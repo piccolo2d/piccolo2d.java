@@ -175,12 +175,12 @@ public class LineShape implements Shape, MutablePoints
             return false;
         }
         x2 = points.getX(0);
-        y2 = points.getX(0);
+        y2 = points.getY(0);
         for (int i = 0; i < points.getPointCount(); i++) {
             x1 = x2;
             y1 = y2;
             x2 = points.getX(i);
-            y2 = points.getX(i);
+            y2 = points.getY(i);
             if (intersects(x,     y,     x + w, y,     x1, y1, x2, y2, true, true, true, true) ||
                 intersects(x + w, y,     x + w, y + h, x1, y1, x2, y2, true, true, true, true) ||
                 intersects(x + w, y + h, x,     y + h, x1, y1, x2, y2, true, true, true, true) ||
