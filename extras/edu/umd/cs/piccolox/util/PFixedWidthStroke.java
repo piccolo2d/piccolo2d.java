@@ -223,42 +223,54 @@ public class PFixedWidthStroke implements Stroke, Serializable {
 		PathConsumer consumer;
 
 		// Fixed Width Additions, always stroke path inside shape.
-		float fixedWidth = 1;
-		
-		if (PDebug.getProcessingOutput()) {
-			if (PPaintContext.CURRENT_PAINT_CONTEXT != null) fixedWidth = width / (float) PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
-		} else {
-			if (PPickPath.CURRENT_PICK_PATH != null) fixedWidth = width / (float) PPickPath.CURRENT_PICK_PATH.getScale();
-		}
-		
-		Rectangle2D bounds = s.getBounds2D();
-		double scale = 1.0;
-	
-		if (bounds.getWidth() > bounds.getHeight()) {
-			if (bounds.getWidth() != 0) {
-				scale = (bounds.getWidth()-fixedWidth)/bounds.getWidth();
+        // Also keeps dashes fixed when zooming (thanks to Shawn Castrianni - Dec 2006)
+		float fixedScale = 1.0f; 
+
+		if (PDebug.getProcessingOutput()) { 
+			if (PPaintContext.CURRENT_PAINT_CONTEXT != null) {
+				fixedScale = 1.0f / (float)PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
 			}
-		} else {
-			if (bounds.getHeight() != 0) {
-				scale = (bounds.getHeight()-fixedWidth)/bounds.getHeight();
+		} else { 
+			if (PPickPath.CURRENT_PICK_PATH != null) { 
+				fixedScale = 1.0f / (float)PPickPath.CURRENT_PICK_PATH.getScale();
 			}
-		}
-	
-		TEMP_TRANSFORM.setToIdentity();
-		TEMP_TRANSFORM.scaleAboutPoint(scale, bounds.getCenterX(), bounds.getCenterY());
-		stroker.setPenDiameter(fixedWidth);
-		PathIterator pi = s.getPathIterator(TEMP_TRANSFORM);
-		
-		stroker.setPenT4(null);
-		stroker.setCaps(RasterizerCaps[cap]);
-		stroker.setCorners(RasterizerCorners[join], miterlimit);
-		if (dash != null) {
-			PathDasher dasher = new PathDasher(stroker);
-			dasher.setDash(dash, dash_phase);
-			dasher.setDashT4(null);
-			consumer = dasher;
-		} else {
-			consumer = stroker;
+		} 
+		float fixedWidth = width * fixedScale; 
+
+		Rectangle2D bounds = s.getBounds2D(); 
+		double scale = 1.0; 
+
+		if (bounds.getWidth() > bounds.getHeight()) { 
+			if (bounds.getWidth() != 0) { 
+				scale = (bounds.getWidth()-fixedWidth)/bounds.getWidth(); 
+			} 
+		} else { 
+			if (bounds.getHeight() != 0) { 
+				scale = (bounds.getHeight()-fixedWidth)/bounds.getHeight(); 
+			} 
+		} 
+
+		TEMP_TRANSFORM.setToIdentity(); 
+		TEMP_TRANSFORM.scaleAboutPoint(scale, bounds.getCenterX(), bounds.getCenterY()); 
+		stroker.setPenDiameter(fixedWidth); 
+		PathIterator pi = s.getPathIterator(TEMP_TRANSFORM); 
+
+		stroker.setPenT4(null); 
+		stroker.setCaps(RasterizerCaps[cap]); 
+		stroker.setCorners(RasterizerCorners[join], miterlimit); 
+		if (dash != null) { 
+			//Fixed Width Additions 
+			float fixedDash[] = new float[dash.length]; 
+			for (int i = 0; i < dash.length; i++) {
+				fixedDash[i] = dash[i] * fixedScale;
+			}
+			float fixedDashPhase = dash_phase * fixedScale; 
+			PathDasher dasher = new PathDasher(stroker); 
+			dasher.setDash(fixedDash, fixedDashPhase); 
+			dasher.setDashT4(null); 
+			consumer = dasher; 
+		} else { 
+			consumer = stroker; 
 		}
 
 		try {

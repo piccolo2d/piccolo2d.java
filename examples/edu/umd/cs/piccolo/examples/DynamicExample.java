@@ -1,5 +1,7 @@
 package edu.umd.cs.piccolo.examples;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -50,11 +52,12 @@ public class DynamicExample extends PFrame {
 		PPath p = new PPath();
 		p.moveTo(0, 0);
 		p.lineTo(0, 1000);
-		p.setStroke(new PFixedWidthStroke(5));
+		PFixedWidthStroke stroke = new PFixedWidthStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, new float[] {5, 2}, 0);
+		p.setStroke(stroke);
+		layer.addChild(p);
 	}
 
 	public void rotateNodes() {
-				
 		Iterator i = getCanvas().getLayer().getChildrenReference().iterator();
 		while (i.hasNext()) {
 			PNode each = (PNode) i.next();
