@@ -301,7 +301,6 @@ public class PText extends PNode {
 			
 			if (constrainWidthToTextWidth) {
 				newWidth = textWidth;
-				newHeight = textHeight;
 			}
 			
 			if (constrainHeightToTextHeight) {
