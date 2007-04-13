@@ -44,7 +44,6 @@ import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PDragSequenceEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventFilter;
-import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDimension;
 import edu.umd.cs.piccolox.util.PLocator;
@@ -65,8 +64,6 @@ public class PSWTHandle extends PSWTPath {
 	public static Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
 	public static Color DEFAULT_COLOR = Color.white;
    
-	private static PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
-	
 	private PLocator locator;
 	private PDragSequenceEventHandler handleDragger;
 

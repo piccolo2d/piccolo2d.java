@@ -81,7 +81,6 @@ public class PSWTPath extends PNode {
 	private static final Rectangle2D.Float TEMP_RECTANGLE = new Rectangle2D.Float();
 	private static final RoundRectangle2D.Float TEMP_ROUNDRECTANGLE = new RoundRectangle2D.Float();
 	private static final Ellipse2D.Float TEMP_ELLIPSE = new Ellipse2D.Float();
-	private static final PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
 	private static final Color DEFAULT_STROKE_PAINT = Color.black;
 	private static final BasicStroke BASIC_STROKE = new BasicStroke();
 	private static final float PEN_WIDTH = 1f; 

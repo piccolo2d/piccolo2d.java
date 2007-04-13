@@ -59,7 +59,6 @@ public class PFrame extends JFrame {
 
 	private PCanvas canvas;
 	private GraphicsDevice graphicsDevice;
-	private DisplayMode originalDisplayMode;
 	private EventListener escapeFullScreenModeListener;
 
 	public PFrame() {
@@ -74,12 +73,6 @@ public class PFrame extends JFrame {
 		super(title, aDevice.getDefaultConfiguration());
 		
 		graphicsDevice = aDevice;
-		
-		try {
-			originalDisplayMode = graphicsDevice.getDisplayMode();		 
-		} catch (InternalError e) {
-			e.printStackTrace();
-		}
 		
 		setBounds(getDefaultFrameBounds());
 		setBackground(null);

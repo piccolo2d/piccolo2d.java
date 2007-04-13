@@ -38,7 +38,6 @@ public class PStickyHandleManager extends PNode {
 	
 	private PNode target;
 	private PCamera camera;
-	private boolean isResizing;
 		
 	public PStickyHandleManager(PCamera newCamera, PNode newTarget) {		
 		setCameraTarget(newCamera, newTarget);		
@@ -76,13 +75,11 @@ public class PStickyHandleManager extends PNode {
 	public void startResizeBounds() {
 		super.startResizeBounds();
 		target.startResizeBounds();
-		isResizing = true;
 	}
 
 	public void endResizeBounds() {
 		super.endResizeBounds();
 		target.endResizeBounds();
-		isResizing = false;
 	}
 
 	public boolean pickAfterChildren(PPickPath pickPath) {

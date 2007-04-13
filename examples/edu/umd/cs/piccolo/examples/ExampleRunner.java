@@ -8,15 +8,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
 
 import edu.umd.cs.piccolo.util.PDebug;
 import edu.umd.cs.piccolox.PFrame;
 
 public class ExampleRunner extends JFrame {
-
-	private JList examples;
 
 	public ExampleRunner() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

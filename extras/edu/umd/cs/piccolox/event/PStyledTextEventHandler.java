@@ -120,13 +120,6 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
 				
 				super.paint(g);
 			}
-			
-			/**
-			 * If the standard scroll rect to visible is on, then you can get weird behaviors if the
-			 * canvas is put in a scrollpane.
-			 */
-			public void scrollRectToVisible() {
-			}
 		};	
 		tComp.setBorder(new CompoundBorder(new LineBorder(Color.black),new EmptyBorder(3,3,3,3)));
 		return tComp;

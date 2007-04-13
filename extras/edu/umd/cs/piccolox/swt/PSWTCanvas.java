@@ -89,7 +89,6 @@ public class PSWTCanvas extends Composite implements PComponent {
 	private PZoomEventHandler zoomEventHandler;
 	private boolean paintingImmediately;
 	private boolean animatingOnLastPaint;
-	private boolean processInputsScheduled;
 	
 	/**
 	 * Construct a canvas with the basic scene graph consisting of a
@@ -389,7 +388,6 @@ public class PSWTCanvas extends Composite implements PComponent {
 	private boolean isButton1Pressed;
 	private boolean isButton2Pressed;
 	private boolean isButton3Pressed;	
-	private boolean lastModifiers;
 	
 	/**
 	 * This method installs mouse and key listeners on the canvas that forward

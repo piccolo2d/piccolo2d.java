@@ -1,7 +1,6 @@
 package edu.umd.cs.piccolo.examples;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.util.Iterator;
 import java.util.Random;
 
