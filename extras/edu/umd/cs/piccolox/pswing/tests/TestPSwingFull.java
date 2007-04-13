@@ -49,7 +49,7 @@ public class TestPSwingFull extends JFrame {
         // JButton
         JButton button = new JButton( "Button" );
         button.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
-        swing = new PSwing( canvas, button );
+        swing = new PSwing(button );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -500, -500 );
@@ -59,7 +59,7 @@ public class TestPSwingFull extends JFrame {
         // JButton
         JSpinner spinner = new JSpinner( new SpinnerNumberModel( 0, 0, 10, 1 ) );
         spinner.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
-        swing = new PSwing( canvas, spinner );
+        swing = new PSwing(spinner );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -800, -500 );
@@ -78,7 +78,7 @@ public class TestPSwingFull extends JFrame {
         // Growable JTextArea
         JTextArea textArea = new JTextArea( "This is a growable TextArea.\nTry it out!" );
         textArea.setBorder( new LineBorder( Color.blue, 3 ) );
-        swing = new PSwing( canvas, textArea );
+        swing = new PSwing(textArea );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -250, -500 );
@@ -87,7 +87,7 @@ public class TestPSwingFull extends JFrame {
 
         // Growable JTextField
         JTextField textField = new JTextField( "A growable text field" );
-        swing = new PSwing( canvas, textField );
+        swing = new PSwing(textField );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 0, -500 );
@@ -96,7 +96,7 @@ public class TestPSwingFull extends JFrame {
 
         // A Slider
         JSlider slider = new JSlider();
-        swing = new PSwing( canvas, slider );
+        swing = new PSwing(slider );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 250, -500 );
@@ -108,7 +108,7 @@ public class TestPSwingFull extends JFrame {
         tree.setEditable( true );
         JScrollPane p = new JScrollPane( tree );
         p.setPreferredSize( new Dimension( 150, 150 ) );
-        swing = new PSwing( canvas, p );
+        swing = new PSwing(p );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -500, -250 );
@@ -118,7 +118,7 @@ public class TestPSwingFull extends JFrame {
         // A Scrollable JTextArea
         JScrollPane pane = new JScrollPane( new JTextArea( "A Scrollable Text Area\nTry it out!" ) );
         pane.setPreferredSize( new Dimension( 150, 150 ) );
-        swing = new PSwing( canvas, pane );
+        swing = new PSwing(pane );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -250, -250 );
@@ -132,7 +132,7 @@ public class TestPSwingFull extends JFrame {
         textField = new JTextField( "A fixed-size text field" );
         panel.setLayout( new BorderLayout() );
         panel.add( textField );
-        swing = new PSwing( canvas, panel );
+        swing = new PSwing(panel );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 0, -250 );
@@ -164,7 +164,7 @@ public class TestPSwingFull extends JFrame {
         JList list = new JList( data );
         list.setBackground( Color.lightGray );
         panel.add( list );
-        swing = new PSwing( canvas, panel );
+        swing = new PSwing(panel );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 250, -250 );
@@ -174,7 +174,7 @@ public class TestPSwingFull extends JFrame {
         // A JLabel
         JLabel label = new JLabel( "A JLabel", SwingConstants.CENTER );
 
-        swing = new PSwing( canvas, label );
+        swing = new PSwing(label );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -500, 0 );
@@ -205,7 +205,7 @@ public class TestPSwingFull extends JFrame {
         panel.add( button2, "South" );
         panel.add( label, "Center" );
         panel.revalidate();
-        swing = new PSwing( canvas, panel );
+        swing = new PSwing(panel );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 0, 0 );
@@ -275,7 +275,7 @@ public class TestPSwingFull extends JFrame {
         pane = new JScrollPane( table );
         pane.setPreferredSize( new Dimension( 200, 200 ) );
         table.setDoubleBuffered( false );
-        swing = new PSwing( canvas, pane );
+        swing = new PSwing(pane );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 250, 0 );
@@ -304,7 +304,7 @@ public class TestPSwingFull extends JFrame {
                     }
                 }
             } );
-            swing = new PSwing( canvas, pane );
+            swing = new PSwing(pane );
             leaf = new ZVisualLeaf( swing );
             transform = new PNode();
             transform.translate( -500, 250 );
@@ -364,7 +364,7 @@ public class TestPSwingFull extends JFrame {
         JSplitPane split = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, options, tools );
         split.setDoubleBuffered( false );
         iframe.getContentPane().add( split );
-        swing = new PSwing( canvas, iframe );
+        swing = new PSwing(iframe );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( 0, 250 );
@@ -385,7 +385,7 @@ public class TestPSwingFull extends JFrame {
         // A JColorChooser - also demonstrates JTabbedPane
 //        JColorChooser chooser = new JColorChooser();
         JCheckBox chooser = new JCheckBox( "Check Box" );
-        swing = new PSwing( canvas, chooser );
+        swing = new PSwing(chooser );
         leaf = new ZVisualLeaf( swing );
         transform = new PNode();
         transform.translate( -250, 850 );
@@ -396,7 +396,7 @@ public class TestPSwingFull extends JFrame {
         canvas.revalidate();
         canvas.repaint();
 
-        PSwing message = new PSwing( canvas, new JTextArea( "Click-drag to zoom in and out." ) );
+        PSwing message = new PSwing(new JTextArea( "Click-drag to zoom in and out." ) );
         message.translate( 0, -50 );
         canvas.getLayer().addChild( message );
 

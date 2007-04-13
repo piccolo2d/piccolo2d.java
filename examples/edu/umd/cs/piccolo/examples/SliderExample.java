@@ -75,7 +75,7 @@ public class SliderExample extends JFrame {
         buttonPreset.setLocation( 240, 285 );
         tabPanel.add( buttonPreset );
         // Create a pswing object for the tab panel
-        swing = new PSwing( canvas, tabPanel );
+        swing = new PSwing( tabPanel );
         swing.translate( 0, 0 );
         // Add the pswing object to the canvas
         canvas.getLayer().addChild( swing );

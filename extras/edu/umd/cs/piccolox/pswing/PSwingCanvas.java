@@ -2,11 +2,11 @@
 
 /*
  * CVS Info -
- * Filename : $Source: /fs/cvs/piccolo/piccolo/extras/edu/umd/cs/piccolox/pswing/PSwingCanvas.java,v $
- * Branch : $Name:  $
- * Modified by : $Author: jesse $
- * Revision : $Revision: 1.1 $
- * Date modified : $Date: 2006/01/05 16:54:26 $
+ * Filename : $Source$
+ * Branch : $Name$
+ * Modified by : $Author: samreid $
+ * Revision : $Revision: 13998 $
+ * Date modified : $Date: 2007-03-22 17:51:34 -0600 (Thu, 22 Mar 2007) $
  */
 package edu.umd.cs.piccolox.pswing;
 
@@ -47,7 +47,15 @@ public class PSwingCanvas extends PCanvas {
         return swingWrapper;
     }
 
-    static class SwingWrapper extends JComponent {
+    public void addPSwing( PSwing pSwing ) {
+        swingWrapper.add( pSwing.getComponent() );
+    }
+
+    public void removePSwing( PSwing pSwing ) {
+        swingWrapper.remove( pSwing.getComponent() );
+    }
+
+    private static class SwingWrapper extends JComponent {
         private PSwingCanvas pSwingCanvas;
 
         public SwingWrapper( PSwingCanvas pSwingCanvas ) {

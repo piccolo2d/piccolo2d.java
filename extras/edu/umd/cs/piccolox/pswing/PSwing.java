@@ -4,16 +4,16 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
+import edu.umd.cs.piccolo.PCamera;
+import edu.umd.cs.piccolo.PLayer;
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -22,13 +22,8 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-
-import javax.swing.JComponent;
-import javax.swing.RepaintManager;
-
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
   This message was sent to Sun on August 27, 1999
@@ -157,6 +152,8 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * @author Sam R. Reid
  * @author Benjamin B. Bederson
  * @author Lance E. Good
+ *
+ * 3-23-2007 edited to automatically detect PCamera/PSwingCanvas to allow single-arg constructor usage
  */
 public class PSwing extends PNode implements Serializable, PropertyChangeListener {
 
@@ -168,7 +165,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     public static final String PSWING_PROPERTY = "PSwing";
     private static final AffineTransform IDENTITY_TRANSFORM = new AffineTransform();
     private static PBounds TEMP_REPAINT_BOUNDS2 = new PBounds();
-    private static boolean highQualityRender = false;
 
     /**
      * The cutoff at which the Swing component is rendered greek
@@ -179,25 +175,54 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     private Stroke defaultStroke = new BasicStroke();
     private Font defaultFont = new Font( "Serif", Font.PLAIN, 12 );
     private BufferedImage buffer;
-    private PSwingCanvas pSwingCanvas;
+    private static final Color BUFFER_BACKGROUND_COLOR = new Color( 0, 0, 0, 0 );
+    private PSwingCanvas canvas;
+
+    ////////////////////////////////////////////////////////////
+    ///////Following fields are for automatic canvas/camera detection
+    ////////////////////////////////////////////////////////////
+    /*/keep track of which nodes we've attached listeners to since no built in support in PNode*/
+    private ArrayList listeningTo = new ArrayList();
+
+    /*The parent listener for camera/canvas changes*/
+    private PropertyChangeListener parentListener = new PropertyChangeListener() {
+        public void propertyChange( PropertyChangeEvent evt ) {
+            PNode source = (PNode)evt.getSource();
+            PNode parent = source.getParent();
+            if( parent != null ) {
+                listenForCanvas( parent );
+            }
+
+        }
+    };
 
     /**
-     * Constructs a new visual component wrapper for the Swing component
-     * and adds the Swing component to the SwingWrapper component of
-     * the PCanvas
+     * Constructs a new visual component wrapper for the Swing component.
      *
-     * @param canvas    The PSwingCanvas to which the Swing component will
-     *                  be added
      * @param component The swing component to be wrapped
      */
-    public PSwing( PSwingCanvas canvas, JComponent component ) {
-        this.pSwingCanvas = canvas;
+    public PSwing(JComponent component) {
         this.component = component;
         component.putClientProperty( PSWING_PROPERTY, this );
         init( component );
-        this.pSwingCanvas.getSwingWrapper().add( component );
         component.revalidate();
+        component.addPropertyChangeListener( new PropertyChangeListener() {
+            public void propertyChange( PropertyChangeEvent evt ) {
+                reshape();
+            }
+        } );
         reshape();
+        listenForCanvas( this );
+    }
+
+    /**
+     * Deprecated constructor for application code still depending on this signature. 
+     * @param pSwingCanvas
+     * @param component
+     * @deprecated 
+     */
+    public PSwing(PSwingCanvas pSwingCanvas, JComponent component) {
+        this(component);
     }
 
     /**
@@ -235,7 +260,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         g2.setFont( defaultFont );
 
         if( component.getParent() == null ) {
-            pSwingCanvas.getSwingWrapper().add( component );
+//            pSwingCanvas.getSwingWrapper().add( component );
             component.revalidate();
         }
 
@@ -249,8 +274,10 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     protected boolean shouldRenderGreek( PPaintContext renderContext ) {
-        return ( renderContext.getScale() < renderCutoff && pSwingCanvas.getInteracting() ) ||
-               minFontSize * renderContext.getScale() < 0.5;
+        return ( renderContext.getScale() < renderCutoff
+//                 && pSwingCanvas.getInteracting()
+        ) ||
+          minFontSize * renderContext.getScale() < 0.5;
     }
 
     /**
@@ -275,9 +302,19 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * Renders to a buffered image, then draws that to the screen.
+     * Remove from the SwingWrapper; throws an exception if no canvas is associated with this PSwing.
+     */
+    public void removeFromSwingWrapper() {
+        if( canvas != null && Arrays.asList( this.canvas.getSwingWrapper().getComponents() ).contains( component ) ) {
+            this.canvas.getSwingWrapper().remove( component );
+        }
+    }
+
+    /**
+     * Renders to a buffered image, then draws that image to the
+     * drawing surface associated with g2 (usually the screen).
      *
-     * @param g2 The graphics on which to render the JComponent.
+     * @param g2 graphics context for rendering the JComponent
      */
     public void paint( Graphics2D g2 ) {
         if( component.getBounds().isEmpty() ) {
@@ -288,35 +325,44 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         PSwingRepaintManager manager = (PSwingRepaintManager)RepaintManager.currentManager( component );
         manager.lockRepaint( component );
 
-        if( buffer == null || buffer.getWidth() != component.getWidth() || buffer.getHeight() != component.getHeight() )
-        {
-            buffer = new BufferedImage( component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB );
+        Graphics2D bufferedGraphics = null;
+        if( !isBufferValid() ) {
+            // Get the graphics context associated with a new buffered image.
+            // Use TYPE_INT_ARGB_PRE so that transparent components look good on Windows.
+            buffer = new BufferedImage( component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE );
+            bufferedGraphics = buffer.createGraphics();
         }
         else {
-            Graphics2D bufferedGraphics = buffer.createGraphics();
-            bufferedGraphics.setBackground( Color.black );
-            bufferedGraphics.clipRect( 0, 0, component.getWidth(), component.getHeight() );
-        }
-        Graphics2D bufferedGraphics = buffer.createGraphics();
-
-        //optionally prepare buffered graphics for better rendering.
-        if( highQualityRender ) {
-            bufferedGraphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-            bufferedGraphics.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC );
+            // Use the graphics context associated with the existing buffered image
+            bufferedGraphics = buffer.createGraphics();
+            // Clear the buffered image to prevent artifacts on Macintosh
+            bufferedGraphics.setBackground( BUFFER_BACKGROUND_COLOR );
+            bufferedGraphics.clearRect( 0, 0, component.getWidth(), component.getHeight() );
         }
 
+        // Start with the rendering hints from the provided graphics context
+        bufferedGraphics.setRenderingHints( g2.getRenderingHints() );
+
+        //PSwing sometimes causes JComponent text to render with "..." when fractional font metrics are enabled.  These are now always disabled for the offscreen buffer.
+        bufferedGraphics.setRenderingHint( RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF );
+
+        // Draw the component to the buffer
         component.paint( bufferedGraphics );
-        Object origHint = g2.getRenderingHint( RenderingHints.KEY_INTERPOLATION );
-        g2.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC );
+
+        // Draw the buffer to g2's associated drawing surface
         g2.drawRenderedImage( buffer, IDENTITY_TRANSFORM );
-        if( origHint != null ) {
-            g2.setRenderingHint( RenderingHints.KEY_INTERPOLATION, origHint );
-        }
-        else {
-            g2.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR );
-        }
 
         manager.unlockRepaint( component );
+    }
+
+    /**
+     * Tells whether the buffer for the image of the Swing components
+     * is currently valid.
+     *
+     * @return true if the buffer is currently valid
+     */
+    private boolean isBufferValid() {
+        return !( buffer == null || buffer.getWidth() != component.getWidth() || buffer.getHeight() != component.getHeight() );
     }
 
     /**
@@ -337,13 +383,14 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * updates the visual components copy of these bounds
      */
     public void computeBounds() {
-        if( !component.getBounds().isEmpty() ) {
-            Dimension d = component.getPreferredSize();
-            getBoundsReference().setRect( 0, 0, d.getWidth(), d.getHeight() );
-            if( !component.getSize().equals( d ) ) {
-                component.setBounds( 0, 0, (int)d.getWidth(), (int)d.getHeight() );
-            }
-        }
+        reshape();
+//        if( !component.getBounds().isEmpty() ) {
+//            Dimension d = component.getPreferredSize();
+//            getBoundsReference().setRect( 0, 0, d.getWidth(), d.getHeight() );
+//            if( !component.getSize().equals( d ) ) {
+//                component.setBounds( 0, 0, (int)d.getWidth(), (int)d.getHeight() );
+//            }
+//        }
     }
 
     /**
@@ -386,6 +433,15 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         if( c instanceof JComponent ) {
             ( (JComponent)c ).setDoubleBuffered( false );
             c.addPropertyChangeListener( "font", this );
+            c.addComponentListener( new ComponentAdapter() {
+                public void componentResized( ComponentEvent e ) {
+                    computeBounds();
+                }
+
+                public void componentShown( ComponentEvent e ) {
+                    computeBounds();
+                }
+            } );
         }
     }
 
@@ -404,12 +460,87 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         init( component );
     }
 
+        ////////////////////////////////////////////////////////////
+    ///////Start methods for automatic canvas detection
+    ////////////////////////////////////////////////////////////
     /**
-     * Set high quality buffer rendering.
-     *
-     * @param highQuality
+     * Attaches a listener to the specified node and all its parents to listen
+     * for a change in the PSwingCanvas.  Only PROPERTY_PARENT listeners are added
+     * so this code wouldn't handle if a PLayer were viewed by a different PCamera
+     * since that constitutes a child change.
+     * @param node The child node at which to begin a parent-based traversal for adding listeners.
      */
-    public static void setHighQualityRender( boolean highQuality ) {
-        highQualityRender = highQuality;
+    private void listenForCanvas( PNode node ) {
+        //need to get the full tree for this node
+        PNode p = node;
+        while( p != null ) {
+            listenToNode( p );
+
+            PNode parent = p;
+//            System.out.println( "parent = " + parent.getClass() );
+            if( parent instanceof PLayer ) {
+                PLayer player = (PLayer)parent;
+//                System.out.println( "Found player: with " + player.getCameraCount() + " cameras" );
+                for( int i = 0; i < player.getCameraCount(); i++ ) {
+                    PCamera cam = player.getCamera( i );
+                    if( cam.getComponent() instanceof PSwingCanvas ) {
+                        updateCanvas( (PSwingCanvas)cam.getComponent() );
+                        break;
+                    }
+                }
+            }
+            p = p.getParent();
+        }
     }
+
+    /**
+     * Attach a listener to the specified node, if one has not already been attached.
+     * @param node the node to listen to for parent/pcamera/pcanvas changes
+     */
+    private void listenToNode( PNode node ) {
+//        System.out.println( "listeningTo.size() = " + listeningTo.size() );
+        if( !listeningTo( node ) ) {
+            listeningTo.add( node );
+            node.addPropertyChangeListener( PNode.PROPERTY_PARENT, parentListener );
+        }
+    }
+
+    /**
+     * Determine whether this PSwing is already listening to the specified node for camera/canvas changes.
+     * @param node the node to check
+     * @return true if this PSwing is already listening to the specified node for camera/canvas changes
+     */
+    private boolean listeningTo( PNode node ) {
+        for( int i = 0; i < listeningTo.size(); i++ ) {
+            PNode pNode = (PNode)listeningTo.get( i );
+            if( pNode == node ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Removes this PSwing from previous PSwingCanvas (if any), and ensure that this PSwing is attached to the new PSwingCanvas.
+     * @param newCanvas the new PSwingCanvas (may be null)
+     */
+    private void updateCanvas( PSwingCanvas newCanvas ) {
+        if( newCanvas != canvas ) {
+            if( canvas != null ) {
+                canvas.removePSwing( this );
+            }
+            if( newCanvas != null ) {
+                canvas = newCanvas;
+                canvas.addPSwing( this );
+                reshape();
+                repaint();
+                canvas.invalidate();
+                canvas.revalidate();
+                canvas.repaint();
+            }
+        }
+    }
+    ////////////////////////////////////////////////////////////
+    ///////End methods for automatic canvas detection
+    ////////////////////////////////////////////////////////////
 }
