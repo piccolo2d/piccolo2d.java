@@ -33,6 +33,7 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -74,8 +75,8 @@ public class PFrame extends JFrame {
 		
 		graphicsDevice = aDevice;
 		
-		setBounds(getDefaultFrameBounds());
 		setBackground(null);
+		setBounds(getDefaultFrameBounds());
 		
 		try {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,11 +88,19 @@ public class PFrame extends JFrame {
 			canvas = aCanvas;
 		}
 						
+		getContentPane().setLayout(null);
 		getContentPane().add(canvas);
 		validate(); 	
 		setFullScreenMode(fullScreenMode);
 		canvas.requestFocus();
 		beforeInitialize();
+
+		// Make canvas bounds follow containing frame bounds
+		addComponentListener(new ComponentAdapter() {
+			public void componentResized(java.awt.event.ComponentEvent e) {
+				canvas.setBounds(0, 0, getWidth(), getHeight());
+			}
+		});
 
 		// Manipulation of Piccolo's scene graph should be done from Swings
 		// event dispatch thread since Piccolo is not thread safe. This code calls
