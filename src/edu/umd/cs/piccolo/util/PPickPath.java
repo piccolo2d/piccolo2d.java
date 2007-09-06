@@ -126,7 +126,7 @@ public class PPickPath implements PInputEventListener {
 	 * Return the next node that will be picked after the current picked node.
 	 * For instance of you have two overlaping children nodes then the topmost
 	 * child will always be picked first, use this method to find the covered child.
-	 * Return null when no more nodes will be picked.
+	 * Return the camera when no more visual will be picked.
 	 */
 	public PNode nextPickedNode() {
 		PNode picked = getPickedNode();
