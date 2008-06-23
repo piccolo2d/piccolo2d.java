@@ -25,14 +25,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<scm>
-		<!-- repeat the scm section as the artifactid doesn't match the svn subdir -->
-		<connection>
-			scm:svn:http://piccolo2d.googlecode.com/svn/piccolo.java/trunk/core
-		</connection>
-		<developerConnection>
-			scm:svn:https://piccolo2d.googlecode.com/svn/piccolo.java/trunk/core
-		</developerConnection>
-		<url>http://code.google.com/p/piccolo2d/source/browse</url>
-	</scm>
 </project>

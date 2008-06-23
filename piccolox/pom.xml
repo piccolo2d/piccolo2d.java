@@ -24,7 +24,7 @@
 			<version>1.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<!-- don't hardcode swt here, but rather follow http://blambi.blogspot.com/2007/07/maven2-swt-builds.html -->
+			<!-- TODO don't hardcode swt here, but rather follow http://blambi.blogspot.com/2007/07/maven2-swt-builds.html -->
 			<groupId>swt</groupId>
 			<artifactId>swt-linux-gtk</artifactId>
 			<version>3.0m8</version>
@@ -37,19 +37,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<scm>
-		<!-- repeat the scm section as the artifactid doesn't match the svn subdir -->
-		<connection>
-			scm:svn:http://piccolo2d.googlecode.com/svn/piccolo.java/trunk/extras
-		</connection>
-		<developerConnection>
-			scm:svn:https://piccolo2d.googlecode.com/svn/piccolo.java/trunk/extras
-		</developerConnection>
-		<url>http://code.google.com/p/piccolo2d/source/browse</url>
-	</scm>
 	<reporting>
 		<plugins>
-			<!-- don't use UmlGraph as this causes pain with swt  -->
+			<!-- don't use UmlGraph as the current settings (see ../parent/pom.xml) cause pain with swt  -->
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>

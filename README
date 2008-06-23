@@ -1,0 +1,32 @@
+This is the Piccolo README file
+
+INTRODUCTION
+	
+Welcome to Piccolo! Piccolo is a revolutionary way (in the Jazz ZUI 
+tradition) to create robust, full-featured graphical applications in 
+Java, with striking features such as zooming and multiple representation. 
+Piccolo is an extensive toolkit based on the Java2D API.
+
+REQUIRMENTS
+
+To run Piccolo applications you need to install the Java 2 Runtime Environment (1.4), 
+which can be downloaded from "http://www.javasoft.com/j2se/".
+
+To build Piccolo itself you need Apache Maven2, which can be downloaded from
+http://maven.apache.org/.
+
+GETTING STARTED
+
+1) check out: svn checkout  svn list http://piccolo2d.googlecode.com/svn/piccolo.java/trunk piccolo.java
+2) change into the directory: cd piccolo.java
+3) build jars and doc: mvn clean install site
+
+This builds three jar files in the local maven cache. 
+($HOME/.m2/repository/edu/umd/cs/hcil/*/1.3-SNAPSHOT/*.jar) and quite a bit
+of documentation in ./target/site/index.html and ./*/target/site/index.html
+
+MORE INFORMATION
+
+More Piccolo documentation (beyond the one mentioned above) can be found at
+http://code.google.com/p/piccolo2d/
+

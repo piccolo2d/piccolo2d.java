@@ -30,19 +30,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<scm>
-		<!-- repeat the scm section as the artifactid doesn't match the svn subdir -->
-		<connection>
-			scm:svn:http://piccolo2d.googlecode.com/svn/piccolo.java/trunk/examples
-		</connection>
-		<developerConnection>
-			scm:svn:https://piccolo2d.googlecode.com/svn/piccolo.java/trunk/examples
-		</developerConnection>
-		<url>http://code.google.com/p/piccolo2d/source/browse</url>
-	</scm>
 	<reporting>
 		<plugins>
-			<!-- don't use UmlGraph as this causes pain with swt  -->
+			<!-- don't use UmlGraph as the current settings (see ../parent/pom.xml) cause pain with swt  -->
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>

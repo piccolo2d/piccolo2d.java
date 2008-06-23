@@ -29,8 +29,8 @@
 	<build />
 	<reporting />
 	<modules>
-		<module>core</module>
-		<module>extras</module>
+		<module>piccolo</module>
+		<module>piccolox</module>
 		<module>examples</module>
 	</modules>
 </project>
