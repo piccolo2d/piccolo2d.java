@@ -17,7 +17,7 @@ http://maven.apache.org/.
 
 GETTING STARTED
 
-1) check out: svn checkout  svn list http://piccolo2d.googlecode.com/svn/piccolo.java/trunk piccolo.java
+1) check out: svn checkout  svn checkout http://piccolo2d.googlecode.com/svn/piccolo.java/trunk piccolo.java
 2) change into the directory: cd piccolo.java
 3) build jars and doc: mvn clean install site
 
