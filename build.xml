@@ -73,8 +73,8 @@ Then try building.
     <tstamp/>
     <property name="Name" value="Piccolo"/>
     <property name="name" value="piccolo"/>
-    <property name="version" value="1.2"/>
-    <property name="year" value="2006"/>
+    <property name="version" value="1.2.1"/>
+    <property name="year" value="2008"/>
 
     <echo message="----------- ${Name} ${version} [${year}] ------------"/>
 
@@ -150,7 +150,7 @@ Then try building.
     <mkdir dir="${build.lib}"/>
 
     <copy todir="${build.lib}">
-      <fileset dir="${lib.dir}"/>
+      <fileset dir="${lib.dir}" excludes="**/.svn/**"/>
     </copy>
 
   </target>
@@ -163,7 +163,7 @@ Then try building.
     <mkdir dir="${build.piccolo.dest}"/>
    
     <copy todir="${build.piccolo.src}">
-      <fileset dir="${src.dir}"/>
+      <fileset dir="${src.dir}" excludes="**/.svn/**"/>
     </copy>
          
   </target>
@@ -176,7 +176,7 @@ Then try building.
     <mkdir dir="${build.extras.dest}"/>
 
     <copy todir="${build.extras.src}">
-      <fileset dir="${extras.dir}"/>
+      <fileset dir="${extras.dir}" excludes="**/.svn/**"/>
     </copy>
     
   </target>
@@ -189,7 +189,7 @@ Then try building.
     <mkdir dir="${build.examples.dest}"/>
 
     <copy todir="${build.examples.src}">
-      <fileset dir="${examples.dir}"/>
+      <fileset dir="${examples.dir}" excludes="**/.svn/**"/>
     </copy>
         
   </target>
@@ -202,7 +202,7 @@ Then try building.
     <mkdir dir="${build.tests.dest}"/>
 
     <copy todir="${build.tests.src}">
-      <fileset dir="${tests.dir}"/>
+      <fileset dir="${tests.dir}" excludes="**/.svn/**"/>
     </copy>
     
   </target>
@@ -213,14 +213,16 @@ Then try building.
   <target name="compile-piccolo" depends="prepare-piccolo">
     <!-- copy resource files -->
     <copy todir="${build.piccolo.dest}">
-      <fileset dir="${build.piccolo.src}" excludes="**/*.java"/>
+      <fileset dir="${build.piccolo.src}" excludes="**/*.java,**/.svn/**"/>
     </copy>
 
     <javac srcdir="${build.piccolo.src}"
            destdir="${build.piccolo.dest}"
            debug="${debug}"
            deprecation="${deprecation}"
-           optimize="${optimize}"/>
+           optimize="${optimize}"
+           source="1.2"
+           target="1.2"/>
   </target>
 
   <!-- =================================================================== -->
@@ -229,7 +231,7 @@ Then try building.
   <target name="compile-extras" depends="prepare-extras, piccolo">
     <!-- copy resource files -->
     <copy todir="${build.extras.dest}">
-      <fileset dir="${build.extras.src}" excludes="**/*.java"/>
+      <fileset dir="${build.extras.src}" excludes="**/*.java,**/.svn/**"/>
     </copy>
 
     <javac srcdir="${build.extras.src}"
@@ -237,7 +239,9 @@ Then try building.
 		   classpath="${build.dir}/${name}.jar;${lib.dir}/swt.jar"
            debug="${debug}"
            deprecation="${deprecation}"
-           optimize="${optimize}"/>
+           optimize="${optimize}"
+           source="1.2"
+           target="1.2"/>
   </target>
 
   <!-- =================================================================== -->
@@ -246,7 +250,7 @@ Then try building.
   <target name="compile-examples" depends="prepare-examples, extras">
     <!-- copy resource files -->
     <copy todir="${build.examples.dest}">
-      <fileset dir="${build.examples.src}" excludes="**/*.java"/>
+      <fileset dir="${build.examples.src}" excludes="**/*.java,**/.svn/**"/>
     </copy>
 
     <javac srcdir="${build.examples.src}"
@@ -254,7 +258,9 @@ Then try building.
 		   classpath="${build.dir}/${name}x.jar;${build.dir}/${name}.jar;${lib.dir}/swt.jar"
            debug="${debug}"
            deprecation="${deprecation}"
-           optimize="${optimize}"/>
+           optimize="${optimize}"
+           source="1.2"
+           target="1.2"/>
   </target>
 
   <!-- =================================================================== -->
@@ -263,7 +269,7 @@ Then try building.
   <target name="compile-tests" depends="prepare-tests, piccolo, extras">
     <!-- copy resource files -->
     <copy todir="${build.tests.dest}">
-      <fileset dir="${build.tests.src}" excludes="**/*.java"/>
+      <fileset dir="${build.tests.src}" excludes="**/*.java,**/.svn/**"/>
     </copy>
 
     <javac srcdir="${build.tests.src}"
@@ -271,7 +277,9 @@ Then try building.
 		   classpath="${build.dir}/${name}.jar;${build.dir}/${name}x.jar"
            debug="${debug}"
            deprecation="${deprecation}"
-           optimize="${optimize}"/>
+           optimize="${optimize}"
+           source="1.2"
+           target="1.2"/>
   </target>
 
   <!-- =================================================================== -->
@@ -290,7 +298,7 @@ Then try building.
     <jar jarfile="${build.dir}/${name}x.jar"
          basedir="${build.extras.dest}"
          manifest="${build.extras.src}/extras.manifest"
-         includes="**"/>
+         includes="**" excludes="**/Test*.class"/>
   </target>
 
   <!-- =================================================================== -->
@@ -400,7 +408,7 @@ Then try building.
     <mkdir dir="${sourcedist.dir}"/>
 
     <copy todir="${sourcedist.dir}">
-      <fileset dir="${root.dir}"/>
+      <fileset dir="${root.dir}" excludes="**/.svn/**"/>
     </copy>
 
     <!-- Now delete what we dont want, probably a better way to do this -->
@@ -426,7 +434,7 @@ Then try building.
     <mkdir dir="${compiledist.dir}"/>
 
     <copy todir="${compiledist.dir}">
-      <fileset dir="${root.dir}"/>
+      <fileset dir="${root.dir}" excludes="**/.svn/**"/>
     </copy>
 
     <!-- Now delete what we dont want, probably a better way to do this -->
