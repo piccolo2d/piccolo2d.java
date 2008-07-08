@@ -98,7 +98,7 @@ public class PFrame extends JFrame {
 		// Make canvas bounds follow containing frame bounds
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(java.awt.event.ComponentEvent e) {
-				canvas.setBounds(0, 0, getWidth(), getHeight());
+				canvas.setBounds(0, 0, getContentPane().getWidth(), getContentPane().getHeight());
 			}
 		});
 

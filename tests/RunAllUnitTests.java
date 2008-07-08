@@ -16,6 +16,7 @@ public class RunAllUnitTests {
 		suite.addTest(new TestSuite(TransformActivityTest.class));
 		suite.addTest(new TestSuite(NotificationCenterTest.class));
 		suite.addTest(new TestSuite(PickTest.class));
+		suite.addTest(new TestSuite(PFrameTest.class));
 		return suite;
 	}
 
