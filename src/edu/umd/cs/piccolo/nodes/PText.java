@@ -1,5 +1,5 @@
 /*
- on* Copyright (c) 2002-@year@, University of Maryland
+ * Copyright (c) 2002-@year@, University of Maryland
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -71,10 +71,6 @@ public class PText extends PNode {
 	public static Font DEFAULT_FONT = new Font("Helvetica", Font.PLAIN, 12);
 	public static double DEFAULT_GREEK_THRESHOLD = 5.5;
 	
-	public static int NO_WRAP = 1;   // Bounds gets set to text
-	public static int WRAP = 2;      // Set width, height gets calculated, text wraps
-	public static int WRAP_CLIP = 3; // Set width and height, text wraps and gets clipped off bottom
-	
 	private String text;
 	private Paint textPaint;
 	private Font font;
@@ -128,31 +124,6 @@ public class PText extends PNode {
 		invalidatePaint();
 	}
 
-	/**
-	 * Determines how bounds get set and how text wraps within bounds
-	 * NO_WRAP     Bounds gets set to text
-	 * WRAP        Set width, height gets calculated, text wraps
-	 * WRAP_CLIP   Set width and height, text wraps and gets clipped off bottom
-	 * @param wrapMode
-	 */
-	public void setWrapMode(int wrapMode) {
-		if (wrapMode == NO_WRAP) {
-			constrainWidthToTextWidth = false;
-			constrainHeightToTextHeight = false;
-		} else if (wrapMode == WRAP) {
-			constrainWidthToTextWidth = true;
-			constrainHeightToTextHeight = true;
-		} else if (wrapMode == WRAP_CLIP){
-			constrainWidthToTextWidth = false;
-			constrainHeightToTextHeight = true;
-		}
-		recomputeLayout();
-	}
-	
-	/**
-	 * @deprecated See setWrapMode()
-	 * @return
-	 */
     public boolean isConstrainWidthToTextWidth() {
         return constrainWidthToTextWidth;
     }
@@ -160,17 +131,12 @@ public class PText extends PNode {
 	/**
 	 * Controls whether this node changes its width to fit the width 
 	 * of its text. If flag is true it does; if flag is false it doesn't
-	 * @deprecated See setWrapMode()
 	 */
 	public void setConstrainWidthToTextWidth(boolean constrainWidthToTextWidth) {
 		this.constrainWidthToTextWidth = constrainWidthToTextWidth;
 		recomputeLayout();
 	}
 
-	/**
-	 * @deprecated See setWrapMode()
-	 * @return
-	 */
     public boolean isConstrainHeightToTextHeight() {
         return constrainHeightToTextHeight;
     }
@@ -178,7 +144,6 @@ public class PText extends PNode {
 	/**
 	 * Controls whether this node changes its height to fit the height 
 	 * of its text. If flag is true it does; if flag is false it doesn't
-	 * @deprecated See setWrapMode()
 	 */
 	public void setConstrainHeightToTextHeight(boolean constrainHeightToTextHeight) {
 		this.constrainHeightToTextHeight = constrainHeightToTextHeight;

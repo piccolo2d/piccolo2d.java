@@ -88,19 +88,11 @@ public class PFrame extends JFrame {
 			canvas = aCanvas;
 		}
 						
-		getContentPane().setLayout(null);
-		getContentPane().add(canvas);
+		setContentPane(canvas);
 		validate(); 	
 		setFullScreenMode(fullScreenMode);
 		canvas.requestFocus();
 		beforeInitialize();
-
-		// Make canvas bounds follow containing frame bounds
-		addComponentListener(new ComponentAdapter() {
-			public void componentResized(java.awt.event.ComponentEvent e) {
-				canvas.setBounds(0, 0, getWidth(), getHeight());
-			}
-		});
 
 		// Manipulation of Piccolo's scene graph should be done from Swings
 		// event dispatch thread since Piccolo is not thread safe. This code calls

@@ -118,7 +118,8 @@ public class LensExample extends PFrame {
 		sharedLayer.addChild(sharedNode);
 		
 		PText label = new PText("Move the lens \n (by dragging title bar) over the green rectangle, and it will appear red. press and drag the mouse on the canvas and it will draw squiggles. press and drag the mouse over the lens and drag squiggles that are only visible through the lens.");
-		label.setWrapMode(PText.NO_WRAP);
+		label.setConstrainWidthToTextWidth(false);
+		label.setConstrainHeightToTextHeight(false);
 		label.setBounds(200, 100, 200, 200);
 			
 		sharedLayer.addChild(label);				
