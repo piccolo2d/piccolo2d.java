@@ -2,11 +2,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>edu.umd.cs.hcil</groupId>
+	<groupId>org.piccolo2d</groupId>
 	<artifactId>parent</artifactId>
 	<version>1.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Piccolo 2D</name>
+	<name>Piccolo2D</name>
 	<description>
 		A revolutionary way to create robust, full-featured graphical
 		applications in Java and C#, with striking visual effects such
@@ -24,7 +24,8 @@
 			<!-- @TODO Will, is there ssh access to the website? Required for maven site upload. -->
 		</scpsitebase>
 	</properties>
-	<url>${httpsitebase}/${pom.artifactId}/${pom.version}</url>
+	<!-- url>${httpsitebase}/${pom.artifactId}/${pom.version}</url -->
+	<url>http://code.google.com/p/piccolo2d/</url>
 	<issueManagement>
 		<system>Google Code</system>
 		<url>http://code.google.com/p/piccolo2d/issues/list</url>
@@ -32,7 +33,7 @@
 	<inceptionYear>1995</inceptionYear>
 	<mailingLists>
 		<mailingList>
-			<name>Piccolo 2D Announce</name>
+			<name>Piccolo2D Announce</name>
 			<subscribe>
 				http://groups.google.com/group/piccolo2d-announce/subscribe
 			</subscribe>
@@ -42,7 +43,7 @@
 			</archive>
 		</mailingList>
 		<mailingList>
-			<name>Piccolo 2D Users</name>
+			<name>Piccolo2D Users</name>
 			<subscribe>
 				http://groups.google.com/group/piccolo2d-users/subscribe
 			</subscribe>
@@ -52,7 +53,7 @@
 			</archive>
 		</mailingList>
 		<mailingList>
-			<name>Piccolo 2D Dev</name>
+			<name>Piccolo2D Dev</name>
 			<subscribe>
 				http://groups.google.com/group/piccolo2d-dev/subscribe
 			</subscribe>
@@ -79,7 +80,7 @@
 		<url>http://code.google.com/p/piccolo2d/source/browse</url>
 	</scm>
 	<organization>
-		<name>Piccolo 2D</name>
+		<name>Piccolo2D</name>
 		<url>http://code.google.com/p/piccolo2d/</url>
 	</organization>
 	<build>
