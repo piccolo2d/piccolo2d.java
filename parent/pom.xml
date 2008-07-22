@@ -24,8 +24,7 @@
 			<!-- @TODO Will, is there ssh access to the website? Required for maven site upload. -->
 		</scpsitebase>
 	</properties>
-	<!-- url>${httpsitebase}/${pom.artifactId}/${pom.version}</url -->
-	<url>http://code.google.com/p/piccolo2d/</url>
+	<url>${httpsitebase}/${pom.artifactId}/${pom.version}</url>
 	<issueManagement>
 		<system>Google Code</system>
 		<url>http://code.google.com/p/piccolo2d/issues/list</url>
