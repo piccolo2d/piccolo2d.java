@@ -145,6 +145,7 @@
 					</docletArtifact>
 					<!-- http://www.spinellis.gr/sw/umlgraph/doc/cd-opt.html -->
 					<additionalparam>
+						-overview ${basedir}/src/main/java/overview.html 
 						-inferrel -inferdep -quiet -hide java.*
 						-collpackages java.util.* -qualify
 						-postfixpackage -nodefontsize 9
