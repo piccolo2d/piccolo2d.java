@@ -42,11 +42,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-<distributionManagement>
-    <site>
-      <id>dav.piccolo2d.org</id>
-      <name>Piccolo2D Website (Snapshot Maven Reports)</name>
-      <url>dav:https://piccolo2d.googlecode.com/svn/site/piccolo2d.java/release-${project.version}/${project.artifactId}</url>
-    </site>
-  </distributionManagement>
 </project>
