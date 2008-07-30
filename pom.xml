@@ -8,7 +8,7 @@
 		<version>1.3-SNAPSHOT</version>
 		<relativePath>./parent/pom.xml</relativePath>
 	</parent>
-	<artifactId>piccolo2d-complete</artifactId>
+	<artifactId>piccolo2d</artifactId>
 	<packaging>pom</packaging>
 	<name>Piccolo2D</name>
 	<description>
@@ -32,4 +32,11 @@
 		<module>extras</module>
 		<module>examples</module>
 	</modules>
+<distributionManagement>
+    <site>
+      <id>dav.piccolo2d.org</id>
+      <name>Piccolo2D Website (Snapshot Maven Reports)</name>
+      <url>dav:https://piccolo2d.googlecode.com/svn/site/piccolo2d.java/release-${project.version}/${project.artifactId}</url>
+    </site>
+  </distributionManagement>
 </project>
