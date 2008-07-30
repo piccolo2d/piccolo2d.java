@@ -21,7 +21,7 @@ public class PFrameTest extends TestCase {
             }
         });
         Rectangle bounds = frame.getCanvas().getBounds();
-        assertTrue("Canvas width should be inset by frame decoration size", bounds.getWidth() < TEST_WIDTH);
-        assertTrue("Canvas height should be inset by frame decoration size", bounds.getHeight() < TEST_HEIGHT);
+        assertEquals("Canvas width should match width of content pane", frame.getContentPane().getWidth(), bounds.width);
+        assertEquals("Canvas height should match height of content pane", frame.getContentPane().getHeight(), bounds.height);
     }
 }
