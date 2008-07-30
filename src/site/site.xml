@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ASCII"?>
+<project name="Maven">
+  <!-- skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-default-skin</artifactId>
+  </skin -->
+  <bannerLeft>
+    <name>Piccol2D</name>
+    <src>http://piccolo2d.googlecode.com/svn/site/images/Piccolo2D-Logo.png</src>
+    <href>http://piccolo2d.googlecode.com/svn/site/piccolo2d.java/release-1.3-SNAPSHOT/piccolo2d/index.html</href>
+  </bannerLeft>
+  <bannerRight />
+  <body>
+    <menu name="Piccolo2D">
+      <!-- %2e because http://jira.codehaus.org/browse/MSITE-159 -->
+      <item name="Google Code Home" href="http://code.google.com/p/piccolo2d/"/>
+    </menu>
+	<!--
+     ${modules} or <menu ref="modules" /> doesn't work:
+     http://jira.codehaus.org/browse/MSITE-236
+	-->
+    <menu name="Modules">
+      <item name="Core" href="../piccolo2d-core/index.html"/>
+      <item name="Extras" href="../piccolo2d-extras/index.html"/>
+      <item name="Examples" href="../piccolo2d-examples/index.html"/>
+    </menu>
+    <menu ref="reports" />
+  </body>
+</project>
