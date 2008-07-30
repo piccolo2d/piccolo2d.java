@@ -29,6 +29,7 @@
  */
 package edu.umd.cs.piccolox.util;
 
+import java.awt.BasicStroke;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
@@ -49,7 +50,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
 /**
- * <b>PFixedWidthStroke</b> is the same as java.awt.BasicStroke except that PFixedWidthStroke
+ * <b>PFixedWidthStroke</b> is the same as {@link java.awt.BasicStroke} except that PFixedWidthStroke
  * has a fixed width on the screen so that even when the canvas view is zooming its
  * width stays the same in canvas coordinates. Note that this stroke draws in the inside of 
  * the stroked shape, instead of the normal draw on center behavior.
@@ -63,12 +64,12 @@ public class PFixedWidthStroke implements Stroke, Serializable {
 	private static PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
 	private static GeneralPath TEMP_PATH = new GeneralPath(GeneralPath.WIND_NON_ZERO);
 	
-	public final static int JOIN_MITER = 0;
-	public final static int JOIN_ROUND = 1;
-	public final static int JOIN_BEVEL = 2;
-	public final static int CAP_BUTT = 0;
-	public final static int CAP_ROUND = 1;
-	public final static int CAP_SQUARE = 2;
+	final static int JOIN_MITER = BasicStroke.JOIN_MITER;
+	final static int JOIN_ROUND = BasicStroke.JOIN_ROUND;
+	final static int JOIN_BEVEL = BasicStroke.JOIN_BEVEL;
+	final static int CAP_BUTT = BasicStroke.CAP_BUTT;
+	final static int CAP_ROUND = BasicStroke.CAP_ROUND;
+	final static int CAP_SQUARE = BasicStroke.CAP_SQUARE;
 
 	private float width;
 	private int join;
@@ -77,15 +78,15 @@ public class PFixedWidthStroke implements Stroke, Serializable {
 	private float dash[];
 	private float dash_phase;
 
-	public static final int RasterizerCaps[] = {
+	private static final int RasterizerCaps[] = {
 		Rasterizer.BUTT, Rasterizer.ROUND, Rasterizer.SQUARE
 	};
 
-	public static final int RasterizerCorners[] = {
+	private static final int RasterizerCorners[] = {
 		Rasterizer.MITER, Rasterizer.ROUND, Rasterizer.BEVEL
 	};
 
-	public class FillAdapter implements PathConsumer {
+	private class FillAdapter implements PathConsumer {
 		boolean closed;
 		GeneralPath path;
 
@@ -365,7 +366,7 @@ public class PFixedWidthStroke implements Stroke, Serializable {
 		return true;
 	}
 	
-	public float[] getDashArray() {
+	private float[] getDashArray() {
 		if (dash == null) {
 			return null;
 		}
@@ -373,23 +374,23 @@ public class PFixedWidthStroke implements Stroke, Serializable {
 		return (float[]) dash.clone();
 	}
 	
-	public float getDashPhase() {
+	private float getDashPhase() {
 		return dash_phase;
 	}
 	
-	public int getEndCap() {
+	private int getEndCap() {
 		return cap;
 	}
 	
-	public int getLineJoin() {
+	private int getLineJoin() {
 		return join;
 	}
 	
-	public float getLineWidth() {
+	private float getLineWidth() {
 		return width;
 	}
 	
-	public float getMiterLimit() {
+	private float getMiterLimit() {
 		return miterlimit;
 	}
 	
