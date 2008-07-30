@@ -1,8 +1,9 @@
-import edu.umd.cs.piccolox.PFrame;
-import junit.framework.TestCase;
-
-import java.awt.*;
+package edu.umd.cs.piccolox;
+import java.awt.EventQueue;
+import java.awt.Rectangle;
 import java.lang.reflect.InvocationTargetException;
+
+import junit.framework.TestCase;
 
 public class PFrameTest extends TestCase {
     private static final int TEST_WIDTH = 500;

@@ -1,19 +1,18 @@
+package edu.umd.cs.piccolo;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
-
-import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDimension;
 
-public class NodeTest extends TestCase {
+public class PNodeTest extends TestCase {
 
-	public NodeTest(String name) {
+	public PNodeTest(String name) {
 		super(name);
 	}
 	

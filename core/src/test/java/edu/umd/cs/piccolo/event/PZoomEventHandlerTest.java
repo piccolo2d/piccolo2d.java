@@ -1,10 +1,11 @@
+package edu.umd.cs.piccolo.event;
 import edu.umd.cs.piccolo.event.PZoomEventHandler;
 
 import junit.framework.TestCase;
 
-public class ZoomEventHandlerTest extends TestCase {
+public class PZoomEventHandlerTest extends TestCase {
 
-	public ZoomEventHandlerTest(String name) {
+	public PZoomEventHandlerTest(String name) {
 		super(name);
 	}
 	

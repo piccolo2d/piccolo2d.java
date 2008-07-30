@@ -1,3 +1,4 @@
+package edu.umd.cs.piccolo.util;
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
@@ -6,9 +7,9 @@ import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PPickPath;
 import junit.framework.TestCase;
 
-public class PickTest extends TestCase {
+public class PPickPathTest extends TestCase {
 
-	public PickTest(String name) {
+	public PPickPathTest(String name) {
 		super(name);
 	}
 

@@ -1,3 +1,4 @@
+package edu.umd.cs.piccolo;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
@@ -11,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import junit.framework.TestCase;
-
-import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;

@@ -1,3 +1,4 @@
+package edu.umd.cs.piccolo.nodes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,9 +11,9 @@ import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PObjectOutputStream;
 
-public class PathNodeTest extends TestCase {
+public class PPathTest extends TestCase {
 
-	public PathNodeTest(String name) {
+	public PPathTest(String name) {
 		super(name);
 	}
 	

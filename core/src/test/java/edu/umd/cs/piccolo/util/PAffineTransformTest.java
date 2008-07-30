@@ -1,11 +1,12 @@
+package edu.umd.cs.piccolo.util;
 import junit.framework.TestCase;
 
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 
-public class AffineTransformTest extends TestCase {
+public class PAffineTransformTest extends TestCase {
 	
-	public AffineTransformTest(String aName) {
+	public PAffineTransformTest(String aName) {
 		super(aName);
 	}
 	

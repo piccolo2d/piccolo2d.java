@@ -1,9 +1,7 @@
+package edu.umd.cs.piccolo;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
-
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.nodes.PText;
 

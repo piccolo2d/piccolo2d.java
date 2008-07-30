@@ -1,12 +1,9 @@
+package edu.umd.cs.piccolo;
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-
-public class CameraNodeTest extends TestCase {
+public class PCameraTest extends TestCase {
 	
-	public CameraNodeTest(String name) {
+	public PCameraTest(String name) {
 		super(name);
 	}
 	

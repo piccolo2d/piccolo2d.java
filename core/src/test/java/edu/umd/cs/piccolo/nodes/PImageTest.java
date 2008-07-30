@@ -1,3 +1,4 @@
+package edu.umd.cs.piccolo.nodes;
 import java.awt.image.BufferedImage;
 
 import junit.framework.TestCase;
@@ -5,9 +6,9 @@ import junit.framework.TestCase;
 import edu.umd.cs.piccolo.nodes.PImage;
 import edu.umd.cs.piccolo.util.PBounds;
 
-public class ImageNodeTest extends TestCase {
+public class PImageTest extends TestCase {
 
-	public ImageNodeTest(String name) {
+	public PImageTest(String name) {
 		super(name);
 	}
 	

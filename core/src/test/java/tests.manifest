@@ -1,3 +1,0 @@
-Main-Class: RunAllUnitTests
-Class-Path: piccolo.jar lib/junit.jar
-Created-By: Jesse Grosjean

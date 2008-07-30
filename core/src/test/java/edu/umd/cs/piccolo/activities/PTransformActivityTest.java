@@ -1,10 +1,11 @@
+package edu.umd.cs.piccolo.activities;
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 
 import junit.framework.TestCase;
 
-public class TransformActivityTest extends TestCase {
+public class PTransformActivityTest extends TestCase {
 
-	public TransformActivityTest(String name) {
+	public PTransformActivityTest(String name) {
 		super(name);
 	}
 	

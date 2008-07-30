@@ -1,16 +1,14 @@
-import edu.umd.cs.piccolox.event.PNotification;
-import edu.umd.cs.piccolox.event.PNotificationCenter;
-
+package edu.umd.cs.piccolox.event;
 import junit.framework.TestCase;
 
-public class NotificationCenterTest extends TestCase {
+public class PNotificationCenterTest extends TestCase {
 
 	boolean changed1;
 	boolean changed2;
 	boolean changed3;
 	boolean changed4;
 
-	public NotificationCenterTest(String name) {
+	public PNotificationCenterTest(String name) {
 		super(name);
 	}
 

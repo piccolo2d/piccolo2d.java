@@ -1,10 +1,11 @@
+package edu.umd.cs.piccolo.nodes;
 import junit.framework.TestCase;
 
 import edu.umd.cs.piccolo.nodes.PText;
 
-public class TextNodeTest extends TestCase {
+public class PTextTest extends TestCase {
 
-	public TextNodeTest(String name) {
+	public PTextTest(String name) {
 		super(name);
 	}
 	
