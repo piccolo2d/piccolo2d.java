@@ -9,6 +9,7 @@ public class TransformActivityTest extends TestCase {
 	}
 	
 	public void testToString() {
-		System.out.println(new PTransformActivity(1000, 0, null).toString());
+		PTransformActivity transformActivity = new PTransformActivity(1000, 0, null);
+		assertNotNull(transformActivity.toString());
 	}
 }

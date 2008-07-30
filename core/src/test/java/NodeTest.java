@@ -197,7 +197,7 @@ public class NodeTest extends TestCase {
 		d.addChild(e);
 		e.addChild(f);
 		
-		System.out.println(a.toString());
+		assertNotNull(a.toString());
 	}
 	
 	public void testRecursiveLayout() {

@@ -9,6 +9,7 @@ public class ZoomEventHandlerTest extends TestCase {
 	}
 	
 	public void testToString() {
-		System.out.println(new PZoomEventHandler().toString());
+		PZoomEventHandler zoomEventHandler = new PZoomEventHandler();
+		assertNotNull(zoomEventHandler.toString());
 	}
 }

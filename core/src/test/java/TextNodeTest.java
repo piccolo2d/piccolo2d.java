@@ -35,6 +35,6 @@ public class TextNodeTest extends TestCase {
 	public void testToString() {
 		PText t = new PText();
 		t.setText("hello world");
-		System.out.println(t.toString());
+		assertNotNull(t.toString());
 	}
 }
