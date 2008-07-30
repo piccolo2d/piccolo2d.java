@@ -10,7 +10,6 @@
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>piccolo2d-examples</artifactId>
-	<version>1.3-SNAPSHOT</version>
 	<name>Piccolo2D Examples</name>
 	<url>http://code.google.com/p/piccolo2d/</url>
 	<description>
@@ -22,13 +21,7 @@
 		<dependency>
 			<groupId>org.piccolo2d</groupId>
 			<artifactId>piccolo2d-extras</artifactId>
-			<version>1.3-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
-			<scope>test</scope>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -37,12 +30,12 @@
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
-					<source>1.2</source>
+					<source>1.4</source>
 					<verbose>false</verbose>
 					<show>package</show>
 					<links>
 						<link>
-							http://java.sun.com/j2se/1.3/docs/api/
+							http://java.sun.com/j2se/1.4.2/docs/api/
 						</link>
 					</links>
 				</configuration>

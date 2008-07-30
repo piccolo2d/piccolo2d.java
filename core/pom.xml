@@ -10,7 +10,6 @@
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>piccolo2d-core</artifactId>
-	<version>1.3-SNAPSHOT</version>
 	<name>Piccolo2D Core</name>
 	<url>http://code.google.com/p/piccolo2d/</url>
 	<description>
@@ -18,23 +17,15 @@
 		applications in Java and C#, with striking visual effects such
 		as zooming, animation and multiple representations.
 	</description>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 	<!-- reporting>
 		<plugins>
-			<plugin>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>${basedir}/src/build/conf/checkstyle.xml</configLocation>
-					<enableRulesSummary>false</enableRulesSummary>
-				</configuration>
-			</plugin>
+		<plugin>
+		<artifactId>maven-checkstyle-plugin</artifactId>
+		<configuration>
+		<configLocation>${basedir}/src/build/conf/checkstyle.xml</configLocation>
+		<enableRulesSummary>false</enableRulesSummary>
+		</configuration>
+		</plugin>
 		</plugins>
-	</reporting -->
+		</reporting -->
 </project>
