@@ -17,15 +17,15 @@
 		applications in Java and C#, with striking visual effects such
 		as zooming, animation and multiple representations.
 	</description>
-	<!-- reporting>
-		<plugins>
-		<plugin>
-		<artifactId>maven-checkstyle-plugin</artifactId>
-		<configuration>
-		<configLocation>${basedir}/src/build/conf/checkstyle.xml</configLocation>
-		<enableRulesSummary>false</enableRulesSummary>
-		</configuration>
-		</plugin>
-		</plugins>
-		</reporting -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>${basedir}/src/build/conf/checkstyle.xml</configLocation>
+          <enableRulesSummary>false</enableRulesSummary>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
