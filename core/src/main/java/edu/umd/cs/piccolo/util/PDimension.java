@@ -34,60 +34,61 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 
 /**
- * <b>PDimension</b> this class should be removed once a concrete Dimension2D 
- * that supports doubles is added to java. 
+ * <b>PDimension</b> this class should be removed once a concrete Dimension2D
+ * that supports doubles is added to java.
  * <P>
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PDimension extends Dimension2D implements Serializable {
 
-	public double width;
-	public double height;
+    public double width;
+    public double height;
 
-	public PDimension() {
-		super();
-	}
+    public PDimension() {
+        super();
+    }
 
-	public PDimension(Dimension2D aDimension) {
-		this(aDimension.getWidth(), aDimension.getHeight());
-	}
-	
-	public PDimension(double aWidth, double aHeight) {
-		super();
-		width = aWidth;
-		height = aHeight;
-	}
+    public PDimension(Dimension2D aDimension) {
+        this(aDimension.getWidth(), aDimension.getHeight());
+    }
 
-	public PDimension(Point2D p1, Point2D p2) {
-		width = p2.getX() - p1.getX();
-		height = p2.getY() - p1.getY();
-	}
+    public PDimension(double aWidth, double aHeight) {
+        super();
+        width = aWidth;
+        height = aHeight;
+    }
 
-	public double getHeight() {
-		return height;
-	}
+    public PDimension(Point2D p1, Point2D p2) {
+        width = p2.getX() - p1.getX();
+        height = p2.getY() - p1.getY();
+    }
 
-	public double getWidth() {
-		return width;
-	}
+    public double getHeight() {
+        return height;
+    }
 
-	public void setSize(double aWidth, double aHeight) {
-		width = aWidth;
-		height = aHeight;
-	}
-	
-	public String toString() {
-		StringBuffer result = new StringBuffer();
+    public double getWidth() {
+        return width;
+    }
 
-		result.append(super.toString().replaceAll(".*\\.", ""));
-		result.append('[');
-		result.append("width=");
-		result.append(width);
-		result.append(",height=");
-		result.append(height);
-		result.append(']');
+    public void setSize(double aWidth, double aHeight) {
+        width = aWidth;
+        height = aHeight;
+    }
 
-		return result.toString();
-	}	
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+
+        result.append(super.toString().replaceAll(".*\\.", ""));
+        result.append('[');
+        result.append("width=");
+        result.append(width);
+        result.append(",height=");
+        result.append(height);
+        result.append(']');
+
+        return result.toString();
+    }
 }

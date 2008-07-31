@@ -41,133 +41,136 @@ import edu.umd.cs.piccolo.util.PUtil;
 
 /**
  * <b>PActivityScheduler</b> is responsible for maintaining a list of
- * activities. It is given a chance to process these activities from 
- * the PRoot's processInputs() method. Most users will not need to use
- * the PActivityScheduler directly, instead you should look at:
+ * activities. It is given a chance to process these activities from the PRoot's
+ * processInputs() method. Most users will not need to use the
+ * PActivityScheduler directly, instead you should look at:
  * <ul>
- * <li>PNode.addActivity - to schedule a new activity 		
- * <li>PActivity.terminate - to terminate a running activity 		
+ * <li>PNode.addActivity - to schedule a new activity
+ * <li>PActivity.terminate - to terminate a running activity
  * <li>PRoot.processInputs - already calls processActivities for you.
  * </ul>
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PActivityScheduler {
-		
-	private PRoot root;
-	private List activities;
-	private Timer activityTimer;
-	private boolean activitiesChanged;
-	private boolean animating;	
-	private ArrayList processingActivities;
 
-	public PActivityScheduler(PRoot rootNode) {
-		root = rootNode;
-		activities = new ArrayList();
-		processingActivities = new ArrayList();
-	}
-		
-	public PRoot getRoot() {
-		return root;
-	}
-	
-	public void addActivity(PActivity activity) {
-		addActivity(activity, false);
-	}
+    private PRoot root;
+    private List activities;
+    private Timer activityTimer;
+    private boolean activitiesChanged;
+    private boolean animating;
+    private ArrayList processingActivities;
 
-	/**
-	 * Add this activity to the scheduler. Sometimes it's useful to make sure
-	 * that an activity is run after all other activities have been run. To do
-	 * this set processLast to true when adding the activity.
-	 */
-	public void addActivity(PActivity activity, boolean processLast) {
-		if (activities.contains(activity)) return;
+    public PActivityScheduler(PRoot rootNode) {
+        root = rootNode;
+        activities = new ArrayList();
+        processingActivities = new ArrayList();
+    }
 
-		activitiesChanged = true;
-		
-		if (processLast) {
-			activities.add(0, activity);
-		} else {
-			activities.add(activity);
-		}
+    public PRoot getRoot() {
+        return root;
+    }
 
-		activity.setActivityScheduler(this);
+    public void addActivity(PActivity activity) {
+        addActivity(activity, false);
+    }
 
-		if (!getActivityTimer().isRunning()) {
-			startActivityTimer();
-		}		
-	}
-		
-	public void removeActivity(PActivity activity) {
-		if (!activities.contains(activity)) return;
+    /**
+     * Add this activity to the scheduler. Sometimes it's useful to make sure
+     * that an activity is run after all other activities have been run. To do
+     * this set processLast to true when adding the activity.
+     */
+    public void addActivity(PActivity activity, boolean processLast) {
+        if (activities.contains(activity))
+            return;
 
-		activitiesChanged = true;
-		activities.remove(activity);
+        activitiesChanged = true;
 
-		if (activities.size() == 0) {
-			stopActivityTimer();
-		}					
-	}
+        if (processLast) {
+            activities.add(0, activity);
+        }
+        else {
+            activities.add(activity);
+        }
 
-	public void removeAllActivities() {		
-		activitiesChanged = true;	
-		activities.clear();
-		stopActivityTimer();
-	}
+        activity.setActivityScheduler(this);
 
-	public List getActivitiesReference() {
-		return activities;
-	}
-	
-	/**
-	 * Process all scheduled activities for the given time. Each activity
-	 * is given one "step", equivalent to one frame of animation.
-	 */	
-	public void processActivities(long currentTime) {
-		int size = activities.size();		
-		if (size > 0) {
-			processingActivities.clear();
-			processingActivities.addAll(activities);
-			for (int i = size - 1; i >= 0; i--) {
-				PActivity each = (PActivity) processingActivities.get(i);
-				each.processStep(currentTime);
-			}
-		}		
-	}
-		
-	/**
-	 * Return true if any of the scheduled activities return true to
-	 * the message isAnimation();
-	 */
-	public boolean getAnimating() {
-		if (activitiesChanged) {
-			animating = false;
-			for(int i=0; i<activities.size(); i++) {
-				PActivity each = (PActivity) activities.get(i);
-				animating |= each.isAnimation();
-			}	
-			activitiesChanged = false;
-		}
-		return animating;
-	}
-			
-	protected void startActivityTimer() {
-		getActivityTimer().start();
-	}
-	
-	protected void stopActivityTimer() {
-		getActivityTimer().stop();
-	}
-		
-	protected Timer getActivityTimer() {
-		if (activityTimer == null) {
-			activityTimer = root.createTimer(PUtil.ACTIVITY_SCHEDULER_FRAME_DELAY, new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					root.processInputs();
-				}
-			});
-		}
-		return activityTimer;
-	}
+        if (!getActivityTimer().isRunning()) {
+            startActivityTimer();
+        }
+    }
+
+    public void removeActivity(PActivity activity) {
+        if (!activities.contains(activity))
+            return;
+
+        activitiesChanged = true;
+        activities.remove(activity);
+
+        if (activities.size() == 0) {
+            stopActivityTimer();
+        }
+    }
+
+    public void removeAllActivities() {
+        activitiesChanged = true;
+        activities.clear();
+        stopActivityTimer();
+    }
+
+    public List getActivitiesReference() {
+        return activities;
+    }
+
+    /**
+     * Process all scheduled activities for the given time. Each activity is
+     * given one "step", equivalent to one frame of animation.
+     */
+    public void processActivities(long currentTime) {
+        int size = activities.size();
+        if (size > 0) {
+            processingActivities.clear();
+            processingActivities.addAll(activities);
+            for (int i = size - 1; i >= 0; i--) {
+                PActivity each = (PActivity) processingActivities.get(i);
+                each.processStep(currentTime);
+            }
+        }
+    }
+
+    /**
+     * Return true if any of the scheduled activities return true to the message
+     * isAnimation();
+     */
+    public boolean getAnimating() {
+        if (activitiesChanged) {
+            animating = false;
+            for (int i = 0; i < activities.size(); i++) {
+                PActivity each = (PActivity) activities.get(i);
+                animating |= each.isAnimation();
+            }
+            activitiesChanged = false;
+        }
+        return animating;
+    }
+
+    protected void startActivityTimer() {
+        getActivityTimer().start();
+    }
+
+    protected void stopActivityTimer() {
+        getActivityTimer().stop();
+    }
+
+    protected Timer getActivityTimer() {
+        if (activityTimer == null) {
+            activityTimer = root.createTimer(PUtil.ACTIVITY_SCHEDULER_FRAME_DELAY, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    root.processInputs();
+                }
+            });
+        }
+        return activityTimer;
+    }
 }
-
