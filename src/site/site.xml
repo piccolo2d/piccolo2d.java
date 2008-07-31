@@ -7,13 +7,14 @@
   <bannerLeft>
     <name>Piccol2D</name>
     <src>http://piccolo2d.googlecode.com/svn/site/images/Piccolo2D-Logo.png</src>
-    <href>http://piccolo2d.googlecode.com/svn/site/piccolo2d.java/release-1.3-SNAPSHOT/piccolo2d/index.html</href>
+    <href>../piccolo2d/index.html</href>
   </bannerLeft>
-  <bannerRight />
+  <!-- bannerRight / -->
   <body>
     <menu name="Piccolo2D">
       <!-- %2e because http://jira.codehaus.org/browse/MSITE-159 -->
       <item name="Google Code Home" href="http://code.google.com/p/piccolo2d/"/>
+      <item name="Maven Site Home" href="../piccolo2d/index.html"/>
     </menu>
 	<!--
      ${modules} or <menu ref="modules" /> doesn't work:

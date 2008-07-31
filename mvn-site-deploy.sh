@@ -27,13 +27,18 @@ svn="svn"
 # create a fresh site
 #mvn clean install site
 
-echo "Checkout $base/release-$version"
 $svn mkdir $msg $base/release-$version 2> /dev/null
-# todo: checkout only if not there yet.
-#rm -rf $tmp
-#$svn checkout $base/release-$version $tmp
-$svn revert --recursive $tmp
-$svn update $tmp
+ls -Al target
+# checkout only if not there yet.
+if [ -d $tmp ]; then
+	echo "Revert and update $tmp"
+	$svn revert --recursive $tmp
+	$svn update $tmp
+else
+	echo "Checkout $base/release-$version"
+	echo "... go, get some tea..."	
+	$svn checkout $base/release-$version $tmp > /dev/null
+fi
 
 echo "Copy generated site to $tmp"
 cp -r target/site/* $tmp/piccolo2d
@@ -53,9 +58,6 @@ find . -name "*.xml" | xargs $svn propset svn:mime-type text/xml
 find . -name "*.css" | xargs $svn propset svn:mime-type text/css
 find . -name "*.gif" | xargs $svn propset svn:mime-type image/gif
 find . -name "*.png" | xargs $svn propset svn:mime-type image/png
-#$svn $msg commit .
-#$svn update
-#$svn status
 
 # go back where we came from
 cd $cwd

@@ -159,7 +159,7 @@
 						-inferrel -inferdep -quiet -hide java.*
 						-collpackages java.util.* -qualify
 						-postfixpackage -nodefontsize 9
-						-nodefontpackagesize 7 -visibility -operations
+						-nodefontpackagesize 7 -visibility
 						-link http://java.sun.com/j2se/1.4.2/docs/api/
 					</additionalparam>
 				</configuration>

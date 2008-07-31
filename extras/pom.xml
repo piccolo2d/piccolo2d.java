@@ -10,7 +10,6 @@
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>piccolo2d-extras</artifactId>
-	<version>1.3-SNAPSHOT</version>
 	<name>Piccolo2D Extras</name>
 	<url>http://code.google.com/p/piccolo2d/</url>
 	<description>
