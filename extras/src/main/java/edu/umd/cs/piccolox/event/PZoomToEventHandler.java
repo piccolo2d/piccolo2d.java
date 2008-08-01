@@ -41,31 +41,32 @@ import edu.umd.cs.piccolo.util.PBounds;
 /**
  * <b>PZoomToEventHandler</b> is used to zoom the camera view to the node
  * clicked on with button one.
- * <P>
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PZoomToEventHandler extends PBasicInputEventHandler {
 
-	public PZoomToEventHandler() {
-		setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
-	}
+    public PZoomToEventHandler() {
+        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+    }
 
-	public void mousePressed(PInputEvent aEvent) {
-		zoomTo(aEvent); 	
-	}
+    public void mousePressed(PInputEvent aEvent) {
+        zoomTo(aEvent);
+    }
 
-	protected void zoomTo(final PInputEvent aEvent) {
-		PBounds zoomToBounds;
-		PNode picked = aEvent.getPickedNode();
-		
-		if (picked instanceof PCamera) {
-			PCamera c = (PCamera) picked;
-			zoomToBounds = c.getUnionOfLayerFullBounds();
-		} else {
-			zoomToBounds = picked.getGlobalFullBounds();
-		}
-		
-		aEvent.getCamera().animateViewToCenterBounds(zoomToBounds, true, 500);
-	}	
+    protected void zoomTo(final PInputEvent aEvent) {
+        PBounds zoomToBounds;
+        PNode picked = aEvent.getPickedNode();
+
+        if (picked instanceof PCamera) {
+            PCamera c = (PCamera) picked;
+            zoomToBounds = c.getUnionOfLayerFullBounds();
+        }
+        else {
+            zoomToBounds = picked.getGlobalFullBounds();
+        }
+
+        aEvent.getCamera().animateViewToCenterBounds(zoomToBounds, true, 500);
+    }
 }

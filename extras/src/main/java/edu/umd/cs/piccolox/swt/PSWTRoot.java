@@ -21,36 +21,37 @@ import edu.umd.cs.piccolo.PRoot;
  * thread. With the current setup only a single PSWTCanvas is expected to be
  * connected to a root.
  * <P>
+ * 
  * @version 1.1
  * @author Jesse Grosjean
  */
 public class PSWTRoot extends PRoot {
 
-	private Composite composite;
-	
-	public PSWTRoot(Composite composite) {
-		this.composite = composite;
-	}
+    private Composite composite;
 
-	public Timer createTimer(int delay, ActionListener listener) {
-		return new SWTTimer(composite.getDisplay(),delay,listener);
-	}
+    public PSWTRoot(Composite composite) {
+        this.composite = composite;
+    }
 
-	public void scheduleProcessInputsIfNeeded() {
-		if (!Thread.currentThread().equals(composite.getDisplay().getThread())) {
-			return;
-		}
+    public Timer createTimer(int delay, ActionListener listener) {
+        return new SWTTimer(composite.getDisplay(), delay, listener);
+    }
 
-		if (!processInputsScheduled && !processingInputs &&
-			(getFullBoundsInvalid() || getChildBoundsInvalid() || getPaintInvalid() || getChildPaintInvalid())) {
+    public void scheduleProcessInputsIfNeeded() {
+        if (!Thread.currentThread().equals(composite.getDisplay().getThread())) {
+            return;
+        }
 
-			processInputsScheduled = true;
-			composite.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					processInputs();
-					processInputsScheduled = false;
-				}
-			});
-		}
-	}
+        if (!processInputsScheduled && !processingInputs
+                && (getFullBoundsInvalid() || getChildBoundsInvalid() || getPaintInvalid() || getChildPaintInvalid())) {
+
+            processInputsScheduled = true;
+            composite.getDisplay().asyncExec(new Runnable() {
+                public void run() {
+                    processInputs();
+                    processInputsScheduled = false;
+                }
+            });
+        }
+    }
 }

@@ -40,124 +40,129 @@ import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
- * <b>PImage</b> is a wrapper around a java.awt.Image. If this node is
- * copied or serialized that image will be converted into a BufferedImage if
- * it is not already one.
+ * <b>PImage</b> is a wrapper around a java.awt.Image. If this node is copied or
+ * serialized that image will be converted into a BufferedImage if it is not
+ * already one.
  * <P>
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PSWTImage extends PNode {
-	
-	private transient PSWTCanvas canvas;
 
-	private transient Image image;
+    private transient PSWTCanvas canvas;
 
-	public PSWTImage(PSWTCanvas canvas) {
-		super();
-		
-		this.canvas = canvas;
-		canvas.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent de) {
-				if (image != null) {
-					image.dispose();
-				}	
-			}
-		});
-	}
-	
-	public PSWTImage(PSWTCanvas canvas, Image newImage) {
-		this(canvas);
-		setImage(newImage);
-	}
+    private transient Image image;
 
-	public PSWTImage(PSWTCanvas canvas, String fileName) {
-		this(canvas);
-		setImage(fileName);	
-	}
-	
-	/**
-	 * Returns the image that is shown by this node.
-	 * @return the image that is shown by this node
-	 */ 
-	public Image getImage() {
-		return image;
-	}
+    public PSWTImage(PSWTCanvas canvas) {
+        super();
 
-	/**
-	 * Set the image that is wrapped by this PImage node. This method will also load
-	 * the image using a MediaTracker before returning. And if the this PImage is
-	 * accelerated that I'm will be copied into an accelerated image if needed. Note
-	 * that this may cause undesired results with images that have transparent regions,
-	 * for those cases you may want to set the PImage to be not accelerated.
-	 */
-	public void setImage(String fileName) {
-		setImage(new Image(canvas.getDisplay(),fileName));
-	}
+        this.canvas = canvas;
+        canvas.addDisposeListener(new DisposeListener() {
+            public void widgetDisposed(DisposeEvent de) {
+                if (image != null) {
+                    image.dispose();
+                }
+            }
+        });
+    }
 
-	/**
-	 * Set the image that is wrapped by this PImage node. This method will also load
-	 * the image using a MediaTracker before returning. And if the this PImage is
-	 * accelerated that I'm will be copied into an accelerated image if needed. Note
-	 * that this may cause undesired results with images that have transparent regions,
-	 * for those cases you may want to set the PImage to be not accelerated.
-	 */
-	public void setImage(Image newImage) {
-		Image old = image;
-		image = newImage;
-				
-		if (image != null) {								
-			Rectangle bounds = getImage().getBounds();
-			setBounds(0, 0, bounds.width, bounds.height);
-			invalidatePaint();
-		} else {
-			image = null;
-		}
-		
-		firePropertyChange(PImage.PROPERTY_CODE_IMAGE, PImage.PROPERTY_IMAGE, old, image);
-	}
+    public PSWTImage(PSWTCanvas canvas, Image newImage) {
+        this(canvas);
+        setImage(newImage);
+    }
 
-	protected void paint(PPaintContext paintContext) {
-		if (getImage() != null) {
-			Rectangle r = image.getBounds();
-			double iw = r.width;
-			double ih = r.height;
-			PBounds b = getBoundsReference();
-			SWTGraphics2D g2 = (SWTGraphics2D)paintContext.getGraphics();
+    public PSWTImage(PSWTCanvas canvas, String fileName) {
+        this(canvas);
+        setImage(fileName);
+    }
 
-			if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
-				g2.translate(b.x, b.y);
-				g2.scale(b.width / iw, b.height / ih);
-				g2.drawImage(image, 0, 0);
-				g2.scale(iw / b.width, ih / b.height);
-				g2.translate(-b.x, -b.y);
-			} else {
-				g2.drawImage(image, 0, 0);
-			}
-		}
-	}
-		
-	
-	//****************************************************************
-	// Debugging - methods for debugging
-	//****************************************************************
+    /**
+     * Returns the image that is shown by this node.
+     * 
+     * @return the image that is shown by this node
+     */
+    public Image getImage() {
+        return image;
+    }
 
-	/**
-	 * Returns a string representing the state of this node. This method is
-	 * intended to be used only for debugging purposes, and the content and
-	 * format of the returned string may vary between implementations. The
-	 * returned string may be empty but may not be <code>null</code>.
-	 *
-	 * @return  a string representation of this node's state
-	 */
-	protected String paramString() {
-		StringBuffer result = new StringBuffer();
+    /**
+     * Set the image that is wrapped by this PImage node. This method will also
+     * load the image using a MediaTracker before returning. And if the this
+     * PImage is accelerated that I'm will be copied into an accelerated image
+     * if needed. Note that this may cause undesired results with images that
+     * have transparent regions, for those cases you may want to set the PImage
+     * to be not accelerated.
+     */
+    public void setImage(String fileName) {
+        setImage(new Image(canvas.getDisplay(), fileName));
+    }
 
-		result.append("image=" + (image == null ? "null" : image.toString()));
-		
-		result.append(',');
-		result.append(super.paramString());
+    /**
+     * Set the image that is wrapped by this PImage node. This method will also
+     * load the image using a MediaTracker before returning. And if the this
+     * PImage is accelerated that I'm will be copied into an accelerated image
+     * if needed. Note that this may cause undesired results with images that
+     * have transparent regions, for those cases you may want to set the PImage
+     * to be not accelerated.
+     */
+    public void setImage(Image newImage) {
+        Image old = image;
+        image = newImage;
 
-		return result.toString();
-	}
+        if (image != null) {
+            Rectangle bounds = getImage().getBounds();
+            setBounds(0, 0, bounds.width, bounds.height);
+            invalidatePaint();
+        }
+        else {
+            image = null;
+        }
+
+        firePropertyChange(PImage.PROPERTY_CODE_IMAGE, PImage.PROPERTY_IMAGE, old, image);
+    }
+
+    protected void paint(PPaintContext paintContext) {
+        if (getImage() != null) {
+            Rectangle r = image.getBounds();
+            double iw = r.width;
+            double ih = r.height;
+            PBounds b = getBoundsReference();
+            SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
+
+            if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
+                g2.translate(b.x, b.y);
+                g2.scale(b.width / iw, b.height / ih);
+                g2.drawImage(image, 0, 0);
+                g2.scale(iw / b.width, ih / b.height);
+                g2.translate(-b.x, -b.y);
+            }
+            else {
+                g2.drawImage(image, 0, 0);
+            }
+        }
+    }
+
+    // ****************************************************************
+    // Debugging - methods for debugging
+    // ****************************************************************
+
+    /**
+     * Returns a string representing the state of this node. This method is
+     * intended to be used only for debugging purposes, and the content and
+     * format of the returned string may vary between implementations. The
+     * returned string may be empty but may not be <code>null</code>.
+     * 
+     * @return a string representation of this node's state
+     */
+    protected String paramString() {
+        StringBuffer result = new StringBuffer();
+
+        result.append("image=" + (image == null ? "null" : image.toString()));
+
+        result.append(',');
+        result.append(super.paramString());
+
+        return result.toString();
+    }
 }

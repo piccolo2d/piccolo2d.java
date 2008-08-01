@@ -50,361 +50,363 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
 /**
- * <b>PFixedWidthStroke</b> is the same as {@link java.awt.BasicStroke} except that PFixedWidthStroke
- * has a fixed width on the screen so that even when the canvas view is zooming its
- * width stays the same in canvas coordinates. Note that this stroke draws in the inside of 
- * the stroked shape, instead of the normal draw on center behavior.
+ * <b>PFixedWidthStroke</b> is the same as {@link java.awt.BasicStroke} except
+ * that PFixedWidthStroke has a fixed width on the screen so that even when the
+ * canvas view is zooming its width stays the same in canvas coordinates. Note
+ * that this stroke draws in the inside of the stroked shape, instead of the
+ * normal draw on center behavior.
  * <P>
+ * 
  * @see edu.umd.cs.piccolo.nodes.PPath
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PFixedWidthStroke implements Stroke, Serializable {
-	
-	private static PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
-	private static GeneralPath TEMP_PATH = new GeneralPath(GeneralPath.WIND_NON_ZERO);
-	
-	final static int JOIN_MITER = BasicStroke.JOIN_MITER;
-	final static int JOIN_ROUND = BasicStroke.JOIN_ROUND;
-	final static int JOIN_BEVEL = BasicStroke.JOIN_BEVEL;
-	final static int CAP_BUTT = BasicStroke.CAP_BUTT;
-	final static int CAP_ROUND = BasicStroke.CAP_ROUND;
-	final static int CAP_SQUARE = BasicStroke.CAP_SQUARE;
 
-	private float width;
-	private int join;
-	private int cap;
-	private float miterlimit;
-	private float dash[];
-	private float dash_phase;
+    private static PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
+    private static GeneralPath TEMP_PATH = new GeneralPath(GeneralPath.WIND_NON_ZERO);
 
-	private static final int RasterizerCaps[] = {
-		Rasterizer.BUTT, Rasterizer.ROUND, Rasterizer.SQUARE
-	};
+    final static int JOIN_MITER = BasicStroke.JOIN_MITER;
+    final static int JOIN_ROUND = BasicStroke.JOIN_ROUND;
+    final static int JOIN_BEVEL = BasicStroke.JOIN_BEVEL;
+    final static int CAP_BUTT = BasicStroke.CAP_BUTT;
+    final static int CAP_ROUND = BasicStroke.CAP_ROUND;
+    final static int CAP_SQUARE = BasicStroke.CAP_SQUARE;
 
-	private static final int RasterizerCorners[] = {
-		Rasterizer.MITER, Rasterizer.ROUND, Rasterizer.BEVEL
-	};
+    private float width;
+    private int join;
+    private int cap;
+    private float miterlimit;
+    private float dash[];
+    private float dash_phase;
 
-	private class FillAdapter implements PathConsumer {
-		boolean closed;
-		GeneralPath path;
+    private static final int RasterizerCaps[] = { Rasterizer.BUTT, Rasterizer.ROUND, Rasterizer.SQUARE };
 
-		public FillAdapter() {
-			path = TEMP_PATH;
-			path.reset();
-		}
+    private static final int RasterizerCorners[] = { Rasterizer.MITER, Rasterizer.ROUND, Rasterizer.BEVEL };
 
-		public Shape getShape() {
-			return path;
-		}
+    private class FillAdapter implements PathConsumer {
+        boolean closed;
+        GeneralPath path;
 
-		public void beginPath() {}
+        public FillAdapter() {
+            path = TEMP_PATH;
+            path.reset();
+        }
 
-		public void beginSubpath(float x0, float y0) {
-			if (closed) {
-				path.closePath();
-				closed = false;
-			}
-			path.moveTo(x0, y0);
-		}
+        public Shape getShape() {
+            return path;
+        }
 
-		public void appendLine(float x1, float y1) {
-			path.lineTo(x1, y1);
-		}
+        public void beginPath() {
+        }
 
-		public void appendQuadratic(float xm, float ym, float x1, float y1) {
-			path.quadTo(xm, ym, x1, y1);
-		}
+        public void beginSubpath(float x0, float y0) {
+            if (closed) {
+                path.closePath();
+                closed = false;
+            }
+            path.moveTo(x0, y0);
+        }
 
-		public void appendCubic(float xm, float ym,
-					float xn, float yn,
-					float x1, float y1) {
-			path.curveTo(xm, ym, xn, yn, x1, y1);
-		}
+        public void appendLine(float x1, float y1) {
+            path.lineTo(x1, y1);
+        }
 
-		public void closedSubpath() {
-			closed = true;
-		}
+        public void appendQuadratic(float xm, float ym, float x1, float y1) {
+            path.quadTo(xm, ym, x1, y1);
+        }
 
-		public void endPath() {
-			if (closed) {
-				path.closePath();
-				closed = false;
-			}
-		}
+        public void appendCubic(float xm, float ym, float xn, float yn, float x1, float y1) {
+            path.curveTo(xm, ym, xn, yn, x1, y1);
+        }
 
-		public void useProxy(FastPathProducer proxy)
-			throws PathException {
-			proxy.sendTo(this);
-		}
+        public void closedSubpath() {
+            closed = true;
+        }
 
-		public long getCPathConsumer() {
-			return 0;
-		}
-		
-		public void dispose() {
-		}
+        public void endPath() {
+            if (closed) {
+                path.closePath();
+                closed = false;
+            }
+        }
 
-		public PathConsumer getConsumer() {
-			return null;
-		}
-	}
-	
-	public PFixedWidthStroke() {
-		this(1.0f, CAP_SQUARE, JOIN_MITER, 10.0f, null, 0.0f);
-	}
-	
-	public PFixedWidthStroke(float width) {
-		this(width, CAP_SQUARE, JOIN_MITER, 10.0f, null, 0.0f);
-	}
-	
-	public PFixedWidthStroke(float width, int cap, int join) {
-		this(width, cap, join, 10.0f, null, 0.0f);
-	}
-	
-	public PFixedWidthStroke(float width, int cap, int join, float miterlimit) {
-		this(width, cap, join, miterlimit, null, 0.0f);
-	}
-	
-	public PFixedWidthStroke(float width, int cap, int join, float miterlimit, float dash[], float dash_phase) {
-		if (width < 0.0f) {
-			throw new IllegalArgumentException("negative width");
-		}
-		if (cap != CAP_BUTT && cap != CAP_ROUND && cap != CAP_SQUARE) {
-			throw new IllegalArgumentException("illegal end cap value");
-		}
-		if (join == JOIN_MITER) {
-			if (miterlimit < 1.0f) {
-				throw new IllegalArgumentException("miter limit < 1");
-			}
-		} else if (join != JOIN_ROUND && join != JOIN_BEVEL) {
-			throw new IllegalArgumentException("illegal line join value");
-		}
-		if (dash != null) {
-			if (dash_phase < 0.0f) {
-				throw new IllegalArgumentException("negative dash phase");
-			}
-			boolean allzero = true;
-			for (int i = 0; i < dash.length; i++) {
-				float d = dash[i];
-				if (d > 0.0) {
-					allzero = false;
-				} else if (d < 0.0) {
-					throw new IllegalArgumentException("negative dash length");
-				}
-			}
-			
-			if (allzero) {
-				throw new IllegalArgumentException("dash lengths all zero");
-			}
-		}
-		this.width	= width;
-		this.cap	= cap;
-		this.join	= join;
-		this.miterlimit = miterlimit;
-		if (dash != null) {
-			this.dash = (float []) dash.clone();
-		}
-		this.dash_phase = dash_phase;
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public Shape createStrokedShape(Shape s) {
-		FillAdapter filler = new FillAdapter();
-		PathStroker stroker = new PathStroker(filler);
-		PathConsumer consumer;
+        public void useProxy(FastPathProducer proxy) throws PathException {
+            proxy.sendTo(this);
+        }
 
-		// Fixed Width Additions, always stroke path inside shape.
-        // Also keeps dashes fixed when zooming (thanks to Shawn Castrianni - Dec 2006)
-		float fixedScale = 1.0f; 
+        public long getCPathConsumer() {
+            return 0;
+        }
 
-		if (PDebug.getProcessingOutput()) { 
-			if (PPaintContext.CURRENT_PAINT_CONTEXT != null) {
-				fixedScale = 1.0f / (float)PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
-			}
-		} else { 
-			if (PPickPath.CURRENT_PICK_PATH != null) { 
-				fixedScale = 1.0f / (float)PPickPath.CURRENT_PICK_PATH.getScale();
-			}
-		} 
-		float fixedWidth = width * fixedScale; 
+        public void dispose() {
+        }
 
-		Rectangle2D bounds = s.getBounds2D(); 
-		double scale = 1.0; 
+        public PathConsumer getConsumer() {
+            return null;
+        }
+    }
 
-		if (bounds.getWidth() > bounds.getHeight()) { 
-			if (bounds.getWidth() != 0) { 
-				scale = (bounds.getWidth()-fixedWidth)/bounds.getWidth(); 
-			} 
-		} else { 
-			if (bounds.getHeight() != 0) { 
-				scale = (bounds.getHeight()-fixedWidth)/bounds.getHeight(); 
-			} 
-		} 
+    public PFixedWidthStroke() {
+        this(1.0f, CAP_SQUARE, JOIN_MITER, 10.0f, null, 0.0f);
+    }
 
-		TEMP_TRANSFORM.setToIdentity(); 
-		TEMP_TRANSFORM.scaleAboutPoint(scale, bounds.getCenterX(), bounds.getCenterY()); 
-		stroker.setPenDiameter(fixedWidth); 
-		PathIterator pi = s.getPathIterator(TEMP_TRANSFORM); 
+    public PFixedWidthStroke(float width) {
+        this(width, CAP_SQUARE, JOIN_MITER, 10.0f, null, 0.0f);
+    }
 
-		stroker.setPenT4(null); 
-		stroker.setCaps(RasterizerCaps[cap]); 
-		stroker.setCorners(RasterizerCorners[join], miterlimit); 
-		if (dash != null) { 
-			//Fixed Width Additions 
-			float fixedDash[] = new float[dash.length]; 
-			for (int i = 0; i < dash.length; i++) {
-				fixedDash[i] = dash[i] * fixedScale;
-			}
-			float fixedDashPhase = dash_phase * fixedScale; 
-			PathDasher dasher = new PathDasher(stroker); 
-			dasher.setDash(fixedDash, fixedDashPhase); 
-			dasher.setDashT4(null); 
-			consumer = dasher; 
-		} else { 
-			consumer = stroker; 
-		}
+    public PFixedWidthStroke(float width, int cap, int join) {
+        this(width, cap, join, 10.0f, null, 0.0f);
+    }
 
-		try {
-			consumer.beginPath();
-			boolean pathClosed = false;
-			float mx = 0.0f;
-			float my = 0.0f;
-			float point[]  = new float[6];
+    public PFixedWidthStroke(float width, int cap, int join, float miterlimit) {
+        this(width, cap, join, miterlimit, null, 0.0f);
+    }
 
-			while (!pi.isDone()) {
-				int type = pi.currentSegment(point);
-				if (pathClosed == true) {
-					pathClosed = false;
-					if (type != PathIterator.SEG_MOVETO) {
-						// Force current point back to last moveto point
-						consumer.beginSubpath(mx, my);
-					}
-				}
-				switch (type) {
-					case PathIterator.SEG_MOVETO:
-						mx = point[0];
-						my = point[1];
-						consumer.beginSubpath(point[0], point[1]);
-						break;
-					case PathIterator.SEG_LINETO:
-						consumer.appendLine(point[0], point[1]);
-						break;
-					case PathIterator.SEG_QUADTO:
-						// Quadratic curves take two points
-						consumer.appendQuadratic(point[0], point[1],
-									 point[2], point[3]);
-						break;
-					case PathIterator.SEG_CUBICTO:
-						// Cubic curves take three points
-						consumer.appendCubic(point[0], point[1],
-								 point[2], point[3],
-								 point[4], point[5]);
-						break;
-					case PathIterator.SEG_CLOSE:
-						consumer.closedSubpath();
-						pathClosed = true;
-						break;
-				}
-				pi.next();
-			}
+    public PFixedWidthStroke(float width, int cap, int join, float miterlimit, float dash[], float dash_phase) {
+        if (width < 0.0f) {
+            throw new IllegalArgumentException("negative width");
+        }
+        if (cap != CAP_BUTT && cap != CAP_ROUND && cap != CAP_SQUARE) {
+            throw new IllegalArgumentException("illegal end cap value");
+        }
+        if (join == JOIN_MITER) {
+            if (miterlimit < 1.0f) {
+                throw new IllegalArgumentException("miter limit < 1");
+            }
+        }
+        else if (join != JOIN_ROUND && join != JOIN_BEVEL) {
+            throw new IllegalArgumentException("illegal line join value");
+        }
+        if (dash != null) {
+            if (dash_phase < 0.0f) {
+                throw new IllegalArgumentException("negative dash phase");
+            }
+            boolean allzero = true;
+            for (int i = 0; i < dash.length; i++) {
+                float d = dash[i];
+                if (d > 0.0) {
+                    allzero = false;
+                }
+                else if (d < 0.0) {
+                    throw new IllegalArgumentException("negative dash length");
+                }
+            }
 
-			consumer.endPath();
+            if (allzero) {
+                throw new IllegalArgumentException("dash lengths all zero");
+            }
+        }
+        this.width = width;
+        this.cap = cap;
+        this.join = join;
+        this.miterlimit = miterlimit;
+        if (dash != null) {
+            this.dash = (float[]) dash.clone();
+        }
+        this.dash_phase = dash_phase;
+    }
 
-			consumer.dispose(); // hack to fix memory leak, shouldn't be neccessary but is.
-		} catch (PathException e) {
-			throw new InternalError("Unable to Stroke shape ("+
-						e.getMessage()+")");
-		}
+    public Object clone() {
+        try {
+            return super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-		return filler.getShape();
-	}
-	
-	public boolean equals(Object obj) {
-		if (!(obj instanceof PFixedWidthStroke)) {
-			return false;
-		}
+    public Shape createStrokedShape(Shape s) {
+        FillAdapter filler = new FillAdapter();
+        PathStroker stroker = new PathStroker(filler);
+        PathConsumer consumer;
 
-		PFixedWidthStroke bs = (PFixedWidthStroke) obj;
-		if (width != bs.width) {
-			return false;
-		}
+        // Fixed Width Additions, always stroke path inside shape.
+        // Also keeps dashes fixed when zooming (thanks to Shawn Castrianni -
+        // Dec 2006)
+        float fixedScale = 1.0f;
 
-		if (join != bs.join) {
-			return false;
-		}
+        if (PDebug.getProcessingOutput()) {
+            if (PPaintContext.CURRENT_PAINT_CONTEXT != null) {
+                fixedScale = 1.0f / (float) PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
+            }
+        }
+        else {
+            if (PPickPath.CURRENT_PICK_PATH != null) {
+                fixedScale = 1.0f / (float) PPickPath.CURRENT_PICK_PATH.getScale();
+            }
+        }
+        float fixedWidth = width * fixedScale;
 
-		if (cap != bs.cap) {
-			return false;
-		}
+        Rectangle2D bounds = s.getBounds2D();
+        double scale = 1.0;
 
-		if (miterlimit != bs.miterlimit) {
-			return false;
-		}
+        if (bounds.getWidth() > bounds.getHeight()) {
+            if (bounds.getWidth() != 0) {
+                scale = (bounds.getWidth() - fixedWidth) / bounds.getWidth();
+            }
+        }
+        else {
+            if (bounds.getHeight() != 0) {
+                scale = (bounds.getHeight() - fixedWidth) / bounds.getHeight();
+            }
+        }
 
-		if (dash != null) {
-			if (dash_phase != bs.dash_phase) {
-				return false;
-			}
+        TEMP_TRANSFORM.setToIdentity();
+        TEMP_TRANSFORM.scaleAboutPoint(scale, bounds.getCenterX(), bounds.getCenterY());
+        stroker.setPenDiameter(fixedWidth);
+        PathIterator pi = s.getPathIterator(TEMP_TRANSFORM);
 
-			if (!java.util.Arrays.equals(dash, bs.dash)) {
-				return false;
-			}
-		} else if (bs.dash != null) {
-			return false;
-		}
+        stroker.setPenT4(null);
+        stroker.setCaps(RasterizerCaps[cap]);
+        stroker.setCorners(RasterizerCorners[join], miterlimit);
+        if (dash != null) {
+            // Fixed Width Additions
+            float fixedDash[] = new float[dash.length];
+            for (int i = 0; i < dash.length; i++) {
+                fixedDash[i] = dash[i] * fixedScale;
+            }
+            float fixedDashPhase = dash_phase * fixedScale;
+            PathDasher dasher = new PathDasher(stroker);
+            dasher.setDash(fixedDash, fixedDashPhase);
+            dasher.setDashT4(null);
+            consumer = dasher;
+        }
+        else {
+            consumer = stroker;
+        }
 
-		return true;
-	}
-	
-	private float[] getDashArray() {
-		if (dash == null) {
-			return null;
-		}
+        try {
+            consumer.beginPath();
+            boolean pathClosed = false;
+            float mx = 0.0f;
+            float my = 0.0f;
+            float point[] = new float[6];
 
-		return (float[]) dash.clone();
-	}
-	
-	private float getDashPhase() {
-		return dash_phase;
-	}
-	
-	private int getEndCap() {
-		return cap;
-	}
-	
-	private int getLineJoin() {
-		return join;
-	}
-	
-	private float getLineWidth() {
-		return width;
-	}
-	
-	private float getMiterLimit() {
-		return miterlimit;
-	}
-	
-	public int hashCode() {
-		int hash = Float.floatToIntBits(width);
-		hash = hash * 31 + join;
-		hash = hash * 31 + cap;
-		hash = hash * 31 + Float.floatToIntBits(miterlimit);
-		if (dash != null) {
-			hash = hash * 31 + Float.floatToIntBits(dash_phase);
-			for (int i = 0; i < dash.length; i++) {
-				hash = hash * 31 + Float.floatToIntBits(dash[i]);
-			}
-		}
-		return hash;
-	}
+            while (!pi.isDone()) {
+                int type = pi.currentSegment(point);
+                if (pathClosed == true) {
+                    pathClosed = false;
+                    if (type != PathIterator.SEG_MOVETO) {
+                        // Force current point back to last moveto point
+                        consumer.beginSubpath(mx, my);
+                    }
+                }
+                switch (type) {
+                    case PathIterator.SEG_MOVETO:
+                        mx = point[0];
+                        my = point[1];
+                        consumer.beginSubpath(point[0], point[1]);
+                        break;
+                    case PathIterator.SEG_LINETO:
+                        consumer.appendLine(point[0], point[1]);
+                        break;
+                    case PathIterator.SEG_QUADTO:
+                        // Quadratic curves take two points
+                        consumer.appendQuadratic(point[0], point[1], point[2], point[3]);
+                        break;
+                    case PathIterator.SEG_CUBICTO:
+                        // Cubic curves take three points
+                        consumer.appendCubic(point[0], point[1], point[2], point[3], point[4], point[5]);
+                        break;
+                    case PathIterator.SEG_CLOSE:
+                        consumer.closedSubpath();
+                        pathClosed = true;
+                        break;
+                }
+                pi.next();
+            }
+
+            consumer.endPath();
+
+            consumer.dispose(); // hack to fix memory leak, shouldn't be
+                                // neccessary but is.
+        }
+        catch (PathException e) {
+            throw new InternalError("Unable to Stroke shape (" + e.getMessage() + ")");
+        }
+
+        return filler.getShape();
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PFixedWidthStroke)) {
+            return false;
+        }
+
+        PFixedWidthStroke bs = (PFixedWidthStroke) obj;
+        if (width != bs.width) {
+            return false;
+        }
+
+        if (join != bs.join) {
+            return false;
+        }
+
+        if (cap != bs.cap) {
+            return false;
+        }
+
+        if (miterlimit != bs.miterlimit) {
+            return false;
+        }
+
+        if (dash != null) {
+            if (dash_phase != bs.dash_phase) {
+                return false;
+            }
+
+            if (!java.util.Arrays.equals(dash, bs.dash)) {
+                return false;
+            }
+        }
+        else if (bs.dash != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private float[] getDashArray() {
+        if (dash == null) {
+            return null;
+        }
+
+        return (float[]) dash.clone();
+    }
+
+    private float getDashPhase() {
+        return dash_phase;
+    }
+
+    private int getEndCap() {
+        return cap;
+    }
+
+    private int getLineJoin() {
+        return join;
+    }
+
+    private float getLineWidth() {
+        return width;
+    }
+
+    private float getMiterLimit() {
+        return miterlimit;
+    }
+
+    public int hashCode() {
+        int hash = Float.floatToIntBits(width);
+        hash = hash * 31 + join;
+        hash = hash * 31 + cap;
+        hash = hash * 31 + Float.floatToIntBits(miterlimit);
+        if (dash != null) {
+            hash = hash * 31 + Float.floatToIntBits(dash_phase);
+            for (int i = 0; i < dash.length; i++) {
+                hash = hash * 31 + Float.floatToIntBits(dash[i]);
+            }
+        }
+        return hash;
+    }
 }

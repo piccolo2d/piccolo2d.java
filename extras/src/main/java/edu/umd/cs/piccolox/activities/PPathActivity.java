@@ -32,78 +32,82 @@ package edu.umd.cs.piccolox.activities;
 import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
 
 /**
- * <b>PPathActivity</b> is the abstract base class for all path
- * activity interpolators. Path activities interpolate between multiple states
- * over the duration of the activity.
+ * <b>PPathActivity</b> is the abstract base class for all path activity
+ * interpolators. Path activities interpolate between multiple states over the
+ * duration of the activity.
  * <p>
  * Knots are used to determine when in time the activity should move from state
  * to state. Knot values should be increasing in value from 0 to 1 inclusive.
  * This class is based on the Java 3D PathInterpolator object, see that class
  * documentation for more information on the basic concepts used in this classes
  * design.
+ * </p>
  * <p>
  * See PPositionPathActivity for a concrete path activity that will animate
  * through a list of points.
- * <p>
- * @version  1.0
+ * </p>
+ * 
+ * @version 1.0
  * @author Jesse Grosjean
  */
 public abstract class PPathActivity extends PInterpolatingActivity {
-	
-	protected float[] knots;
 
-	public PPathActivity(long duration, long stepRate, float[] knots) {
-		this(duration, stepRate, 0, PInterpolatingActivity.SOURCE_TO_DESTINATION, knots);
-	}
-			
-	public PPathActivity(long duration, long stepRate, int loopCount, int mode, float[] knots) {
-		super(duration, stepRate, loopCount, mode);
-		setKnots(knots);
-	}
-	
-	public int getKnotsLength() {
-		return knots.length;
-	}
-	
-	public void setKnots(float[] knots) {
-		this.knots = knots;
-	}
-	
-	public float[] getKnots() {
-		return knots;
-	}
+    protected float[] knots;
 
-	public void setKnot(int index, float knot) {
-		knots[index] = knot;
-	}	
-	
-	public float getKnot(int index) {
-		return knots[index];
-	}
-		
-	public void setRelativeTargetValue(float zeroToOne) {
-		int currentKnotIndex = 0;
-		
-		while (zeroToOne > knots[currentKnotIndex]) {
-			currentKnotIndex++;
-		}
+    public PPathActivity(long duration, long stepRate, float[] knots) {
+        this(duration, stepRate, 0, PInterpolatingActivity.SOURCE_TO_DESTINATION, knots);
+    }
 
-		int startKnot = currentKnotIndex - 1;
-		int endKnot = currentKnotIndex;
-		
-		if (startKnot < 0) startKnot = 0;
-		if (endKnot > getKnotsLength() - 1) endKnot = getKnotsLength() - 1;
-		
-		float currentRange = knots[endKnot] - knots[startKnot];
-		float currentPointOnRange = zeroToOne - knots[startKnot];
-		float normalizedPointOnRange = currentPointOnRange;
-		
-		if (currentRange != 0) {
-			normalizedPointOnRange = currentPointOnRange / currentRange;
-		}
-		
-		setRelativeTargetValue(normalizedPointOnRange, startKnot, endKnot);		
-	}
-	
-	public abstract void setRelativeTargetValue(float zeroToOne, int startKnot, int endKnot);
+    public PPathActivity(long duration, long stepRate, int loopCount, int mode, float[] knots) {
+        super(duration, stepRate, loopCount, mode);
+        setKnots(knots);
+    }
+
+    public int getKnotsLength() {
+        return knots.length;
+    }
+
+    public void setKnots(float[] knots) {
+        this.knots = knots;
+    }
+
+    public float[] getKnots() {
+        return knots;
+    }
+
+    public void setKnot(int index, float knot) {
+        knots[index] = knot;
+    }
+
+    public float getKnot(int index) {
+        return knots[index];
+    }
+
+    public void setRelativeTargetValue(float zeroToOne) {
+        int currentKnotIndex = 0;
+
+        while (zeroToOne > knots[currentKnotIndex]) {
+            currentKnotIndex++;
+        }
+
+        int startKnot = currentKnotIndex - 1;
+        int endKnot = currentKnotIndex;
+
+        if (startKnot < 0)
+            startKnot = 0;
+        if (endKnot > getKnotsLength() - 1)
+            endKnot = getKnotsLength() - 1;
+
+        float currentRange = knots[endKnot] - knots[startKnot];
+        float currentPointOnRange = zeroToOne - knots[startKnot];
+        float normalizedPointOnRange = currentPointOnRange;
+
+        if (currentRange != 0) {
+            normalizedPointOnRange = currentPointOnRange / currentRange;
+        }
+
+        setRelativeTargetValue(normalizedPointOnRange, startKnot, endKnot);
+    }
+
+    public abstract void setRelativeTargetValue(float zeroToOne, int startKnot, int endKnot);
 }

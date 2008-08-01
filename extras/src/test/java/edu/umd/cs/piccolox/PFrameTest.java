@@ -1,4 +1,5 @@
 package edu.umd.cs.piccolox;
+
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +24,7 @@ public class PFrameTest extends TestCase {
         });
         Rectangle bounds = frame.getCanvas().getBounds();
         assertEquals("Canvas width should match width of content pane", frame.getContentPane().getWidth(), bounds.width);
-        assertEquals("Canvas height should match height of content pane", frame.getContentPane().getHeight(), bounds.height);
+        assertEquals("Canvas height should match height of content pane", frame.getContentPane().getHeight(),
+                bounds.height);
     }
 }

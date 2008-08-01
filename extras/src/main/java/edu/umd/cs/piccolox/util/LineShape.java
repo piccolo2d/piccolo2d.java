@@ -8,15 +8,14 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public class LineShape implements Shape, MutablePoints
-{
+public class LineShape implements Shape, MutablePoints {
     private MutablePoints points;
-    private Rectangle2D bounds = new Rectangle2D.Double(); 
+    private Rectangle2D bounds = new Rectangle2D.Double();
 
     public LineShape(MutablePoints points) {
         setPoints(points);
     }
-    
+
     public void setPoints(MutablePoints points) {
         if (points == null) {
             points = new XYArray();
@@ -25,13 +24,18 @@ public class LineShape implements Shape, MutablePoints
     }
 
     // from Points
-    
+
     public int getPointCount() {
         return points.getPointCount();
     }
 
-    public double getX(int i) { return points.getX(i); }
-    public double getY(int i) { return points.getY(i); }
+    public double getX(int i) {
+        return points.getX(i);
+    }
+
+    public double getY(int i) {
+        return points.getY(i);
+    }
 
     public Point2D getPoint(int i, Point2D dst) {
         return points.getPoint(i, dst);
@@ -48,7 +52,7 @@ public class LineShape implements Shape, MutablePoints
         bounds.setRect(0.0d, 0.0d, 0.0d, 0.0d);
         points.getBounds(bounds);
     }
-    
+
     public void setPoint(int i, double x, double y) {
         points.setPoint(i, x, y);
         updateBounds();
@@ -70,21 +74,20 @@ public class LineShape implements Shape, MutablePoints
         newPoints.transformPoints(trans);
         points = newPoints;
     }
-    
+
     //
-    
+
     public Rectangle getBounds() {
-        return new Rectangle((int)bounds.getX(), (int)bounds.getY(), (int)bounds.getWidth(), (int)bounds.getHeight());
+        return new Rectangle((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds
+                .getHeight());
     }
 
     public Rectangle2D getBounds2D() {
         return bounds;
     }
 
-    public static boolean contains(double x, double y, double x1, double y1, double x2, double y2, 
-                                   boolean min, boolean max,
-                                   double d)
-    {
+    public static boolean contains(double x, double y, double x1, double y1, double x2, double y2, boolean min,
+            boolean max, double d) {
         double dx = x2 - x1, dy = y2 - y1;
         double dx2 = dx * dx, dy2 = dy * dy;
         double p;
@@ -103,7 +106,8 @@ public class LineShape implements Shape, MutablePoints
         else if (min && p < 0.0) {
             return false;
         }
-        dx = (p * dx) + x1 - x; dy = (p * dy) + y1 - y;
+        dx = (p * dx) + x1 - x;
+        dy = (p * dy) + y1 - y;
         double len = dx * dx + dy * dy;
         return (len < d);
     }
@@ -126,6 +130,7 @@ public class LineShape implements Shape, MutablePoints
         }
         return false;
     }
+
     public boolean contains(double x, double y) {
         return contains(x, y, 2.0d);
     }
@@ -134,11 +139,8 @@ public class LineShape implements Shape, MutablePoints
         return contains(p.getX(), p.getY());
     }
 
-    public static boolean intersects(double x1, double y1, double x2, double y2,
-                                     double x3, double y3, double x4, double y4,
-                                     boolean min1, boolean max1,
-                                     boolean min2, boolean max2)
-    {
+    public static boolean intersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
+            double y4, boolean min1, boolean max1, boolean min2, boolean max2) {
         double dx1 = x2 - x1, dy1 = y2 - y1, dx2 = x4 - x3, dy2 = y4 - y3;
         double d, p2, p1;
 
@@ -165,8 +167,7 @@ public class LineShape implements Shape, MutablePoints
         else {
             return false;
         }
-        return (((! min1) || (p1 >= 0.0)) && ((! max1) || (p1 <= 1.0)) &&
-                ((! min2) || (p2 >= 0.0)) && ((! max2) || (p2 <= 1.0)));
+        return (((!min1) || (p1 >= 0.0)) && ((!max1) || (p1 <= 1.0)) && ((!min2) || (p2 >= 0.0)) && ((!max2) || (p2 <= 1.0)));
     }
 
     public boolean intersects(double x, double y, double w, double h) {
@@ -181,10 +182,10 @@ public class LineShape implements Shape, MutablePoints
             y1 = y2;
             x2 = points.getX(i);
             y2 = points.getY(i);
-            if (intersects(x,     y,     x + w, y,     x1, y1, x2, y2, true, true, true, true) ||
-                intersects(x + w, y,     x + w, y + h, x1, y1, x2, y2, true, true, true, true) ||
-                intersects(x + w, y + h, x,     y + h, x1, y1, x2, y2, true, true, true, true) ||
-                intersects(x,     y + h, x,     y,     x1, y1, x2, y2, true, true, true, true)) {
+            if (intersects(x, y, x + w, y, x1, y1, x2, y2, true, true, true, true)
+                    || intersects(x + w, y, x + w, y + h, x1, y1, x2, y2, true, true, true, true)
+                    || intersects(x + w, y + h, x, y + h, x1, y1, x2, y2, true, true, true, true)
+                    || intersects(x, y + h, x, y, x1, y1, x2, y2, true, true, true, true)) {
                 return true;
             }
         }
@@ -204,9 +205,9 @@ public class LineShape implements Shape, MutablePoints
     }
 
     //
-    
+
     //
-    
+
     public PathIterator getPathIterator(AffineTransform at) {
         return new LinePathIterator(points, at);
     }
@@ -214,13 +215,13 @@ public class LineShape implements Shape, MutablePoints
     public PathIterator getPathIterator(AffineTransform at, double flatness) {
         return new LinePathIterator(points, at);
     }
-    
+
     private static class LinePathIterator implements PathIterator {
 
         private Points points;
         private AffineTransform trans;
         private int i = 0;
-        
+
         public LinePathIterator(Points points, AffineTransform trans) {
             this.points = points;
             this.trans = trans;
@@ -239,7 +240,7 @@ public class LineShape implements Shape, MutablePoints
         }
 
         private Point2D tempPoint = new Point2D.Double();
-        
+
         private void currentSegment() {
             tempPoint.setLocation(points.getX(i), points.getY(i));
             if (trans != null) {
@@ -249,8 +250,8 @@ public class LineShape implements Shape, MutablePoints
 
         public int currentSegment(float[] coords) {
             currentSegment();
-            coords[0] = (float)tempPoint.getX();
-            coords[1] = (float)tempPoint.getY();
+            coords[0] = (float) tempPoint.getX();
+            coords[1] = (float) tempPoint.getY();
             return (i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO);
         }
 

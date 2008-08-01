@@ -39,30 +39,31 @@ import edu.umd.cs.piccolo.PNode;
  * many different nodes you will need to call setNode() before asking for each
  * location.
  * <P>
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PNodeLocator extends PLocator {
-	
-	protected PNode node;
 
-	public PNodeLocator(PNode node) {
-		setNode(node);
-	}
+    protected PNode node;
 
-	public PNode getNode() {
-		return node;
-	}
-	
-	public void setNode(PNode node) {
-		this.node = node;
-	}
+    public PNodeLocator(PNode node) {
+        setNode(node);
+    }
 
-	public double locateX() {
-		return node.getBoundsReference().getCenterX();
-	}
+    public PNode getNode() {
+        return node;
+    }
 
-	public double locateY() {
-		return node.getBoundsReference().getCenterY();
-	}
+    public void setNode(PNode node) {
+        this.node = node;
+    }
+
+    public double locateX() {
+        return node.getBoundsReference().getCenterX();
+    }
+
+    public double locateY() {
+        return node.getBoundsReference().getCenterY();
+    }
 }

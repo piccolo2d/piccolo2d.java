@@ -40,81 +40,81 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
 /**
- * <b>PNodeCache</b> caches a visual representation of it's children 
- * into an image and uses this cached image for painting instead of
- * painting it's children directly. This  is intended to be used in 
- * two ways.
- * <P>
- * First it can be used as a simple optimization technique. If a node 
- * has many descendents it may be faster to paint the cached image 
- * representation instead of painting each node.
- * <P>
- * Second PNodeCache provides a place where "image" effects such as
- * blurring and drop shadows can be added to the Piccolo scene graph.
- * This can be done by overriding the method createImageCache and
- * returing an image with the desired effect applied.
- * <P>
+ * <b>PNodeCache</b> caches a visual representation of it's children into an
+ * image and uses this cached image for painting instead of painting it's
+ * children directly. This is intended to be used in two ways.
+ * <p>
+ * First it can be used as a simple optimization technique. If a node has many
+ * descendents it may be faster to paint the cached image representation instead
+ * of painting each node.
+ * </p>
+ * <p>
+ * Second PNodeCache provides a place where "image" effects such as blurring and
+ * drop shadows can be added to the Piccolo scene graph. This can be done by
+ * overriding the method createImageCache and returing an image with the desired
+ * effect applied.
+ * </p>
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PNodeCache extends PNode {
-	
-	private transient Image imageCache;
-	private boolean validatingCache;
-	
-	/**
-	 * Override this method to customize the image cache creation process. For
-	 * example if you want to create a shadow effect you would do that here. Fill
-	 * in the cacheOffsetRef if needed to make your image cache line up with the
-	 * nodes children.
-	 */
-	public Image createImageCache(Dimension2D cacheOffsetRef) {
-		return toImage();		
-	}
-	
-	public Image getImageCache() {
-		if (imageCache == null) {			
-			PDimension cacheOffsetRef = new PDimension();
-			validatingCache = true;
-			resetBounds();
-			imageCache = createImageCache(cacheOffsetRef);
-			PBounds b = getFullBoundsReference();
-			setBounds(b.getX() + cacheOffsetRef.getWidth(),
-					  b.getY() + cacheOffsetRef.getHeight(),
-					  imageCache.getWidth(null), 
-					  imageCache.getHeight(null));
-			validatingCache = false;
-		}
-		return imageCache;
-	}
-	
-	public void invalidateCache() {
-		imageCache = null;
-	}	
-	
-	public void invalidatePaint() {
-		if (!validatingCache) {
-			super.invalidatePaint();
-		}
-	}
-	
-	public void repaintFrom(PBounds localBounds, PNode childOrThis) {
-		if (!validatingCache) {
-			super.repaintFrom(localBounds, childOrThis);
-			invalidateCache();
-		}
-	}	
-	
-	public void fullPaint(PPaintContext paintContext) {		
-		if (validatingCache) {
-			super.fullPaint(paintContext);
-		} else {
-			Graphics2D g2 = paintContext.getGraphics();
-			g2.drawImage(getImageCache(), (int) getX(), (int) getY(), null);
-		}
-	}
-	
-	protected boolean pickAfterChildren(PPickPath pickPath) {
-		return false;
-	}
+
+    private transient Image imageCache;
+    private boolean validatingCache;
+
+    /**
+     * Override this method to customize the image cache creation process. For
+     * example if you want to create a shadow effect you would do that here.
+     * Fill in the cacheOffsetRef if needed to make your image cache line up
+     * with the nodes children.
+     */
+    public Image createImageCache(Dimension2D cacheOffsetRef) {
+        return toImage();
+    }
+
+    public Image getImageCache() {
+        if (imageCache == null) {
+            PDimension cacheOffsetRef = new PDimension();
+            validatingCache = true;
+            resetBounds();
+            imageCache = createImageCache(cacheOffsetRef);
+            PBounds b = getFullBoundsReference();
+            setBounds(b.getX() + cacheOffsetRef.getWidth(), b.getY() + cacheOffsetRef.getHeight(), imageCache
+                    .getWidth(null), imageCache.getHeight(null));
+            validatingCache = false;
+        }
+        return imageCache;
+    }
+
+    public void invalidateCache() {
+        imageCache = null;
+    }
+
+    public void invalidatePaint() {
+        if (!validatingCache) {
+            super.invalidatePaint();
+        }
+    }
+
+    public void repaintFrom(PBounds localBounds, PNode childOrThis) {
+        if (!validatingCache) {
+            super.repaintFrom(localBounds, childOrThis);
+            invalidateCache();
+        }
+    }
+
+    public void fullPaint(PPaintContext paintContext) {
+        if (validatingCache) {
+            super.fullPaint(paintContext);
+        }
+        else {
+            Graphics2D g2 = paintContext.getGraphics();
+            g2.drawImage(getImageCache(), (int) getX(), (int) getY(), null);
+        }
+    }
+
+    protected boolean pickAfterChildren(PPickPath pickPath) {
+        return false;
+    }
 }

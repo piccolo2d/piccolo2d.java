@@ -48,203 +48,210 @@ import javax.swing.SwingUtilities;
 import edu.umd.cs.piccolo.PCanvas;
 
 /**
- * <b>PFrame</b> is meant to be subclassed by applications that just need a PCanvas in a JFrame.
- * It also includes full screen mode functionality when run in JDK 1.4. These
- * subclasses should override the initialize method and start adding their own
- * code there. Look in the examples package to see lots of uses of PFrame.
- *
+ * <b>PFrame</b> is meant to be subclassed by applications that just need a
+ * PCanvas in a JFrame. It also includes full screen mode functionality when run
+ * in JDK 1.4. These subclasses should override the initialize method and start
+ * adding their own code there. Look in the examples package to see lots of uses
+ * of PFrame.
+ * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PFrame extends JFrame {
 
-	private PCanvas canvas;
-	private GraphicsDevice graphicsDevice;
-	private EventListener escapeFullScreenModeListener;
+    private PCanvas canvas;
+    private GraphicsDevice graphicsDevice;
+    private EventListener escapeFullScreenModeListener;
 
-	public PFrame() {
-		this("", false, null);
-	}
+    public PFrame() {
+        this("", false, null);
+    }
 
-	public PFrame(String title, boolean fullScreenMode, PCanvas aCanvas) {
-		this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, aCanvas);
-	}
+    public PFrame(String title, boolean fullScreenMode, PCanvas aCanvas) {
+        this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, aCanvas);
+    }
 
-	public PFrame(String title, GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
-		super(title, aDevice.getDefaultConfiguration());
-		
-		graphicsDevice = aDevice;
-		
-		setBackground(null);
-		setBounds(getDefaultFrameBounds());
-		
-		try {
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		} catch (SecurityException e) {} // expected from applets
-		
-		if (aCanvas == null) {
-			canvas = new PCanvas();
-		} else {
-			canvas = aCanvas;
-		}
-						
-		setContentPane(canvas);
-		validate(); 	
-		setFullScreenMode(fullScreenMode);
-		canvas.requestFocus();
-		beforeInitialize();
+    public PFrame(String title, GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
+        super(title, aDevice.getDefaultConfiguration());
 
-		// Manipulation of Piccolo's scene graph should be done from Swings
-		// event dispatch thread since Piccolo is not thread safe. This code calls
-		// initialize() from that thread once the PFrame is initialized, so you are 
-		// safe to start working with Piccolo in the initialize() method.
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				PFrame.this.initialize();
-				repaint();
-			}
-		});
-	}
+        graphicsDevice = aDevice;
 
-	public PCanvas getCanvas() {
-		return canvas;
-	}
-	
-	public Rectangle getDefaultFrameBounds() {
-		return new Rectangle(100, 100, 400, 400);
-	}		
-	
-	//****************************************************************
-	// Full Screen Display Mode
-	//****************************************************************
+        setBackground(null);
+        setBounds(getDefaultFrameBounds());
 
-	public boolean isFullScreenMode() {
-		return graphicsDevice.getFullScreenWindow() != null;
-	}
-	
-	public void setFullScreenMode(boolean fullScreenMode) {
-		if (fullScreenMode) {
-			addEscapeFullScreenModeListener();
-			
-			if (isDisplayable()) {
-				dispose();
-			}
-			
-			setUndecorated(true);
-			setResizable(false);
-			graphicsDevice.setFullScreenWindow(this);			 
-			
-			if (graphicsDevice.isDisplayChangeSupported()) {
-				chooseBestDisplayMode(graphicsDevice);
-			}		 
-			validate();
-		} else {
-			removeEscapeFullScreenModeListener();
-			
-			if (isDisplayable()) {
-				dispose();
-			}
-			
-			setUndecorated(false);
-			setResizable(true);
-			graphicsDevice.setFullScreenWindow(null);					 
-			validate();
-			setVisible(true);
-		}		
-	}
-	
-	protected void chooseBestDisplayMode(GraphicsDevice device) {
-		DisplayMode best = getBestDisplayMode(device);
-		if (best != null) {
-			device.setDisplayMode(best);
-		}
-	}
-	
-	protected DisplayMode getBestDisplayMode(GraphicsDevice device) {
-		Iterator itr = getPreferredDisplayModes(device).iterator();
-		while (itr.hasNext()) {
-			DisplayMode each = (DisplayMode) itr.next();
-			DisplayMode[] modes = device.getDisplayModes();
-			for (int i = 0; i < modes.length; i++) {
-				if (modes[i].getWidth() == each.getWidth() && 
-					modes[i].getHeight() == each.getHeight() && 
-					modes[i].getBitDepth() == each.getBitDepth()) {
-						return each;
-				}
-			}			
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * By default return the current display mode. Subclasses may override this method
-	 * to return other modes in the collection.
-	 */
-	protected Collection getPreferredDisplayModes(GraphicsDevice device) {
-		ArrayList result = new ArrayList();
-		
-		result.add(device.getDisplayMode());
-		/*result.add(new DisplayMode(640, 480, 32, 0));
-		result.add(new DisplayMode(640, 480, 16, 0));
-		result.add(new DisplayMode(640, 480, 8, 0));*/
-		
-		return result;
-	}
+        try {
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+        catch (SecurityException e) {
+        } // expected from applets
 
-	/**
-	 * This method adds a key listener that will take this PFrame out of full
-	 * screen mode when the escape key is pressed. This is called for you
-	 * automatically when the frame enters full screen mode.
-	 */
-	public void addEscapeFullScreenModeListener() {
-		removeEscapeFullScreenModeListener();
-		escapeFullScreenModeListener = new KeyAdapter() {
-			public void keyPressed(KeyEvent aEvent) {
-				if (aEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					setFullScreenMode(false);
-				}
-			}
-		};	
-		canvas.addKeyListener((KeyListener)escapeFullScreenModeListener);
-	}
-	
-	/**
-	 * This method removes the escape full screen mode key listener. It will be
-	 * called for you automatically when full screen mode exits, but the method
-	 * has been made public for applications that wish to use other methods for
-	 * exiting full screen mode.
-	 */
-	public void removeEscapeFullScreenModeListener() {
-		if (escapeFullScreenModeListener != null) {
-			canvas.removeKeyListener((KeyListener)escapeFullScreenModeListener);
-			escapeFullScreenModeListener = null;
-		}
-	}
-	
-	//****************************************************************
-	// Initialize
-	//****************************************************************
+        if (aCanvas == null) {
+            canvas = new PCanvas();
+        }
+        else {
+            canvas = aCanvas;
+        }
 
-	/**
-	 * This method will be called before the initialize() method and will be
-	 * called on the thread that is constructing this object.
-	 */
-	public void beforeInitialize() {
-	}
+        setContentPane(canvas);
+        validate();
+        setFullScreenMode(fullScreenMode);
+        canvas.requestFocus();
+        beforeInitialize();
 
-	/**
-	 * Subclasses should override this method and add their 
-	 * Piccolo initialization code there. This method will be called on the
-	 * swing event dispatch thread. Note that the constructors of PFrame
-	 * subclasses may not be complete when this method is called. If you need to
-	 * initailize some things in your class before this method is called place
-	 * that code in beforeInitialize();
-	 */
-	public void initialize() {
-	}
+        // Manipulation of Piccolo's scene graph should be done from Swings
+        // event dispatch thread since Piccolo is not thread safe. This code
+        // calls initialize() from that thread once the PFrame is initialized,
+        // so you are safe to start working with Piccolo in the initialize()
+        // method.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                PFrame.this.initialize();
+                repaint();
+            }
+        });
+    }
 
-	public static void main(String[] argv) {
-		new PFrame();
-	}	
+    public PCanvas getCanvas() {
+        return canvas;
+    }
+
+    public Rectangle getDefaultFrameBounds() {
+        return new Rectangle(100, 100, 400, 400);
+    }
+
+    // ****************************************************************
+    // Full Screen Display Mode
+    // ****************************************************************
+
+    public boolean isFullScreenMode() {
+        return graphicsDevice.getFullScreenWindow() != null;
+    }
+
+    public void setFullScreenMode(boolean fullScreenMode) {
+        if (fullScreenMode) {
+            addEscapeFullScreenModeListener();
+
+            if (isDisplayable()) {
+                dispose();
+            }
+
+            setUndecorated(true);
+            setResizable(false);
+            graphicsDevice.setFullScreenWindow(this);
+
+            if (graphicsDevice.isDisplayChangeSupported()) {
+                chooseBestDisplayMode(graphicsDevice);
+            }
+            validate();
+        }
+        else {
+            removeEscapeFullScreenModeListener();
+
+            if (isDisplayable()) {
+                dispose();
+            }
+
+            setUndecorated(false);
+            setResizable(true);
+            graphicsDevice.setFullScreenWindow(null);
+            validate();
+            setVisible(true);
+        }
+    }
+
+    protected void chooseBestDisplayMode(GraphicsDevice device) {
+        DisplayMode best = getBestDisplayMode(device);
+        if (best != null) {
+            device.setDisplayMode(best);
+        }
+    }
+
+    protected DisplayMode getBestDisplayMode(GraphicsDevice device) {
+        Iterator itr = getPreferredDisplayModes(device).iterator();
+        while (itr.hasNext()) {
+            DisplayMode each = (DisplayMode) itr.next();
+            DisplayMode[] modes = device.getDisplayModes();
+            for (int i = 0; i < modes.length; i++) {
+                if (modes[i].getWidth() == each.getWidth() && modes[i].getHeight() == each.getHeight()
+                        && modes[i].getBitDepth() == each.getBitDepth()) {
+                    return each;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * By default return the current display mode. Subclasses may override this
+     * method to return other modes in the collection.
+     */
+    protected Collection getPreferredDisplayModes(GraphicsDevice device) {
+        ArrayList result = new ArrayList();
+
+        result.add(device.getDisplayMode());
+        /*
+         * result.add(new DisplayMode(640, 480, 32, 0)); result.add(new
+         * DisplayMode(640, 480, 16, 0)); result.add(new DisplayMode(640, 480,
+         * 8, 0));
+         */
+
+        return result;
+    }
+
+    /**
+     * This method adds a key listener that will take this PFrame out of full
+     * screen mode when the escape key is pressed. This is called for you
+     * automatically when the frame enters full screen mode.
+     */
+    public void addEscapeFullScreenModeListener() {
+        removeEscapeFullScreenModeListener();
+        escapeFullScreenModeListener = new KeyAdapter() {
+            public void keyPressed(KeyEvent aEvent) {
+                if (aEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    setFullScreenMode(false);
+                }
+            }
+        };
+        canvas.addKeyListener((KeyListener) escapeFullScreenModeListener);
+    }
+
+    /**
+     * This method removes the escape full screen mode key listener. It will be
+     * called for you automatically when full screen mode exits, but the method
+     * has been made public for applications that wish to use other methods for
+     * exiting full screen mode.
+     */
+    public void removeEscapeFullScreenModeListener() {
+        if (escapeFullScreenModeListener != null) {
+            canvas.removeKeyListener((KeyListener) escapeFullScreenModeListener);
+            escapeFullScreenModeListener = null;
+        }
+    }
+
+    // ****************************************************************
+    // Initialize
+    // ****************************************************************
+
+    /**
+     * This method will be called before the initialize() method and will be
+     * called on the thread that is constructing this object.
+     */
+    public void beforeInitialize() {
+    }
+
+    /**
+     * Subclasses should override this method and add their Piccolo
+     * initialization code there. This method will be called on the swing event
+     * dispatch thread. Note that the constructors of PFrame subclasses may not
+     * be complete when this method is called. If you need to initailize some
+     * things in your class before this method is called place that code in
+     * beforeInitialize();
+     */
+    public void initialize() {
+    }
+
+    public static void main(String[] argv) {
+        new PFrame();
+    }
 }

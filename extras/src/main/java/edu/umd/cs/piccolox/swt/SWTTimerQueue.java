@@ -6,11 +6,11 @@ import org.eclipse.swt.widgets.Display;
  * @author Lance Good
  */
 public class SWTTimerQueue implements Runnable {
-	static SWTTimerQueue instance;
+    static SWTTimerQueue instance;
 
-	Display display = null;
+    Display display = null;
 
-    SWTTimer   firstTimer;
+    SWTTimer firstTimer;
     boolean running;
 
     /**
@@ -19,31 +19,27 @@ public class SWTTimerQueue implements Runnable {
     public SWTTimerQueue(Display display) {
         super();
 
-		this.display = display;
+        this.display = display;
 
         // Now start the TimerQueue thread.
         start();
     }
 
-
     public static SWTTimerQueue sharedInstance(Display display) {
-    	if (instance == null) {
-        	instance = new SWTTimerQueue(display);
+        if (instance == null) {
+            instance = new SWTTimerQueue(display);
         }
         return instance;
     }
 
-
     synchronized void start() {
         if (running) {
-            throw new RuntimeException("Can't start a TimerQueue " +
-                                       "that is already running");
+            throw new RuntimeException("Can't start a TimerQueue " + "that is already running");
         }
         else {
-			Display.getDefault().asyncExec(new Runnable() {
+            Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
-                    Thread timerThread = new Thread(SWTTimerQueue.this,
-                                                    "TimerQueue");
+                    Thread timerThread = new Thread(SWTTimerQueue.this, "TimerQueue");
                     timerThread.setDaemon(true);
                     timerThread.setPriority(Thread.NORM_PRIORITY);
                     timerThread.start();
@@ -53,12 +49,10 @@ public class SWTTimerQueue implements Runnable {
         }
     }
 
-
     synchronized void stop() {
         running = false;
         notify();
     }
-
 
     synchronized void addTimer(SWTTimer timer, long expirationTime) {
         SWTTimer previousTimer;
@@ -73,11 +67,12 @@ public class SWTTimerQueue implements Runnable {
         nextTimer = firstTimer;
 
         // Insert the Timer into the linked list in the order they will
-        // expire.  If two timers expire at the same time, put the newer entry
+        // expire. If two timers expire at the same time, put the newer entry
         // later so they expire in the order they came in.
 
         while (nextTimer != null) {
-            if (nextTimer.expirationTime > expirationTime) break;
+            if (nextTimer.expirationTime > expirationTime)
+                break;
 
             previousTimer = nextTimer;
             nextTimer = nextTimer.nextTimer;
@@ -96,13 +91,13 @@ public class SWTTimerQueue implements Runnable {
         notify();
     }
 
-
     synchronized void removeTimer(SWTTimer timer) {
-        SWTTimer   previousTimer;
-        SWTTimer   nextTimer;
+        SWTTimer previousTimer;
+        SWTTimer nextTimer;
         boolean found;
 
-        if (!timer.running) return;
+        if (!timer.running)
+            return;
 
         previousTimer = null;
         nextTimer = firstTimer;
@@ -118,7 +113,8 @@ public class SWTTimerQueue implements Runnable {
             nextTimer = nextTimer.nextTimer;
         }
 
-        if (!found) return;
+        if (!found)
+            return;
 
         if (previousTimer == null) {
             firstTimer = timer.nextTimer;
@@ -132,35 +128,34 @@ public class SWTTimerQueue implements Runnable {
         timer.running = false;
     }
 
-
     synchronized boolean containsTimer(SWTTimer timer) {
         return timer.running;
     }
 
-
     /**
-     * If there are a ton of timers, this method may never return.  It loops
-     * checking to see if the head of the Timer list has expired.  If it has,
-     * it posts the Timer and reschedules it if necessary.
+     * If there are a ton of timers, this method may never return. It loops
+     * checking to see if the head of the Timer list has expired. If it has, it
+     * posts the Timer and reschedules it if necessary.
      */
     synchronized long postExpiredTimers() {
-        SWTTimer   timer;
-        long    currentTime;
-        long    timeToWait;
+        SWTTimer timer;
+        long currentTime;
+        long timeToWait;
 
         // The timeToWait we return should never be negative and only be zero
         // when we have no Timers to wait for.
 
         do {
             timer = firstTimer;
-            if (timer == null) return 0;
+            if (timer == null)
+                return 0;
 
             currentTime = System.currentTimeMillis();
             timeToWait = timer.expirationTime - currentTime;
 
             if (timeToWait <= 0) {
                 try {
-                    timer.postOverride();  // have timer post an event
+                    timer.postOverride(); // have timer post an event
                 }
                 catch (SecurityException e) {
                 }
@@ -175,7 +170,7 @@ public class SWTTimerQueue implements Runnable {
                 }
 
                 // Allow other threads to call addTimer() and removeTimer()
-                // even when we are posting Timers like mad.  Since the wait()
+                // even when we are posting Timers like mad. Since the wait()
                 // releases the lock, be sure not to maintain any state
                 // between iterations of the loop.
 
@@ -189,7 +184,6 @@ public class SWTTimerQueue implements Runnable {
 
         return timeToWait;
     }
-
 
     public synchronized void run() {
         long timeToWait;
@@ -212,11 +206,10 @@ public class SWTTimerQueue implements Runnable {
                 timer.cancelEventOverride();
                 timer = timer.nextTimer;
             }
-			display.asyncExec(new SWTTimerQueueRestart(display));
+            display.asyncExec(new SWTTimerQueueRestart(display));
             throw td;
         }
     }
-
 
     public synchronized String toString() {
         StringBuffer buf;
@@ -230,39 +223,39 @@ public class SWTTimerQueue implements Runnable {
             buf.append(nextTimer.toString());
 
             nextTimer = nextTimer.nextTimer;
-            if (nextTimer != null) buf.append(", ");
+            if (nextTimer != null)
+                buf.append(", ");
         }
 
         buf.append(")");
         return buf.toString();
-    }	
-    
+    }
 
     /**
-     * Runnable that will message the shared instance of the Timer Queue
-     * to restart.
+     * Runnable that will message the shared instance of the Timer Queue to
+     * restart.
      */
     protected static class SWTTimerQueueRestart implements Runnable {
-		boolean attemptedStart;
-	
-		Display display = null;
-	
-		public SWTTimerQueueRestart(Display display) {
-			this.display = display;	
-		}
-	
-		public synchronized void run() {
-		    // Only try and restart the q once.
-		    if(!attemptedStart) {
-				SWTTimerQueue q = SWTTimerQueue.sharedInstance(display);
-		
-				synchronized(q) {
-				    if(!q.running)
-						q.start();
-				}
-				attemptedStart = true;
-		    }
-		}
+        boolean attemptedStart;
+
+        Display display = null;
+
+        public SWTTimerQueueRestart(Display display) {
+            this.display = display;
+        }
+
+        public synchronized void run() {
+            // Only try and restart the q once.
+            if (!attemptedStart) {
+                SWTTimerQueue q = SWTTimerQueue.sharedInstance(display);
+
+                synchronized (q) {
+                    if (!q.running)
+                        q.start();
+                }
+                attemptedStart = true;
+            }
+        }
     }
-    
+
 }

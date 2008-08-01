@@ -39,54 +39,55 @@ import java.util.Map;
 
 /**
  * <b>PNotification</b> objects encapsulate information so that it can be
- * broadcast to other objects by a PNotificationCenter. A PNotification contains a
- * name, an object, and an optional properties map. The name is a tag
+ * broadcast to other objects by a PNotificationCenter. A PNotification contains
+ * a name, an object, and an optional properties map. The name is a tag
  * identifying the notification. The object is any object that the poster of the
  * notification wants to send to observers of that notification (typically, it
  * is the object that posted the notification). The properties map stores other
  * related objects, if any.
- * <P>
+ * <p>
  * You don't usually create your own notifications directly. The
- * PNotificationCenter method postNotification() allow you to conveniently post a
- * notification without creating it first.
- * <P>
+ * PNotificationCenter method postNotification() allow you to conveniently post
+ * a notification without creating it first.
+ * </p>
+ * 
  * @author Jesse Grosjean
  */
 public class PNotification {
-	
-	protected String name;
-	protected Object source;
-	protected Map properties;
 
-	public PNotification(String name, Object source, Map properties) {
-		this.name = name;
-		this.source = source;
-		this.properties = properties;
-	}
+    protected String name;
+    protected Object source;
+    protected Map properties;
 
-	/**
-	 * Return the name of the notification. This is the same as the name used to
-	 * register with the notfication center.
-	 */
-	public String getName() {
-		return name;
-	}
+    public PNotification(String name, Object source, Map properties) {
+        this.name = name;
+        this.source = source;
+        this.properties = properties;
+    }
 
-	/**
-	 * Return the object associated with this notification. This is most often
-	 * the same object that posted the notfication. It may be null.
-	 */
-	public Object getObject() {
-		return source;
-	}
+    /**
+     * Return the name of the notification. This is the same as the name used to
+     * register with the notfication center.
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Return a property associated with the notfication.
-	 */
-	public Object getProperty(Object key) {
-		if (properties != null) {
-			return properties.get(key);
-		}
-		return null;
-	}
+    /**
+     * Return the object associated with this notification. This is most often
+     * the same object that posted the notfication. It may be null.
+     */
+    public Object getObject() {
+        return source;
+    }
+
+    /**
+     * Return a property associated with the notfication.
+     */
+    public Object getProperty(Object key) {
+        if (properties != null) {
+            return properties.get(key);
+        }
+        return null;
+    }
 }

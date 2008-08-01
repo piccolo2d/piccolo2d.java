@@ -112,7 +112,7 @@ import java.util.Arrays;
 
 /**
  * <b>PSwing</b> is used to add Swing Components to a Piccolo canvas.
- * <p/>
+ * <p>
  * Example: adding a swing JButton to a PCanvas:
  * <pre>
  *     PSwingCanvas canvas = new PSwingCanvas();
@@ -120,14 +120,16 @@ import java.util.Arrays;
  *     swing = new PSwing(canvas, button);
  *     canvas.getLayer().addChild(swing);
  * <pre>
- * <p/>
+ * </p>
+ * <p>
  * NOTE: PSwing has the current limitation that it does not listen for
  *       Container events.  This is only an issue if you create a PSwing
  *       and later add Swing components to the PSwing's component hierarchy
  *       that do not have double buffering turned off or have a smaller font
  *       size than the minimum font size of the original PSwing's component
  *       hierarchy.
- * <p/>
+ * </p>
+ * <p>
  *       For instance, the following bit of code will give unexpected
  *       results:
  *       <pre>
@@ -137,17 +139,21 @@ import java.util.Arrays;
  *            newChild.setDoubleBuffered(true);
  *            panel.add(newChild);
  *       </pre>
- * <p/>
+ * </p>
+ * <p>
  * NOTE: PSwing cannot be correctly interacted with through multiple cameras.
  * There is no support for it yet.
- * <p/>
+ * </p>
+ * <p>
  * NOTE: PSwing is java.io.Serializable.
- * <p/>
+ * </p>
+ * <p>
  * <b>Warning:</b> Serialized objects of this class will not be
  * compatible with future Piccolo releases. The current serialization support is
  * appropriate for short term storage or RMI between applications running the
  * same version of Piccolo. A future release of Piccolo will provide support for long
  * term persistence.
+ * </p>
  *
  * @author Sam R. Reid
  * @author Benjamin B. Bederson
