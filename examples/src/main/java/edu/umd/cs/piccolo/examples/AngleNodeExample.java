@@ -25,96 +25,106 @@ import edu.umd.cs.piccolox.util.PLocator;
  */
 public class AngleNodeExample extends PFrame {
 
-	public AngleNodeExample() {
-		this(null);
-	}
-	
-	public AngleNodeExample(PCanvas aCanvas) {
-		super("AngleNodeExample", false, aCanvas);
-	}
+    public AngleNodeExample() {
+        this(null);
+    }
 
-	public void initialize() {
-		PCanvas c = getCanvas();
-		PLayer l = c.getLayer();
-		l.addChild(new AngleNode());
-	}
-	
-	public static void main(String[] args) {
-		new AngleNodeExample();
-	}	
+    public AngleNodeExample(PCanvas aCanvas) {
+        super("AngleNodeExample", false, aCanvas);
+    }
 
-	// the angle node class
-	public static class AngleNode extends PNode {
-		protected Point2D.Double pointOne;
-		protected Point2D.Double pointTwo;
-		protected Stroke stroke;
-	
-		public AngleNode() {
-			pointOne = new Point2D.Double(100, 0);
-			pointTwo = new Point2D.Double(0, 100);
-			stroke = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-			setPaint(Color.BLACK);
-			updateBounds();
-			addHandles();
-		}
-	
-		public void addHandles() {
-			// point one
-			PLocator l = new PLocator() {
-				public double locateX() { return pointOne.getX(); }
-				public double locateY() { return pointOne.getY(); }
-			};
-			PHandle h = new PHandle(l) {
-				public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
-					localToParent(aLocalDimension);
-					pointOne.setLocation(pointOne.getX() + aLocalDimension.getWidth(),
-									     pointOne.getY() + aLocalDimension.getHeight());
-					updateBounds();
-					relocateHandle();
-				}
-			};
-			addChild(h);
-	
-			// point two
-			l = new PLocator() {
-				public double locateX() { return pointTwo.getX(); }
-				public double locateY() { return pointTwo.getY(); }
-			};
-			h = new PHandle(l) {
-				public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
-					localToParent(aLocalDimension);
-					pointTwo.setLocation(pointTwo.getX() + aLocalDimension.getWidth(),
-										 pointTwo.getY() + aLocalDimension.getHeight());
-					updateBounds();
-					relocateHandle();
-				}
-			};
-			addChild(h);
-		}
-	
-		protected void paint(PPaintContext paintContext) {
-			Graphics2D g2 = paintContext.getGraphics();
-			g2.setStroke(stroke);
-			g2.setPaint(getPaint());
-			g2.draw(getAnglePath());
-		}
-	
-		protected void updateBounds() {
-			GeneralPath p = getAnglePath();
-			Rectangle2D b = stroke.createStrokedShape(p).getBounds2D();
-			super.setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-		}
-	
-		public GeneralPath getAnglePath() {
-			GeneralPath p = new GeneralPath();
-			p.moveTo((float)pointOne.getX(), (float)pointOne.getY());
-			p.lineTo(0, 0);
-			p.lineTo((float)pointTwo.getX(), (float)pointTwo.getY());
-			return p;
-		}
-	
-		public boolean setBounds(double x, double y, double width, double height) {
-			return false; // bounds can be set externally
-		}			
-	}
+    public void initialize() {
+        PCanvas c = getCanvas();
+        PLayer l = c.getLayer();
+        l.addChild(new AngleNode());
+    }
+
+    public static void main(String[] args) {
+        new AngleNodeExample();
+    }
+
+    // the angle node class
+    public static class AngleNode extends PNode {
+        protected Point2D.Double pointOne;
+        protected Point2D.Double pointTwo;
+        protected Stroke stroke;
+
+        public AngleNode() {
+            pointOne = new Point2D.Double(100, 0);
+            pointTwo = new Point2D.Double(0, 100);
+            stroke = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+            setPaint(Color.BLACK);
+            updateBounds();
+            addHandles();
+        }
+
+        public void addHandles() {
+            // point one
+            PLocator l = new PLocator() {
+                public double locateX() {
+                    return pointOne.getX();
+                }
+
+                public double locateY() {
+                    return pointOne.getY();
+                }
+            };
+            PHandle h = new PHandle(l) {
+                public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
+                    localToParent(aLocalDimension);
+                    pointOne.setLocation(pointOne.getX() + aLocalDimension.getWidth(), pointOne.getY()
+                            + aLocalDimension.getHeight());
+                    updateBounds();
+                    relocateHandle();
+                }
+            };
+            addChild(h);
+
+            // point two
+            l = new PLocator() {
+                public double locateX() {
+                    return pointTwo.getX();
+                }
+
+                public double locateY() {
+                    return pointTwo.getY();
+                }
+            };
+            h = new PHandle(l) {
+                public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
+                    localToParent(aLocalDimension);
+                    pointTwo.setLocation(pointTwo.getX() + aLocalDimension.getWidth(), pointTwo.getY()
+                            + aLocalDimension.getHeight());
+                    updateBounds();
+                    relocateHandle();
+                }
+            };
+            addChild(h);
+        }
+
+        protected void paint(PPaintContext paintContext) {
+            Graphics2D g2 = paintContext.getGraphics();
+            g2.setStroke(stroke);
+            g2.setPaint(getPaint());
+            g2.draw(getAnglePath());
+        }
+
+        protected void updateBounds() {
+            GeneralPath p = getAnglePath();
+            Rectangle2D b = stroke.createStrokedShape(p).getBounds2D();
+            super.setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+        }
+
+        public GeneralPath getAnglePath() {
+            GeneralPath p = new GeneralPath();
+            p.moveTo((float) pointOne.getX(), (float) pointOne.getY());
+            p.lineTo(0, 0);
+            p.lineTo((float) pointTwo.getX(), (float) pointTwo.getY());
+            return p;
+        }
+
+        public boolean setBounds(double x, double y, double width, double height) {
+            return false; // bounds can be set externally
+        }
+    }
 }

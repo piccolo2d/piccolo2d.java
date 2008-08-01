@@ -13,27 +13,27 @@ import edu.umd.cs.piccolox.nodes.PClip;
  */
 public class ClipExample extends PFrame {
 
-	public ClipExample() {
-		this(null);
-	}
-	
-	public ClipExample(PCanvas aCanvas) {
-		super("ClipExample", false, aCanvas);
-	}
-	
-	public void initialize() {
-		PClip clip = new PClip();
-		clip.setPathToEllipse(0, 0, 100, 100);
-		clip.setPaint(Color.red);
-		
-		clip.addChild(PPath.createRectangle(20, 20, 100, 50));
-		getCanvas().getLayer().addChild(clip);
+    public ClipExample() {
+        this(null);
+    }
 
-		getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
-		getCanvas().addInputEventListener(new PDragEventHandler());
-	}
-		
-	public static void main(String[] args) {
-		new ClipExample();
-	}	
+    public ClipExample(PCanvas aCanvas) {
+        super("ClipExample", false, aCanvas);
+    }
+
+    public void initialize() {
+        PClip clip = new PClip();
+        clip.setPathToEllipse(0, 0, 100, 100);
+        clip.setPaint(Color.red);
+
+        clip.addChild(PPath.createRectangle(20, 20, 100, 50));
+        getCanvas().getLayer().addChild(clip);
+
+        getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
+        getCanvas().addInputEventListener(new PDragEventHandler());
+    }
+
+    public static void main(String[] args) {
+        new ClipExample();
+    }
 }

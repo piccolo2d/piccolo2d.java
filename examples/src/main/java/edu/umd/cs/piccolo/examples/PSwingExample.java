@@ -17,32 +17,32 @@ import javax.swing.event.ChangeListener;
 public class PSwingExample extends PFrame {
 
     public PSwingExample() {
-        this( new PSwingCanvas() );
+        this(new PSwingCanvas());
     }
 
-    public PSwingExample( PCanvas aCanvas ) {
-        super( "PSwingExample", false, aCanvas );
+    public PSwingExample(PCanvas aCanvas) {
+        super("PSwingExample", false, aCanvas);
     }
 
     public void initialize() {
-        PSwingCanvas pswingCanvas = (PSwingCanvas)getCanvas();
+        PSwingCanvas pswingCanvas = (PSwingCanvas) getCanvas();
         PLayer l = pswingCanvas.getLayer();
 
-        JSlider js = new JSlider( 0, 100 );
-        js.addChangeListener( new ChangeListener() {
-            public void stateChanged( ChangeEvent e ) {
-                System.out.println( "e = " + e );
+        JSlider js = new JSlider(0, 100);
+        js.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                System.out.println("e = " + e);
             }
-        } );
-        js.setBorder( BorderFactory.createTitledBorder( "Test JSlider" ) );
-        PSwing pSwing = new PSwing( js );
-        pSwing.translate( 100, 100 );
-        l.addChild( pSwing );
+        });
+        js.setBorder(BorderFactory.createTitledBorder("Test JSlider"));
+        PSwing pSwing = new PSwing(js);
+        pSwing.translate(100, 100);
+        l.addChild(pSwing);
 
-        pswingCanvas.setPanEventHandler( null );
+        pswingCanvas.setPanEventHandler(null);
     }
 
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
         new PSwingExample();
     }
 }

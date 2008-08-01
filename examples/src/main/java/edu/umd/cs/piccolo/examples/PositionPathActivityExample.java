@@ -15,42 +15,43 @@ import edu.umd.cs.piccolox.activities.PPositionPathActivity;
  */
 public class PositionPathActivityExample extends PFrame {
 
-	public PositionPathActivityExample() {
-		super();
-	}
+    public PositionPathActivityExample() {
+        super();
+    }
 
-	public void initialize() {
-		PLayer layer = getCanvas().getLayer();
-		final PNode animatedNode = PPath.createRectangle(0, 0, 100, 80);
-		layer.addChild(animatedNode);
-		
-		// create animation path
-		GeneralPath path = new GeneralPath();
-		path.moveTo(0, 0);
-		path.lineTo(300, 300);
-		path.lineTo(300, 0);
-		path.append(new Arc2D.Float(0, 0, 300, 300, 90, -90, Arc2D.OPEN), true);
-		path.closePath();
+    public void initialize() {
+        PLayer layer = getCanvas().getLayer();
+        final PNode animatedNode = PPath.createRectangle(0, 0, 100, 80);
+        layer.addChild(animatedNode);
 
-		// create node to display animation path
-		PPath ppath = new PPath(path);
-		layer.addChild(ppath);
+        // create animation path
+        GeneralPath path = new GeneralPath();
+        path.moveTo(0, 0);
+        path.lineTo(300, 300);
+        path.lineTo(300, 0);
+        path.append(new Arc2D.Float(0, 0, 300, 300, 90, -90, Arc2D.OPEN), true);
+        path.closePath();
 
-		// create activity to run animation.
-		PPositionPathActivity positionPathActivity = new PPositionPathActivity(5000, 0, new PPositionPathActivity.Target() {
-			public void setPosition(double x, double y) {
-				animatedNode.setOffset(x, y);
-			}
-		});
-//		positionPathActivity.setSlowInSlowOut(false);
-		positionPathActivity.setPositions(path);
-		positionPathActivity.setLoopCount(Integer.MAX_VALUE);
-		
-		// add the activity.
-		animatedNode.addActivity(positionPathActivity);
-	}
+        // create node to display animation path
+        PPath ppath = new PPath(path);
+        layer.addChild(ppath);
 
-	public static void main(String[] args) {
-		new PositionPathActivityExample();
-	}
+        // create activity to run animation.
+        PPositionPathActivity positionPathActivity = new PPositionPathActivity(5000, 0,
+                new PPositionPathActivity.Target() {
+                    public void setPosition(double x, double y) {
+                        animatedNode.setOffset(x, y);
+                    }
+                });
+        // positionPathActivity.setSlowInSlowOut(false);
+        positionPathActivity.setPositions(path);
+        positionPathActivity.setLoopCount(Integer.MAX_VALUE);
+
+        // add the activity.
+        animatedNode.addActivity(positionPathActivity);
+    }
+
+    public static void main(String[] args) {
+        new PositionPathActivityExample();
+    }
 }
