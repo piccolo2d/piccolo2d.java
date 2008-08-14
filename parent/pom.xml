@@ -76,7 +76,7 @@
 		<developerConnection>
 			scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk
 		</developerConnection>
-		<url>http://code.google.com/p/piccolo2d/source/browse</url>
+		<url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk</url>
 	</scm>
 	<organization>
 		<name>Piccolo2D</name>
@@ -167,9 +167,9 @@
 			<plugin>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 			</plugin>
-			<!-- plugin>
+			<plugin>
 				<artifactId>maven-changelog-plugin</artifactId>
-				</plugin -->
+			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
 			</plugin>
