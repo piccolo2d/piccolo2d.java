@@ -15,7 +15,7 @@
 # as this causes thousands of commits, we'll try another way.
 #
 
-base=https://piccolo2d.googlecode.com/svn/site/piccolo2d.java
+base=https://piccolo2d.googlecode.com/svn/site/doc/piccolo2d.java
 version=1.3-SNAPSHOT
 
 cwd=`pwd`
