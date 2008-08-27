@@ -31,5 +31,6 @@
 		<module>core</module>
 		<module>extras</module>
 		<module>examples</module>
+		<module>svg</module>
 	</modules>
 </project>

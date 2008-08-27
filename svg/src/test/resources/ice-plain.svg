@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   width="14"
+   height="31"
+   viewBox="-7 -22 14 31"
+   id="svg2">
+  <desc
+     id="desc4">Sheet of curling ice with one rock of each color - http://www.jcurl.org</desc>
+  <defs
+     id="defs6">
+    <style
+       type="text/css"
+       id="style8" />
+    <g
+       id="ice">
+      <rect
+         width="12"
+         height="21"
+         x="-6"
+         y="0"
+         id="rect11"
+         style="fill:#e8e8ff;stroke:none" />
+      <line
+         class="line"
+         x1="-2"
+         y1="-6"
+         x2="-2"
+         y2="93"
+         id="line13"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="2"
+         y1="-6"
+         x2="2"
+         y2="93"
+         id="line15"
+         style="stroke:#000000;stroke-width:0.025" />
+      <rect
+         width="12"
+         height="6"
+         x="-6"
+         y="-6"
+         id="rect17"
+         style="fill:#e8e8ff;stroke:none" />
+      <circle
+         cx="0"
+         cy="0"
+         r="6"
+         id="circle19"
+         style="fill:#ff3131;stroke:none" />
+      <circle
+         cx="0"
+         cy="0"
+         r="4"
+         id="circle21"
+         style="fill:#ffffff;stroke:none" />
+      <circle
+         cx="0"
+         cy="0"
+         r="2"
+         id="circle23"
+         style="fill:#3131ff;stroke:none" />
+      <circle
+         cx="0"
+         cy="0"
+         r="0.5"
+         id="circle25"
+         style="fill:#ffffff;stroke:none" />
+      <line
+         class="line"
+         x1="-7"
+         y1="0"
+         x2="7"
+         y2="0"
+         id="line27"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="-7"
+         y1="-6"
+         x2="7"
+         y2="-6"
+         id="line29"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="-7"
+         y1="21"
+         x2="7"
+         y2="21"
+         id="line31"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="-7"
+         y1="93"
+         x2="7"
+         y2="93"
+         id="line33"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="-0.5"
+         y1="132"
+         x2="0.5"
+         y2="132"
+         id="line35"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="0"
+         y1="-6"
+         x2="0"
+         y2="132"
+         id="line37"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="-6"
+         y1="-6"
+         x2="-6"
+         y2="93"
+         id="line39"
+         style="stroke:#000000;stroke-width:0.025" />
+      <line
+         class="line"
+         x1="6"
+         y1="-6"
+         x2="6"
+         y2="93"
+         id="line41"
+         style="stroke:#000000;stroke-width:0.025" />
+      <a
+         xlink:href="http://www.jcurl.org"
+         xlink:title="JCurl Homepage"
+         xlink:show="new"
+         transform="scale(1,-1)"
+         id="a43">
+        <text
+           x="-6"
+           y="5.8000002"
+           id="text45"
+           style="font-size:0.40000001px;opacity:0.75;fill:#000000">http://www.jcurl.org</text>
+      </a>
+    </g>
+    <g
+       id="rock_body">
+      <circle
+         cx="0"
+         cy="0"
+         r="0.5"
+         id="circle48"
+         style="fill:#565755;stroke:none" />
+      <circle
+         cx="0"
+         cy="0"
+         r="0.34999999"
+         id="circle50" />
+    </g>
+    <g
+       id="rock_1">
+      <use
+         id="use53"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g55">
+        <text
+           transform="translate(0,0.25)"
+           id="text57"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">1</text>
+      </g>
+    </g>
+    <g
+       id="rock_2">
+      <use
+         id="use60"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g62">
+        <text
+           transform="translate(0,0.25)"
+           id="text64"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">2</text>
+      </g>
+    </g>
+    <g
+       id="rock_3">
+      <use
+         id="use67"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g69">
+        <text
+           transform="translate(0,0.25)"
+           id="text71"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">3</text>
+      </g>
+    </g>
+    <g
+       id="rock_4">
+      <use
+         id="use74"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g76">
+        <text
+           transform="translate(0,0.25)"
+           id="text78"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">4</text>
+      </g>
+    </g>
+    <g
+       id="rock_5">
+      <use
+         id="use81"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g83">
+        <text
+           transform="translate(0,0.25)"
+           id="text85"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">5</text>
+      </g>
+    </g>
+    <g
+       id="rock_6">
+      <use
+         id="use88"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g90">
+        <text
+           transform="translate(0,0.25)"
+           id="text92"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">6</text>
+      </g>
+    </g>
+    <g
+       id="rock_7">
+      <use
+         id="use95"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g97">
+        <text
+           transform="translate(0,0.25)"
+           id="text99"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">7</text>
+      </g>
+    </g>
+    <g
+       id="rock_8">
+      <use
+         id="use102"
+         x="0"
+         y="0"
+         width="14"
+         height="31"
+         xlink:href="#rock_body" />
+      <g
+         transform="scale(1,-1)"
+         id="g104">
+        <text
+           transform="translate(0,0.25)"
+           id="text106"
+           style="font-size:0.64999998px;text-anchor:middle;fill:#000000">8</text>
+      </g>
+    </g>
+  </defs>
+  <g
+     transform="scale(1,-1)"
+     id="g108">
+    <use
+       id="use110"
+       x="0"
+       y="0"
+       width="14"
+       height="31"
+       xlink:href="#ice" />
+    <use
+       id="use112"
+       style="fill:#e0e010;stroke:none"
+       x="-2"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_1" />
+    <use
+       id="use114"
+       style="fill:#e0e010;stroke:none"
+       x="-2"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_2" />
+    <use
+       id="use116"
+       style="fill:#e0e010;stroke:none"
+       x="-3.2"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_3" />
+    <use
+       id="use118"
+       style="fill:#e0e010;stroke:none"
+       x="-3.2"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_4" />
+    <use
+       id="use120"
+       style="fill:#e0e010;stroke:none"
+       x="-4.4000001"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_5" />
+    <use
+       id="use122"
+       style="fill:#e0e010;stroke:none"
+       x="-4.4000001"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_6" />
+    <use
+       id="use124"
+       style="fill:#e0e010;stroke:none"
+       x="-5.5999999"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_7" />
+    <use
+       id="use126"
+       style="fill:#e0e010;stroke:none"
+       x="-5.5999999"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_8" />
+    <use
+       id="use128"
+       style="fill:#e01010;stroke:none"
+       x="2"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_1" />
+    <use
+       id="use130"
+       style="fill:#e01010;stroke:none"
+       x="2"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_2" />
+    <use
+       id="use132"
+       style="fill:#e01010;stroke:none"
+       x="3.2"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_3" />
+    <use
+       id="use134"
+       style="fill:#e01010;stroke:none"
+       x="3.2"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_4" />
+    <use
+       id="use136"
+       style="fill:#e01010;stroke:none"
+       x="4.4000001"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_5" />
+    <use
+       id="use138"
+       style="fill:#e01010;stroke:none"
+       x="4.4000001"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_6" />
+    <use
+       id="use140"
+       style="fill:#e01010;stroke:none"
+       x="5.5999999"
+       y="-7"
+       width="14"
+       height="31"
+       xlink:href="#rock_7" />
+    <use
+       id="use142"
+       style="fill:#e01010;stroke:none"
+       x="5.5999999"
+       y="-8.1999998"
+       width="14"
+       height="31"
+       xlink:href="#rock_8" />
+    <use
+       id="use144"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="28"
+       width="14"
+       height="31"
+       xlink:href="#rock_1" />
+    <use
+       id="use146"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="27"
+       width="14"
+       height="31"
+       xlink:href="#rock_2" />
+    <use
+       id="use148"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="26"
+       width="14"
+       height="31"
+       xlink:href="#rock_3" />
+    <use
+       id="use150"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="25"
+       width="14"
+       height="31"
+       xlink:href="#rock_4" />
+    <use
+       id="use152"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="24"
+       width="14"
+       height="31"
+       xlink:href="#rock_5" />
+    <use
+       id="use154"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="23"
+       width="14"
+       height="31"
+       xlink:href="#rock_6" />
+    <use
+       id="use156"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="22"
+       width="14"
+       height="31"
+       xlink:href="#rock_7" />
+    <use
+       id="use158"
+       style="opacity:0.5;fill:#e0e010;stroke:none"
+       x="-6.5999999"
+       y="21"
+       width="14"
+       height="31"
+       xlink:href="#rock_8" />
+    <use
+       id="use160"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="28"
+       width="14"
+       height="31"
+       xlink:href="#rock_1" />
+    <use
+       id="use162"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="27"
+       width="14"
+       height="31"
+       xlink:href="#rock_2" />
+    <use
+       id="use164"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="26"
+       width="14"
+       height="31"
+       xlink:href="#rock_3" />
+    <use
+       id="use166"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="25"
+       width="14"
+       height="31"
+       xlink:href="#rock_4" />
+    <use
+       id="use168"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="24"
+       width="14"
+       height="31"
+       xlink:href="#rock_5" />
+    <use
+       id="use170"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="23"
+       width="14"
+       height="31"
+       xlink:href="#rock_6" />
+    <use
+       id="use172"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="22"
+       width="14"
+       height="31"
+       xlink:href="#rock_7" />
+    <use
+       id="use174"
+       style="opacity:0.5;fill:#e01010;stroke:none"
+       x="6.5999999"
+       y="21"
+       width="14"
+       height="31"
+       xlink:href="#rock_8" />
+  </g>
+</svg>
