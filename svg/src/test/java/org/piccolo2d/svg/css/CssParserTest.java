@@ -31,19 +31,17 @@ import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
-import org.piccolo2d.svg.css.CssParser;
-
 import junit.framework.TestCase;
 
 public class CssParserTest extends TestCase {
 
-    private static void debug(String label, Object o) {
+    private static void debug(final String label, final Object o) {
         System.out.println("-- debug " + label + " -----------");
         System.out.println(o);
     }
 
     public void testParse() throws ParseException {
-        CssParser p = new CssParser();
+        final CssParser p = new CssParser();
         LinkedHashMap css = null;
 
         assertNotNull(css = p.parse("d { key:value }", null));
@@ -56,7 +54,12 @@ public class CssParserTest extends TestCase {
         assertFalse(pa.matcher("/a/b/cd").matches());
 
         // FIXME invert this test:
-        assertNull(css = p.parse("d f{ key:value }", null));
+        try {
+            assertNull(css = p.parse("d f{ key:value }", null));
+        }
+        catch (final ParseException e) {
+            assertEquals(2, e.getErrorOffset());
+        }
         // pa = (Pattern) css.keySet().iterator().next();
         // debug("p0", pa.pattern());
         // assertTrue(pa.matcher("/a/b/d/e/f").matches());
@@ -74,7 +77,7 @@ public class CssParserTest extends TestCase {
         assertTrue(pa.matcher("/a/b/cd[@class='c0 c1 c2']").matches());
         assertTrue(pa.matcher("/a/b/de[@class='c0 c1 c2']").matches());
         assertFalse(pa.matcher("/a/b/d[@class='c0 c1 c2']/e").matches());
-        
+
         assertNotNull(css = p.parse("d.c1{ key:value }", null));
         pa = (Pattern) css.keySet().iterator().next();
         debug("p1", pa.pattern());
@@ -107,13 +110,37 @@ public class CssParserTest extends TestCase {
 
         assertNotNull(css = p.parse(".c2.c1 { key:value }", null));
         assertNotNull(css = p.parse(".c2 .c1 { key:value }", null));
-        // FIXME invert this test:
-        assertNull(css = p.parse("f.c2 g.c1{ key:value }", null));
-        // FIXME invert this test:
-        assertNull(css = p.parse("parent child { key:value }", null));
-
-        assertNull(p.parse("parent > child { key:value }", null));
-        assertNull(p.parse("parent + child { key:value }", null));
-        assertNull(p.parse("bla", null));
+        try {
+            // FIXME invert this test:
+            assertNull(css = p.parse("f.c2 g.c1{ key:value }", null));
+        }
+        catch (final ParseException e) {
+            assertEquals(5, e.getErrorOffset());
+        }
+        try {
+            // FIXME invert this test:
+            assertNull(css = p.parse("parent child { key:value }", null));
+        }
+        catch (final ParseException e) {
+            assertEquals(7, e.getErrorOffset());
+        }
+        try {
+            assertNull(p.parse("parent > child { key:value }", null));
+        }
+        catch (final ParseException e) {
+            assertEquals(7, e.getErrorOffset());
+        }
+        try {
+            assertNull(p.parse("parent + child { key:value }", null));
+        }
+        catch (final ParseException e) {
+            assertEquals(7, e.getErrorOffset());
+        }
+        try {
+            assertNull(p.parse("bla", null));
+        }
+        catch (final ParseException e) {
+            assertEquals(3, e.getErrorOffset());
+        }
     }
 }

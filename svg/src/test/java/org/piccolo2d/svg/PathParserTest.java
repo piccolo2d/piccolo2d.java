@@ -33,13 +33,23 @@ import junit.framework.TestCase;
 
 public class PathParserTest extends TestCase {
 
-	public void test01() throws ParseException {
-		final PathParser pp = new PathParser();
-		assertNotNull(pp.parse("M 1,2"));
-		assertNotNull(pp.parse("M 1,2 3,4 5,6 z"));
-		assertNotNull(pp.parse("M 0.1,0.2 1,2 C 3,4 5,6 7,8 z"));
-		assertNotNull(pp.parse("M -1,-2 1,2 Q 3,4 5,6 z"));
-		assertNull(pp.parse("C 3,4 5,6 7,8"));
-		assertNull(pp.parse("bogus"));
-	}
+    public void test01() throws ParseException {
+        final PathParser pp = new PathParser();
+        assertNotNull(pp.parse("M 1,2"));
+        assertNotNull(pp.parse("M 1,2 3,4 5,6 z"));
+        assertNotNull(pp.parse("M 0.1,0.2 1,2 C 3,4 5,6 7,8 z"));
+        assertNotNull(pp.parse("M -1,-2 1,2 Q 3,4 5,6 z"));
+        try {
+            pp.parse("C 3,4 5,6 7,8");
+        }
+        catch (final ParseException e) {
+            assertEquals(0, e.getErrorOffset());
+        }
+        try {
+            pp.parse("bogus");
+        }
+        catch (final ParseException e) {
+            assertEquals(0, e.getErrorOffset());
+        }
+    }
 }

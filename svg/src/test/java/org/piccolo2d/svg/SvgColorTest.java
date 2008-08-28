@@ -46,27 +46,27 @@ public class SvgColorTest extends TestCase {
         assertEquals(0x0088AA, SvgColor.duplicate(0x08a));
     }
 
-    public void testRgbHex() {
-        Color c = SvgColor.compute("#1b3");
-        assertEquals(0x11, c.getRed());
-        assertEquals(0xbb, c.getGreen());
-        assertEquals(0x33, c.getBlue());
-        
-        c = SvgColor.compute("#3a5b7c");
-        assertEquals(0x3a, c.getRed());
-        assertEquals(0x5b, c.getGreen());
-        assertEquals(0x7c, c.getBlue());
-    }
-
     public void testRgb() {
         Color c = SvgColor.compute("rgb( 11 , 22 , 33 )");
         assertEquals(11, c.getRed());
         assertEquals(22, c.getGreen());
         assertEquals(33, c.getBlue());
-        
+
         c = SvgColor.compute("rgb( 25 % , 50 % , 75 % )");
         assertEquals(64, c.getRed());
         assertEquals(128, c.getGreen());
         assertEquals(191, c.getBlue());
+    }
+
+    public void testRgbHex() {
+        Color c = SvgColor.compute("#1b3");
+        assertEquals(0x11, c.getRed());
+        assertEquals(0xbb, c.getGreen());
+        assertEquals(0x33, c.getBlue());
+
+        c = SvgColor.compute("#3a5b7c");
+        assertEquals(0x3a, c.getRed());
+        assertEquals(0x5b, c.getGreen());
+        assertEquals(0x7c, c.getBlue());
     }
 }

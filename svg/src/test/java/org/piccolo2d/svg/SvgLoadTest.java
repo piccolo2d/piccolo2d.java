@@ -42,13 +42,13 @@ public class SvgLoadTest extends TestCase {
         return SvgLoadTest.class.getResource(name);
     }
 
-    public void testFindResource() {
-        assertNotNull(findResource("/ice-plain.svg"));
-    }
-
-    public void testIcePlain() throws IOException {
+    public void _testIcePlain() throws IOException {
         final SvgLoader loader = new SvgLoader();
         final PNode scene = loader.load(findResource("/ice-plain.svg").openStream());
+    }
+
+    public void testFindResource() {
+        assertNotNull(findResource("/ice-plain.svg"));
     }
 
     public void testPatternDigit() {

@@ -27,7 +27,6 @@
  */
 package org.piccolo2d.svg;
 
-import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.text.ParseException;
 
@@ -37,7 +36,7 @@ import java.text.ParseException;
  * DO NOT EDIT MANUALLY!!!
  * </p>
  */
-class PathParser extends PathParserBase {
+class PathParser {
 %%{
 
 	machine path;
@@ -52,41 +51,46 @@ class PathParser extends PathParserBase {
 	}
 	action NUM {
 		/* parse the buffer. */		
-		argv[argc++] = Double.parseDouble(buf.toString());
+		argv[argc++] = Float.parseFloat(buf.toString());
 		buf.setLength(0);
 	}
 	action ABS {
-		absolute = data[p] > 'z';
+		//System.out.println(data[p]);
+		absolute = data[p] <= 'Z';
 	}
 	action CLEAR {
 		argc = 0;
 	}
+	
 	action CLOSE {
-		System.out.println("close.");		
+		pb.closePath();		
 	}
 	action MOVETO {
-		System.out.println("MoveTo x=" + argv[0] + " y=" + argv[1]);		
+		pb.moveTo(absolute, argv[0], argv[1]);
 	}
 	action LINETO {
-		System.out.println("LineTo x=" + argv[0] + " y=" + argv[1]);		
+		pb.lineTo(absolute, argv[0], argv[1]);
 	}
 	action HLINETO {
-		System.out.println("hline: TODO");		
+		pb.hlineTo(absolute, argv[0]);
 	}
 	action VLINETO {
-		System.out.println("vline: TODO");		
+		pb.vlineTo(absolute, argv[0]);
 	}
 	action CUBICTO {
-		System.out.println("CubicTo x0=" + argv[0] + " y0=" + argv[1]+" x1=" + argv[2] + " y1=" + argv[3]+" x2=" + argv[4] + " y2=" + argv[5]);		
+		// I have no idea why this is not sequential...
+		pb.cubicTo(absolute, argv[2], argv[3], argv[4], argv[5], argv[0], argv[1]);
 	}
 	action SCUBICTO {
-		System.out.println("smooth cubic: TODO");		
+		// I have no idea why this is not sequential...
+		pb.smoothCubicTo(absolute, argv[2], argv[3], argv[0], argv[1]);
 	}
 	action QUADTO {
-		System.out.println("QuadTo x0=" + argv[0] + " y0=" + argv[1]+" x1=" + argv[2] + " y1=" + argv[3]);		
+		// I have no idea why this is not sequential...
+		pb.quadTo(absolute, argv[2], argv[3], argv[0], argv[1]);
 	}
 	action SQUADTO {
-		System.out.println("smooth quadratic: TODO");		
+		pb.smoothQuadTo(absolute, argv[0], argv[1]);
 	}
 	action ARC {
 		System.out.println("arc: TODO");		
@@ -209,16 +213,19 @@ class PathParser extends PathParserBase {
 
 %% write data;
 
-	final Shape parse(final CharSequence data) throws ParseException {
+	final GeneralPath parse(final CharSequence data) throws ParseException {
 		return parse(data.toString().toCharArray());
 	}
 
-	final Shape parse(final char[] data) throws ParseException {
+	final GeneralPath parse(final char[] data) throws ParseException {
+		final PathBuilder pb = new PathBuilder();
+		if(data == null)
+			return pb.toPath();
 		// high-level buffers
 		final StringBuilder buf = new StringBuilder();
-		final double[] argv = new double[7];
+		final float[] argv = new float[7];
 		int argc = 0;
-		boolean absolute = true;
+		boolean absolute = true;		
 		
 		// ragel variables (low level)
 		final int pe = data.length;
@@ -231,6 +238,6 @@ class PathParser extends PathParserBase {
 
 		if ( cs < path_first_final )
 			throw new ParseException(new String(data), p);
-        return new GeneralPath();
+        return pb.toPath();
 	}
 }

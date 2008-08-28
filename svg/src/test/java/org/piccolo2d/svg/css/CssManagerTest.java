@@ -30,10 +30,17 @@ package org.piccolo2d.svg.css;
 import java.text.ParseException;
 import java.util.Map;
 
-
 import junit.framework.TestCase;
 
 public class CssManagerTest extends TestCase {
+
+    public void testCircle() throws ParseException {
+        final CssManager cm = new CssManagerImpl();
+        cm.loadStyleSheet("\n" + "      .circle_12 { fill: #ff3131; stroke: none }\n" + "    ");
+
+        final Map m = cm.findStyle("/c/b", null);
+
+    }
 
     public void testOk() throws ParseException {
         final CssManager cm = new CssManagerImpl();

@@ -28,7 +28,6 @@
  */
 package org.piccolo2d.svg;
 
-import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.text.ParseException;
 
@@ -38,12 +37,12 @@ import java.text.ParseException;
  * DO NOT EDIT MANUALLY!!!
  * </p>
  */
-class PathParser extends PathParserBase {
-// line 208 "src/main/ragel/PathParser.rl"
+class PathParser {
+// line 212 "src/main/ragel/PathParser.rl"
 
 
 
-// line 47 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 46 "src/main/java/org/piccolo2d/svg/PathParser.java"
 private static byte[] init__path_actions_0()
 {
 	return new byte [] {
@@ -667,18 +666,21 @@ static final int path_error = 0;
 
 static final int path_en_main = 1;
 
-// line 211 "src/main/ragel/PathParser.rl"
+// line 215 "src/main/ragel/PathParser.rl"
 
-	final Shape parse(final CharSequence data) throws ParseException {
+	final GeneralPath parse(final CharSequence data) throws ParseException {
 		return parse(data.toString().toCharArray());
 	}
 
-	final Shape parse(final char[] data) throws ParseException {
+	final GeneralPath parse(final char[] data) throws ParseException {
+		final PathBuilder pb = new PathBuilder();
+		if(data == null)
+			return pb.toPath();
 		// high-level buffers
 		final StringBuilder buf = new StringBuilder();
-		final double[] argv = new double[7];
+		final float[] argv = new float[7];
 		int argc = 0;
-		boolean absolute = true;
+		boolean absolute = true;		
 		
 		// ragel variables (low level)
 		final int pe = data.length;
@@ -687,13 +689,13 @@ static final int path_en_main = 1;
 		int top;
 
 		
-// line 691 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 693 "src/main/java/org/piccolo2d/svg/PathParser.java"
 	{
 	cs = path_start;
 	}
-// line 230 "src/main/ragel/PathParser.rl"
+// line 237 "src/main/ragel/PathParser.rl"
 		
-// line 697 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 699 "src/main/java/org/piccolo2d/svg/PathParser.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -774,24 +776,25 @@ case 1:
 			switch ( _path_actions[_acts++] )
 			{
 	case 0:
-// line 49 "src/main/ragel/PathParser.rl"
+// line 48 "src/main/ragel/PathParser.rl"
 	{
 		/* add the character to the buffer. */
 		buf.append(data[p]);
 	}
 	break;
 	case 1:
-// line 53 "src/main/ragel/PathParser.rl"
+// line 52 "src/main/ragel/PathParser.rl"
 	{
 		/* parse the buffer. */		
-		argv[argc++] = Double.parseDouble(buf.toString());
+		argv[argc++] = Float.parseFloat(buf.toString());
 		buf.setLength(0);
 	}
 	break;
 	case 2:
-// line 58 "src/main/ragel/PathParser.rl"
+// line 57 "src/main/ragel/PathParser.rl"
 	{
-		absolute = data[p] > 'z';
+		//System.out.println(data[p]);
+		absolute = data[p] <= 'Z';
 	}
 	break;
 	case 3:
@@ -801,66 +804,69 @@ case 1:
 	}
 	break;
 	case 4:
-// line 64 "src/main/ragel/PathParser.rl"
+// line 65 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("close.");		
+		pb.closePath();		
 	}
 	break;
 	case 5:
-// line 67 "src/main/ragel/PathParser.rl"
+// line 68 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("MoveTo x=" + argv[0] + " y=" + argv[1]);		
+		pb.moveTo(absolute, argv[0], argv[1]);
 	}
 	break;
 	case 6:
-// line 70 "src/main/ragel/PathParser.rl"
+// line 71 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("LineTo x=" + argv[0] + " y=" + argv[1]);		
+		pb.lineTo(absolute, argv[0], argv[1]);
 	}
 	break;
 	case 7:
-// line 73 "src/main/ragel/PathParser.rl"
+// line 74 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("hline: TODO");		
+		pb.hlineTo(absolute, argv[0]);
 	}
 	break;
 	case 8:
-// line 76 "src/main/ragel/PathParser.rl"
+// line 77 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("vline: TODO");		
+		pb.vlineTo(absolute, argv[0]);
 	}
 	break;
 	case 9:
-// line 79 "src/main/ragel/PathParser.rl"
+// line 80 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("CubicTo x0=" + argv[0] + " y0=" + argv[1]+" x1=" + argv[2] + " y1=" + argv[3]+" x2=" + argv[4] + " y2=" + argv[5]);		
+		// I have no idea why this is not sequential...
+		pb.cubicTo(absolute, argv[2], argv[3], argv[4], argv[5], argv[0], argv[1]);
 	}
 	break;
 	case 10:
-// line 82 "src/main/ragel/PathParser.rl"
+// line 84 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("smooth cubic: TODO");		
+		// I have no idea why this is not sequential...
+		pb.smoothCubicTo(absolute, argv[2], argv[3], argv[0], argv[1]);
 	}
 	break;
 	case 11:
-// line 85 "src/main/ragel/PathParser.rl"
+// line 88 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("QuadTo x0=" + argv[0] + " y0=" + argv[1]+" x1=" + argv[2] + " y1=" + argv[3]);		
+		// I have no idea why this is not sequential...
+		pb.quadTo(absolute, argv[2], argv[3], argv[0], argv[1]);
 	}
 	break;
 	case 12:
-// line 88 "src/main/ragel/PathParser.rl"
+// line 92 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("smooth quadratic: TODO");		
+		pb.smoothQuadTo(absolute, argv[0], argv[1]);
 	}
 	break;
 	case 13:
-// line 91 "src/main/ragel/PathParser.rl"
+// line 95 "src/main/ragel/PathParser.rl"
 	{
 		System.out.println("arc: TODO");		
 	}
 	break;
-// line 864 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 870 "src/main/java/org/piccolo2d/svg/PathParser.java"
 			}
 		}
 	}
@@ -882,68 +888,71 @@ case 4:
 	while ( __nacts-- > 0 ) {
 		switch ( _path_actions[__acts++] ) {
 	case 1:
-// line 53 "src/main/ragel/PathParser.rl"
+// line 52 "src/main/ragel/PathParser.rl"
 	{
 		/* parse the buffer. */		
-		argv[argc++] = Double.parseDouble(buf.toString());
+		argv[argc++] = Float.parseFloat(buf.toString());
 		buf.setLength(0);
 	}
 	break;
 	case 5:
-// line 67 "src/main/ragel/PathParser.rl"
+// line 68 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("MoveTo x=" + argv[0] + " y=" + argv[1]);		
+		pb.moveTo(absolute, argv[0], argv[1]);
 	}
 	break;
 	case 6:
-// line 70 "src/main/ragel/PathParser.rl"
+// line 71 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("LineTo x=" + argv[0] + " y=" + argv[1]);		
+		pb.lineTo(absolute, argv[0], argv[1]);
 	}
 	break;
 	case 7:
-// line 73 "src/main/ragel/PathParser.rl"
+// line 74 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("hline: TODO");		
+		pb.hlineTo(absolute, argv[0]);
 	}
 	break;
 	case 8:
-// line 76 "src/main/ragel/PathParser.rl"
+// line 77 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("vline: TODO");		
+		pb.vlineTo(absolute, argv[0]);
 	}
 	break;
 	case 9:
-// line 79 "src/main/ragel/PathParser.rl"
+// line 80 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("CubicTo x0=" + argv[0] + " y0=" + argv[1]+" x1=" + argv[2] + " y1=" + argv[3]+" x2=" + argv[4] + " y2=" + argv[5]);		
+		// I have no idea why this is not sequential...
+		pb.cubicTo(absolute, argv[2], argv[3], argv[4], argv[5], argv[0], argv[1]);
 	}
 	break;
 	case 10:
-// line 82 "src/main/ragel/PathParser.rl"
+// line 84 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("smooth cubic: TODO");		
+		// I have no idea why this is not sequential...
+		pb.smoothCubicTo(absolute, argv[2], argv[3], argv[0], argv[1]);
 	}
 	break;
 	case 11:
-// line 85 "src/main/ragel/PathParser.rl"
+// line 88 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("QuadTo x0=" + argv[0] + " y0=" + argv[1]+" x1=" + argv[2] + " y1=" + argv[3]);		
+		// I have no idea why this is not sequential...
+		pb.quadTo(absolute, argv[2], argv[3], argv[0], argv[1]);
 	}
 	break;
 	case 12:
-// line 88 "src/main/ragel/PathParser.rl"
+// line 92 "src/main/ragel/PathParser.rl"
 	{
-		System.out.println("smooth quadratic: TODO");		
+		pb.smoothQuadTo(absolute, argv[0], argv[1]);
 	}
 	break;
 	case 13:
-// line 91 "src/main/ragel/PathParser.rl"
+// line 95 "src/main/ragel/PathParser.rl"
 	{
 		System.out.println("arc: TODO");		
 	}
 	break;
-// line 947 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 956 "src/main/java/org/piccolo2d/svg/PathParser.java"
 		}
 	}
 	}
@@ -952,10 +961,10 @@ case 5:
 	}
 	break; }
 	}
-// line 231 "src/main/ragel/PathParser.rl"
+// line 238 "src/main/ragel/PathParser.rl"
 
 		if ( cs < path_first_final )
 			throw new ParseException(new String(data), p);
-        return new GeneralPath();
+        return pb.toPath();
 	}
 }

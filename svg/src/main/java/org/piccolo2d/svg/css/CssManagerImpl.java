@@ -27,8 +27,6 @@
  */
 package org.piccolo2d.svg.css;
 
-import java.io.IOException;
-import java.net.URL;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,14 +36,13 @@ import java.util.WeakHashMap;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-
 /**
  * Very simple, non-DOM based css manager.
  * <p>
  * The {@link CssParser} creates {@link Pattern}s to match document xpaths from
  * the CSS selectors and {@link Map}s from the CSS attributes.
  * <p>
- * The single rules are kept in a {@link LinkedHashMap} to keep the order.
+ * The single rules are kept in a {@link LinkedHashMap} to preserve the order.
  * 
  * @see CssParser
  */
@@ -92,9 +89,5 @@ public class CssManagerImpl implements CssManager {
     public void loadStyleSheet(final CharSequence styledata) throws ParseException {
         new CssParser().parse(styledata, css);
         clearCache();
-    }
-
-    public void loadStyleSheet(final URL path) throws IOException {
-        throw new UnsupportedOperationException("Not implemented yet.");
     }
 }

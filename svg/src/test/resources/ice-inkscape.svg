@@ -86,7 +86,7 @@
       .circle-8 { fill: #ffffff; stroke: none }
       .circle-4 { fill: #3131ff; stroke: none }
       .circle-1 { fill: #ffffff; stroke: none }
-      .line { stroke: black; stroke-width: 0.025 /* feet, world-coordinates */ }
+      .line { stroke: black; stroke-width: 0.025 }
       .ice-house { fill: #e8e8ff; stroke: none; }
       .watermark { fill: black; opacity: 0.75; font-size: 0.4; }
       .ghost { opacity: 0.5; }

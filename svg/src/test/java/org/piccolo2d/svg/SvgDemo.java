@@ -39,34 +39,36 @@ import edu.umd.cs.piccolo.PNode;
 
 public class SvgDemo {
 
-	public static void main(final String[] args) throws IOException {
-		final JFrame frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(final WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		frame.setSize(600, 800);
+    public static void main(final String[] args) throws IOException {
+        final JFrame frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(final WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        frame.setSize(600, 800);
 
-		final PCanvas zui = new PCanvas();
-		frame.setTitle(SvgDemo.class.getName());
-		frame.getContentPane().add(zui);
+        final PCanvas zui = new PCanvas();
+        frame.setTitle(SvgDemo.class.getName());
+        frame.getContentPane().add(zui);
+        {
+            final PNode world = new SvgLoader().load(SvgLoadTest.findResource("/ice-plain.svg").openStream());
+        }
+        final long start = System.currentTimeMillis();
+        final PNode world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/path/quad01.svg").openStream());
+        System.out.println(System.currentTimeMillis() - start);
 
-		final PNode world = new SvgLoader().load(SvgLoadTest.findResource(
-				"/w3c-svg/line01.svg").openStream());
+        zui.getLayer().addChild(world);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                frame.setVisible(true);
+            }
+        });
 
-		zui.getLayer().addChild(world);
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				frame.setVisible(true);
-			}
-		});
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				zui.getCamera().animateViewToCenterBounds(
-						world.getFullBounds(), true, 500);
-			}
-		});
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                zui.getCamera().animateViewToCenterBounds(world.getFullBounds(), true, 500);
+            }
+        });
+    }
 }

@@ -48,15 +48,16 @@ abstract class CssParserBase {
     static final String A0 = "\\[@class='(?:[^']+\\s)?\\s*# <= class Attribute Start \n";
     /** Attribute end */
     static final String AE = "(?:\\s[^']+)?'\\]# <= Attribute end\n";
+    protected static final String ANY_ELEMENT = "*";
     /** Inter-Attribute separator */
     static final String AS = "(?:\\s[^']+)?\\s*# <= inter-Attribute separator\n";
     /** Element start */
     static final String E0 = "/# <= Element Start\n";
     /** Element climber */
     static final String EC = "\n.*# <= Element Climber\n";
+
     /** Element end (separator) */
     static final String EE = "# Element End\n";
-
     // <String>
     private final SortedSet classes = new TreeSet();
     private String currentElem = null;
@@ -66,11 +67,11 @@ abstract class CssParserBase {
     private String prop = null;
     // <String, String>
     private final Map prop_expr = new HashMap();
-    protected static final String ANY_ELEMENT = "*";
 
     protected void finishElement() {
-        if (null == currentElem) // Oops - what's that?
+        if (null == currentElem) {
             return;
+        }
         pat.append(EC);
         pat.append(E0);
         if (ANY_ELEMENT.equals(currentElem)) {
@@ -109,7 +110,7 @@ abstract class CssParserBase {
         try {
             pat.append("$");
             // System.out.println(pat);
-            Pattern p = Pattern.compile(pat.toString(), Pattern.COMMENTS);
+            final Pattern p = Pattern.compile(pat.toString(), Pattern.COMMENTS);
             pats.add(p);
             return p;
         }
@@ -125,14 +126,15 @@ abstract class CssParserBase {
 
     protected void pushElement(final CharSequence s) {
         // pat.append("//" + s);
-        //assert currentElem == null;
-        //assert classes.size() == 0;
+        // assert currentElem == null;
+        // assert classes.size() == 0;
         currentElem = s.toString();
     }
 
     protected void pushExpr(final CharSequence s) {
-        if (prop == null) // Oops - what's that?
+        if (prop == null) {
             return;
+        }
         prop_expr.put(prop, s.toString());
         prop = null;
     }

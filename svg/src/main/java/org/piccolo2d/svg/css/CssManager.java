@@ -37,8 +37,11 @@ public interface CssManager {
 
     void clearCache();
 
-    /** Cached, public access. 
-     * @throws ParseException TODO*/
+    /**
+     * Cached, public access.
+     * 
+     * @throws ParseException
+     */
     Map findStyle(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException;
 
     void loadStyleSheet(final CharSequence styledata) throws ParseException;
