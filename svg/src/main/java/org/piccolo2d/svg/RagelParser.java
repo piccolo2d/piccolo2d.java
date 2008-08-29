@@ -25,36 +25,15 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.svg.css;
 
-import java.text.ParseException;
-import java.util.Map;
-
-import javax.swing.text.html.StyleSheet;
-
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
+package org.piccolo2d.svg;
 
 /**
- * Very simple, non-DOM based css manager.
+ * Marker interface to tag (and group) parsers created via <a
+ * href="http://research.cs.queensu.ca/~thurston/ragel/">ragel</a>.
  * 
- * http://www.w3.org/Style/CSS/SAC/ http://cssparser.sourceforge.net/
- * 
- * TODO replace the xpath with {@link CSSStyleRule#getSelectorText()}.
- * 
- * TODO: examine {@link CSSStyleSheet}, {@link CSSStyleRule} and
- * {@link StyleSheet}.
+ * @author mr0738@mro.name
  */
-public interface CssManager {
+public interface RagelParser {
 
-    void clearCache();
-
-    /**
-     * Cached, public access.
-     * 
-     * @throws ParseException
-     */
-    Map findStyleByXPath(CharSequence xpath, CharSequence styleAttributeValue) throws ParseException;
-
-    void loadStyleSheet(CharSequence styledata) throws ParseException;
 }

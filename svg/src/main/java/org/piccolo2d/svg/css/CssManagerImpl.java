@@ -70,7 +70,7 @@ public class CssManagerImpl implements CssManager {
         return style;
     }
 
-    public Map findStyle(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException {
+    public Map findStyleByXPath(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException {
         xpath = xpath.toString();
         Map style = (Map) styleCache.get(xpath);
         if (style == null) {

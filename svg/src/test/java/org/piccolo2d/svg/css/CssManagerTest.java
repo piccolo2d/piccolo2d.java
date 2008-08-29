@@ -38,7 +38,7 @@ public class CssManagerTest extends TestCase {
         final CssManager cm = new CssManagerImpl();
         cm.loadStyleSheet("\n" + "      .circle_12 { fill: #ff3131; stroke: none }\n" + "    ");
 
-        final Map m = cm.findStyle("/c/b", null);
+        final Map m = cm.findStyleByXPath("/c/b", null);
 
     }
 
@@ -46,7 +46,7 @@ public class CssManagerTest extends TestCase {
         final CssManager cm = new CssManagerImpl();
         cm.loadStyleSheet("* {elem:none;class:none}\n" + "a {elem:a}\n" + ".c1 {class:c1}");
 
-        Map m = cm.findStyle("/c/b", null);
+        Map m = cm.findStyleByXPath("/c/b", null);
         // for (final Iterator it = m.entrySet().iterator(); it.hasNext();) {
         // final Entry et = (Entry) it.next();
         // System.out.println(et.getKey() + "=" + et.getValue());
@@ -55,22 +55,22 @@ public class CssManagerTest extends TestCase {
         assertEquals("none", m.get("class"));
         assertEquals("none", m.get("elem"));
 
-        m = cm.findStyle("/c/b[@class='c0 c1 c2']/a", null);
+        m = cm.findStyleByXPath("/c/b[@class='c0 c1 c2']/a", null);
         assertEquals(2, m.size());
         assertEquals("none", m.get("class"));
         assertEquals("a", m.get("elem"));
 
-        m = cm.findStyle("/c/a/b[@class='c0 c1 c2']", null);
+        m = cm.findStyleByXPath("/c/a/b[@class='c0 c1 c2']", null);
         assertEquals(2, m.size());
         assertEquals("c1", m.get("class"));
         assertEquals("none", m.get("elem"));
 
-        m = cm.findStyle("/c/b/a[@class='c0 c1 c2']", null);
+        m = cm.findStyleByXPath("/c/b/a[@class='c0 c1 c2']", null);
         assertEquals(2, m.size());
         assertEquals("c1", m.get("class"));
         assertEquals("a", m.get("elem"));
 
-        m = cm.findStyle("/c/b/a[@class='c0 c1 c2']", "class:c2");
+        m = cm.findStyleByXPath("/c/b/a[@class='c0 c1 c2']", "class:c2");
         assertEquals(2, m.size());
         assertEquals("c2", m.get("class"));
         assertEquals("a", m.get("elem"));

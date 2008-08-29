@@ -36,7 +36,7 @@ import java.text.ParseException;
  * DO NOT EDIT MANUALLY!!!
  * </p>
  */
-class TrafoParser {
+class TrafoParser implements RagelParser {
 %%{
 
 	machine trafo;

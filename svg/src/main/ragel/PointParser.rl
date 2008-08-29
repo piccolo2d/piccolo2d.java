@@ -36,7 +36,7 @@ import java.text.ParseException;
  * DO NOT EDIT MANUALLY!!!
  * </p>
  */
-class PointParser {
+class PointParser implements RagelParser {
 %%{
 
 	machine points;

@@ -37,7 +37,7 @@ import java.text.ParseException;
  * DO NOT EDIT MANUALLY!!!
  * </p>
  */
-class TrafoParser {
+class TrafoParser implements RagelParser {
 // line 139 "src/main/ragel/TrafoParser.rl"
 
 

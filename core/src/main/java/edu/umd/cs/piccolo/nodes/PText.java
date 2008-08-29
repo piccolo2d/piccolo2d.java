@@ -234,7 +234,7 @@ public class PText extends PNode {
             AttributedString atString = new AttributedString(text);
             atString.addAttribute(TextAttribute.FONT, getFont());
             AttributedCharacterIterator itr = atString.getIterator();
-            LineBreakMeasurer measurer = new LineBreakMeasurer(itr, PPaintContext.RENDER_QUALITY_HIGH_FRC);
+            final LineBreakMeasurer measurer = new LineBreakMeasurer(itr, PPaintContext.RENDER_QUALITY_HIGH_FRC);
             float availableWidth = constrainWidthToTextWidth ? Float.MAX_VALUE : (float) getWidth();
 
             int nextLineBreakOffset = text.indexOf('\n');
