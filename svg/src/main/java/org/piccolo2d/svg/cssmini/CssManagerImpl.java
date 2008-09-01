@@ -28,7 +28,6 @@
 
 package org.piccolo2d.svg.cssmini;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.text.ParseException;
 import java.util.Collection;
@@ -43,32 +42,34 @@ import org.piccolo2d.svg.css.CssManager;
 import org.piccolo2d.svg.util.FontUtil;
 
 /**
- * @see CSSSelector
+ * Very simple css implementation based on {@link CssParser} with full element
+ * nesting and class support.
+ * 
  * @author mr0738@mro.name
  */
 abstract class CssManagerImpl implements CssManager {
-    private static class SD extends TreeMap implements Style {
+    private static class StyImp extends TreeMap implements Style {
 
         private static final long serialVersionUID = 5567683947559207117L;
 
-        public SD() {
+        private StyImp() {
             super();
         }
 
-        public SD(final Map m) {
+        private StyImp(final Map m) {
             super(m);
         }
     }
 
     private final Collection css = new LinkedList();
     private final CssParser parser = new CssParser();
-    private final CssSelectorToXPath selparser = new CssSelectorToXPath();
+    private final CssSelectorToXPath selector2xpath = new CssSelectorToXPath();
     private final Map styleCacheXPath = new WeakHashMap();
 
-    private SD addStyle(final CharSequence styleAttributeValue, SD style) throws ParseException {
+    private StyImp addStyleAttribute(final CharSequence styleAttributeValue, StyImp style) throws ParseException {
         if (styleAttributeValue != null && styleAttributeValue.length() > 0) {
             // that's really brute force, but simple:
-            style = new SD(style);
+            style = new StyImp(style);
             final CSSStyleRule r = (CSSStyleRule) parser.parse("dummyelem{" + styleAttributeValue + "}").iterator()
                     .next();
             style.putAll(r.getStyle());
@@ -80,8 +81,8 @@ abstract class CssManagerImpl implements CssManager {
         styleCacheXPath.clear();
     }
 
-    SD computeStyleByXPath(final CharSequence xpath) {
-        final SD style = new SD();
+    StyImp computeStyleByXPath(final CharSequence xpath) {
+        final StyImp style = new StyImp();
         for (final Iterator it = css.iterator(); it.hasNext();) {
             final CSSStyleRule rule = (CSSStyleRule) it.next();
             if (rule.getSelector().matchesXPath(xpath)) {
@@ -93,29 +94,29 @@ abstract class CssManagerImpl implements CssManager {
 
     public Style findStyleByCSSSelector(final CharSequence cssSelector, final CharSequence styleAttributeValue)
             throws ParseException {
-        return findStyleByXPath(selparser.parse(cssSelector), styleAttributeValue);
+        return findStyleByXPath(selector2xpath.parse(cssSelector), styleAttributeValue);
     }
 
     public Style findStyleByXPath(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException {
         xpath = xpath.toString();
-        SD style = (SD) styleCacheXPath.get(xpath);
+        StyImp style = (StyImp) styleCacheXPath.get(xpath);
         if (style == null) {
             styleCacheXPath.put(xpath, style = computeStyleByXPath(xpath));
         }
-        return addStyle(styleAttributeValue, style);
-    }
-
-    public Color getColor(final Style style, final String key) {
-        return SvgColor.valueOf(getString(style, key));
+        return addStyleAttribute(styleAttributeValue, style);
     }
 
     /**
-     * TODO make this a duty of {@link SvgCssManager}.
+     * Create a new {@link Style} instance and delegate to
+     * {@link #initDefaults(org.piccolo2d.svg.css.CssManager.Style)}
      */
     public Style getDefaultStyle() {
-        return initDefaults(new SD());
+        return initDefaults(new StyImp());
     }
 
+    /**
+     * @see FontUtil#findFont(CharSequence, String, CharSequence)
+     */
     public Font getFont(final Style style) {
         return FontUtil.findFont(getString(style, "font-family"), getString(style, "font-style"), getString(style,
                 "font-size"));
@@ -123,35 +124,23 @@ abstract class CssManagerImpl implements CssManager {
 
     public Number getNumber(final Style style, final String key) {
         final String s = getString(style, key);
-        if (s == null) {
-            return null;
-        }
-        return new Double(s);
+        return s == null ? null : new Double(s);
     }
 
     public double getNumber(final Style style, final String key, final double def) {
         final String s = getString(style, key);
-        if (s == null) {
-            return def;
-        }
-        return Double.parseDouble(s);
+        return s == null ? def : Double.parseDouble(s);
     }
 
     public float getNumber(final Style style, final String key, final float def) {
         final String s = getString(style, key);
-        if (s == null) {
-            return def;
-        }
-        return Float.parseFloat(s);
+        return s == null ? def : Float.parseFloat(s);
     }
 
     public String getString(final Style style, final String key) {
-        final SD sty = (SD) style;
+        final StyImp sty = (StyImp) style;
         final CharSequence ret = (CharSequence) sty.get(key);
-        if (ret == null) {
-            return null;
-        }
-        return ret.toString();
+        return ret == null ? null : ret.toString();
     }
 
     protected abstract Style initDefaults(Style style);
@@ -162,26 +151,26 @@ abstract class CssManagerImpl implements CssManager {
     }
 
     public Style merge(final Style parent, final CharSequence child) throws ParseException {
-        final SD r = new SD((SD) parent);
-        r.putAll((SD) child);
+        final StyImp r = new StyImp((StyImp) parent);
+        r.putAll((StyImp) child);
         return r;
     }
 
     public Style merge(final Style parent, final Style child) {
-        final SD r = new SD();
-        for (final Iterator it = ((SD) parent).entrySet().iterator(); it.hasNext();) {
+        final StyImp r = new StyImp();
+        for (final Iterator it = ((StyImp) parent).entrySet().iterator(); it.hasNext();) {
             final Entry elem = (Entry) it.next();
             final String key = (String) elem.getKey();
-            if (isInherited(key)) {
+            if (inheritProperty(key)) {
                 r.put(key, elem.getValue());
             }
         }
-        r.putAll((SD) child);
+        r.putAll((StyImp) child);
         return r;
     }
 
     public Iterator properties(final Style style) {
-        final SD s = (SD) style;
+        final StyImp s = (StyImp) style;
         return s.keySet().iterator();
     }
 
@@ -191,7 +180,7 @@ abstract class CssManagerImpl implements CssManager {
     }
 
     public String setProperty(final Style style, final String key, final String value) throws ParseException {
-        final SD s = (SD) style;
+        final StyImp s = (StyImp) style;
         return (String) s.put(key, value);
     }
 }

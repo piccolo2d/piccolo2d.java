@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -64,6 +65,7 @@ import edu.umd.cs.piccolo.nodes.PText;
 /**
  * Sax parser for svg.
  * 
+ * @see SvgLoader
  * @author mr0738@mro.name
  */
 class SvgSaxHandler extends DefaultHandler {
@@ -74,7 +76,7 @@ class SvgSaxHandler extends DefaultHandler {
      * @see Arc2D.Double#Double(double, double, double, double, double, double,
      *      int)
      */
-    final class XmlCircle extends XmlPPath {
+    private final class XmlCircle extends XmlPPath {
         PPath createPPath(final Style attributes) throws ParseException {
             final PPath ret = super.createPPath(attributes);
             ret.setVisible(css.getNumber(attributes, "r", 0.0) > 0);
@@ -89,7 +91,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    final class XmlDefs extends XmlHeadElement {
+    private final class XmlDefs extends XmlHeadElement {
         void end() throws SAXException {
             current = root;
         }
@@ -100,7 +102,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    abstract class XmlElement {
+    private abstract class XmlElement {
         void end() throws SAXException {
         };
 
@@ -119,7 +121,7 @@ class SvgSaxHandler extends DefaultHandler {
      * @see Arc2D.Double#Double(double, double, double, double, double, double,
      *      int)
      */
-    final class XmlEllipse extends XmlPPath {
+    private final class XmlEllipse extends XmlPPath {
         PPath createPPath(final Style attributes) throws ParseException {
             final PPath ret = super.createPPath(attributes);
             ret.setVisible(css.getNumber(attributes, "rx", 0.0) > 0 && css.getNumber(attributes, "ry", 0.0) > 0);
@@ -135,7 +137,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    abstract class XmlGeneralPath extends XmlPPath {
+    private abstract class XmlGeneralPath extends XmlPPath {
 
         abstract GeneralPath createGeneralPath(final CharSequence points) throws ParseException;
 
@@ -147,17 +149,16 @@ class SvgSaxHandler extends DefaultHandler {
     /**
      * <a href="http://www.w3.org/TR/SVG11/struct.html#Groups">svg g</a>
      */
-    final class XmlGroup extends XmlPNode {
+    private final class XmlGroup extends XmlPNode {
         PNode createPNode(final Style attributes) throws ParseException {
             return new PNode();
         }
     }
 
-    abstract class XmlHeadElement extends XmlElement {
-
+    private abstract class XmlHeadElement extends XmlElement {
     }
 
-    final class XmlIgnore extends XmlHeadElement {
+    private final class XmlIgnore extends XmlHeadElement {
     }
 
     /**
@@ -165,7 +166,7 @@ class SvgSaxHandler extends DefaultHandler {
      * 
      * @see Line2D.Double#Double(double, double, double, double)
      */
-    final class XmlLine extends XmlPPath {
+    private final class XmlLine extends XmlPPath {
 
         Shape createShape(final Style attributes) throws ParseException {
             final double x1 = css.getNumber(attributes, "x1", 0.0);
@@ -179,7 +180,7 @@ class SvgSaxHandler extends DefaultHandler {
     /**
      * <a href="http://www.w3.org/TR/SVG11/paths.html">svg path</a>
      */
-    class XmlPath extends XmlGeneralPath {
+    private final class XmlPath extends XmlGeneralPath {
         GeneralPath createGeneralPath(final CharSequence d) throws ParseException {
             return path.parse(d);
         }
@@ -189,7 +190,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    abstract class XmlPNode extends XmlElement {
+    private abstract class XmlPNode extends XmlElement {
 
         /**
          * @see #start(Style)
@@ -210,7 +211,10 @@ class SvgSaxHandler extends DefaultHandler {
                     id2node.put(id, child);
                 }
 
-                trafo.parse(find(attributes, "transform"), child.getTransformReference(true));
+                final String tr = find(attributes, "transform");
+                if (tr != null) {
+                    trafo.parse(tr, child.getTransformReference(true));
+                }
 
                 current.addChild(child);
                 current = child;
@@ -225,10 +229,8 @@ class SvgSaxHandler extends DefaultHandler {
     /**
      * <a href="http://www.w3.org/TR/SVG11/shapes.html#PolygonElement">svg
      * polylgon</a>
-     * 
-     * @see GeneralPath
      */
-    class XmlPolygon extends XmlPolyline {
+    private final class XmlPolygon extends XmlPolyline {
         final GeneralPath createGeneralPath(final CharSequence points) throws ParseException {
             final GeneralPath gp = super.createGeneralPath(points);
             gp.closePath();
@@ -244,7 +246,7 @@ class SvgSaxHandler extends DefaultHandler {
      * <a href="http://www.w3.org/TR/SVG11/shapes.html#PolylineElement">svg
      * polyline</a>
      */
-    class XmlPolyline extends XmlGeneralPath {
+    private class XmlPolyline extends XmlGeneralPath {
         GeneralPath createGeneralPath(final CharSequence points) throws ParseException {
             return point.parse(points);
         }
@@ -254,7 +256,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    abstract class XmlPPath extends XmlPNode {
+    private abstract class XmlPPath extends XmlPNode {
         /** Uses {@link #createPPath(Style)} */
         final PNode createPNode(final Style attributes) throws ParseException {
             return createPPath(attributes);
@@ -294,7 +296,7 @@ class SvgSaxHandler extends DefaultHandler {
      * @see Font
      * @author mr0738@mro.name
      */
-    final class XmlPText extends XmlPNode {
+    private final class XmlPText extends XmlPNode {
         PNode createPNode(final Style attributes) throws ParseException {
             final PText node = new PText();
             node.setConstrainWidthToTextWidth(true);
@@ -309,6 +311,7 @@ class SvgSaxHandler extends DefaultHandler {
             node.translate(x, y);
 
             // TODO text attributes!
+            node.addAttribute(P2D_Prefix + "text-anchor", css.getString(attributes, "text-anchor"));
 
             node.scale(1.0 / FontUtil.SCALE);
             node.setFont(css.getFont(attributes));
@@ -321,7 +324,12 @@ class SvgSaxHandler extends DefaultHandler {
             node.setText(txt.toString().trim());
 
             // TODO justification!
-            node.translate(0, -node.getHeight());
+            if ("middle".equals(node.getAttribute(P2D_Prefix + "text-anchor"))) {
+                node.translate(-0.5 * node.getWidth(), -0.5 * node.getHeight());
+            }
+            else {
+                node.translate(0, -node.getHeight());
+            }
 
             super.end();
         }
@@ -334,7 +342,7 @@ class SvgSaxHandler extends DefaultHandler {
      * @see RoundRectangle2D.Double#Double(double, double, double, double,
      *      double, double)
      */
-    final class XmlRect extends XmlPPath {
+    private final class XmlRect extends XmlPPath {
         Shape createShape(final Style attributes) throws ParseException {
             final double x = css.getNumber(attributes, "x", 0.0);
             final double y = css.getNumber(attributes, "y", 0.0);
@@ -351,7 +359,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    final class XmlStyle extends XmlHeadElement {
+    private final class XmlStyle extends XmlHeadElement {
         void end() throws SAXException {
             try {
                 css.loadStyleSheet(txt);
@@ -362,16 +370,7 @@ class SvgSaxHandler extends DefaultHandler {
         }
     }
 
-    final class XmlSvg extends XmlElement {
-        boolean start(final Style attributes) throws SAXException {
-            current = root = new PNode();
-            txt.setLength(0);
-            id2node.clear();
-            return false;
-        }
-    }
-
-    final class XmlUse extends XmlPNode {
+    private final class XmlUse extends XmlPNode {
         PNode createPNode(final Style attributes) throws ParseException {
             final String id = raw_atts.getValue(xlinkNS, "href");
             if (id == null) {
@@ -406,7 +405,7 @@ class SvgSaxHandler extends DefaultHandler {
     private static final String xlinkNS = "http://www.w3.org/1999/xlink";
 
     private static void debug(final Object o) {
-        ;// log.info("" + o);
+        log.info("" + o);
     }
 
     private static String find(final Attributes attributes, final String name) {
@@ -435,7 +434,7 @@ class SvgSaxHandler extends DefaultHandler {
     }
 
     private static final boolean isDebugEnabled() {
-        return true;
+        return false;
     }
 
     private final CssManager css;
@@ -444,7 +443,7 @@ class SvgSaxHandler extends DefaultHandler {
     private final Map handler = new TreeMap();
     // <String, PNode>
     private final Map id2node = new TreeMap();
-    // <Map<CharSequence, CharSequence>>
+    // <CssManager.Style>
     private final Stack inherited = new Stack();
     private Attributes raw_atts = null;
     private PNode root = null;
@@ -454,7 +453,7 @@ class SvgSaxHandler extends DefaultHandler {
 
     public SvgSaxHandler(final CssManager css) {
         this.css = css;
-        handler.put("svg", new XmlSvg());
+        handler.put("svg", new XmlIgnore());
         handler.put("desc", new XmlIgnore());
         handler.put("title", new XmlIgnore());
         handler.put("metadata", new XmlIgnore());
@@ -477,8 +476,11 @@ class SvgSaxHandler extends DefaultHandler {
         txt.append(ch, start, length);
     }
 
-    protected PNode cloneNode(final PNode n, final CharSequence parentPath, final Style parentStyle) {
-        // return stripId((PNode) n.clone());
+    protected PNode cloneNode(final PNode n, final CharSequence parentXPath, final Style parentStyle) {
+        if (false) {
+            // this is terribly slow:
+            return stripId((PNode) n.clone());
+        }
         final PNode ret;
         if (PNode.class.equals(n.getClass())) {
             ret = new PNode();
@@ -506,6 +508,12 @@ class SvgSaxHandler extends DefaultHandler {
         ret.setTransparency(n.getTransparency());
         ret.setPickable(n.getPickable());
         ret.setVisible(n.getVisible());
+        for (final Enumeration enu = n.getClientPropertyKeysEnumeration(); enu.hasMoreElements();) {
+            final Object key = enu.nextElement();
+            if (!P2DID.equals(key)) {
+                ret.addAttribute(key, n.getAttribute(key));
+            }
+        }
         for (int i = 0; i < n.getChildrenCount(); i++) {
             ret.addChild(cloneNode(n.getChild(i), null, null));
         }
@@ -514,11 +522,15 @@ class SvgSaxHandler extends DefaultHandler {
     }
 
     public void endDocument() throws SAXException {
-        debug("endDocument");
+        if (isDebugEnabled()) {
+            debug("endDocument");
+        }
     }
 
     public void endElement(final String uri, final String localName, final String name) throws SAXException {
-        debug("endElement(" + uri + ", " + localName + ", " + name + ")");
+        if (isDebugEnabled()) {
+            debug("endElement(" + uri + ", " + localName + ", " + name + ")");
+        }
         if (svgNS.equals(uri)) {
             final XmlElement eh = (XmlElement) handler.get(localName);
             if (eh == null) {
@@ -531,7 +543,9 @@ class SvgSaxHandler extends DefaultHandler {
     }
 
     public void endPrefixMapping(final String prefix) throws SAXException {
-        debug("endPrefixMapping(" + prefix + ")");
+        if (isDebugEnabled()) {
+            debug("endPrefixMapping(" + prefix + ")");
+        }
     }
 
     public void error(final SAXParseException e) throws SAXException {
@@ -567,15 +581,23 @@ class SvgSaxHandler extends DefaultHandler {
     }
 
     public void startDocument() throws SAXException {
-        debug("startDocument");
+        if (isDebugEnabled()) {
+            debug("startDocument");
+        }
+        current = root = new PNode();
+        txt.setLength(0);
+        id2node.clear();
         xpath.clear();
         xpath.push("");
+        inherited.clear();
         inherited.push(css.getDefaultStyle());
     }
 
     public void startElement(final String uri, final String localName, final String name, final Attributes attributes)
             throws SAXException {
-        debug("startElement(" + uri + ", " + localName + ", " + name + ")");
+        if (isDebugEnabled()) {
+            debug("startElement(" + uri + ", " + localName + ", " + name + ")");
+        }
         txt.setLength(0);
         if (svgNS.equals(uri)) {
             final XmlElement eh = (XmlElement) handler.get(localName);
@@ -607,18 +629,20 @@ class SvgSaxHandler extends DefaultHandler {
                 xp = txt.toString();
             }
             xpath.push(xp);
-            debug("xpath: " + xp);
+            if (isDebugEnabled()) {
+                debug("xpath: " + xp);
+            }
 
-            final Style a;
+            final Style sty;
             try {
                 // merge style(s) and element attributes:
-                a = css.findStyleByXPath(xp, find(attributes, "style"));
+                sty = css.findStyleByXPath(xp, find(attributes, "style"));
                 for (int i = 0; i < attributes.getLength(); i++) {
                     final String n = attributes.getLocalName(i);
                     if ("class".equals(n) || "style".equals(n)) {
                         continue;
                     }
-                    css.setProperty(a, n, attributes.getValue(i));
+                    css.setProperty(sty, n, attributes.getValue(i));
                 }
             }
             catch (final ParseException e) {
@@ -626,7 +650,7 @@ class SvgSaxHandler extends DefaultHandler {
             }
 
             // inherit attributes
-            final Style in = css.merge((Style) inherited.peek(), a);
+            final Style in = css.merge((Style) inherited.peek(), sty);
             inherited.push(in);
 
             txt.setLength(0);
@@ -641,11 +665,13 @@ class SvgSaxHandler extends DefaultHandler {
     }
 
     public void startPrefixMapping(final String prefix, final String uri) throws SAXException {
-        debug("startPrefixMapping(" + prefix + ", " + uri + ")");
+        if (isDebugEnabled()) {
+            debug("startPrefixMapping(" + prefix + ", " + uri + ")");
+        }
     }
 
     // TODO Re-apply the styles!
-    protected PNode stripId(final PNode n) {
+    private PNode stripId(final PNode n) {
         n.addAttribute(P2DID, null);
         for (int i = 0; i < n.getChildrenCount(); i++) {
             stripId(n.getChild(i));

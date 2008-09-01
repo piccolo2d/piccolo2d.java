@@ -76,17 +76,6 @@ class CSSStyleDeclaration implements Map {
         }
     }
 
-    public static CharSequence checkValue(final CharSequence raw) throws ParseException {
-        if (raw == null) {
-            return null;
-        }
-        final CharSequence parsed = CSSValue.valueOf(raw);
-        if (parsed != null) {
-            return parsed;
-        }
-        return raw;
-    }
-
     private final Map properties;
 
     public CSSStyleDeclaration() {
@@ -154,13 +143,8 @@ class CSSStyleDeclaration implements Map {
     }
 
     public Object put(final Object arg0, final Object arg1) {
-        try {
-            // Check syntactic validity
-            return properties.put(arg0, checkValue((CharSequence) arg1));
-        }
-        catch (final ParseException e) {
-            throw new IllegalArgumentException(e);
-        }
+        // Check syntactic validity
+        return properties.put(arg0, arg1);
     }
 
     public void putAll(final Map arg0) {

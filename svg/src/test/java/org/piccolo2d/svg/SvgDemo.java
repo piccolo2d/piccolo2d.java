@@ -55,13 +55,16 @@ public class SvgDemo {
             final PNode world = new SvgLoader().load(SvgLoadTest.findResource("/ice-plain.svg").openStream());
         }
         final long start = System.currentTimeMillis();
-        // final PNode world = new
-        // SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/text01.svg"
-        // ).openStream());
-        // final PNode world = new
-        // SvgLoader().load(SvgLoadTest.findResource("/ice-inkscape.svg"
-        // ).openStream());
-        final PNode world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/path/cubic02.svg").openStream());
+        final PNode world;
+        if (false) {
+            world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/text01.svg").openStream());
+        }
+        else if (true) {
+            world = new SvgLoader().load(SvgLoadTest.findResource("/ice-inkscape.svg").openStream());
+        }
+        else {
+            world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/path/cubic02.svg").openStream());
+        }
         System.out.println(System.currentTimeMillis() - start);
 
         zui.getLayer().addChild(world);

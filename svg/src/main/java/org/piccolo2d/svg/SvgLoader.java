@@ -41,15 +41,25 @@ import org.xml.sax.SAXException;
 import edu.umd.cs.piccolo.PNode;
 
 /**
- * <b>THE</b> central class. Load svg and produce a {@link PNode}.
+ * <b>THE</b> central class. Load svg and produce a {@link PNode}. Choose the
+ * {@link CssManager} implementation by dependency injection into
+ * {@link #load(InputStream, CssManager)}.
  */
 public class SvgLoader {
 
+    /**
+     * Convenience wrapper. For {@link #load(InputStream, CssManager)} using
+     * {@link SvgCssManager}.
+     */
     public PNode load(final InputStream in) throws IOException {
         return load(in, new SvgCssManager() {
         });
     }
 
+    /**
+     * @see SvgSaxHandler
+     * @see SAXParser
+     */
     public PNode load(final InputStream in, final CssManager css) throws IOException {
         final SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);

@@ -41,7 +41,7 @@ public class SvgCssManagerTest extends TestCase {
 
         Map m = (Map) cm.findStyleByCSSSelector("c > b", null);
         assertEquals(2, m.size());
-        assertEquals(CSSValue.class.getName(), m.get("class").getClass().getName());
+        assertEquals(String.class.getName(), m.get("class").getClass().getName());
         assertEquals("none", m.get("class").toString());
         assertEquals("none", m.get("elem").toString());
 

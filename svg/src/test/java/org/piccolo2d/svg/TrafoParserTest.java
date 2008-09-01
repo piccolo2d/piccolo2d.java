@@ -51,6 +51,17 @@ public class TrafoParserTest extends TestCase {
         return b.toString();
     }
 
+    public void testScale() throws ParseException {
+        final TrafoParser p = new TrafoParser();
+        final AffineTransform t = p.parse("scale(2.0 -3.0)", null);
+        assertEquals(2, t.getScaleX(), 1e-9);
+        assertEquals(-3, t.getScaleY(), 1e-9);
+        assertEquals(0, t.getShearX(), 1e-9);
+        assertEquals(0, t.getShearY(), 1e-9);
+        assertEquals(0, t.getTranslateX(), 1e-9);
+        assertEquals(0, t.getTranslateY(), 1e-9);
+    }
+
     public void testTranslate() throws ParseException {
         final TrafoParser p = new TrafoParser();
         final AffineTransform t = p.parse("translate(2 3)", null);

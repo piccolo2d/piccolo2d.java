@@ -28,6 +28,7 @@
 
 package org.piccolo2d.svg.cssmini;
 
+import java.awt.Color;
 import java.text.ParseException;
 
 /**
@@ -35,6 +36,14 @@ import java.text.ParseException;
  * @author mr0738@mro.name
  */
 public class SvgCssManager extends CssManagerImpl {
+
+    public Color getColor(final Style style, final String key) {
+        return SvgColor.valueOf(getString(style, key));
+    }
+
+    public boolean inheritProperty(final String key) {
+        return !"transform".equals(key);
+    }
 
     protected Style initDefaults(final Style style) {
         try {
@@ -47,7 +56,4 @@ public class SvgCssManager extends CssManagerImpl {
         }
     }
 
-    public boolean isInherited(final String key) {
-        return true;
-    }
 }

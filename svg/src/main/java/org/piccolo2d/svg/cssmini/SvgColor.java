@@ -35,8 +35,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Turn svg color strings into {@link Color}s. Maybe better use a ragel
- * micro-parser.
+ * Helper to turn svg color strings into {@link Color}s. Maybe better use a
+ * ragel micro-parser.
  * 
  * See http://www.w3.org/TR/SVG11/types.html#BasicDataTypes
  */

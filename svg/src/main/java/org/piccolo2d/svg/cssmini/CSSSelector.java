@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
- * A Css selector that can easily matched with a via a {@link Pattern}s.
+ * A Css selector that can easily be matched with a via {@link Pattern}s.
  * 
  * @see CSSSelectorBuilderXPath
  * @see org.w3c.dom.css.CSSStyleRule#setSelectorText(String)
