@@ -1,4 +1,4 @@
-package org.piccolo2d.svg;
+package org.piccolo2d.svg.css;
 
 import java.awt.Font;
 import java.util.Map;
@@ -16,15 +16,9 @@ public class FontUtil {
      */
     public static final int SCALE = 100;
 
-    // <String, String>
-    public static Font findFont(final Map attributes) {
-        return findFont((String) attributes.get("font-family"), (String) attributes.get("font-style"),
-                (CharSequence) attributes.get("font-size"));
-    }
-
-    public static Font findFont(final String family, final String style, final CharSequence size) {
+    public static Font findFont(final CharSequence family, final String style, final CharSequence size) {
         // font-family="Verdana" font-size="55" fill="blue" >
-        final String ff = family;
+        final String ff = family.toString();
         final int fs;
         {
             final Matcher s = fsp.matcher(size);
@@ -34,5 +28,11 @@ public class FontUtil {
             fs = (int) (SCALE * Double.parseDouble(s.group(1)));
         }
         return new Font(ff, Font.PLAIN, fs);
+    }
+
+    // <String, CharSequence>
+    public static Font findFont(final Map attributes) {
+        return findFont((CharSequence) attributes.get("font-family"), (String) attributes.get("font-style"),
+                (CharSequence) attributes.get("font-size"));
     }
 }

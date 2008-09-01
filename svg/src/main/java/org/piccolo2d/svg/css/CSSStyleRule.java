@@ -1,4 +1,4 @@
-<!--
+/*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
  * All rights reserved.
  *
@@ -24,5 +24,31 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
-<body>A rudimentary CSS implementation. Aims for some convergence with http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113/java-binding.html.</body> 
+ */
+package org.piccolo2d.svg.css;
+
+/**
+ * @see org.w3c.dom.css.CSSStyleRule
+ * @author mr0738@mro.name
+ */
+public class CSSStyleRule {
+    private final CSSSelector selector;
+    private final CSSStyleDeclaration style;
+
+    public CSSStyleRule(final CSSSelector selector, final CSSStyleDeclaration style) {
+        this.selector = selector;
+        this.style = style;
+    }
+
+    public CSSSelector getSelector() {
+        return selector;
+    }
+
+    public CSSStyleDeclaration getStyle() {
+        return style;
+    }
+
+    public String toString() {
+        return selector + " " + style;
+    }
+}

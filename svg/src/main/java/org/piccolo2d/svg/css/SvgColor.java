@@ -25,7 +25,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.svg;
+package org.piccolo2d.svg.css;
 
 import java.awt.Color;
 import java.util.Collections;

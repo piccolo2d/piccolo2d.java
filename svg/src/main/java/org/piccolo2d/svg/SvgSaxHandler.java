@@ -28,6 +28,7 @@
 package org.piccolo2d.svg;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -40,16 +41,16 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.piccolo2d.svg.css.CSSValue;
 import org.piccolo2d.svg.css.CssManager;
+import org.piccolo2d.svg.css.FontUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -67,7 +68,8 @@ import edu.umd.cs.piccolo.nodes.PText;
  */
 class SvgSaxHandler extends DefaultHandler {
     /**
-     * <a href="http://www.w3.org/TR/SVG11/shapes.html#CircleElement">svg circle</a>
+     * <a href="http://www.w3.org/TR/SVG11/shapes.html#CircleElement">svg
+     * circle</a>
      * 
      * @see Arc2D.Double#Double(double, double, double, double, double, double,
      *      int)
@@ -75,14 +77,14 @@ class SvgSaxHandler extends DefaultHandler {
     final class XmlCircle extends XmlPPath {
         PPath createPPath(final Map attributes) throws ParseException {
             final PPath ret = super.createPPath(attributes);
-            ret.setVisible(find(attributes, "r", 0.0) > 0);
+            ret.setVisible(cssDouble(attributes, "r", 0.0) > 0);
             return ret;
         }
 
         Shape createShape(final Map attributes) throws ParseException {
-            final double r = find(attributes, "r", 0.0);
-            final double cx = find(attributes, "cx", 0.0);
-            final double cy = find(attributes, "cy", 0.0);
+            final double r = cssDouble(attributes, "r", 0.0);
+            final double cx = cssDouble(attributes, "cx", 0.0);
+            final double cy = cssDouble(attributes, "cy", 0.0);
             return new Arc2D.Double(cx - r, cy - r, 2 * r, 2 * r, 0, 360, Arc2D.CHORD);
         }
     }
@@ -120,15 +122,15 @@ class SvgSaxHandler extends DefaultHandler {
     final class XmlEllipse extends XmlPPath {
         PPath createPPath(final Map attributes) throws ParseException {
             final PPath ret = super.createPPath(attributes);
-            ret.setVisible(find(attributes, "rx", 0.0) > 0 && find(attributes, "ry", 0.0) > 0);
+            ret.setVisible(cssDouble(attributes, "rx", 0.0) > 0 && cssDouble(attributes, "ry", 0.0) > 0);
             return ret;
         }
 
         Shape createShape(final Map attributes) throws ParseException {
-            final double rx = find(attributes, "rx", 0.0);
-            final double ry = find(attributes, "ry", 0.0);
-            final double cx = find(attributes, "cx", 0.0);
-            final double cy = find(attributes, "cy", 0.0);
+            final double rx = cssDouble(attributes, "rx", 0.0);
+            final double ry = cssDouble(attributes, "ry", 0.0);
+            final double cx = cssDouble(attributes, "cx", 0.0);
+            final double cy = cssDouble(attributes, "cy", 0.0);
             return new Arc2D.Double(cx - rx, cy - ry, 2 * rx, 2 * ry, 0, 360, Arc2D.CHORD);
         }
     }
@@ -166,10 +168,10 @@ class SvgSaxHandler extends DefaultHandler {
     final class XmlLine extends XmlPPath {
 
         Shape createShape(final Map attributes) throws ParseException {
-            final double x1 = find(attributes, "x1", 0.0);
-            final double y1 = find(attributes, "y1", 0.0);
-            final double x2 = find(attributes, "x2", 0.0);
-            final double y2 = find(attributes, "y2", 0.0);
+            final double x1 = cssDouble(attributes, "x1", 0.0);
+            final double y1 = cssDouble(attributes, "y1", 0.0);
+            final double x2 = cssDouble(attributes, "x2", 0.0);
+            final double y2 = cssDouble(attributes, "y2", 0.0);
             return new Line2D.Double(x1, y1, x2, y2);
         }
     }
@@ -190,7 +192,6 @@ class SvgSaxHandler extends DefaultHandler {
     abstract class XmlPNode extends XmlElement {
 
         /**
-         * @throws ParseException TODO
          * @see #start(Map)
          */
         abstract PNode createPNode(Map attributes) throws ParseException;
@@ -201,19 +202,14 @@ class SvgSaxHandler extends DefaultHandler {
         }
 
         final boolean start(final Map attributes) throws SAXException {
-            final String id = find(attributes, "id");
             try {
                 final PNode child = createPNode(attributes);
-                for (final Iterator it = attributes.entrySet().iterator(); it.hasNext();) {
-                    final Entry elem = (Entry) it.next();
-                    child.addAttribute(P2D_Prefix + elem.getKey(), elem.getValue());
-                }
-                // child.addAttribute(ID, id);
+                // attributes common to all elements:
+                final String id = find(attributes, "id");
                 if (id != null) {
                     id2node.put(id, child);
                 }
 
-                // attributes common to all elements:
                 trafo.parse(find(attributes, "transform"), child.getTransformReference(true));
 
                 current.addChild(child);
@@ -270,14 +266,14 @@ class SvgSaxHandler extends DefaultHandler {
         PPath createPPath(final Map attributes) throws ParseException {
             final PPath node = new PPath(createShape(attributes));
             // http://www.w3.org/TR/SVG11/painting.html#paint-att-mod
-            node.setPaint(SvgColor.valueOf((String) attributes.get("fill")));
+            node.setPaint(cssColor(attributes.get("fill")));
 
             // TODO stroke type
-            final String t = (String) attributes.get("stroke-width");
+            final CSSValue t = cssValue(attributes.get("stroke-width"));
             if (t != null) {
-                node.setStroke(new BasicStroke(Float.parseFloat(t)));
+                node.setStroke(new BasicStroke(t.getFloat()));
             }
-            node.setStrokePaint(SvgColor.valueOf((String) attributes.get("stroke")));
+            node.setStrokePaint(cssColor(attributes.get("stroke")));
 
             // set drawing attributes
 
@@ -305,10 +301,11 @@ class SvgSaxHandler extends DefaultHandler {
             node.setConstrainHeightToTextHeight(true);
 
             // http://www.w3.org/TR/SVG11/painting.html#paint-att-mod
-            node.setTextPaint(SvgColor.valueOf((String) attributes.get("fill")));
+            final Color c = cssColor(attributes.get("fill"));
+            node.setTextPaint(c == null ? Color.BLACK : c);
 
-            final double x = find(attributes, "x", 0.0);
-            final double y = find(attributes, "y", 0.0);
+            final double x = cssDouble(attributes, "x", 0.0);
+            final double y = cssDouble(attributes, "y", 0.0);
             node.translate(x, y);
 
             // TODO text attributes!
@@ -324,7 +321,7 @@ class SvgSaxHandler extends DefaultHandler {
             node.setText(txt.toString().trim());
 
             // TODO justification!
-            node.translate(0, -0.5 * node.getHeight());
+            node.translate(0, -node.getHeight());
 
             super.end();
         }
@@ -339,12 +336,12 @@ class SvgSaxHandler extends DefaultHandler {
      */
     final class XmlRect extends XmlPPath {
         Shape createShape(final Map attributes) throws ParseException {
-            final double x = find(attributes, "x", 0.0);
-            final double y = find(attributes, "y", 0.0);
-            final double w = find(attributes, "width", 0.0);
-            final double h = find(attributes, "height", 0.0);
-            final double rx = find(attributes, "rx", 0.0);
-            final double ry = find(attributes, "ry", rx);
+            final double x = cssDouble(attributes, "x", 0.0);
+            final double y = cssDouble(attributes, "y", 0.0);
+            final double w = cssDouble(attributes, "width", 0.0);
+            final double h = cssDouble(attributes, "height", 0.0);
+            final double rx = cssDouble(attributes, "rx", 0.0);
+            final double ry = cssDouble(attributes, "ry", rx);
             if (rx > 0 || ry > 0) {
                 return new RoundRectangle2D.Double(x, y, w, h, rx, ry);
             }
@@ -389,8 +386,8 @@ class SvgSaxHandler extends DefaultHandler {
             final PNode r = new PNode();
             r.addChild(stripId(doClone(used)));
 
-            final double x = find(attributes, "x", 0.0);
-            final double y = find(attributes, "y", 0.0);
+            final double x = cssDouble(attributes, "x", 0.0);
+            final double y = cssDouble(attributes, "y", 0.0);
             r.setTransform(AffineTransform.getTranslateInstance(x, y));
             return r;
         }
@@ -407,6 +404,29 @@ class SvgSaxHandler extends DefaultHandler {
     private static final String svgNS = "http://www.w3.org/2000/svg";
     private static final TrafoParser trafo = new TrafoParser();
     private static final String xlinkNS = "http://www.w3.org/1999/xlink";
+
+    private static Color cssColor(final Object o) {
+        final CSSValue c = cssValue(o);
+        return c == null ? null : c.getColor();
+    }
+
+    private static double cssDouble(final Map attributes, final String name, final double def) {
+        final CSSValue v = cssValue(attributes.get(name));
+        return v == null ? def : v.getDouble();
+    }
+
+    static CSSValue cssValue(final Object txt) {
+        if (txt == null) {
+            return null;
+        }
+        if (!(txt instanceof CharSequence)) {
+            throw new IllegalArgumentException(txt.getClass().getName());
+        }
+        if (txt instanceof CSSValue) {
+            return (CSSValue) txt;
+        }
+        return CSSValue.valueOf((CharSequence) txt);
+    }
 
     private static void debug(final Object o) {
         ;// log.info("" + o);
@@ -443,14 +463,6 @@ class SvgSaxHandler extends DefaultHandler {
 
     private static String find(final Map attributes, final String name) {
         return (String) attributes.get(name);
-    }
-
-    private static double find(final Map attributes, final String name, final double def) {
-        final String v = find(attributes, name);
-        if (v == null) {
-            return def;
-        }
-        return Double.parseDouble(v);
     }
 
     private static final boolean isDebugEnabled() {
@@ -534,6 +546,13 @@ class SvgSaxHandler extends DefaultHandler {
         throw e;
     }
 
+    protected Map getDefaultStyle() {
+        final Map defaults = new TreeMap();
+        defaults.put("font-family", "sans-serif");
+        defaults.put("font-size", "10");
+        return defaults;
+    }
+
     // <String, PNode>
     public Map getIDs() {
         return id2node;
@@ -547,7 +566,8 @@ class SvgSaxHandler extends DefaultHandler {
         if ("-//W3C//DTD SVG 1.1//EN".equals(publicId)
                 && "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd".equals(systemId)) {
             // return new
-            // InputSource(getClass().getResourceAsStream("/svg11-flat-20030114.dtd"));
+            // InputSource(getClass().getResourceAsStream(
+            // "/svg11-flat-20030114.dtd"));
             return new InputSource(new StringReader(""));
         }
         return super.resolveEntity(publicId, systemId);
@@ -557,7 +577,7 @@ class SvgSaxHandler extends DefaultHandler {
         debug("startDocument");
         xpath.clear();
         xpath.push("");
-        inherited.push(new TreeMap());
+        inherited.push(getDefaultStyle());
     }
 
     public void startElement(final String uri, final String localName, final String name, final Attributes attributes)
@@ -620,6 +640,7 @@ class SvgSaxHandler extends DefaultHandler {
             txt.setLength(0);
             raw_atts = attributes;
             if (eh.start(in)) {
+                // preserve xpath and all attributes
                 current.addAttribute(P2D_Prefix + "xpath", xp);
                 current.addAttribute(P2D_Prefix + "style", find(raw_atts, "style"));
                 current.addAttribute(P2D_Prefix + "class", find(raw_atts, "class"));

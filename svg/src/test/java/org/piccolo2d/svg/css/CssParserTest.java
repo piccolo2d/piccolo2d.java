@@ -1,146 +1,95 @@
-/*
- * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided
- * that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
- * and the following disclaimer in the documentation and/or other materials provided with the
- * distribution.
- *
- * None of the name of the Piccolo2D project, the University of Maryland, or the names of its contributors
- * may be used to endorse or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package org.piccolo2d.svg.css;
 
 import java.text.ParseException;
-import java.util.LinkedHashMap;
-import java.util.regex.Pattern;
+import java.util.Collection;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 public class CssParserTest extends TestCase {
 
-    private static void debug(final String label, final Object o) {
-        System.out.println("-- debug " + label + " -----------");
-        System.out.println(o);
+    private static void asser(final String expected, final Collection found) {
+        final CSSStyleRule r = (CSSStyleRule) found.iterator().next();
+        assertEquals(expected, r.getSelector().toString());
     }
 
-    public void testParse() throws ParseException {
-        final CssParser p = new CssParser();
-        LinkedHashMap css = null;
+    public void test01ParseUnnestedSelector() throws ParseException {
+        final CssParser cp = new CssParser();
+        asser("el", cp.parse("el{ fill: #ff3131; stroke: none } "));
+        asser("el", cp.parse(" el{ fill: #ff3131; stroke: none } "));
+        asser("el", cp.parse("el { fill: #ff3131; stroke: none } "));
+        asser("el", cp.parse(" el { fill: #ff3131; stroke: none } "));
 
-        assertNotNull(css = p.parse("d { key:value }", null));
-        Pattern pa = (Pattern) css.keySet().iterator().next();
-        debug("p0", pa.pattern());
-        assertTrue(pa.matcher("/a/b/d").matches());
-        assertTrue(pa.matcher("/a/b/d[@class='c0 c1 c2 c3']").matches());
-        assertTrue(pa.matcher("/a/b/d[@class='c1']").matches());
-        assertFalse(pa.matcher("/a/b/de").matches());
-        assertFalse(pa.matcher("/a/b/cd").matches());
+        asser("* .c1", cp.parse(".c1{ fill: #ff3131; stroke: none } "));
+        asser("* .c1", cp.parse(" .c1{ fill: #ff3131; stroke: none } "));
+        asser("* .c1", cp.parse(".c1 { fill: #ff3131; stroke: none } "));
+        asser("* .c1", cp.parse(" .c1 { fill: #ff3131; stroke: none } "));
 
-        // FIXME invert this test:
-        try {
-            assertNull(css = p.parse("d f{ key:value }", null));
-        }
-        catch (final ParseException e) {
-            assertEquals(2, e.getErrorOffset());
-        }
-        // pa = (Pattern) css.keySet().iterator().next();
-        // debug("p0", pa.pattern());
-        // assertTrue(pa.matcher("/a/b/d/e/f").matches());
-        // assertTrue(pa.matcher("/a/b/d[@class='c0']/e/f").matches());
-        // assertTrue(pa.matcher("/a/b/d/e[@class='c1']/f").matches());
-        // assertTrue(pa.matcher("/a/b/d/e/f[@class='c1']").matches());
-        // assertFalse(pa.matcher("/a/b/df").matches());
+        asser("* .c1 .c2", cp.parse(".c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(" .c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(".c1.c2 { fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(" .c1.c2 { fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(".c1 .c2{ fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(" .c1 .c2{ fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(".c1 .c2 { fill: #ff3131; stroke: none } "));
+        asser("* .c1 .c2", cp.parse(" .c1 .c2 { fill: #ff3131; stroke: none } "));
 
-        assertNotNull(css = p.parse(" .c1 { key:value }", null));
-        pa = (Pattern) css.keySet().iterator().next();
-        debug("p01", pa.pattern());
-        assertTrue(pa.matcher("/a/b/d[@class='c0 c1 c2 c3']").matches());
-        assertTrue(pa.matcher("/a/b/d[@class='c1']").matches());
-        assertFalse(pa.matcher("/a/b/d[@class='c12']").matches());
-        assertTrue(pa.matcher("/a/b/cd[@class='c0 c1 c2']").matches());
-        assertTrue(pa.matcher("/a/b/de[@class='c0 c1 c2']").matches());
-        assertFalse(pa.matcher("/a/b/d[@class='c0 c1 c2']/e").matches());
+        asser("el .c1 .c2", cp.parse("el.c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse(" el.c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el.c1.c2 { fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el.c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el .c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse(" el .c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el .c1.c2 { fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el .c1.c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el.c1 .c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse(" el.c1 .c2{ fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el.c1 .c2 { fill: #ff3131; stroke: none } "));
+        asser("el .c1 .c2", cp.parse("el.c1 .c2{ fill: #ff3131; stroke: none } "));
+    }
 
-        assertNotNull(css = p.parse("d.c1{ key:value }", null));
-        pa = (Pattern) css.keySet().iterator().next();
-        debug("p1", pa.pattern());
-        assertTrue(pa.matcher("/a/b/d[@class='c0 c1 c2 c3']").matches());
-        assertTrue(pa.matcher("/a/b/d[@class='c1']").matches());
-        assertFalse(pa.matcher("/a/b/d[@class='c12']").matches());
-        assertFalse(pa.matcher("/a/b/cd[@class='c0 c1 c2']").matches());
-        assertFalse(pa.matcher("/a/b/de[@class='c0 c1 c2']").matches());
-        assertFalse(pa.matcher("/a/b/d[@class='c0 c1 c2']/e").matches());
+    public void test02ParseNestedSelector() throws ParseException {
+        final CssParser cp = new CssParser();
+        Collection css = null;
+        asser("e1 e2", cp.parse("e1 e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 e2", cp.parse(" e1 e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 e2", cp.parse("e1 e2 { fill: #ff3131; stroke: none } "));
 
-        assertNotNull(css = p.parse(" d .c1 { key:value }", null));
-        pa = (Pattern) css.keySet().iterator().next();
-        debug("p2", pa.pattern());
-        assertTrue(pa.matcher("/a/b/d[@class='c0 c1 c2 c3']").matches());
-        assertTrue(pa.matcher("/a/b/d[@class='c1']").matches());
-        assertFalse(pa.matcher("/a/b/d[@class='c12']").matches());
-        assertFalse(pa.matcher("/a/b/cd[@class='c0 c1 c2']").matches());
-        assertFalse(pa.matcher("/a/b/de[@class='c0 c1 c2']").matches());
-        assertFalse(pa.matcher("/a/b/d[@class='c0 c1 c2']/e").matches());
+        asser("e1 e2", cp.parse("e1  e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 e2", cp.parse(" e1  e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 e2", cp.parse("e1  e2 { fill: #ff3131; stroke: none } "));
 
-        assertNotNull(css = p.parse("e.c2 .c1 { key:value }", null));
-        pa = (Pattern) css.keySet().iterator().next();
-        debug("p3", pa.pattern());
-        assertTrue(pa.matcher("/a/e[@class='c0 c1 c2 c3']").matches());
-        assertTrue(pa.matcher("/a/e[@class='c1 c2']").matches());
-        assertFalse(pa.matcher("/a/e[@class='c11 c2']").matches());
-        assertFalse(pa.matcher("/a/e[@class='c1 c21']").matches());
-        assertFalse(pa.matcher("/a/de[@class='c1 c2']").matches());
-        assertFalse(pa.matcher("/a/e[@class='c1 c2']/f").matches());
+        asser("e1 .c1 e2 .c20 .c21 e3 .c30 .c31", cp
+                .parse("e1.c1 e2.c20.c21 e3.c30.c31{ fill: #ff3131; stroke: none } "));
+        asser("e1 .c1 e2 .c20 .c21 e3 .c30 .c31", cp
+                .parse(" e1 .c1 e2 .c20 .c21 e3 .c30 .c31 { fill: #ff3131; stroke: none } "));
 
-        assertNotNull(css = p.parse(".c2.c1 { key:value }", null));
-        assertNotNull(css = p.parse(".c2 .c1 { key:value }", null));
-        try {
-            // FIXME invert this test:
-            assertNull(css = p.parse("f.c2 g.c1{ key:value }", null));
-        }
-        catch (final ParseException e) {
-            assertEquals(5, e.getErrorOffset());
-        }
-        try {
-            // FIXME invert this test:
-            assertNull(css = p.parse("parent child { key:value }", null));
-        }
-        catch (final ParseException e) {
-            assertEquals(7, e.getErrorOffset());
-        }
-        try {
-            assertNull(p.parse("parent > child { key:value }", null));
-        }
-        catch (final ParseException e) {
-            assertEquals(7, e.getErrorOffset());
-        }
-        try {
-            assertNull(p.parse("parent + child { key:value }", null));
-        }
-        catch (final ParseException e) {
-            assertEquals(7, e.getErrorOffset());
-        }
-        try {
-            assertNull(p.parse("bla", null));
-        }
-        catch (final ParseException e) {
-            assertEquals(3, e.getErrorOffset());
-        }
+        asser("e1 > e2", cp.parse("e1>e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse(" e1>e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse("e1>e2 { fill: #ff3131; stroke: none } "));
+
+        asser("e1 > e2", cp.parse("e1 >e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse(" e1 >e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse("e1 >e2 { fill: #ff3131; stroke: none } "));
+
+        asser("e1 > e2", cp.parse("e1> e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse(" e1> e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse("e1> e2 { fill: #ff3131; stroke: none } "));
+
+        asser("e1 > e2", cp.parse("e1 > e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse(" e1 > e2{ fill: #ff3131; stroke: none } "));
+        asser("e1 > e2", cp.parse("e1 > e2 { fill: #ff3131; stroke: none } "));
+
+        asser("e1 .c1 > e2 .c20 .c21 > e3 .c30 .c31", cp
+                .parse("e1.c1>e2.c20.c21>e3.c30.c31{ fill: #ff3131; stroke: none } "));
+        asser("e1 .c1 > e2 .c20 .c21 > e3 .c30 .c31", cp
+                .parse(" e1 .c1 > e2 .c20 .c21 > e3 .c30 .c31 { fill: #ff3131; stroke: none } "));
+
+        css = cp.parse("\n      g  >  h  .c1  , i  >  j  .c2  { stroke: none; fill: #ff3131;  }\n    ");
+        assertEquals(2, css.size());
+        final Iterator it = css.iterator();
+        assertEquals("g > h .c1 {\n\tfill: #ff3131;\n\tstroke: none\n}", it.next().toString());
+        assertEquals("i > j .c2 {\n\tfill: #ff3131;\n\tstroke: none\n}", it.next().toString());
+        assertFalse(it.hasNext());
     }
 }

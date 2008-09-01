@@ -1,4 +1,4 @@
-package org.piccolo2d.svg;
+package org.piccolo2d.svg.css;
 
 import java.awt.Font;
 

@@ -14,7 +14,7 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 /**
- * Examine {@link CSSStyleSheet}, {@link CSSStyleRule} and {@link StyleSheet}. 
+ * Examine {@link CSSStyleSheet}, {@link CSSStyleRule} and {@link StyleSheet}.
  * 
  * @author mr0738@mro.name
  */

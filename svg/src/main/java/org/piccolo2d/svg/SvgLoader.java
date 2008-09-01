@@ -54,10 +54,15 @@ public class SvgLoader {
         spf.setNamespaceAware(true);
         spf.setValidating(false);
         spf.setXIncludeAware(false);
-        final SvgSaxHandler s = new SvgSaxHandler(css);
         try {
+            // final SchemaFactory sf =
+            // SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+            // spf.setSchema(sf.newSchema(getClass().getResource(
+            // "/svg11-flat-20030114.xsd")));
+            final SvgSaxHandler svg = new SvgSaxHandler(css);
             final SAXParser sp = spf.newSAXParser();
-            sp.parse(in, s);
+            sp.parse(in, svg);
+            return svg.getScene();
         }
         catch (final ParserConfigurationException e) {
             final IOException ioe = new IOException("Sax Parser Exception");
@@ -69,7 +74,5 @@ public class SvgLoader {
             ioe.initCause(e);
             throw ioe;
         }
-        return s.getScene();
     }
-
 }

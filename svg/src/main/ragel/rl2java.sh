@@ -36,6 +36,13 @@ ragel $opts -p -V -o $target/$file.dot $src/$file.rl
 #dot -o $target/$file.svg -Tsvg $target/$file.dot
 ragel $opts -s -J -o $target_java/$file.java $src/$file.rl
 
+file=CssParser0
+opts="-e"
+ragel $opts -p -V -o $target/$file.dot $src/$file.rl
+#dot -o $target/$file.png -Tpng $target/$file.dot
+dot -o $target/$file.svg -Tsvg $target/$file.dot
+ragel $opts -s -J -o $target_java/css0/$file.java $src/$file.rl
+
 file=CssParser
 opts="-e"
 ragel $opts -p -V -o $target/$file.dot $src/$file.rl

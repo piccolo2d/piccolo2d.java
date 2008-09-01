@@ -25,69 +25,89 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.piccolo2d.svg.css;
 
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 /**
- * Very simple, non-DOM based css manager.
- * <p>
- * The {@link CssParser} creates {@link Pattern}s to match document xpaths from
- * the CSS selectors and {@link Map}s from the CSS attributes.
- * <p>
- * The single rules are kept in a {@link LinkedHashMap} to preserve the order.
- * 
- * @see CssParser
+ * @author mr0738@mro.name
  */
 public class CssManagerImpl implements CssManager {
+    private final Collection css = new LinkedList();
 
-    // LinkedHashMap<Pattern, Map<CharSequence, CharSequence>>
-    private final LinkedHashMap css = new LinkedHashMap();
+    private final Map styleCacheCSSSel = new WeakHashMap();
+    private final Map styleCacheXPath = new WeakHashMap();
 
-    // <CharSequence, Map<CharSequence, CharSequence>>
-    private final Map styleCache = new WeakHashMap();
-
-    public void clearCache() {
-        styleCache.clear();
+    private Map addStyle(final CharSequence styleAttributeValue, Map style) throws ParseException {
+        if (styleAttributeValue != null && styleAttributeValue.length() > 0) {
+            // that's really brute force, but simple:
+            style = new HashMap(style);
+            final CSSStyleRule r = (CSSStyleRule) new CssParser().parse("dummyelem{" + styleAttributeValue + "}")
+                    .iterator().next();
+            style.putAll(r.getStyle());
+        }
+        return style;
     }
 
-    Map computeStyle(final CharSequence xpath) {
+    public void clearCache() {
+        styleCacheXPath.clear();
+        styleCacheCSSSel.clear();
+    }
+
+    Map computeStyleByCSSSelector(final CharSequence cssSel) {
         final Map style = new HashMap();
-        for (final Iterator it = css.entrySet().iterator(); it.hasNext();) {
-            final Entry elm = (Entry) it.next();
-            final Pattern p = (Pattern) elm.getKey();
-            if (p.matcher(xpath).matches()) {
-                style.putAll((Map) elm.getValue());
+        for (final Iterator it = css.iterator(); it.hasNext();) {
+            final CSSStyleRule rule = (CSSStyleRule) it.next();
+            if (rule.getSelector().getSelectorpPattern().matcher(cssSel).matches()) {
+                style.putAll(rule.getStyle());
             }
         }
         return style;
     }
 
-    public Map findStyleByXPath(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException {
-        xpath = xpath.toString();
-        Map style = (Map) styleCache.get(xpath);
-        if (style == null) {
-            styleCache.put(xpath, style = computeStyle(xpath));
-        }
-        if (styleAttributeValue != null && styleAttributeValue.length() > 0) {
-            // that's really brute force, but simple:
-            style = new HashMap(style);
-            final Map tmp = new CssParser().parse("dummyelem{" + styleAttributeValue + "}", null);
-            final Entry en = (Entry) tmp.entrySet().iterator().next();
-            style.putAll((Map) en.getValue());
+    Map computeStyleByXPath(final CharSequence xpath) {
+        final Map style = new HashMap();
+        for (final Iterator it = css.iterator(); it.hasNext();) {
+            final CSSStyleRule rule = (CSSStyleRule) it.next();
+            if (rule.getSelector().getXPathPattern().matcher(xpath).matches()) {
+                style.putAll(rule.getStyle());
+            }
         }
         return style;
     }
 
+    public Map findStyleByCSSSelector(CharSequence cssSelector, final CharSequence styleAttributeValue)
+            throws ParseException {
+        cssSelector = cssSelector.toString();
+        Map style = (Map) styleCacheCSSSel.get(cssSelector);
+        if (style == null) {
+            styleCacheCSSSel.put(cssSelector, style = computeStyleByCSSSelector(cssSelector));
+        }
+        return addStyle(styleAttributeValue, style);
+    }
+
+    public Map findStyleByXPath(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException {
+        xpath = xpath.toString();
+        Map style = (Map) styleCacheXPath.get(xpath);
+        if (style == null) {
+            styleCacheXPath.put(xpath, style = computeStyleByXPath(xpath));
+        }
+        return addStyle(styleAttributeValue, style);
+    }
+
     public void loadStyleSheet(final CharSequence styledata) throws ParseException {
-        new CssParser().parse(styledata, css);
+        css.addAll(new CssParser().parse(styledata));
         clearCache();
+    }
+
+    int ruleCount() {
+        return css.size();
     }
 }

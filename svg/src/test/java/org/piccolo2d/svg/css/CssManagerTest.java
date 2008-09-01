@@ -34,15 +34,7 @@ import junit.framework.TestCase;
 
 public class CssManagerTest extends TestCase {
 
-    public void testCircle() throws ParseException {
-        final CssManager cm = new CssManagerImpl();
-        cm.loadStyleSheet("\n" + "      .circle_12 { fill: #ff3131; stroke: none }\n" + "    ");
-
-        final Map m = cm.findStyleByXPath("/c/b", null);
-
-    }
-
-    public void testOk() throws ParseException {
+    public void _testOk() throws ParseException {
         final CssManager cm = new CssManagerImpl();
         cm.loadStyleSheet("* {elem:none;class:none}\n" + "a {elem:a}\n" + ".c1 {class:c1}");
 
@@ -74,5 +66,38 @@ public class CssManagerTest extends TestCase {
         assertEquals(2, m.size());
         assertEquals("c2", m.get("class"));
         assertEquals("a", m.get("elem"));
+    }
+
+    public void testFindStyleByCSSSelector() throws ParseException {
+        final CssManagerImpl cm = new CssManagerImpl();
+        cm.loadStyleSheet("* {elem:none;class:none}\n" + "a {elem:a}\n" + ".c1 {class:c1}");
+        assertEquals(3, cm.ruleCount());
+
+        Map m = cm.findStyleByCSSSelector("c > b", null);
+        assertEquals(2, m.size());
+        assertEquals(CSSValue.class.getName(), m.get("class").getClass().getName());
+        assertEquals("none", m.get("class").toString());
+        assertEquals("none", m.get("elem").toString());
+
+        m = cm.findStyleByCSSSelector("c > b .c0 .c1 .c2 > a", null);
+        assertEquals(2, m.size());
+        assertEquals("none", m.get("class").toString());
+        assertEquals("a", m.get("elem").toString());
+
+        m = cm.findStyleByCSSSelector("c > a > b .c0 .c1 .c2", null);
+        assertEquals(2, m.size());
+        assertEquals("c1", m.get("class").toString());
+        assertEquals("none", m.get("elem").toString());
+
+        m = cm.findStyleByCSSSelector("c > b > a .c0 .c1 .c2", null);
+        assertEquals(2, m.size());
+        assertEquals("c1", m.get("class").toString());
+        assertEquals("a", m.get("elem").toString());
+
+        m = cm.findStyleByCSSSelector("c > b > a .c0 .c1 .c2", "class:c2");
+        assertEquals(2, m.size());
+        assertEquals("c2", m.get("class").toString());
+        assertEquals("a", m.get("elem").toString());
+
     }
 }
