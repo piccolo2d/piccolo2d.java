@@ -1,4 +1,4 @@
-package org.piccolo2d.svg.css;
+package org.piccolo2d.svg.cssmini;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -37,7 +37,7 @@ public class JDKStyleSheetTest extends TestCase {
                         + "      .watermark { fill: black; opacity: 0.75; font-size: 0.4; }\n"
                         + "      .ghost { opacity: 0.5; }\n" + "    ");
         css.loadRules(src, null);
-        final Style s = css.getRule("svg defs g rect .ice-house");
+        final Style s = css.getRule("svg > defs > g > rect .ice-house");
         assertEquals(1, s.getAttributeCount());
         assertEquals(".ice-house", s.getAttribute(StyleConstants.NameAttribute));
     }

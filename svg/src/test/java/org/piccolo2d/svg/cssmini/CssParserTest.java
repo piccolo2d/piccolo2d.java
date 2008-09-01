@@ -1,4 +1,4 @@
-package org.piccolo2d.svg.css;
+package org.piccolo2d.svg.cssmini;
 
 import java.text.ParseException;
 import java.util.Collection;

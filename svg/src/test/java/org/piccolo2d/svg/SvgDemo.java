@@ -51,7 +51,7 @@ public class SvgDemo {
         final PCanvas zui = new PCanvas();
         frame.setTitle(SvgDemo.class.getName());
         frame.getContentPane().add(zui);
-        if (false) {
+        if (true) {
             final PNode world = new SvgLoader().load(SvgLoadTest.findResource("/ice-plain.svg").openStream());
         }
         final long start = System.currentTimeMillis();

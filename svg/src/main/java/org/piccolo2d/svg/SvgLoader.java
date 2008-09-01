@@ -35,7 +35,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.piccolo2d.svg.css.CssManager;
-import org.piccolo2d.svg.css.CssManagerImpl;
+import org.piccolo2d.svg.cssmini.SvgCssManager;
 import org.xml.sax.SAXException;
 
 import edu.umd.cs.piccolo.PNode;
@@ -46,7 +46,8 @@ import edu.umd.cs.piccolo.PNode;
 public class SvgLoader {
 
     public PNode load(final InputStream in) throws IOException {
-        return load(in, new CssManagerImpl());
+        return load(in, new SvgCssManager() {
+        });
     }
 
     public PNode load(final InputStream in, final CssManager css) throws IOException {

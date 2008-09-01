@@ -1,7 +1,6 @@
-package org.piccolo2d.svg.css;
+package org.piccolo2d.svg.util;
 
 import java.awt.Font;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,11 +27,5 @@ public class FontUtil {
             fs = (int) (SCALE * Double.parseDouble(s.group(1)));
         }
         return new Font(ff, Font.PLAIN, fs);
-    }
-
-    // <String, CharSequence>
-    public static Font findFont(final Map attributes) {
-        return findFont((CharSequence) attributes.get("font-family"), (String) attributes.get("font-style"),
-                (CharSequence) attributes.get("font-size"));
     }
 }

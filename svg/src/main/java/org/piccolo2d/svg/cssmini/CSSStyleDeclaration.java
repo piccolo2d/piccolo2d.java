@@ -25,7 +25,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.svg.css;
+package org.piccolo2d.svg.cssmini;
 
 import java.text.ParseException;
 import java.util.Collection;
@@ -38,7 +38,7 @@ import java.util.TreeMap;
  * @see org.w3c.dom.css.CSSStyleDeclaration
  * @author mr0738@mro.name
  */
-public class CSSStyleDeclaration implements Map {
+class CSSStyleDeclaration implements Map {
 
     public static class Builder {
         private CSSStyleDeclaration d = null;

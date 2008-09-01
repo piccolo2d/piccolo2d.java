@@ -25,48 +25,29 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.svg.css;
 
-import java.awt.Color;
+package org.piccolo2d.svg.cssmini;
 
-import junit.framework.TestCase;
+import java.text.ParseException;
 
-public class SvgColorTest extends TestCase {
+/**
+ * @see CSSSelector
+ * @author mr0738@mro.name
+ */
+public class SvgCssManager extends CssManagerImpl {
 
-    public void testColorName() {
-        assertEquals(147, SvgColor.name2col.size());
-        final Color c = SvgColor.compute("chartreuse");
-        assertEquals(127, c.getRed());
-        assertEquals(255, c.getGreen());
-        assertEquals(0, c.getBlue());
+    protected Style initDefaults(final Style style) {
+        try {
+            setProperty(style, "font-family", "sans-serif");
+            setProperty(style, "font-size", "10");
+            return style;
+        }
+        catch (final ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void testDuplicateHex() {
-        assertEquals(0x112233, SvgColor.duplicate(0x123));
-        assertEquals(0x0088AA, SvgColor.duplicate(0x08a));
-    }
-
-    public void testRgb() {
-        Color c = SvgColor.compute("rgb( 11 , 22 , 33 )");
-        assertEquals(11, c.getRed());
-        assertEquals(22, c.getGreen());
-        assertEquals(33, c.getBlue());
-
-        c = SvgColor.compute("rgb( 25 % , 50 % , 75 % )");
-        assertEquals(64, c.getRed());
-        assertEquals(128, c.getGreen());
-        assertEquals(191, c.getBlue());
-    }
-
-    public void testRgbHex() {
-        Color c = SvgColor.compute("#1b3");
-        assertEquals(0x11, c.getRed());
-        assertEquals(0xbb, c.getGreen());
-        assertEquals(0x33, c.getBlue());
-
-        c = SvgColor.compute("#3a5b7c");
-        assertEquals(0x3a, c.getRed());
-        assertEquals(0x5b, c.getGreen());
-        assertEquals(0x7c, c.getBlue());
+    public boolean isInherited(final String key) {
+        return true;
     }
 }

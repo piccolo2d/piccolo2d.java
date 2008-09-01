@@ -25,30 +25,41 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.svg.css;
+
+package org.piccolo2d.svg.cssmini;
+
+import java.io.Serializable;
+import java.util.regex.Pattern;
 
 /**
- * @see org.w3c.dom.css.CSSStyleRule
+ * A Css selector that can easily matched with a via a {@link Pattern}s.
+ * 
+ * @see CSSSelectorBuilderXPath
+ * @see org.w3c.dom.css.CSSStyleRule#setSelectorText(String)
  * @author mr0738@mro.name
  */
-public class CSSStyleRule {
-    private final CSSSelector selector;
-    private final CSSStyleDeclaration style;
+interface CSSSelector extends CharSequence, Serializable {
 
-    public CSSStyleRule(final CSSSelector selector, final CSSStyleDeclaration style) {
-        this.selector = selector;
-        this.style = style;
+    public interface Builder {
+
+        void addClass(CharSequence clazz);
+
+        void combinator(char combinator);
+
+        void endElement();
+
+        CSSSelector finish();
+
+        void reset();
+
+        void startElement(CharSequence element);
     }
 
-    public CSSSelector getSelector() {
-        return selector;
-    }
+    String getSelectorText();
 
-    public CSSStyleDeclaration getStyle() {
-        return style;
-    }
+    String getXPathText();
 
-    public String toString() {
-        return selector + " " + style;
-    }
+    boolean matchesSelector(CharSequence documentSelector);
+
+    boolean matchesXPath(CharSequence documentXPath);
 }

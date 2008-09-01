@@ -1,8 +1,8 @@
-package org.piccolo2d.svg.css;
+package org.piccolo2d.svg.cssmini;
 
 import java.awt.Color;
 
-public class CSSValue implements CharSequence {
+class CSSValue implements CharSequence {
 
     public static CSSValue valueOf(final CharSequence value) {
         return new CSSValue(value);

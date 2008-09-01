@@ -25,15 +25,30 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package org.piccolo2d.svg;
+package org.piccolo2d.svg.cssmini;
 
 /**
- * Marker interface to tag (and group) parsers created via <a
- * href="http://research.cs.queensu.ca/~thurston/ragel/">ragel</a>.
- * 
+ * @see org.w3c.dom.css.CSSStyleRule
  * @author mr0738@mro.name
  */
-public interface RagelParser {
+class CSSStyleRule {
+    private final CSSSelector selector;
+    private final CSSStyleDeclaration style;
 
+    public CSSStyleRule(final CSSSelector selector, final CSSStyleDeclaration style) {
+        this.selector = selector;
+        this.style = style;
+    }
+
+    public CSSSelector getSelector() {
+        return selector;
+    }
+
+    public CSSStyleDeclaration getStyle() {
+        return style;
+    }
+
+    public String toString() {
+        return selector + " " + style;
+    }
 }

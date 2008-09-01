@@ -27,8 +27,10 @@
  */
 package org.piccolo2d.svg.css;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.text.ParseException;
-import java.util.Map;
+import java.util.Iterator;
 
 import javax.swing.text.html.StyleSheet;
 
@@ -36,25 +38,62 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 /**
- * Very simple, non-DOM based css manager.
- * 
+ * Very simple, non-DOM based css manager. This is the <b>ONLY</b> relevant
+ * interface for using this implementation - all other classes are
+ * implementation details.
+ * <p>
  * http://www.w3.org/Style/CSS/SAC/ http://cssparser.sourceforge.net/
- * 
+ * </p>
+ * <p>
  * TODO replace the xpath with {@link CSSStyleRule#getSelectorText()}.
- * 
+ * </p>
+ * <p>
  * TODO: examine {@link CSSStyleSheet}, {@link CSSStyleRule} and
  * {@link StyleSheet}.
+ * </p>
  */
 public interface CssManager {
 
+    /** Marker interface for a set of css properties. */
+    public interface Style {
+    };
+
     void clearCache();
+
+    Style findStyleByCSSSelector(final CharSequence cssSelector, final CharSequence styleAttributeValue)
+            throws ParseException;
 
     /**
      * Cached, public access.
      * 
      * @throws ParseException
      */
-    Map findStyleByXPath(CharSequence xpath, CharSequence styleAttributeValue) throws ParseException;
+    Style findStyleByXPath(CharSequence xpath, CharSequence styleAttributeValue) throws ParseException;
+
+    Color getColor(Style style, String key);
+
+    Style getDefaultStyle();
+
+    Font getFont(Style style);
+
+    Number getNumber(Style style, String key);
+
+    double getNumber(Style style, String key, double def);
+
+    float getNumber(Style style, String key, float def);
+
+    String getString(Style style, String key);
+
+    boolean isInherited(String key);
 
     void loadStyleSheet(CharSequence styledata) throws ParseException;
+
+    /** See {@link #isInherited(String)} */
+    Style merge(Style parent, CharSequence child) throws ParseException;
+
+    Style merge(Style parent, Style child);
+
+    Iterator properties(Style style);
+
+    String setProperty(Style style, String key, String value) throws ParseException;
 }

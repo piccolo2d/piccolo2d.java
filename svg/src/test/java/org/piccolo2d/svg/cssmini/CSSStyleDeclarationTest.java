@@ -1,8 +1,8 @@
-package org.piccolo2d.svg.css;
+package org.piccolo2d.svg.cssmini;
 
 import junit.framework.TestCase;
 
-import org.piccolo2d.svg.css.CSSStyleDeclaration.Builder;
+import org.piccolo2d.svg.cssmini.CSSStyleDeclaration.Builder;
 
 public class CSSStyleDeclarationTest extends TestCase {
 
