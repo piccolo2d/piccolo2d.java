@@ -1,0 +1,28 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="12cm" height="3cm" viewBox="0 0 1200 300"
+     xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <desc>Example Use04-GeneratedContent - 'use' with a 'transform' attribute</desc>
+
+  <!-- 'style' and 'defs' sections left out -->
+
+  <rect x="0" y="0" width="1200" height="300"
+         style="fill:none; stroke:blue; stroke-width:3"/>
+  <g style="stroke-width:40">
+
+    <!-- Start of generated content. Replaces 'use' -->
+    <g style=" fill:blue;
+                  fill-opacity:.5;
+                  stroke-linecap:round;
+                  stroke-dashoffset:50" >
+      <path d="M300 50 L900 50 L900 250 L300 250"
+            style=" stroke:red; 
+                    stroke-opacity:.5; 
+                    stroke-linejoin: bevel; 
+                    stroke-dasharray:300,100" />
+    </g> 
+    <!-- End of generated content -->
+
+  </g>
+</svg>

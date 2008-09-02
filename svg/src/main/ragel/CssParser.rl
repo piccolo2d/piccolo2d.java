@@ -129,13 +129,10 @@ class CssParser implements RagelParser {
 	#######################################################
 	## Define the grammar
 	#######################################################
-	
-	# TODO allow CSS comments!
-	
-	# Consume a comment.
-	# css_comment := any* :>> '*/' @{fgoto main;};
-		
+
 	S = space;
+	comment = "/*" any* :>> "*/";
+	SC = space* (comment space*)?;
 	IDENT = [_a-zA-Z] ([_a-zA-Z0-9] | '-')*;
 
 	element_name = (IDENT >start_element %push_element | "*" >push_wildcard) S*;
@@ -154,12 +151,12 @@ class CssParser implements RagelParser {
 
 	expr = value >start_prop_value %push_prop_value;
 
-	declaration = (property S* ':' S* expr)?  S*;
+	declaration = (property SC ':' S* expr)?  SC;
+
+	ruleset =  selector SC? ("," SC selector )*
+	"{" SC declaration (";" SC declaration )* "}" SC %end_definition;
 	
-	ruleset =  selector ("," S* selector )*
-    "{" S* declaration (";" S* declaration )* "}" S* %end_definition;
-	
-	stylesheet = S* ruleset*;
+	stylesheet = SC ruleset*;
 	
 	main := stylesheet %{if(debug) System.out.println("---");};
 }%%

@@ -59,8 +59,11 @@ public class SvgDemo {
         if (false) {
             world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/text01.svg").openStream());
         }
-        else if (true) {
+        else if (false) {
             world = new SvgLoader().load(SvgLoadTest.findResource("/ice-inkscape.svg").openStream());
+        }
+        else if (true) {
+            world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/Use04-GeneratedContent.svg").openStream());
         }
         else {
             world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/path/cubic02.svg").openStream());

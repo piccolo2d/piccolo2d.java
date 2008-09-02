@@ -92,4 +92,18 @@ public class CssParserTest extends TestCase {
         assertEquals("i > j .c2 {\n\tfill: #ff3131;\n\tstroke: none\n}", it.next().toString());
         assertFalse(it.hasNext());
     }
+
+    public void test03ParseComments() throws ParseException {
+        final CssParser cp = new CssParser();
+        asser("e1 e2", cp.parse("e1 e2 { fill: #ff3131; stroke: none }"));
+        asser("e1 e2", cp.parse("/* comment */ e1 e2 { fill: #ff3131; stroke: none }"));
+        asser("e1 e2", cp.parse("e1 e2 /* comment */ { fill: #ff3131; stroke: none }"));
+        asser("e1 e2", cp.parse("e1 e2 { /* comment */ fill: #ff3131; stroke: none }"));
+        asser("e1 e2", cp.parse("e1 e2 { fill: #ff3131; /* comment */ stroke: none }"));
+        asser("e1 e2", cp.parse("e1 e2 { fill: #ff3131; stroke: none /* comment */ }"));
+        asser("e1 e2", cp.parse("e1 e2 { fill: #ff3131; stroke: none } /* comment */ "));
+        asser("e1 e2", cp.parse("e1 e2 { fill /* comment */ : #ff3131; stroke: none }"));
+        // FIXME asser("e1 e2",
+        // cp.parse("e1 e2 { fill: /* comment */ #ff3131; stroke: none }"));
+    }
 }
