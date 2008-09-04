@@ -51,7 +51,7 @@ public class SvgDemo {
         final PCanvas zui = new PCanvas();
         frame.setTitle(SvgDemo.class.getName());
         frame.getContentPane().add(zui);
-        if (true) {
+        if (false) {
             final PNode world = new SvgLoader().load(SvgLoadTest.findResource("/ice-plain.svg").openStream());
         }
         final long start = System.currentTimeMillis();
@@ -59,8 +59,14 @@ public class SvgDemo {
         if (false) {
             world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/text01.svg").openStream());
         }
+        else if (true) {
+            world = new SvgLoader().load(SvgLoadTest.findResource("/ice-use.svg").openStream());
+        }
         else if (false) {
-            world = new SvgLoader().load(SvgLoadTest.findResource("/ice-inkscape.svg").openStream());
+            world = new SvgLoader().load(SvgLoadTest.findResource("/ice-plain.svg").openStream());
+        }
+        else if (true) {
+            world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/Use04.svg").openStream());
         }
         else if (true) {
             world = new SvgLoader().load(SvgLoadTest.findResource("/w3c-svg/Use04-GeneratedContent.svg").openStream());

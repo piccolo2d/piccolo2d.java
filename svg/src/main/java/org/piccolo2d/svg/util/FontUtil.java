@@ -15,7 +15,7 @@ public class FontUtil {
      */
     public static final int SCALE = 100;
 
-    public static Font findFont(final CharSequence family, final String style, final CharSequence size) {
+    public static Font findFont(final CharSequence family, final CharSequence style, final CharSequence size) {
         // font-family="Verdana" font-size="55" fill="blue" >
         final String ff = family.toString();
         final int fs;

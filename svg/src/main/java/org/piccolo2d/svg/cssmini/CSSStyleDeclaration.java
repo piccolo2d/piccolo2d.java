@@ -34,11 +34,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.piccolo2d.svg.css.CssManager.Style;
+
 /**
  * @see org.w3c.dom.css.CSSStyleDeclaration
  * @author mr0738@mro.name
  */
-class CSSStyleDeclaration implements Map {
+class CSSStyleDeclaration implements Map, Style {
 
     public static class Builder {
         private CSSStyleDeclaration d = null;
@@ -149,7 +151,8 @@ class CSSStyleDeclaration implements Map {
 
     public void putAll(final Map arg0) {
         // TODO Check syntactic validity
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // throw new UnsupportedOperationException("Not implemented yet.");
+        properties.putAll(arg0);
     }
 
     public Object remove(final Object key) {

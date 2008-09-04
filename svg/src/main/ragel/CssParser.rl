@@ -132,7 +132,7 @@ class CssParser implements RagelParser {
 
 	S = space;
 	comment = "/*" any* :>> "*/";
-	SC = space* (comment space*)?;
+	SC = space* (comment space*)*;
 	IDENT = [_a-zA-Z] ([_a-zA-Z0-9] | '-')*;
 
 	element_name = (IDENT >start_element %push_element | "*" >push_wildcard) S*;

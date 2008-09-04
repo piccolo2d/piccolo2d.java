@@ -9,18 +9,18 @@
 
   <rect x="0" y="0" width="1200" height="300"
          style="fill:none; stroke:blue; stroke-width:3"/>
-  <g style="stroke-width:40">
+  <g style="/* rule 11 */ stroke-width:40">
 
     <!-- Start of generated content. Replaces 'use' -->
-    <g style=" fill:blue;
-                  fill-opacity:.5;
-                  stroke-linecap:round;
-                  stroke-dashoffset:50" >
+    <g style="/* rule 1 */ fill:blue;
+                 /* rule 3 */ fill-opacity:.5;
+                 /* rule 5 */ stroke-linecap:round;
+                 /* rule 12 */ stroke-dashoffset:50" >
       <path d="M300 50 L900 50 L900 250 L300 250"
-            style=" stroke:red; 
-                    stroke-opacity:.5; 
-                    stroke-linejoin: bevel; 
-                    stroke-dasharray:300,100" />
+            style="/* rule 2 */ stroke:red; 
+                   /* rule 4 */ stroke-opacity:.5; 
+                   /* rule 6 */ stroke-linejoin: bevel; 
+                   /* rule 10 */ stroke-dasharray:300,100" />
     </g> 
     <!-- End of generated content -->
 

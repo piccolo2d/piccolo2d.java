@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.WeakHashMap;
 import java.util.Map.Entry;
 
@@ -48,16 +47,14 @@ import org.piccolo2d.svg.util.FontUtil;
  * @author mr0738@mro.name
  */
 abstract class CssManagerImpl implements CssManager {
-    private static class StyImp extends TreeMap implements Style {
+    private static class StyImp extends CSSStyleDeclaration {
 
-        private static final long serialVersionUID = 5567683947559207117L;
-
-        private StyImp() {
+        public StyImp() {
             super();
         }
 
-        private StyImp(final Map m) {
-            super(m);
+        public StyImp(final Map properties) {
+            super(properties);
         }
     }
 
@@ -67,12 +64,10 @@ abstract class CssManagerImpl implements CssManager {
     private final Map styleCacheXPath = new WeakHashMap();
 
     private StyImp addStyleAttribute(final CharSequence styleAttributeValue, StyImp style) throws ParseException {
-        if (styleAttributeValue != null && styleAttributeValue.length() > 0) {
-            // that's really brute force, but simple:
+        final Map s = (Map) parseStyleAttribute(styleAttributeValue);
+        if (s != null) {
             style = new StyImp(style);
-            final CSSStyleRule r = (CSSStyleRule) parser.parse("dummyelem{" + styleAttributeValue + "}").iterator()
-                    .next();
-            style.putAll(r.getStyle());
+            style.putAll(s);
         }
         return style;
     }
@@ -123,24 +118,23 @@ abstract class CssManagerImpl implements CssManager {
     }
 
     public Number getNumber(final Style style, final String key) {
-        final String s = getString(style, key);
-        return s == null ? null : new Double(s);
+        final CharSequence s = getString(style, key);
+        return s == null ? null : new Double(s.toString());
     }
 
     public double getNumber(final Style style, final String key, final double def) {
-        final String s = getString(style, key);
-        return s == null ? def : Double.parseDouble(s);
+        final CharSequence s = getString(style, key);
+        return s == null ? def : Double.parseDouble(s.toString());
     }
 
     public float getNumber(final Style style, final String key, final float def) {
-        final String s = getString(style, key);
-        return s == null ? def : Float.parseFloat(s);
+        final CharSequence s = getString(style, key);
+        return s == null ? def : Float.parseFloat(s.toString());
     }
 
-    public String getString(final Style style, final String key) {
+    public CharSequence getString(final Style style, final String key) {
         final StyImp sty = (StyImp) style;
-        final CharSequence ret = (CharSequence) sty.get(key);
-        return ret == null ? null : ret.toString();
+        return (CharSequence) sty.get(key);
     }
 
     protected abstract Style initDefaults(Style style);
@@ -148,12 +142,6 @@ abstract class CssManagerImpl implements CssManager {
     public void loadStyleSheet(final CharSequence styledata) throws ParseException {
         css.addAll(parser.parse(styledata));
         clearCache();
-    }
-
-    public Style merge(final Style parent, final CharSequence child) throws ParseException {
-        final StyImp r = new StyImp((StyImp) parent);
-        r.putAll((StyImp) child);
-        return r;
     }
 
     public Style merge(final Style parent, final Style child) {
@@ -169,7 +157,19 @@ abstract class CssManagerImpl implements CssManager {
         return r;
     }
 
-    public Iterator properties(final Style style) {
+    public Style parseStyleAttribute(final CharSequence styleAttributeValue) throws ParseException {
+        if (styleAttributeValue == null || styleAttributeValue.length() == 0) {
+            return null;
+        }
+        // that's really brute force, but simple:
+        final CSSStyleRule r = (CSSStyleRule) parser.parse("dummyelem{" + styleAttributeValue + "}").iterator().next();
+        if (r == null) {
+            return null;
+        }
+        return r.getStyle();
+    }
+
+    public Iterator propertyKeys(final Style style) {
         final StyImp s = (StyImp) style;
         return s.keySet().iterator();
     }
@@ -179,7 +179,7 @@ abstract class CssManagerImpl implements CssManager {
         return css.size();
     }
 
-    public String setProperty(final Style style, final String key, final String value) throws ParseException {
+    public String setProperty(final Style style, final String key, final CharSequence value) throws ParseException {
         final StyImp s = (StyImp) style;
         return (String) s.put(key, value);
     }

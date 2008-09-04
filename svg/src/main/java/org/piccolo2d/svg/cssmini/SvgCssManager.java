@@ -30,6 +30,7 @@ package org.piccolo2d.svg.cssmini;
 
 import java.awt.Color;
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
 /**
  * @see CSSSelector
@@ -37,12 +38,14 @@ import java.text.ParseException;
  */
 public class SvgCssManager extends CssManagerImpl {
 
+    private static final Pattern exclude = Pattern.compile("id|class|style|transform|width|height");
+
     public Color getColor(final Style style, final String key) {
         return SvgColor.valueOf(getString(style, key));
     }
 
     public boolean inheritProperty(final String key) {
-        return !"transform".equals(key);
+        return !exclude.matcher(key).matches();
     }
 
     protected Style initDefaults(final Style style) {

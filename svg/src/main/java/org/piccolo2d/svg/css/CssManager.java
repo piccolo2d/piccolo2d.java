@@ -75,8 +75,9 @@ public interface CssManager {
      * 
      * @param cssSelector the whole path, e.g.
      *            <code>html > body > p .myclass > em</code>
-     * @param styleAttributeValue if the document node (<code>em</code> in the
-     *            above example) has a style attribute put the value here.
+     * @param styleAttributeValue may be <code>null</code>. If the document node
+     *            (<code>em</code> in the above example) has a style attribute
+     *            put the value here.
      * @return the resulting, complete style.
      * @throws ParseException the style attribute value cannot be parsed.
      */
@@ -129,7 +130,7 @@ public interface CssManager {
      * 
      * @return <code>null</code> if not present.
      */
-    String getString(Style style, String key);
+    CharSequence getString(Style style, String key);
 
     /**
      * Should properties with this name be passed on downward in the hierarchy?
@@ -141,28 +142,26 @@ public interface CssManager {
      */
     void loadStyleSheet(CharSequence styledata) throws ParseException;
 
-    /** Clone style and add the properties from styleAttribute. */
-    Style merge(Style style, CharSequence styleAttribute) throws ParseException;
-
     /**
-     * Create an empty {@link Style} instance, inherit properties from parent
+     * Create an empty {@link Style} instance, add all properties from parent
      * and add all properties from child.
      * 
-     * @param child
      * @return a new {@link Style} instance.
      * @see #inheritProperty(String)
      */
     Style merge(Style parent, Style child);
+
+    Style parseStyleAttribute(CharSequence styleAttribute) throws ParseException;
 
     /**
      * List all property keys of a {@link Style}.
      * 
      * @return Iterator of Strings.
      */
-    Iterator properties(Style style);
+    Iterator propertyKeys(Style style);
 
     /**
      * Set a property value of a style.
      */
-    String setProperty(Style style, String key, String value) throws ParseException;
+    String setProperty(Style style, String key, CharSequence value) throws ParseException;
 }
