@@ -15,12 +15,77 @@
   <description>
     A very simple SVG loader to import scenegraphs from SVG 1.1 Tiny documents.
   </description>
+  <properties>
+    <batik.version>1.6</batik.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.piccolo2d</groupId>
       <artifactId>piccolo2d-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+		<groupId>org.apache.xmlgraphics</groupId>
+		<artifactId>batik-extension</artifactId>
+		<version>1.7</version>
+		<scope>test</scope>
+    </dependency>
+    	<!-- 
+    	<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-awt-util</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-dom</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-util</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-xml</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>    
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-bridge</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>    
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-parser</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>    
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-css</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>    
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-gvt</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>    
+		<dependency>
+			<groupId>batik</groupId>
+			<artifactId>batik-svg-dom</artifactId>
+			<version>${batik.version}</version>
+			<scope>test</scope>
+		</dependency>
+		-->
   </dependencies>
   <scm>
 	<connection>

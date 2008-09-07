@@ -78,15 +78,15 @@ class SvgSaxHandler extends DefaultHandler {
     private final class XmlCircle extends XmlPPath {
         PNode create(final CharSequence xpath, final CharSequence localName, final Style style, final Attributes unused)
                 throws ParseException {
-            final double r = css.getNumber(style, "r", 0.0);
-            final double cx = css.getNumber(style, "cx", 0.0);
-            final double cy = css.getNumber(style, "cy", 0.0);
+            final double r = style.getNumber("r", 0.0);
+            final double cx = style.getNumber("cx", 0.0);
+            final double cy = style.getNumber("cy", 0.0);
             return new PPath(new Arc2D.Double(cx - r, cy - r, 2 * r, 2 * r, 0, 360, Arc2D.CHORD));
         }
 
         PNode style(final PNode node, final Style style) throws ParseException {
             super.style(node, style);
-            node.setVisible(css.getNumber(style, "r", 0.0) > 0);
+            node.setVisible(style.getNumber("r", 0.0) > 0);
             return node;
         }
     }
@@ -132,16 +132,16 @@ class SvgSaxHandler extends DefaultHandler {
     private final class XmlEllipse extends XmlPPath {
         PNode create(final CharSequence xpath, final CharSequence localName, final Style style, final Attributes unused)
                 throws ParseException {
-            final double rx = css.getNumber(style, "rx", 0.0);
-            final double ry = css.getNumber(style, "ry", 0.0);
-            final double cx = css.getNumber(style, "cx", 0.0);
-            final double cy = css.getNumber(style, "cy", 0.0);
+            final double rx = style.getNumber("rx", 0.0);
+            final double ry = style.getNumber("ry", 0.0);
+            final double cx = style.getNumber("cx", 0.0);
+            final double cy = style.getNumber("cy", 0.0);
             return new PPath(new Arc2D.Double(cx - rx, cy - ry, 2 * rx, 2 * ry, 0, 360, Arc2D.CHORD));
         }
 
         PNode style(final PNode node, final Style style) throws ParseException {
             super.style(node, style);
-            node.setVisible(css.getNumber(style, "rx", 0.0) > 0 && css.getNumber(style, "ry", 0.0) > 0);
+            node.setVisible(style.getNumber("rx", 0.0) > 0 && style.getNumber("ry", 0.0) > 0);
             return node;
         }
     }
@@ -173,10 +173,10 @@ class SvgSaxHandler extends DefaultHandler {
     private final class XmlLine extends XmlPPath {
         PNode create(final CharSequence xpath, final CharSequence localName, final Style style, final Attributes unused)
                 throws ParseException {
-            final double x1 = css.getNumber(style, "x1", 0.0);
-            final double y1 = css.getNumber(style, "y1", 0.0);
-            final double x2 = css.getNumber(style, "x2", 0.0);
-            final double y2 = css.getNumber(style, "y2", 0.0);
+            final double x1 = style.getNumber("x1", 0.0);
+            final double y1 = style.getNumber("y1", 0.0);
+            final double x2 = style.getNumber("x2", 0.0);
+            final double y2 = style.getNumber("y2", 0.0);
             return new PPath(new Line2D.Double(x1, y1, x2, y2));
         }
     }
@@ -195,9 +195,6 @@ class SvgSaxHandler extends DefaultHandler {
 
         /**
          * Factory without look!
-         * 
-         * @param xpath TODO
-         * @param localName TODO
          * 
          * @see #style
          */
@@ -228,10 +225,13 @@ class SvgSaxHandler extends DefaultHandler {
 
         /** apply the look */
         PNode style(final PNode n, final Style style) throws ParseException {
+            // store the current style:
+            n.addAttribute(P2DStyl, style);
             final CharSequence tr = find(style, "transform");
             if (tr != null) {
                 trafo.parse(tr, n.getTransformReference(true));
             }
+            n.setTransparency(style.getNumber("opacity", 1.0F));
             return n;
         }
     }
@@ -264,14 +264,14 @@ class SvgSaxHandler extends DefaultHandler {
         PNode style(final PNode n, final Style style) throws ParseException {
             final PPath node = (PPath) super.style(n, style);
             // http://www.w3.org/TR/SVG11/painting.html#paint-att-mod
-            node.setPaint(css.getColor(style, "fill"));
+            node.setPaint(style.getColor("fill"));
 
             // TODO stroke type
-            final float t = css.getNumber(style, "stroke-width", -1.0F);
+            final float t = style.getNumber("stroke-width", -1.0F);
             if (t >= 0) {
                 node.setStroke(new BasicStroke(t));
             }
-            node.setStrokePaint(css.getColor(style, "stroke"));
+            node.setStrokePaint(style.getColor("stroke"));
 
             // set drawing attributes
 
@@ -316,18 +316,18 @@ class SvgSaxHandler extends DefaultHandler {
             node.setConstrainHeightToTextHeight(true);
 
             // http://www.w3.org/TR/SVG11/painting.html#paint-att-mod
-            final Color c = css.getColor(style, "fill");
+            final Color c = style.getColor("fill");
             node.setTextPaint(c == null ? Color.BLACK : c);
 
-            final double x = css.getNumber(style, "x", 0.0);
-            final double y = css.getNumber(style, "y", 0.0);
+            final double x = style.getNumber("x", 0.0);
+            final double y = style.getNumber("y", 0.0);
             node.translate(x, y);
 
             // TODO text attributes!
-            node.addAttribute(P2D_Prefix + "text-anchor", css.getString(style, "text-anchor"));
+            node.addAttribute(P2D_Prefix + "text-anchor", style.getString("text-anchor"));
 
             node.scale(1.0 / FontUtil.SCALE);
-            node.setFont(css.getFont(style));
+            node.setFont(style.getFont());
 
             return node;
         }
@@ -343,12 +343,12 @@ class SvgSaxHandler extends DefaultHandler {
     private final class XmlRect extends XmlPPath {
         PNode create(final CharSequence xpath, final CharSequence localName, final Style style, final Attributes atts)
                 throws ParseException {
-            final double x = css.getNumber(style, "x", 0.0);
-            final double y = css.getNumber(style, "y", 0.0);
-            final double w = css.getNumber(style, "width", 0.0);
-            final double h = css.getNumber(style, "height", 0.0);
-            final double rx = css.getNumber(style, "rx", 0.0);
-            final double ry = css.getNumber(style, "ry", rx);
+            final double x = style.getNumber("x", 0.0);
+            final double y = style.getNumber("y", 0.0);
+            final double w = style.getNumber("width", 0.0);
+            final double h = style.getNumber("height", 0.0);
+            final double rx = style.getNumber("rx", 0.0);
+            final double ry = style.getNumber("ry", rx);
             final Shape s;
             if (rx > 0 || ry > 0) {
                 s = new RoundRectangle2D.Double(x, y, w, h, rx, ry);
@@ -380,22 +380,24 @@ class SvgSaxHandler extends DefaultHandler {
      * http://www.w3.org/TR/SVG11/struct.html#UseElement
      */
     private final class XmlUse extends XmlUseBase {
-        protected PNode deepClone(final CharSequence xpath, final CharSequence localName, final Style sty,
-                final PNode src) {
+        protected PNode deepClone(final CharSequence xpath, final CharSequence localName, Style sty, final PNode src) {
             final String elem = (String) src.getAttribute(P2DElement);
             final XmlPNode handl = (XmlPNode) handler.get(elem);
             try {
                 final PNode dst = shallowClone(src);
+                sty = css.merge(sty, (Style) src.getAttribute(P2DStyl));
+                // System.out.println(xpath + " stroke: " + css.getString(sty,
+                // "stroke"));
                 handl.style(dst, sty);
-                dst.setVisible(true);
                 // deep recursion
                 for (int i = 0; i < src.getChildrenCount(); i++) {
                     final PNode fromc = src.getChild(i);
                     final CharSequence el = (CharSequence) fromc.getAttribute(P2DElement);
                     final CharSequence tocp = appendXPath(xpath, el, (CharSequence) fromc.getAttribute(P2DClass));
-                    System.out.println(tocp);
-                    Style s = css.findStyleByXPath(tocp, (CharSequence) fromc.getAttribute(P2DStyle));
-                    s = css.merge(sty, s);
+                    // System.out.println(tocp);
+                    // Style s = css.findStyleByXPath(tocp, (CharSequence)
+                    // fromc.getAttribute(P2DStyle));
+                    final Style s = css.merge(sty, (Style) fromc.getAttribute(P2DStyl));
                     dst.addChild(deepClone(tocp, el, s, fromc));
                 }
                 return dst;
@@ -436,8 +438,8 @@ class SvgSaxHandler extends DefaultHandler {
             final PNode used = (PNode) id2node.get(m.group(1));
             r.addChild(deepClone(xpath, localName, style, used));
 
-            final double x = css.getNumber(style, "x", 0.0);
-            final double y = css.getNumber(style, "y", 0.0);
+            final double x = style.getNumber("x", 0.0);
+            final double y = style.getNumber("y", 0.0);
             // r.setTransform(AffineTransform.getTranslateInstance(x, y));
             r.translate(x, y);
             return r;
@@ -475,11 +477,12 @@ class SvgSaxHandler extends DefaultHandler {
             for (final Enumeration enu = node.getClientPropertyKeysEnumeration(); enu.hasMoreElements();) {
                 final Object key = enu.nextElement();
                 if (!P2DID.equals(key)) {
-                    System.out.println("\t" + key + "=" + node.getAttribute(key));
+                    // System.out.println("\t" + key + "=" +
+                    // node.getAttribute(key));
                     ret.addAttribute(key, node.getAttribute(key));
                 }
             }
-            System.out.println();
+            // System.out.println();
             return ret;
         }
     }
@@ -492,6 +495,7 @@ class SvgSaxHandler extends DefaultHandler {
     private static final String P2DElement = P2D_Prefix + "element";
     // piccolo2d node attribute name of the svg id attribute value
     private static final String P2DID = P2D_Prefix + "id";
+    private static final String P2DStyl = P2D_Prefix + "style_";
     private static final String P2DStyle = P2D_Prefix + "style";
     private static final String P2DXPath = P2D_Prefix + "xpath";
     private static final PathParser path = new PathParser();
@@ -631,7 +635,7 @@ class SvgSaxHandler extends DefaultHandler {
     }
 
     private CharSequence find(final Style attributes, final String name) {
-        return css.getString(attributes, name);
+        return attributes.getString(name);
     }
 
     // <String, PNode>
@@ -641,6 +645,13 @@ class SvgSaxHandler extends DefaultHandler {
 
     public PNode getScene() {
         return root;
+    }
+
+    private Style merge(final Style style, final Attributes attributes) throws ParseException {
+        for (int i = 0; i < attributes.getLength(); i++) {
+            style.setProperty(attributes.getLocalName(i), attributes.getValue(i));
+        }
+        return style;
     }
 
     public InputSource resolveEntity(final String publicId, final String systemId) throws IOException, SAXException {
@@ -689,8 +700,9 @@ class SvgSaxHandler extends DefaultHandler {
             Style style;
             try {
                 // merge style(s) and element attributes:
-                style = css.findStyleByXPath(xp, find(attributes, "style"));
-                merge(style, attributes);
+                style = css.findStyleByXPath(xp);
+                style = css.merge(style, css.parseStyleAttribute(find(attributes, "style")));
+                style = merge(style, attributes);
             }
             catch (final ParseException e) {
                 throw new SAXException(e);
@@ -700,6 +712,9 @@ class SvgSaxHandler extends DefaultHandler {
             style = css.merge((Style) inherited.peek(), style);
             inherited.push(style);
 
+            // System.out.println(xp + " stroke: " + css.getString(style,
+            // "stroke"));
+
             txt.setLength(0);
             if (eh.start(xp, localName, style, attributes)) {
                 final String id = find(attributes, "id");
@@ -707,12 +722,6 @@ class SvgSaxHandler extends DefaultHandler {
                     id2node.put(id, current);
                 }
             }
-        }
-    }
-
-    private void merge(Style style, final Attributes attributes) throws ParseException {
-        for (int i = 0; i < attributes.getLength(); i++) {
-            css.setProperty(style, attributes.getLocalName(i), attributes.getValue(i));
         }
     }
 

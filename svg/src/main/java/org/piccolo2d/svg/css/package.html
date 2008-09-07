@@ -1,4 +1,4 @@
-/*
+<!--
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
  * All rights reserved.
  *
@@ -24,35 +24,7 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-package org.piccolo2d.svg.cssmini;
-
-import java.text.ParseException;
-import java.util.regex.Pattern;
-
-/**
- * @see CSSSelector
- * @author mr0738@mro.name
- */
-public class SvgCssManager extends CssManagerImpl {
-
-    private static final Pattern exclude = Pattern.compile("id|class|style|transform|width|height|opacity");
-
-    public boolean inheritProperty(final String key) {
-        return !exclude.matcher(key).matches();
-    }
-
-    protected Style initDefaults(final Style style) {
-        try {
-            style.setProperty("font-family", "sans-serif");
-            style.setProperty("font-size", "10");
-            // setProperty(style, "stroke", "black");
-            // setProperty(style, "stroke-width", "1");
-            return style;
-        }
-        catch (final ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
+-->
+<body>
+Very simple, non-DOM based css manager facade.
+</body>

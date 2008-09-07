@@ -27,6 +27,8 @@
  */
 package org.piccolo2d.svg.cssmini;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,7 +36,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.piccolo2d.svg.css.CssManager;
 import org.piccolo2d.svg.css.CssManager.Style;
+import org.piccolo2d.svg.util.FontUtil;
 
 /**
  * @see org.w3c.dom.css.CSSStyleDeclaration
@@ -112,7 +116,11 @@ class CSSStyleDeclaration implements Map, Style {
         return properties.get(key);
     }
 
-    public String getCssText() {
+    public Color getColor(final String key) {
+        return SvgColor.valueOf(getString(key));
+    }
+
+    public CharSequence getCssText() {
         final StringBuilder s = new StringBuilder();
         s.append("{");
         final Iterator it = properties.entrySet().iterator();
@@ -132,6 +140,32 @@ class CSSStyleDeclaration implements Map, Style {
         return s.toString();
     }
 
+    /**
+     * @see FontUtil#findFont(CharSequence, String, CharSequence)
+     */
+    public Font getFont() {
+        return FontUtil.findFont(getString("font-family"), getString("font-style"), getString("font-size"));
+    }
+
+    public Number getNumber(final String key) {
+        final CharSequence s = getString(key);
+        return s == null ? null : new Double(s.toString());
+    }
+
+    public double getNumber(final String key, final double def) {
+        final CharSequence s = getString(key);
+        return s == null ? def : Double.parseDouble(s.toString());
+    }
+
+    public float getNumber(final String key, final float def) {
+        final CharSequence s = getString(key);
+        return s == null ? def : Float.parseFloat(s.toString());
+    }
+
+    public CharSequence getString(final String key) {
+        return (CharSequence) get(key);
+    }
+
     public int hashCode() {
         return properties.hashCode();
     }
@@ -142,6 +176,10 @@ class CSSStyleDeclaration implements Map, Style {
 
     public Set keySet() {
         return properties.keySet();
+    }
+
+    public Iterator propertyKeys() {
+        return keySet().iterator();
     }
 
     public Object put(final Object arg0, final Object arg1) {
@@ -159,9 +197,16 @@ class CSSStyleDeclaration implements Map, Style {
         return properties.remove(key);
     }
 
+    /**
+     * @see CssManager#parseStyleAttribute(CharSequence)
+     */
     void setCssText(final String cssText) throws ParseException {
         // TODO parse
         throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    public CharSequence setProperty(final String key, final CharSequence value) throws ParseException {
+        return (String) put(key, value);
     }
 
     public int size() {
@@ -169,7 +214,7 @@ class CSSStyleDeclaration implements Map, Style {
     }
 
     public String toString() {
-        return getCssText();
+        return getCssText().toString();
     }
 
     public Collection values() {

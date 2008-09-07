@@ -25,34 +25,53 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.piccolo2d.svg.batik;
 
-package org.piccolo2d.svg.cssmini;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
-import java.text.ParseException;
-import java.util.regex.Pattern;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
-/**
- * @see CSSSelector
- * @author mr0738@mro.name
- */
-public class SvgCssManager extends CssManagerImpl {
+import edu.umd.cs.piccolo.PCanvas;
+import edu.umd.cs.piccolo.PNode;
 
-    private static final Pattern exclude = Pattern.compile("id|class|style|transform|width|height|opacity");
+public class BatikSvgDemo {
 
-    public boolean inheritProperty(final String key) {
-        return !exclude.matcher(key).matches();
-    }
+    public static void main(final String[] args) throws IOException {
+        final JFrame frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(final WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        frame.setSize(600, 800);
 
-    protected Style initDefaults(final Style style) {
-        try {
-            style.setProperty("font-family", "sans-serif");
-            style.setProperty("font-size", "10");
-            // setProperty(style, "stroke", "black");
-            // setProperty(style, "stroke-width", "1");
-            return style;
+        final PCanvas zui = new PCanvas();
+        frame.setTitle(BatikSvgDemo.class.getName());
+        frame.getContentPane().add(zui);
+        if (false) {
+            final PNode world = new BatikSvgNode(BatikSvgDemo.class
+                    .getResourceAsStream("/w3c-svg/Use04-GeneratedContent.svg"));
         }
-        catch (final ParseException e) {
-            throw new RuntimeException(e);
-        }
+        final PNode world;
+        final long start = System.currentTimeMillis();
+        if (true)
+            world = new BatikSvgNode(BatikSvgDemo.class.getResourceAsStream("/w3c-svg/Use04-GeneratedContent.svg"));
+        System.out.println(System.currentTimeMillis() - start);
+
+        zui.getLayer().addChild(world);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                frame.setVisible(true);
+            }
+        });
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                zui.getCamera().animateViewToCenterBounds(world.getFullBounds(), true, 500);
+            }
+        });
     }
 }

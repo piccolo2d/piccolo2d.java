@@ -49,8 +49,55 @@ import org.w3c.dom.css.CSSStyleSheet;
  */
 public interface CssManager {
 
-    /** Marker interface for a set of css properties. */
+    /** Simple interface for a set of css properties. */
     public interface Style {
+
+        /** Get a property value converted into a {@link Color} */
+        Color getColor(String key);
+
+        CharSequence getCssText();
+
+        Font getFont();
+
+        /**
+         * Get a property value converted into a {@link Number}
+         * 
+         * @return <code>null</code> if not present.
+         */
+        Number getNumber(String key);
+
+        /**
+         * Get a property value converted into a {@link Double}
+         * 
+         * @param def default value if the property is not present.
+         */
+        double getNumber(String key, double def);
+
+        /**
+         * Get a property value converted into a {@link Float}
+         * 
+         * @param def default value if the property is not present.
+         */
+        float getNumber(String key, float def);
+
+        /**
+         * Get a property value as is.
+         * 
+         * @return <code>null</code> if not present.
+         */
+        CharSequence getString(String key);
+
+        /**
+         * List all property keys of a {@link CssManager.Style}.
+         * 
+         * @return Iterator of Strings.
+         */
+        Iterator propertyKeys();
+
+        /**
+         * Set a property value of a style.
+         */
+        CharSequence setProperty(String key, CharSequence value) throws ParseException;
     };
 
     void clearCache();
@@ -70,29 +117,22 @@ public interface CssManager {
      * </p>
      * <p>
      * This method <b>must</b> be implemented while
-     * {@link #findStyleByXPath(CharSequence, CharSequence)} is optional.
+     * {@link #findStyleByXPath(CharSequence)} is optional.
      * </p>
      * 
      * @param cssSelector the whole path, e.g.
      *            <code>html > body > p .myclass > em</code>
-     * @param styleAttributeValue may be <code>null</code>. If the document node
-     *            (<code>em</code> in the above example) has a style attribute
-     *            put the value here.
      * @return the resulting, complete style.
      * @throws ParseException the style attribute value cannot be parsed.
      */
-    Style findStyleByCSSSelector(final CharSequence cssSelector, final CharSequence styleAttributeValue)
-            throws ParseException;
+    Style findStyleByCSSSelector(final CharSequence cssSelector) throws ParseException;
 
     /**
      * Cached, public access.
      * 
-     * @see #findStyleByCSSSelector(CharSequence, CharSequence)
+     * @see #findStyleByCSSSelector(CharSequence)
      */
-    Style findStyleByXPath(CharSequence xpath, CharSequence styleAttributeValue) throws ParseException;
-
-    /** Get a property value converted into a {@link Color} */
-    Color getColor(Style style, String key);
+    Style findStyleByXPath(CharSequence xpath) throws ParseException;
 
     /**
      * Create a new {@link Style} instance and fill it with the default style.
@@ -101,36 +141,6 @@ public interface CssManager {
      * </p>
      */
     Style getDefaultStyle();
-
-    Font getFont(Style style);
-
-    /**
-     * Get a property value converted into a {@link Number}
-     * 
-     * @return <code>null</code> if not present.
-     */
-    Number getNumber(Style style, String key);
-
-    /**
-     * Get a property value converted into a {@link Double}
-     * 
-     * @param def default value if the property is not present.
-     */
-    double getNumber(Style style, String key, double def);
-
-    /**
-     * Get a property value converted into a {@link Float}
-     * 
-     * @param def default value if the property is not present.
-     */
-    float getNumber(Style style, String key, float def);
-
-    /**
-     * Get a property value as is.
-     * 
-     * @return <code>null</code> if not present.
-     */
-    CharSequence getString(Style style, String key);
 
     /**
      * Should properties with this name be passed on downward in the hierarchy?
@@ -152,16 +162,4 @@ public interface CssManager {
     Style merge(Style parent, Style child);
 
     Style parseStyleAttribute(CharSequence styleAttribute) throws ParseException;
-
-    /**
-     * List all property keys of a {@link Style}.
-     * 
-     * @return Iterator of Strings.
-     */
-    Iterator propertyKeys(Style style);
-
-    /**
-     * Set a property value of a style.
-     */
-    String setProperty(Style style, String key, CharSequence value) throws ParseException;
 }

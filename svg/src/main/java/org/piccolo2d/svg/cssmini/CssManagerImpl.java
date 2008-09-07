@@ -28,7 +28,6 @@
 
 package org.piccolo2d.svg.cssmini;
 
-import java.awt.Font;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,7 +37,6 @@ import java.util.WeakHashMap;
 import java.util.Map.Entry;
 
 import org.piccolo2d.svg.css.CssManager;
-import org.piccolo2d.svg.util.FontUtil;
 
 /**
  * Very simple css implementation based on {@link CssParser} with full element
@@ -53,7 +51,7 @@ abstract class CssManagerImpl implements CssManager {
             super();
         }
 
-        public StyImp(final Map properties) {
+        public StyImp(final CSSStyleDeclaration properties) {
             super(properties);
         }
     }
@@ -62,15 +60,6 @@ abstract class CssManagerImpl implements CssManager {
     private final CssParser parser = new CssParser();
     private final CssSelectorToXPath selector2xpath = new CssSelectorToXPath();
     private final Map styleCacheXPath = new WeakHashMap();
-
-    private StyImp addStyleAttribute(final CharSequence styleAttributeValue, StyImp style) throws ParseException {
-        final Map s = (Map) parseStyleAttribute(styleAttributeValue);
-        if (s != null) {
-            style = new StyImp(style);
-            style.putAll(s);
-        }
-        return style;
-    }
 
     public void clearCache() {
         styleCacheXPath.clear();
@@ -87,54 +76,25 @@ abstract class CssManagerImpl implements CssManager {
         return style;
     }
 
-    public Style findStyleByCSSSelector(final CharSequence cssSelector, final CharSequence styleAttributeValue)
-            throws ParseException {
-        return findStyleByXPath(selector2xpath.parse(cssSelector), styleAttributeValue);
+    public Style findStyleByCSSSelector(final CharSequence cssSelector) throws ParseException {
+        return findStyleByXPath(selector2xpath.parse(cssSelector));
     }
 
-    public Style findStyleByXPath(CharSequence xpath, final CharSequence styleAttributeValue) throws ParseException {
+    public Style findStyleByXPath(CharSequence xpath) throws ParseException {
         xpath = xpath.toString();
         StyImp style = (StyImp) styleCacheXPath.get(xpath);
         if (style == null) {
             styleCacheXPath.put(xpath, style = computeStyleByXPath(xpath));
         }
-        return addStyleAttribute(styleAttributeValue, style);
+        return style;
     }
 
     /**
-     * Create a new {@link Style} instance and delegate to
+     * Create a new {@link CssManager.Style} instance and delegate to
      * {@link #initDefaults(org.piccolo2d.svg.css.CssManager.Style)}
      */
     public Style getDefaultStyle() {
         return initDefaults(new StyImp());
-    }
-
-    /**
-     * @see FontUtil#findFont(CharSequence, String, CharSequence)
-     */
-    public Font getFont(final Style style) {
-        return FontUtil.findFont(getString(style, "font-family"), getString(style, "font-style"), getString(style,
-                "font-size"));
-    }
-
-    public Number getNumber(final Style style, final String key) {
-        final CharSequence s = getString(style, key);
-        return s == null ? null : new Double(s.toString());
-    }
-
-    public double getNumber(final Style style, final String key, final double def) {
-        final CharSequence s = getString(style, key);
-        return s == null ? def : Double.parseDouble(s.toString());
-    }
-
-    public float getNumber(final Style style, final String key, final float def) {
-        final CharSequence s = getString(style, key);
-        return s == null ? def : Float.parseFloat(s.toString());
-    }
-
-    public CharSequence getString(final Style style, final String key) {
-        final StyImp sty = (StyImp) style;
-        return (CharSequence) sty.get(key);
     }
 
     protected abstract Style initDefaults(Style style);
@@ -145,6 +105,12 @@ abstract class CssManagerImpl implements CssManager {
     }
 
     public Style merge(final Style parent, final Style child) {
+        if (parent == null) {
+            return child;
+        }
+        if (child == null) {
+            return parent;
+        }
         final StyImp r = new StyImp();
         for (final Iterator it = ((StyImp) parent).entrySet().iterator(); it.hasNext();) {
             final Entry elem = (Entry) it.next();
@@ -153,7 +119,7 @@ abstract class CssManagerImpl implements CssManager {
                 r.put(key, elem.getValue());
             }
         }
-        r.putAll((StyImp) child);
+        r.putAll((Map) child);
         return r;
     }
 
@@ -169,18 +135,8 @@ abstract class CssManagerImpl implements CssManager {
         return r.getStyle();
     }
 
-    public Iterator propertyKeys(final Style style) {
-        final StyImp s = (StyImp) style;
-        return s.keySet().iterator();
-    }
-
     /** For testing purposes only. */
     int ruleCount() {
         return css.size();
-    }
-
-    public String setProperty(final Style style, final String key, final CharSequence value) throws ParseException {
-        final StyImp s = (StyImp) style;
-        return (String) s.put(key, value);
     }
 }
