@@ -44,10 +44,7 @@ import java.awt.*;
 
 public class PSwingCanvas extends PCanvas {
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
-    private static PSwingRepaintManager pSwingRepaintManager = new PSwingRepaintManager();
-
     private SwingWrapper swingWrapper;
-    private PSwingEventHandler swingEventHandler;
 
     /**
      * Construct a new PSwingCanvas.
@@ -55,12 +52,21 @@ public class PSwingCanvas extends PCanvas {
     public PSwingCanvas() {
         swingWrapper = new SwingWrapper(this);
         add(swingWrapper);
-        RepaintManager.setCurrentManager(pSwingRepaintManager);
-        pSwingRepaintManager.addPSwingCanvas(this);
+        initRepaintManager();
+        new PSwingEventHandler(this, getCamera()).setActive(true);
+    }
 
-        // todo or maybe getCameraLayer() or getRoot()?
-        swingEventHandler = new PSwingEventHandler(this, getCamera());
-        swingEventHandler.setActive(true);
+    private void initRepaintManager() {
+        RepaintManager repaintManager = RepaintManager.currentManager(this);
+        PSwingRepaintManager pSwingRepaintManager;
+        if (repaintManager instanceof PSwingRepaintManager) {
+            pSwingRepaintManager = (PSwingRepaintManager) repaintManager;
+        }
+        else {
+            pSwingRepaintManager = new PSwingRepaintManager();
+            RepaintManager.setCurrentManager(pSwingRepaintManager);
+        }
+        pSwingRepaintManager.addPSwingCanvas(this);
     }
 
     JComponent getSwingWrapper() {
