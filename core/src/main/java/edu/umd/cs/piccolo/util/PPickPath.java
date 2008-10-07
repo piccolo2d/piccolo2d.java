@@ -261,6 +261,9 @@ public class PPickPath implements PInputEventListener {
                 for (int j = 0; j < listeners.length; j++) {
                     PInputEventListener listener = (PInputEventListener) listeners[j];
                     listener.processEvent(aEvent, type);
+                    if (aEvent.isHandled()) {
+                        return;
+                    }
                 }
             }
         }

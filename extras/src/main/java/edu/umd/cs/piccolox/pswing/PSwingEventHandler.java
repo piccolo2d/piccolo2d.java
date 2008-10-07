@@ -251,7 +251,6 @@ public class PSwingEventHandler implements PInputEventListener {
 
             PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
             dispatchEvent(comp, e2);
-            pSwingMouseEvent.consume();
         }
 
         // Now we need to check if an exit or enter event needs to
@@ -268,10 +267,6 @@ public class PSwingEventHandler implements PInputEventListener {
 
                 dispatchEvent(prevComponent, e2);
                 prevComponent = null;
-
-                if (pSwingMouseEvent.getID() == MouseEvent.MOUSE_EXITED) {
-                    pSwingMouseEvent.consume();
-                }
             }
 
             // This means mouseExited prevComponent and mouseEntered comp
@@ -408,6 +403,9 @@ public class PSwingEventHandler implements PInputEventListener {
                 if (!recursing) {
                     recursing = true;
                     dispatchEvent(pSwingMouseEvent, aEvent);
+                    if (pSwingMouseEvent.isConsumed()) {
+                        aEvent.setHandled(true);
+                    }
                     recursing = false;
                 }
             }
