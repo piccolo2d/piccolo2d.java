@@ -2888,7 +2888,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the removed child
      */
     public PNode removeChild(PNode child) {
-        return removeChild(indexOfChild(child));
+        int index = indexOfChild(child);
+        if (index == -1) {
+            return null;
+        }
+        return removeChild(index);
     }
 
     /**
@@ -2900,6 +2904,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the removed child
      */
     public PNode removeChild(int index) {
+        if (children == null) {
+            return null;
+        }
         PNode child = (PNode) children.remove(index);
 
         if (children.size() == 0) {
