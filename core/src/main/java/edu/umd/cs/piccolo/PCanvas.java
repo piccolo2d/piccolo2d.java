@@ -33,16 +33,17 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyEventPostProcessor;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import javax.swing.FocusManager;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.Timer;
@@ -83,7 +84,7 @@ public class PCanvas extends JComponent implements PComponent {
     private boolean paintingImmediately;
     private boolean animatingOnLastPaint;
     private MouseListener mouseListener;
-    private KeyListener keyListener;
+    private KeyEventPostProcessor keyEventPostProcessor;
     private MouseWheelListener mouseWheelListener;
     private MouseMotionListener mouseMotionListener;
 
@@ -542,21 +543,22 @@ public class PCanvas extends JComponent implements PComponent {
             addMouseWheelListener(mouseWheelListener);
         }
 
-        if (keyListener == null) {
-            keyListener = new KeyListener() {
-                public void keyPressed(KeyEvent e) {
-                    sendInputEventToInputManager(e, KeyEvent.KEY_PRESSED);
-                }
-
-                public void keyReleased(KeyEvent e) {
-                    sendInputEventToInputManager(e, KeyEvent.KEY_RELEASED);
-                }
-
-                public void keyTyped(KeyEvent e) {
-                    sendInputEventToInputManager(e, KeyEvent.KEY_TYPED);
+        if (keyEventPostProcessor == null) {
+            keyEventPostProcessor = new KeyEventPostProcessor() {
+                /** {@inheritDoc} */
+                public boolean postProcessKeyEvent(final KeyEvent keyEvent) {
+                    Component owner = FocusManager.getCurrentManager().getFocusOwner();
+                    while (owner != null) {
+                        if (owner == PCanvas.this) {
+                            sendInputEventToInputManager(keyEvent, keyEvent.getID());
+                            return true;
+                        }
+                        owner = owner.getParent();
+                    }
+                    return false;
                 }
             };
-            addKeyListener(keyListener);
+            FocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(keyEventPostProcessor);
         }
     }
 
@@ -571,13 +573,14 @@ public class PCanvas extends JComponent implements PComponent {
             removeMouseMotionListener(mouseMotionListener);
         if (mouseWheelListener != null)
             removeMouseWheelListener(mouseWheelListener);
-        if (keyListener != null)
-            removeKeyListener(keyListener);
+        if (keyEventPostProcessor != null) {
+            FocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(keyEventPostProcessor);
+        }
 
         mouseListener = null;
         mouseMotionListener = null;
         mouseWheelListener = null;
-        keyListener = null;
+        keyEventPostProcessor = null;
     }
 
     protected void sendInputEventToInputManager(InputEvent e, int type) {
