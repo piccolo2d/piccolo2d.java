@@ -91,7 +91,7 @@ public class PSwingCanvas extends PCanvas {
             putClientProperty(SWING_WRAPPER_KEY, SWING_WRAPPER_KEY);
         }
 
-        public PSwingCanvas getpSwingCanvas() {
+        public PSwingCanvas getPSwingCanvas() {
             return pSwingCanvas;
         }
     }
