@@ -38,6 +38,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -445,21 +447,24 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @param c The Component to be recursively unDoubleBuffered
      */
     void init( Component c ) {
-        Component[] children = null;
-        if( c instanceof Container ) {
-            children = ( (Container)c ).getComponents();
-        }
-
         if( c.getFont() != null ) {
             minFontSize = Math.min( minFontSize, c.getFont().getSize() );
         }
 
-        if( children != null ) {
-            for( int j = 0; j < children.length; j++ ) {
-                init( children[j] );
+        if (c instanceof Container) {
+            Component[] children = ((Container) c).getComponents();
+            if(children != null) {
+                for(int j = 0; j < children.length; j++) {
+                    init(children[j]);
+                }
             }
+            ((Container) c).addContainerListener(new ContainerAdapter() {
+                /** {@inheritDoc} */
+                public void componentAdded(final ContainerEvent event) {
+                    init(event.getChild());
+                }
+            });
         }
-
         if( c instanceof JComponent ) {
             ( (JComponent)c ).setDoubleBuffered( false );
             c.addPropertyChangeListener( "font", this );
