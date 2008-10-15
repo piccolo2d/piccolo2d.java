@@ -104,6 +104,7 @@ public class PCanvas extends JComponent implements PComponent {
         setPanEventHandler(new PPanEventHandler());
         setZoomEventHandler(new PZoomEventHandler());
         setBackground(Color.WHITE);
+        setOpaque( true );
     }
 
     protected PCamera createDefaultCamera() {
