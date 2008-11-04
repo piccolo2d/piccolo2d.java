@@ -62,7 +62,7 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
     private static final int JOIN_BEVEL = BasicStroke.JOIN_BEVEL;
     private static final int JOIN_MITER = BasicStroke.JOIN_MITER;
     private static final int JOIN_ROUND = BasicStroke.JOIN_ROUND;
-    
+
     private static final long serialVersionUID = -2503357070350473610L;
     private static final double THRESHOLD = 1e-6;
 
@@ -122,18 +122,22 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
-    public Shape createStrokedShape(final Shape s) {
-        float currentScale = 1.0f;
+    protected float computeStrokeScale() {
         if (PDebug.getProcessingOutput()) {
             if (PPaintContext.CURRENT_PAINT_CONTEXT != null) {
-                currentScale = 1.0f / (float) PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
+                return 1.0f / (float) PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
             }
         }
         else {
             if (PPickPath.CURRENT_PICK_PATH != null) {
-                currentScale = 1.0f / (float) PPickPath.CURRENT_PICK_PATH.getScale();
+                return 1.0f / (float) PPickPath.CURRENT_PICK_PATH.getScale();
             }
         }
+        return 1.0F;
+    }
+
+    public Shape createStrokedShape(final Shape s) {
+        final float currentScale = computeStrokeScale();
         if (Math.abs(currentScale - recentScale) > THRESHOLD) {
             recentStroke = newStroke(recentScale = currentScale);
         }
