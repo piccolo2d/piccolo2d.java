@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
- * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -47,6 +46,15 @@ import edu.umd.cs.piccolo.util.PPickPath;
  * {@link #createStrokedShape(Shape)} checks if the scale has changed since the
  * last usage and if that's the case calls {@link #newStroke(float)} to get a
  * new {@link Stroke} instance to delegate to.
+ * <p>
+ * Some of the code here could be factored out to an abstract "PSemanticStroke"
+ * base class.
+ * <p>
+ * <b>CAUTION!</b> this implementation falls short for large scaling factors -
+ * the effective miterlimit might drop below 1.0 which isn't permitted by
+ * {@link BasicStroke} and therefore limited to a minimal 1.0 by this
+ * implementation. A more sophisticated implementation might use the approach
+ * mentioned at http://code.google.com/p/piccolo2d/issues/detail?id=49
  * 
  * @see edu.umd.cs.piccolo.nodes.PPath
  * @see BasicStroke
@@ -122,7 +130,14 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
+    /**
+     * Detect the current scale and return the inverse. Made protected to enable
+     * custom re-implementations.
+     */
     protected float computeStrokeScale() {
+        // TODO Honestly I don't understand this distinction - shouldn't it
+        // always be PPaintContext.CURRENT_PAINT_CONTEXT regardless of the
+        // debugging flag?
         if (PDebug.getProcessingOutput()) {
             if (PPaintContext.CURRENT_PAINT_CONTEXT != null) {
                 return 1.0f / (float) PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
@@ -133,9 +148,13 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
                 return 1.0f / (float) PPickPath.CURRENT_PICK_PATH.getScale();
             }
         }
-        return 1.0F;
+        return 1.0f;
     }
 
+    /**
+     * Ask {@link #computeStrokeScale()}, call {@link #newStroke(float)} if
+     * necessary and delegate to {@link Stroke#createStrokedShape(Shape)}
+     */
     public Shape createStrokedShape(final Shape s) {
         final float currentScale = computeStrokeScale();
         if (Math.abs(currentScale - recentScale) > THRESHOLD) {
@@ -188,13 +207,18 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
         return result;
     }
 
+    /**
+     * Factory to create a new internal stroke delegate. Made protected to
+     * enable custom re-implementations.
+     */
     protected Stroke newStroke(final float scale) {
         if (tmpDash != null) {
             for (int i = dash.length - 1; i >= 0; i--) {
                 tmpDash[i] = dash[i] * scale;
             }
         }
-        return new BasicStroke(width * scale, cap, join, miterlimit * scale, tmpDash, dash_phase * scale);
+        final float ml = miterlimit * scale;
+        return new BasicStroke(width * scale, cap, join, ml < 1.0f ? 1.0f : ml, tmpDash, dash_phase * scale);
     }
 
     /** Is it really necessary to implement {@link Serializable}? */
