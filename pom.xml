@@ -30,6 +30,7 @@
 	<modules>
 		<module>core</module>
 		<module>extras</module>
+		<module>swt</module>
 		<module>examples</module>
 	</modules>
 </project>

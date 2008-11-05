@@ -23,6 +23,11 @@
       <artifactId>piccolo2d-extras</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.piccolo2d</groupId>
+      <artifactId>piccolo2d-swt</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <scm>
 	<connection>
