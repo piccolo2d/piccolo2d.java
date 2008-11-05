@@ -320,6 +320,13 @@ public class ExampleRunner extends JFrame {
             }
         }));
 
+        p.add(new JButton(new AbstractAction("StrokeExample") {
+            public void actionPerformed(ActionEvent e) {
+                PFrame example = new StrokeExample();
+                example.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            }
+        }));
+
         p.add(new JButton(new AbstractAction("TextExample") {
             public void actionPerformed(ActionEvent e) {
                 PFrame example = new TextExample();
