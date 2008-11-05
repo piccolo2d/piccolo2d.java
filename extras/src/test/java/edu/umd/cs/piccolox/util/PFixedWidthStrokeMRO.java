@@ -32,7 +32,6 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.Arrays;
 
 import edu.umd.cs.piccolo.util.PDebug;
 import edu.umd.cs.piccolo.util.PPaintContext;
@@ -55,6 +54,10 @@ import edu.umd.cs.piccolo.util.PPickPath;
  * {@link BasicStroke} and therefore limited to a minimal 1.0 by this
  * implementation. A more sophisticated implementation might use the approach
  * mentioned at http://code.google.com/p/piccolo2d/issues/detail?id=49
+ * <p>
+ * <b>CAUTION!</b> after extreme scaling this implementation seems to change to
+ * internal state of the base stroke. Try PathExample with extreme zoom in and
+ * zoom back to the original scale. The pickable circles disappear. Strange!
  * 
  * @see edu.umd.cs.piccolo.nodes.PPath
  * @see BasicStroke
@@ -74,30 +77,28 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
     private static final long serialVersionUID = -2503357070350473610L;
     private static final double THRESHOLD = 1e-6;
 
-    private static int hashCode(final float[] array) {
-        final int prime = 31;
-        if (array == null) {
-            return 0;
-        }
-        int result = 1;
-        for (int index = 0; index < array.length; index++) {
-            result = prime * result + Float.floatToIntBits(array[index]);
-        }
-        return result;
-    }
-
-    private final int cap;
-    private final float dash[];
-    private final float dash_phase;
-    private final int join;
-    private final float miterlimit;
+    // avoid repeated cloning:
+    private transient final float dash[];
     private transient float recentScale;
-    private transient Stroke recentStroke;
+    // this could very well just be a mere Stroke in an abstract base class
+    // "PSemanticStroke":
+    private transient BasicStroke recentStroke;
+    // this could very well just be a mere Stroke in an abstract base class
+    // "PSemanticStroke":
+    private final BasicStroke stroke;
+    // avoid repeated instantiations:
     private transient final float tmpDash[];
-    private final float width;
 
     public PFixedWidthStrokeMRO() {
         this(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
+    }
+
+    /** This should be "public" and the "main" constructor. */
+    private PFixedWidthStrokeMRO(final BasicStroke stroke) {
+        this.stroke = recentStroke = stroke;
+        recentScale = 1.0F;
+        dash = this.stroke.getDashArray();
+        tmpDash = dash == null ? null : new float[dash.length];
     }
 
     public PFixedWidthStrokeMRO(final float width) {
@@ -114,16 +115,7 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
 
     public PFixedWidthStrokeMRO(final float width, final int cap, final int join, final float miterlimit,
             final float dash[], final float dash_phase) {
-        this.width = width;
-        this.cap = cap;
-        this.join = join;
-        this.miterlimit = miterlimit;
-        this.dash = dash;
-        this.dash_phase = dash_phase;
-        // avoid instantiations at the cost of some bytes of memory:
-        tmpDash = this.dash == null ? null : new float[this.dash.length];
-        // Instantiate eagerly to benefit from ctor's argument checks.
-        recentStroke = newStroke(recentScale = 1.0F);
+        this(new BasicStroke(width, cap, join, miterlimit, dash, dash_phase));
     }
 
     public Object clone() {
@@ -174,55 +166,72 @@ public class PFixedWidthStrokeMRO implements Stroke, Serializable {
             return false;
         }
         final PFixedWidthStrokeMRO other = (PFixedWidthStrokeMRO) obj;
-        if (cap != other.cap) {
-            return false;
+        if (stroke == null) {
+            if (other.stroke != null) {
+                return false;
+            }
         }
-        if (!Arrays.equals(dash, other.dash)) {
-            return false;
-        }
-        if (Float.floatToIntBits(dash_phase) != Float.floatToIntBits(other.dash_phase)) {
-            return false;
-        }
-        if (join != other.join) {
-            return false;
-        }
-        if (Float.floatToIntBits(miterlimit) != Float.floatToIntBits(other.miterlimit)) {
-            return false;
-        }
-        if (Float.floatToIntBits(width) != Float.floatToIntBits(other.width)) {
+        else if (!stroke.equals(other.stroke)) {
             return false;
         }
         return true;
     }
 
+    public float[] getDashArray() {
+        return stroke.getDashArray();
+    }
+
+    public float getDashPhase() {
+        return stroke.getDashPhase();
+    }
+
+    public int getEndCap() {
+        return stroke.getEndCap();
+    }
+
+    public int getLineJoin() {
+        return stroke.getLineJoin();
+    }
+
+    public float getLineWidth() {
+        return stroke.getLineWidth();
+    }
+
+    public float getMiterLimit() {
+        return stroke.getMiterLimit();
+    }
+
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + cap;
-        result = prime * result + PFixedWidthStrokeMRO.hashCode(dash);
-        result = prime * result + Float.floatToIntBits(dash_phase);
-        result = prime * result + join;
-        result = prime * result + Float.floatToIntBits(miterlimit);
-        result = prime * result + Float.floatToIntBits(width);
+        result = prime * result + (stroke == null ? 0 : stroke.hashCode());
         return result;
     }
 
     /**
      * Factory to create a new internal stroke delegate. Made protected to
      * enable custom re-implementations.
+     * 
+     * @return could return a {@link Stroke} when defined in an abstract base
+     *         class.
      */
-    protected Stroke newStroke(final float scale) {
+    protected BasicStroke newStroke(final float scale) {
         if (tmpDash != null) {
             for (int i = dash.length - 1; i >= 0; i--) {
                 tmpDash[i] = dash[i] * scale;
             }
         }
-        final float ml = miterlimit * scale;
-        return new BasicStroke(width * scale, cap, join, ml < 1.0f ? 1.0f : ml, tmpDash, dash_phase * scale);
+        final float ml = stroke.getMiterLimit() * scale;
+        return new BasicStroke(stroke.getLineWidth() * scale, stroke.getEndCap(), stroke.getLineJoin(),
+                ml < 1.0f ? 1.0f : ml, tmpDash, stroke.getDashPhase() * scale);
     }
 
     /** Is it really necessary to implement {@link Serializable}? */
     protected Object readResolve() throws ObjectStreamException {
-        return new PFixedWidthStrokeMRO(width, cap, join, miterlimit, dash, dash_phase);
+        return new PFixedWidthStrokeMRO(stroke);
+    }
+
+    public String toString() {
+        return stroke.toString();
     }
 }
