@@ -35,20 +35,6 @@
   </scm>
   <reporting>
     <plugins>
-      <!-- don't use UmlGraph as the current settings (see ../parent/pom.xml) cause pain with swt  -->
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <source>1.4</source>
-          <verbose>false</verbose>
-          <show>package</show>
-          <links>
-            <link>
-              http://java.sun.com/j2se/1.4.2/docs/api/
-            </link>
-          </links>
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
