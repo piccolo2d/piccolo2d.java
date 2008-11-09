@@ -219,10 +219,12 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /*The parent listener for camera/canvas changes*/
     private PropertyChangeListener parentListener = new PropertyChangeListener() {
         public void propertyChange( PropertyChangeEvent evt ) {
-            PNode source = (PNode)evt.getSource();
-            PNode parent = source.getParent();
+            PNode parent = (PNode) evt.getNewValue();
+            clearListeners((PNode) evt.getOldValue());
             if( parent != null ) {
                 listenForCanvas( parent );
+            } else {
+                updateCanvas( null );
             }
 
         }
@@ -513,7 +515,12 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
             PNode parent = p;
 //            System.out.println( "parent = " + parent.getClass() );
-            if( parent instanceof PLayer ) {
+            if( parent instanceof PCamera) {
+                PCamera cam = (PCamera) parent;
+                if( cam.getComponent() instanceof PSwingCanvas ) {
+                    updateCanvas( (PSwingCanvas)cam.getComponent() );
+                }
+            } else if( parent instanceof PLayer ) {
                 PLayer player = (PLayer)parent;
 //                System.out.println( "Found player: with " + player.getCameraCount() + " cameras" );
                 for( int i = 0; i < player.getCameraCount(); i++ ) {
@@ -556,6 +563,22 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
+     * Clear out all the listeners registered to make sure there are no stray references
+     *
+     * @param fromParent Parent to start with for clearing listeners
+     */
+    private void clearListeners(PNode fromParent) {
+        if (fromParent == null) {
+            return;
+        }
+        if (listeningTo(fromParent)) {
+            fromParent.removePropertyChangeListener( PNode.PROPERTY_PARENT, parentListener );
+            listeningTo.remove(fromParent);
+            clearListeners(fromParent.getParent());
+        }
+    }
+
+    /**
      * Removes this PSwing from previous PSwingCanvas (if any), and ensure that this PSwing is attached to the new PSwingCanvas.
      * @param newCanvas the new PSwingCanvas (may be null)
      */
@@ -564,8 +587,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             if( canvas != null ) {
                 canvas.removePSwing( this );
             }
+            canvas = newCanvas;
             if( newCanvas != null ) {
-                canvas = newCanvas;
                 canvas.addPSwing( this );
                 reshape();
                 repaint();
