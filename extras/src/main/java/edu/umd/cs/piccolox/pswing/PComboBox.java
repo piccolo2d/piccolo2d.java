@@ -184,7 +184,7 @@ public class PComboBox extends JComboBox implements Serializable {
             throw new RuntimeException(
                     "PComboBox.setEnvironment( swing, pCanvas );//has to be done manually at present");
         }
-        Rectangle2D r1c = pSwing.getBounds();
+        Rectangle2D r1c = new Rectangle2D.Double(pSwing.getX(), pSwing.getY(), getWidth(), getHeight());
         pSwing.localToGlobal(r1c);
         canvas.getCamera().globalToLocal(r1c);
         r1c = canvas.getCamera().getViewTransform().createTransformedShape(r1c).getBounds2D();

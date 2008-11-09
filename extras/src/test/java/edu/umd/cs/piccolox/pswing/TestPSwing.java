@@ -154,10 +154,14 @@ public class TestPSwing {
         root.translate(300, 200);
         pCanvas.getLayer().addChild(root);
 
+        // A Combo Box
+        JPanel comboPanel = new JPanel();
+        comboPanel.setBorder( BorderFactory.createTitledBorder( "Combo Box" ) );
         String[] listItems = { "Summer Teeth", "Mermaid Avenue", "Being There", "A.M." };
         PComboBox box = new PComboBox(listItems);
-        swing = new PSwing(box);
-        swing.translate(200, 250);
+        comboPanel.add(box);
+        swing = new PSwing(comboPanel);
+        swing.translate( 200, 230 );
         pCanvas.getLayer().addChild(swing);
         box.setEnvironment(swing, pCanvas);// has to be done manually at present
 
