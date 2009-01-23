@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
+ * Copyright (c) 2008-2009, Piccolo2D project, http://piccolo2d.org
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
