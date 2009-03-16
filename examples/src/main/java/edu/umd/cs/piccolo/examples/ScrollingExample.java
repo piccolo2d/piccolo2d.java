@@ -38,6 +38,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -77,10 +78,7 @@ public class ScrollingExample extends PFrame {
 
     public void initialize() {
         final PCanvas canvas = getCanvas();
-
         final PScrollPane scrollPane = new PScrollPane(canvas);
-        getContentPane().add(scrollPane);
-
         final PViewport viewport = (PViewport) scrollPane.getViewport();
         final PScrollDirector windowSD = viewport.getScrollDirector();
         final PScrollDirector documentSD = new DocumentScrollDirector();
@@ -119,6 +117,7 @@ public class ScrollingExample extends PFrame {
                 viewport.setScrollDirector(windowSD);
                 viewport.fireStateChanged();
                 scrollPane.revalidate();
+                getContentPane().validate();
             }
         });
         document.addActionListener(new ActionListener() {
@@ -126,11 +125,16 @@ public class ScrollingExample extends PFrame {
                 viewport.setScrollDirector(documentSD);
                 viewport.fireStateChanged();
                 scrollPane.revalidate();
+                getContentPane().validate();
             }
         });
-        getContentPane().add(toolBar, BorderLayout.NORTH);
 
-        getContentPane().validate();
+        JPanel contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add("Center", scrollPane);
+        contentPane.add("North", toolBar);
+        setContentPane(contentPane);
+        validate();
     }
 
     /**
