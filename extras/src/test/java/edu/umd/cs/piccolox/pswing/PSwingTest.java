@@ -32,11 +32,7 @@ import junit.framework.TestCase;
 
 import javax.swing.*;
 
-import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolox.PFrame;
-
-import java.lang.ref.WeakReference;
-import java.lang.ref.ReferenceQueue;
 
 /**
  * JUnit test class to exercise PSwing bugfixes.
