@@ -258,8 +258,8 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Paint all the layers that the camera is looking at, this method is only
-     * called when the cameras view transform and clip are applied to the
+     * Paint all the layers that the camera is looking at, this method is 
+     * called after the cameras view transform and clip are applied to the
      * paintContext.
      */
     protected void paintCameraView(PPaintContext paintContext) {
@@ -376,8 +376,8 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Pick all the layers that the camera is looking at, this method is only
-     * called when the cameras view transform and clip are applied to the
+     * Pick all the layers that the camera is looking at, this method is 
+     * called after the cameras view transform and clip are applied to the
      * pickPath.
      */
     protected boolean pickCameraView(PPickPath pickPath) {
@@ -409,7 +409,7 @@ public class PCamera extends PNode {
 
     /**
      * Translates and scales the camera's view transform so that the given
-     * bounds (in camera layer's coordinate system)are centered withing the
+     * bounds (in camera layer's coordinate system)are centered within the
      * cameras view bounds. Use this method to point the camera at a given
      * location.
      */

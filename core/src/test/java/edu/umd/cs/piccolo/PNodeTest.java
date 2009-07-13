@@ -35,13 +35,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.text.MutableAttributeSet;
@@ -1271,17 +1268,5 @@ public class PNodeTest extends TestCase {
 	public void testSetOccludedPersistes() {
 		node.setOccluded(true);
 		assertTrue(node.getOccluded());
-	}
-
-	private class MockPropertyChangeListener implements PropertyChangeListener {
-		private List changes = new ArrayList();
-
-		public void propertyChange(PropertyChangeEvent evt) {
-			changes.add(evt);
-		}		
-
-		public int getPropertyChangeCount() {
-			return changes.size();
-		}
 	}
 }
