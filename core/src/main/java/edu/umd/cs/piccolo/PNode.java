@@ -2021,7 +2021,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            this transform's node
      * @param millis Number of milliseconds over which to perform the animation
      */
-    PActivity animateToRelativePosition(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
+    public PActivity animateToRelativePosition(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
         double srcx, srcy;
         double destx, desty;
         double dx, dy;
@@ -2053,6 +2053,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
     
     /**
+     * @deprecated in favor of animateToRelativePosition
+     * 
      * It will calculate the necessary transform in order to make this node
      * appear at a particular position relative to the specified bounding box.
      * The source point specifies a point in the unit square (0, 0) - (1, 1)
