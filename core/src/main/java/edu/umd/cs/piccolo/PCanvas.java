@@ -336,7 +336,7 @@ public class PCanvas extends JComponent implements PComponent {
 
     // ****************************************************************
     // Code to manage connection to Swing. There appears to be a bug in
-    // swing where it will occasionally send to many mouse pressed or mouse
+    // swing where it will occasionally send too many mouse pressed or mouse
     // released events. Below we attempt to filter out those cases before
     // they get delivered to the Piccolo framework.
     // ****************************************************************
@@ -346,7 +346,7 @@ public class PCanvas extends JComponent implements PComponent {
     private boolean isButton3Pressed;
 
     /**
-     * Overrride setEnabled to install/remove canvas input sources as needed.
+     * Override setEnabled to install/remove canvas input sources as needed.
      */
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
