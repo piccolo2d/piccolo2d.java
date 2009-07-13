@@ -28,22 +28,86 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.RepaintManager;
+
 import junit.framework.TestCase;
-
-import javax.swing.*;
-
 import edu.umd.cs.piccolox.PFrame;
 
 /**
  * JUnit test class to exercise PSwing bugfixes.
- *
+ * 
  * @author Stephen Chin
  */
 public class PSwingTest extends TestCase {
+
     public void testPSwing() {
         PSwing pSwing = new PSwing(new JButton("test"));
         PFrame frame = new PFrame();
         frame.getCanvas().getLayer().addChild(pSwing);
         frame.setVisible(true);
+    }
+
+    public void setUp() {
+        RepaintManager.setCurrentManager(new PSwingRepaintManager());
+    }
+
+    public void testConstructorFailsOnNullComponent() {
+        try {
+            new PSwing(null);
+        } catch (NullPointerException e) {
+            // expected
+        }
+    }
+
+    public void testPSwingRegistersItselfWithComponent() {
+        JPanel panel = new JPanel();
+        PSwing pSwing = new PSwing(panel);
+
+        assertEquals(pSwing, panel.getClientProperty(PSwing.PSWING_PROPERTY));
+    }
+
+    public void testGetComponentReturnsValidComponent() {
+        JPanel panel = new JPanel();
+        PSwing pSwing = new PSwing(panel);
+        assertEquals(panel, pSwing.getComponent());
+    }
+
+    public void testPSwingResizesItselfWhenComponentIsResized() {
+        final boolean[] reshaped = new boolean[1];
+        JPanel panel = new JPanel();
+
+        new PSwing(panel) {
+            protected void reshape() {
+                super.reshape();
+
+                reshaped[0] = true;
+            }
+        };
+        panel.setSize(100, 100);
+        assertTrue(reshaped[0]);
+    }
+
+    public void testPSwingDelegatesPaintingToItsComponent() throws IOException {
+        JPanel panel = new JPanel();
+        PSwing pSwing = new PSwing(panel);
+        panel.setBackground(Color.RED);
+        panel.setPreferredSize(new Dimension(100, 100));
+
+        BufferedImage img = new BufferedImage(100, 100,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .createGraphics(img);
+
+        pSwing.paint(graphics);
+        assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
     }
 }

@@ -579,7 +579,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * Removes this PSwing from previous PSwingCanvas (if any), and ensure that this PSwing is attached to the new PSwingCanvas.
+     * Removes this PSwing from previous PSwingCanvas (if any), and ensure that this 
+     * PSwing is attached to the new PSwingCanvas.
+     * 
      * @param newCanvas the new PSwingCanvas (may be null)
      */
     private void updateCanvas( PSwingCanvas newCanvas ) {
