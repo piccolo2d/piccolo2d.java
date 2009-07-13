@@ -191,4 +191,12 @@ public class PComboBox extends JComboBox implements Serializable {
         return r1c;
     }
 
+    public PSwing getPSwing() {
+        return pSwing;
+    }
+
+    public PSwingCanvas getCanvas() {
+        return canvas;
+    }
+
 }
