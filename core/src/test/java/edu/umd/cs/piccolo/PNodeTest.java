@@ -35,6 +35,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -664,6 +665,9 @@ public class PNodeTest extends TestCase {
 
 		aChild.setBounds(0, 0, 100, 100);
 		assertEquals(1, mockListener.getPropertyChangeCount());
+		PropertyChangeEvent propEvent = mockListener.getPropertyChange(0);
+		assertEquals(PNode.PROPERTY_BOUNDS, propEvent.getPropertyName());
+		assertEquals(new PBounds(0, 0, 100, 100), propEvent.getNewValue());
 	}
 
 	public void testStartEndResizeBoundsCanBeCalledWithoutResizes() {
@@ -1285,4 +1289,5 @@ public class PNodeTest extends TestCase {
 		node.setOccluded(true);
 		assertTrue(node.getOccluded());
 	}
+		
 }

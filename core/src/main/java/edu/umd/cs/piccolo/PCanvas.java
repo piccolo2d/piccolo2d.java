@@ -657,4 +657,16 @@ public class PCanvas extends JComponent implements PComponent {
     public Timer createTimer(int delay, ActionListener listener) {
         return new Timer(delay, listener);
     }
+
+    public int getDefaultRenderQuality() {
+        return defaultRenderQuality;
+    }
+
+    public int getAnimatingRenderQuality() {
+        return animatingRenderQuality;
+    }
+
+    public int getInteractingRenderQuality() {
+        return interactingRenderQuality;
+    }
 }

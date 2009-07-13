@@ -18,4 +18,8 @@ public class MockPropertyChangeListener implements PropertyChangeListener {
 	public int getPropertyChangeCount() {
 		return changes.size();
 	}
+	
+	public PropertyChangeEvent getPropertyChange(int index) {
+		return (PropertyChangeEvent) changes.get(index);
+	}
 }

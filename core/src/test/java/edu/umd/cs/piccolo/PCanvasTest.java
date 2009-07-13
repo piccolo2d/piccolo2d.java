@@ -4,6 +4,7 @@ import java.awt.Cursor;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
 
 public class PCanvasTest extends TestCase {
 	private PCanvas canvas;
@@ -39,26 +40,17 @@ public class PCanvasTest extends TestCase {
 	/**
 	 * This should work, but for some reason there's no getDefaultRenderQuality();
 	 */
-	/*public void testDefaultRenderQualityIsHigh() {
-		fail("Pop cursor shouldn't fail on an empty stack");
-		//assertEquals(PPaintContext.HIGH_QUALITY_RENDERING, canvas.getDefaultRenderQuality());		
-	}*/
+	public void testDefaultRenderQualityIsHigh() {		
+		assertEquals(PPaintContext.HIGH_QUALITY_RENDERING, canvas.getDefaultRenderQuality());		
+	}
 	
-	/**
-	 * This should work, but for some reason there's no getAnimatingRenderQuality();
-	 */
-	/*public void testDefaultAnimatingRenderQualityIsLow() {
-		fail("Missing getter method");
-		//assertEquals(PPaintContext.LOW_QUALITY_RENDERING, canvas.getAnimatingRenderQuality());
-	}*/
+	public void testDefaultAnimatingRenderQualityIsLow() {
+		assertEquals(PPaintContext.LOW_QUALITY_RENDERING, canvas.getAnimatingRenderQuality());
+	}
 	
-	/**
-	 * This should work, but for some reason there's no getAnimatingRenderQuality();
-	 */
-	/*public void testDefaultInteractingRenderQualityIsLow() {
-		fail("Missing getter method");
-		//assertEquals(PPaintContext.LOW_QUALITY_RENDERING, canvas.getInteractingRenderQuality());
-	}*/
+	public void testDefaultInteractingRenderQualityIsLow() {
+		assertEquals(PPaintContext.LOW_QUALITY_RENDERING, canvas.getInteractingRenderQuality());
+	}
 
 	public void testDefaultZoomHandlerIsNotNull() {		
 		assertNotNull(canvas.getZoomEventHandler());
