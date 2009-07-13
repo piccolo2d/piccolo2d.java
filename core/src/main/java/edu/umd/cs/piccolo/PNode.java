@@ -408,7 +408,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PColorActivity animateToColor(Color destColor, long duration) {
+    public PInterpolatingActivity animateToColor(Color destColor, long duration) {
         if (duration == 0) {
             setPaint(destColor);
             return null;
@@ -2021,7 +2021,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            this transform's node
      * @param millis Number of milliseconds over which to perform the animation
      */
-    public PActivity animateToRelativePosition(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
+    PActivity animateToRelativePosition(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
         double srcx, srcy;
         double destx, desty;
         double dx, dy;
@@ -2053,9 +2053,6 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
     
     /**
-     * @deprecated Since it just delegates to animateToRelativePosition
-     * This method uses animateToRelativePosition to do its dirty work.
-     * 
      * It will calculate the necessary transform in order to make this node
      * appear at a particular position relative to the specified bounding box.
      * The source point specifies a point in the unit square (0, 0) - (1, 1)
