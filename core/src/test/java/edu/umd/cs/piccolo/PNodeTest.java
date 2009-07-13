@@ -35,12 +35,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.text.MutableAttributeSet;
 
 import junit.framework.TestCase;
@@ -164,21 +167,21 @@ public class PNodeTest extends TestCase {
 		parent.addChild(node);
 		assertEquals(1, parent.indexOfChild(node));
 	}
-	
+
 	public void testAddChildCanSpecifyAnIndexAndDoesntReplace() {
 		PNode parent = new PNode();
 		parent.addChild(new PNode());
-		parent.addChild(0, node);		
+		parent.addChild(0, node);
 		assertEquals(0, parent.indexOfChild(node));
 		assertEquals(2, parent.getChildrenCount());
 	}
-	
+
 	public void testAddChildWithIndexMovesChildAround() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 
 		parent.addChild(new PNode());
 		parent.addChild(new PNode());
-		parent.addChild(node);		
+		parent.addChild(node);
 
 		parent.addChild(0, node);
 		assertEquals(node, parent.getChild(0));
@@ -190,7 +193,7 @@ public class PNodeTest extends TestCase {
 		assertEquals(node, parent.getChild(2));
 	}
 
-	public void testCopy() {		
+	public void testCopy() {
 		node.setPaint(Color.yellow);
 
 		PNode child = new PNode();
@@ -310,7 +313,7 @@ public class PNodeTest extends TestCase {
 		assertEquals(50, activity.getDuration());
 		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
 		assertTrue(activity.getFirstLoop());
-		assertFalse(activity.isStepping());		
+		assertFalse(activity.isStepping());
 	}
 
 	public void testAnimateTransformToBoundsWithDuration0IsImmediate() {
@@ -403,7 +406,7 @@ public class PNodeTest extends TestCase {
 		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
 		assertTrue(activity.getFirstLoop());
 		assertFalse(activity.isStepping());
-		//assertEquals(Color.BLACK, activity.getDestinationColor());
+		// assertEquals(Color.BLACK, activity.getDestinationColor());
 		assertEquals("Paint should not change immediately", Color.WHITE, node
 				.getPaint());
 	}
@@ -965,23 +968,36 @@ public class PNodeTest extends TestCase {
 		assertEquals(Color.BLUE.getRGB(), img.getRGB(5, 5));
 	}
 
-	/*
-	 * The following 2 test should pass I believe, but don't public void
-	 * testToImageResultsInDesiredSizeImage() {
-	 * 
-	 * node.setBounds(0, 0, 10, 10);
-	 * 
-	 * BufferedImage img = (BufferedImage)node.toImage(20, 40, null);
-	 * assertEquals(40, img.getHeight(null)); assertEquals(20,
-	 * img.getWidth(null)); }
-	 * 
-	 * public void testToImageWithBackgroundColorGivenReturnsValidImage() {
-	 * node.setBounds(0, 0, 10, 10); node.setPaint(Color.RED);
-	 * 
-	 * BufferedImage img = (BufferedImage)node.toImage(20, 40, Color.BLUE);
-	 * assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
-	 * assertEquals(Color.BLUE.getRGB(), img.getRGB(15, 25)); }
-	 */
+	public void testToImageResultsInDesiredSizeImage() {
+		node.setBounds(0, 0, 10, 10);
+
+		BufferedImage img = (BufferedImage) node.toImage(20, 40, null);
+		assertEquals(40, img.getHeight(null));
+		assertEquals(20, img.getWidth(null));
+	}
+
+	public void testToImageWithBackgroundColorGivenReturnsValidImage() {
+		node.setBounds(0, 0, 10, 10);
+		node.setPaint(Color.RED);
+
+		BufferedImage img = (BufferedImage) node.toImage(20, 40, Color.BLUE);
+		assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+		assertEquals(Color.BLUE.getRGB(), img.getRGB(15, 25));
+	}
+	
+	public void testToImageScalesNodeAsBigAsCanBe() throws IOException {
+		node.setBounds(0, 0, 10, 10);
+		node.setPaint(Color.RED);
+
+		BufferedImage img = (BufferedImage) node.toImage(20, 40, Color.BLUE);
+		ImageIO.write(img, "JPEG", new File("C:\\test.jpg"));
+		assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+		assertEquals(Color.RED.getRGB(), img.getRGB(19, 0));
+		assertEquals(Color.RED.getRGB(), img.getRGB(0, 19));
+		assertEquals(Color.RED.getRGB(), img.getRGB(19, 19));
+		assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 20));
+		assertEquals(Color.BLUE.getRGB(), img.getRGB(19, 20));
+	}
 
 	public void testGetPickableShouldDefaultToTrue() {
 		assertTrue(node.getPickable());
@@ -1155,116 +1171,116 @@ public class PNodeTest extends TestCase {
 		assertFalse(node.isAncestorOf(unrelated));
 		assertFalse(grandChild.isDescendentOf(unrelated));
 	}
-	
+
 	public void testMoveToBackMovesNodeToBeFirstChild() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 		parent.addChild(new PNode());
 		parent.addChild(new PNode());
 		parent.addChild(node);
 		node.moveToBack();
-		assertEquals(0, parent.indexOfChild(node));		
+		assertEquals(0, parent.indexOfChild(node));
 	}
 
 	public void testMoveToFrontMovesNodeToBeLastChild() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 		parent.addChild(node);
 		parent.addChild(new PNode());
-		parent.addChild(new PNode());		
+		parent.addChild(new PNode());
 		node.moveToFront();
-		assertEquals(2, parent.indexOfChild(node));		
+		assertEquals(2, parent.indexOfChild(node));
 	}
-	
+
 	public void testMoveInBackOfMovesNodeToBeforeSibling() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 		PNode sibling = new PNode();
-		
+
 		parent.addChild(node);
 		parent.addChild(new PNode());
 		parent.addChild(new PNode());
 		parent.addChild(sibling);
-		
+
 		node.moveInBackOf(sibling);
-		assertEquals(2, parent.indexOfChild(node));		
+		assertEquals(2, parent.indexOfChild(node));
 	}
-	
+
 	public void testMoveInFrontOfMovesNodeToAfterSibling() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 		PNode sibling = new PNode();
-		
+
 		parent.addChild(node);
 		parent.addChild(new PNode());
 		parent.addChild(new PNode());
 		parent.addChild(sibling);
-		
+
 		node.moveInFrontOf(sibling);
-		assertEquals(3, parent.indexOfChild(node));		
+		assertEquals(3, parent.indexOfChild(node));
 	}
-	
+
 	public void testMoveInFrontOfDoesNothingIfNotSibling() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 		PNode stranger = new PNode();
-		
+
 		parent.addChild(node);
 		parent.addChild(new PNode());
-		parent.addChild(new PNode());		
-		
+		parent.addChild(new PNode());
+
 		node.moveInFrontOf(stranger);
-		assertEquals(0, parent.indexOfChild(node));		
+		assertEquals(0, parent.indexOfChild(node));
 	}
-	
+
 	public void testMoveInBackOfDoesNothingIfNotSibling() {
-		PNode parent = new PNode();		
+		PNode parent = new PNode();
 		PNode stranger = new PNode();
-		
+
 		parent.addChild(node);
 		parent.addChild(new PNode());
-		parent.addChild(new PNode());		
-		
+		parent.addChild(new PNode());
+
 		node.moveInBackOf(stranger);
-		assertEquals(0, parent.indexOfChild(node));		
+		assertEquals(0, parent.indexOfChild(node));
 	}
-	
+
 	public void testIsDescendentOfRootHandlesOrphans() {
 		PNode orphan = new PNode();
-		
+
 		assertFalse(orphan.isDescendentOfRoot());
 		orphan.addChild(node);
-		assertFalse(node.isDescendentOfRoot());		
+		assertFalse(node.isDescendentOfRoot());
 	}
-	
+
 	public void testIsDescendentOfRootHandlesDescendentsOfRoot() {
 		PCanvas canvas = new PCanvas();
 		canvas.getLayer().addChild(node);
-		
+
 		assertTrue(node.isDescendentOfRoot());
 	}
-	
+
 	public void testGetGlobalRationTakesParentsIntoAccount() {
 		PNode parent = new PNode();
-		parent.rotate(Math.PI/4d);
+		parent.rotate(Math.PI / 4d);
 		parent.addChild(node);
-		
-		node.rotate(Math.PI/4d);
-		
-		assertEquals(Math.PI/2d, node.getGlobalRotation(), 0.001);
+
+		node.rotate(Math.PI / 4d);
+
+		assertEquals(Math.PI / 2d, node.getGlobalRotation(), 0.001);
 	}
-	
+
 	public void testSetGlobalRationTakesParentsIntoAccount() {
 		PNode parent = new PNode();
-		parent.rotate(Math.PI/4d);
+		parent.rotate(Math.PI / 4d);
 		parent.addChild(node);
-		
-		node.setGlobalRotation(Math.PI/2d);
-		
-		assertEquals(Math.PI/4d, node.getRotation(), 0.001);
+
+		node.setGlobalRotation(Math.PI / 2d);
+
+		assertEquals(Math.PI / 4d, node.getRotation(), 0.001);
 	}
-	
+
 	public void testSetGlobalRationWorksWhenNoParent() {
-		node.setGlobalRotation(Math.PI/2d);
-		
-		assertEquals(Math.PI/2d, node.getRotation(), 0.001);
+		node.setGlobalRotation(Math.PI / 2d);
+
+		assertEquals(Math.PI / 2d, node.getRotation(), 0.001);
 	}
-	
+
 	public void testSetOccludedPersistes() {
 		node.setOccluded(true);
 		assertTrue(node.getOccluded());

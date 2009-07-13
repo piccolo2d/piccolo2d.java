@@ -2469,20 +2469,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param height pixel height of the resulting image
      * @return a new image representing this node and its descendents
      */
-    public Image toImage(int width, int height, Paint backGroundPaint) {
-        PBounds imageBounds = getFullBounds();
-
-        imageBounds.expandNearestIntegerDimensions();
-
-        if (width / imageBounds.width < height / imageBounds.height) {
-            double scale = width / imageBounds.width;
-            height = (int) (imageBounds.height * scale);
-        }
-        else {
-            double scale = height / imageBounds.height;
-            width = (int) (imageBounds.width * scale);
-        }
-
+    public Image toImage(int width, int height, Paint backGroundPaint) {        
         GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice().getDefaultConfiguration();
         BufferedImage result = graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
