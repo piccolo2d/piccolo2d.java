@@ -29,229 +29,1259 @@
 package edu.umd.cs.piccolo;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import javax.swing.text.MutableAttributeSet;
 
 import junit.framework.TestCase;
+import edu.umd.cs.piccolo.activities.PActivity;
+import edu.umd.cs.piccolo.activities.PColorActivity;
+import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
+import edu.umd.cs.piccolo.activities.PTransformActivity;
+import edu.umd.cs.piccolo.activities.PColorActivity.Target;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDimension;
+import edu.umd.cs.piccolo.util.PNodeFilter;
+import edu.umd.cs.piccolo.util.PPaintContext;
+import edu.umd.cs.piccolo.util.PPickPath;
+import edu.umd.cs.piccolo.util.PUtil;
 
 public class PNodeTest extends TestCase {
 
-    public PNodeTest(String name) {
-        super(name);
-    }
+	private MockPropertyChangeListener mockListener;
+	private PNode node;
 
-    public void setUp() {
-    }
+	public PNodeTest(String name) {
+		super(name);
+	}
 
-    public void testCenterBaseBoundsOnPoint() {
-        PNode aNode = new PNode();
+	public void setUp() {
+		node = new PNode();
+		mockListener = new MockPropertyChangeListener();
+	}
 
-        aNode.setBounds(100, 300, 100, 80);
-        aNode.centerBoundsOnPoint(0, 0);
-        assertEquals(-50, aNode.getBoundsReference().getX(), 0);
-        assertEquals(-40, aNode.getBoundsReference().getY(), 0);
-    }
+	public void testCenterBaseBoundsOnPoint() {
+		node.setBounds(100, 300, 100, 80);
+		node.centerBoundsOnPoint(0, 0);
+		assertEquals(-50, node.getBoundsReference().getX(), 0);
+		assertEquals(-40, node.getBoundsReference().getY(), 0);
+	}
 
-    public void testClientProperties() {
-        PNode n = new PNode();
+	public void testClientProperties() {
+		PNode n = new PNode();
 
-        assertNull(n.getAttribute(null));
-        n.addAttribute("a", "b");
-        assertEquals(n.getAttribute("a"), "b");
-        assertNull(n.getAttribute(null));
-        n.addAttribute("a", null);
-        assertNull(n.getAttribute("a"));
-    }
+		assertNull(n.getAttribute(null));
+		n.addAttribute("a", "b");
+		assertEquals(n.getAttribute("a"), "b");
+		assertNull(n.getAttribute(null));
+		n.addAttribute("a", null);
+		assertNull(n.getAttribute("a"));
+	}
 
-    public void testFullScale() {
-        PNode aParent = new PNode();
-        PNode aNode = new PNode();
+	public void testFullScale() {
+		PNode aParent = new PNode();
+		PNode aNode = new PNode();
 
-        aParent.addChild(aNode);
+		aParent.addChild(aNode);
 
-        aParent.scale(2.0);
-        aNode.scale(0.5);
+		aParent.scale(2.0);
+		aNode.scale(0.5);
 
-        assertEquals(1.0, aNode.getGlobalScale(), 0);
+		assertEquals(1.0, aNode.getGlobalScale(), 0);
 
-        aParent.setScale(1.0);
-        assertEquals(0.5, aNode.getGlobalScale(), 0);
+		aParent.setScale(1.0);
+		assertEquals(0.5, aNode.getGlobalScale(), 0);
 
-        aNode.setScale(.75);
-        assertEquals(0.75, aNode.getGlobalScale(), 0);
-    }
+		aNode.setScale(.75);
+		assertEquals(0.75, aNode.getGlobalScale(), 0);
+	}
 
-    public void testReparent() {
-        PNode aParent = new PNode();
-        PNode aNode = new PNode();
+	public void testReparent() {
+		PNode aParent = new PNode();
+		PNode aNode = new PNode();
 
-        aParent.setOffset(400, 500);
-        aParent.scale(0.5);
-        aNode.reparent(aParent);
+		aParent.setOffset(400, 500);
+		aParent.scale(0.5);
+		aNode.reparent(aParent);
 
-        assertEquals(0, aNode.getGlobalTranslation().getX(), 0);
-        assertEquals(0, aNode.getGlobalTranslation().getY(), 0);
-        assertEquals(2.0, aNode.getScale(), 0);
+		assertEquals(0, aNode.getGlobalTranslation().getX(), 0);
+		assertEquals(0, aNode.getGlobalTranslation().getY(), 0);
+		assertEquals(2.0, aNode.getScale(), 0);
 
-        aNode.setGlobalScale(0.25);
-        aNode.setGlobalTranslation(new Point2D.Double(10, 10));
+		aNode.setGlobalScale(0.25);
+		aNode.setGlobalTranslation(new Point2D.Double(10, 10));
 
-        assertEquals(10, aNode.getGlobalTranslation().getX(), 0);
-        assertEquals(10, aNode.getGlobalTranslation().getY(), 0);
-        assertEquals(0.25, aNode.getGlobalScale(), 0);
-    }
+		assertEquals(10, aNode.getGlobalTranslation().getX(), 0);
+		assertEquals(10, aNode.getGlobalTranslation().getY(), 0);
+		assertEquals(0.25, aNode.getGlobalScale(), 0);
+	}
 
-    public void testFindIntersectingNodes() {
-        PNode n = new PNode();
-        PNode c = new PNode();
+	public void testFindIntersectingNodes() {
+		PNode n = new PNode();
+		PNode c = new PNode();
 
-        n.addChild(c);
-        n.setBounds(0, 0, 100, 100);
-        c.setBounds(0, 0, 100, 100);
-        c.scale(200);
+		n.addChild(c);
+		n.setBounds(0, 0, 100, 100);
+		c.setBounds(0, 0, 100, 100);
+		c.scale(200);
 
-        ArrayList found = new ArrayList();
-        Rectangle2D rect2d = new Rectangle2D.Double(50, 50, 10, 10);
-        n.findIntersectingNodes(rect2d, found);
+		ArrayList found = new ArrayList();
+		Rectangle2D rect2d = new Rectangle2D.Double(50, 50, 10, 10);
+		n.findIntersectingNodes(rect2d, found);
 
-        assertEquals(found.size(), 2);
-        assertEquals(rect2d.getHeight(), 10, 0);
-        found = new ArrayList();
+		assertEquals(found.size(), 2);
+		assertEquals(rect2d.getHeight(), 10, 0);
+		found = new ArrayList();
 
-        PBounds bounds = new PBounds(50, 50, 10, 10);
-        n.findIntersectingNodes(bounds, found);
+		PBounds bounds = new PBounds(50, 50, 10, 10);
+		n.findIntersectingNodes(bounds, found);
 
-        assertEquals(found.size(), 2);
-        assertEquals(bounds.getHeight(), 10, 0);
-    }
+		assertEquals(found.size(), 2);
+		assertEquals(bounds.getHeight(), 10, 0);
+	}
 
-    public void testRemoveNonexistantListener() {
-        PNode n = new PNode();
-        n.removeInputEventListener(new PBasicInputEventHandler());
-    }
+	public void testRemoveNonexistantListener() {
+		PNode n = new PNode();
+		n.removeInputEventListener(new PBasicInputEventHandler());
+	}
 
-    public void testAddChild() {
-        PNode p = new PNode();
-        PNode c = new PNode();
+	public void testAddChildHandleDuplicates() {
+		PNode parent = new PNode();
+		parent.addChild(node);
+		parent.addChild(new PNode());
+		parent.addChild(node);
+		assertEquals(1, parent.indexOfChild(node));
+	}
+	
+	public void testAddChildCanSpecifyAnIndexAndDoesntReplace() {
+		PNode parent = new PNode();
+		parent.addChild(new PNode());
+		parent.addChild(0, node);		
+		assertEquals(0, parent.indexOfChild(node));
+		assertEquals(2, parent.getChildrenCount());
+	}
+	
+	public void testAddChildWithIndexMovesChildAround() {
+		PNode parent = new PNode();		
 
-        p.addChild(c);
-        p.addChild(new PNode());
-        p.addChild(new PNode());
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());
+		parent.addChild(node);		
 
-        p.addChild(c);
-        assertEquals(c, p.getChild(2));
+		parent.addChild(0, node);
+		assertEquals(node, parent.getChild(0));
 
-        p.addChild(0, c);
-        assertEquals(c, p.getChild(0));
+		parent.addChild(1, node);
+		assertEquals(node, parent.getChild(1));
 
-        p.addChild(1, c);
-        assertEquals(c, p.getChild(1));
+		parent.addChild(2, node);
+		assertEquals(node, parent.getChild(2));
+	}
 
-        p.addChild(2, c);
-        assertEquals(c, p.getChild(2));
-    }
+	public void testCopy() {		
+		node.setPaint(Color.yellow);
 
-    public void testCopy() {
-        PNode aNode = new PNode();
-        aNode.setPaint(Color.yellow);
+		PNode child = new PNode();
+		node.addChild(child);
 
-        PNode aChild = new PNode();
-        aNode.addChild(aChild);
+		PNode clonedNode = (PNode) node.clone();
 
-        aNode = (PNode) aNode.clone();
+		assertEquals(clonedNode.getPaint(), Color.yellow);
+		assertEquals(clonedNode.getChildrenCount(), 1);
+	}
 
-        assertEquals(aNode.getPaint(), Color.yellow);
-        assertEquals(aNode.getChildrenCount(), 1);
-    }
+	public void testLocalToGlobal() {
+		PNode aParent = new PNode();
+		PNode aChild = new PNode();
 
-    public void testLocalToGlobal() {
-        PNode aParent = new PNode();
-        PNode aChild = new PNode();
+		aParent.addChild(aChild);
+		aChild.scale(0.5);
 
-        aParent.addChild(aChild);
-        aChild.scale(0.5);
+		// bounds
+		PBounds bnds = new PBounds(0, 0, 50, 50);
 
-        // bounds
-        PBounds bnds = new PBounds(0, 0, 50, 50);
+		aChild.localToGlobal(bnds);
+		assertEquals(0, bnds.x, 0);
+		assertEquals(0, bnds.y, 0);
+		assertEquals(25, bnds.width, 0);
+		assertEquals(25, bnds.height, 0);
 
-        aChild.localToGlobal(bnds);
-        assertEquals(0, bnds.x, 0);
-        assertEquals(0, bnds.y, 0);
-        assertEquals(25, bnds.width, 0);
-        assertEquals(25, bnds.height, 0);
+		aChild.globalToLocal(bnds);
+		assertEquals(0, bnds.x, 0);
+		assertEquals(0, bnds.y, 0);
+		assertEquals(50, bnds.width, 0);
+		assertEquals(50, bnds.height, 0);
 
-        aChild.globalToLocal(bnds);
-        assertEquals(0, bnds.x, 0);
-        assertEquals(0, bnds.y, 0);
-        assertEquals(50, bnds.width, 0);
-        assertEquals(50, bnds.height, 0);
+		aChild.getGlobalToLocalTransform(new PAffineTransform());
+		aChild.getLocalToGlobalTransform(new PAffineTransform())
+				.createTransformedShape(aChild.getBounds());
 
-        aChild.getGlobalToLocalTransform(new PAffineTransform());
-        aChild.getLocalToGlobalTransform(new PAffineTransform()).createTransformedShape(aChild.getBounds());
+		// dimensions
+		PDimension dim = new PDimension(50, 50);
 
-        // dimensions
-        PDimension dim = new PDimension(50, 50);
+		aChild.localToGlobal(dim);
+		assertEquals(25, dim.getHeight(), 0);
+		assertEquals(25, dim.getWidth(), 0);
 
-        aChild.localToGlobal(dim);
-        assertEquals(25, dim.getHeight(), 0);
-        assertEquals(25, dim.getWidth(), 0);
+		aChild.globalToLocal(dim);
+		assertEquals(50, dim.getHeight(), 0);
+		assertEquals(50, dim.getWidth(), 0);
+	}
 
-        aChild.globalToLocal(dim);
-        assertEquals(50, dim.getHeight(), 0);
-        assertEquals(50, dim.getWidth(), 0);
-    }
+	public void testToString() {
+		PNode a = new PNode();
+		PNode b = new PNode();
+		PNode c = new PNode();
+		PNode d = new PNode();
+		PNode e = new PNode();
+		PNode f = new PNode();
 
-    public void testToString() {
-        PNode a = new PNode();
-        PNode b = new PNode();
-        PNode c = new PNode();
-        PNode d = new PNode();
-        PNode e = new PNode();
-        PNode f = new PNode();
+		a.translate(100, 100);
+		a.getFullBoundsReference();
 
-        a.translate(100, 100);
-        a.getFullBoundsReference();
+		a.addChild(b);
+		b.addChild(c);
+		c.addChild(d);
+		d.addChild(e);
+		e.addChild(f);
 
-        a.addChild(b);
-        b.addChild(c);
-        c.addChild(d);
-        d.addChild(e);
-        e.addChild(f);
+		assertNotNull(a.toString());
+	}
 
-        assertNotNull(a.toString());
-    }
+	public void testRecursiveLayout() {
+		PNode layoutNode1 = new PNode() {
+			protected void layoutChildren() {
+				if (getChildrenCount() > 0) {
+					getChild(0).setOffset(1, 0);
+				}
+			}
+		};
 
-    public void testRecursiveLayout() {
-        PNode layoutNode1 = new PNode() {
-            protected void layoutChildren() {
-                if (getChildrenCount() > 0) {
-                    getChild(0).setOffset(1, 0);
-                }
-            }
-        };
+		PNode layoutNode2 = new PNode() {
+			protected void layoutChildren() {
+				if (getChildrenCount() > 0) {
+					getChild(0).setOffset(1, 0);
+				}
+			}
+		};
 
-        PNode layoutNode2 = new PNode() {
-            protected void layoutChildren() {
-                if (getChildrenCount() > 0) {
-                    getChild(0).setOffset(1, 0);
-                }
-            }
-        };
+		layoutNode1.addChild(layoutNode2);
 
-        layoutNode1.addChild(layoutNode2);
+		PNode n = new PNode();
+		n.setBounds(0, 0, 100, 100);
 
-        PNode n = new PNode();
-        n.setBounds(0, 0, 100, 100);
+		layoutNode2.addChild(n);
 
-        layoutNode2.addChild(n);
+		n.setBounds(10, 10, 100, 100);
 
-        n.setBounds(10, 10, 100, 100);
+		layoutNode1.getFullBoundsReference();
+	}
 
-        layoutNode1.getFullBoundsReference();
-    }
+	public void testAnimateToBoundsWithDuration0IsImmediate() {
+		node.setBounds(0, 0, 100, 100);
+
+		PActivity activity = node.animateToBounds(50, 50, 150, 150, 0);
+		assertNull(activity);
+
+		PBounds resultBounds = node.getBounds();
+		assertEquals(50.0, resultBounds.x, 0.001);
+		assertEquals(50.0, resultBounds.y, 0.001);
+		assertEquals(150.0, resultBounds.width, 0.001);
+		assertEquals(150.0, resultBounds.height, 0.001);
+	}
+
+	public void testAnimateToBoundsHasProperSetup() {
+		node.setBounds(0, 0, 100, 100);
+		PInterpolatingActivity activity = node.animateToBounds(50, 50, 150,
+				150, 50);
+
+		assertEquals(50, activity.getDuration());
+		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
+		assertTrue(activity.getFirstLoop());
+		assertFalse(activity.isStepping());		
+	}
+
+	public void testAnimateTransformToBoundsWithDuration0IsImmediate() {
+		node.setBounds(0, 0, 100, 100);
+		PActivity activity = node.animateTransformToBounds(0, 0, 10, 10, 0);
+
+		assertNull(activity);
+
+		PAffineTransform transform = node.getTransform();
+		assertEquals(0.1, transform.getScale(), 0.0001);
+	}
+
+	public void testAnimateTransformToBoundsHasProperSetup() {
+		node.setBounds(0, 0, 100, 100);
+		PTransformActivity activity = node.animateTransformToBounds(0, 0, 10,
+				10, 50);
+
+		assertEquals(50, activity.getDuration());
+		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
+		assertTrue(activity.getFirstLoop());
+		assertFalse(activity.isStepping());
+
+		double[] resultTransform = activity.getDestinationTransform();
+
+		assertEquals(0.1, resultTransform[0], 0.001);
+		assertEquals(0, resultTransform[1], 0.001);
+		assertEquals(0, resultTransform[2], 0.001);
+		assertEquals(0.1, resultTransform[3], 0.001);
+		assertEquals(0, resultTransform[4], 0.001);
+		assertEquals(0, resultTransform[5], 0.001);
+	}
+
+	public void testAnimateToPositionScaleRotationWithDuration0IsImmediate() {
+		node.setBounds(0, 0, 100, 100);
+		PActivity activity = node.animateToPositionScaleRotation(50, 50, 0.5,
+				Math.PI, 0);
+
+		assertNull(activity);
+
+		PAffineTransform resultTransform = node.getTransform();
+
+		PAffineTransform expected = new PAffineTransform();
+		expected.translate(50, 50);
+		expected.scale(0.5, 0.5);
+		expected.rotate(Math.PI);
+
+		assertEquals(expected, resultTransform);
+	}
+
+	public void testAnimateToPositionScaleRotationHasProperSetup() {
+		node.setBounds(0, 0, 100, 100);
+		PTransformActivity activity = node.animateToPositionScaleRotation(50,
+				50, 0.5, Math.PI, 50);
+
+		assertEquals(50, activity.getDuration());
+		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
+		assertTrue(activity.getFirstLoop());
+		assertFalse(activity.isStepping());
+
+		double[] resultTransform = activity.getDestinationTransform();
+
+		PAffineTransform expected = new PAffineTransform();
+		expected.translate(50, 50);
+		expected.scale(0.5, 0.5);
+		expected.rotate(Math.PI);
+
+		assertEquals(-0.5, resultTransform[0], 0.001);
+		assertEquals(0, resultTransform[1], 0.001);
+		assertEquals(0, resultTransform[2], 0.001);
+		assertEquals(-0.5, resultTransform[3], 0.001);
+		assertEquals(50.0, resultTransform[4], 0.001);
+		assertEquals(50.0, resultTransform[5], 0.001);
+	}
+
+	public void testAnimateToColorWithDuration0IsImmediate() {
+		node.setPaint(Color.WHITE);
+
+		PActivity activity = node.animateToColor(Color.BLACK, 0);
+
+		assertNull(activity);
+
+		assertEquals(Color.BLACK, node.getPaint());
+	}
+
+	public void testAnimateToColorHasProperSetup() {
+		node.setPaint(Color.WHITE);
+		PColorActivity activity = node.animateToColor(Color.BLACK, 50);
+
+		assertEquals(50, activity.getDuration());
+		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
+		assertTrue(activity.getFirstLoop());
+		assertFalse(activity.isStepping());
+		assertEquals(Color.BLACK, activity.getDestinationColor());
+		assertEquals("Paint should not change immediately", Color.WHITE, node
+				.getPaint());
+	}
+
+	public void testAddActivityAddsActivityToScheduler() {
+		PCanvas canvas = new PCanvas();
+		node.setPaint(Color.WHITE);
+		canvas.getLayer().addChild(node);
+
+		PColorActivity activity = buildTestActivity();
+
+		node.addActivity(activity);
+
+		assertEquals(1, node.getRoot().getActivityScheduler()
+				.getActivitiesReference().size());
+	}
+
+	private PColorActivity buildTestActivity() {
+		Target testTarget = new PColorActivity.Target() {
+
+			public Color getColor() {
+				return Color.BLACK;
+			}
+
+			public void setColor(Color color) {
+
+			}
+		};
+
+		PColorActivity activity = new PColorActivity(1000, 0, testTarget,
+				Color.BLACK);
+		return activity;
+	}
+
+	public void testAnimateToTransparencyWithDuration0IsImmediate() {
+		node.setPaint(Color.WHITE);
+
+		PActivity activity = node.animateToTransparency(0.5f, 0);
+
+		assertNull(activity);
+
+		assertEquals(0.5f, node.getTransparency(), 0.0001);
+	}
+
+	public void testAnimateToTransparencyHasProperSetup() {
+		PInterpolatingActivity activity = node.animateToTransparency(0f, 50);
+
+		assertEquals(50, activity.getDuration());
+		assertEquals(PUtil.DEFAULT_ACTIVITY_STEP_RATE, activity.getStepRate());
+		assertTrue(activity.getFirstLoop());
+		assertFalse(activity.isStepping());
+
+		assertEquals("Transparency should not change immediately", 1.0f, node
+				.getTransparency(), 0.0001);
+	}
+
+	public void testGetClientPropertiesShouldReturnSetEvenIfNonePresent() {
+		MutableAttributeSet properties = node.getClientProperties();
+		assertNotNull(properties);
+		assertEquals(0, properties.getAttributeCount());
+	}
+
+	public void testGetClientPropertiesShouldReturnSameCollectionAlways() {
+		MutableAttributeSet properties1 = node.getClientProperties();
+		MutableAttributeSet properties2 = node.getClientProperties();
+		assertSame(properties1, properties2);
+	}
+
+	public void testGetClientPropertyKeysEnumerationShouldReturnEnumarationOnNewNode() {
+		Enumeration enumeration = node.getClientPropertyKeysEnumeration();
+		assertNotNull(enumeration);
+		assertFalse(enumeration.hasMoreElements());
+	}
+
+	public void testGetClientPropertyKeysEnumerationShouldReturnCorrectEnumWhenPropertiesExist() {
+		node.addAttribute("Testing", "Hello");
+		Enumeration enumeration = node.getClientPropertyKeysEnumeration();
+		assertNotNull(enumeration);
+		assertTrue(enumeration.hasMoreElements());
+		assertEquals("Testing", enumeration.nextElement());
+		assertFalse(enumeration.hasMoreElements());
+	}
+
+	public void testGetAttributeReturnsNullWhenMissing() {
+		assertNull(node.getAttribute("Testing"));
+	}
+
+	public void testGetAttributeReturnsValueWhenPresent() {
+		node.addAttribute("Testing", "Hello");
+		assertEquals("Hello", node.getAttribute("Testing"));
+	}
+
+	public void testGetAttributeReturnsDefaultWhenProvided() {
+		assertEquals("Default", node.getAttribute("Missing", "Default"));
+	}
+
+	public void testGetAttributeReturnsValueIfFoundWhenDefaultProvided() {
+		node.addAttribute("Found", "Hello");
+		assertEquals("Hello", node.getAttribute("Found", "Default"));
+	}
+
+	public void testGetBooleanAttributeReturnsDefaultWhenProvided() {
+		assertEquals(false, node.getBooleanAttribute("Missing", false));
+	}
+
+	public void testGetBooleanAttributeReturnsValueIfFoundWhenDefaultProvided() {
+		node.addAttribute("Found", Boolean.TRUE);
+		assertEquals(true, node.getBooleanAttribute("Found", false));
+	}
+
+	public void testGetIntegerAttributeReturnsDefaultWhenProvided() {
+		assertEquals(10, node.getIntegerAttribute("Missing", 10));
+	}
+
+	public void testGetIntegerAttributeReturnsValueIfFoundWhenDefaultProvided() {
+		node.addAttribute("Found", new Integer(5));
+		assertEquals(5, node.getIntegerAttribute("Found", 10));
+	}
+
+	public void testGetDoubleAttributeReturnsDefaultWhenProvided() {
+		assertEquals(10, node.getDoubleAttribute("Missing", 10), 0.001);
+	}
+
+	public void testGetDoubleAttributeReturnsValueIfFoundWhenDefaultProvided() {
+		node.addAttribute("Found", new Double(5));
+		assertEquals(5, node.getIntegerAttribute("Found", 10), 0.001);
+	}
+
+	public void testGetAddClienProperty() {
+		assertNull(node.getClientProperty("Testing"));
+		node.addClientProperty("Testing", "Hello");
+		assertEquals("Hello", node.getClientProperty("Testing"));
+	}
+
+	public void testGetClientPropertyKeysIteratorIsNotNullOnEmptyClientProperties() {
+		Iterator iterator = node.getClientPropertyKeysIterator();
+		assertNotNull(iterator);
+		assertFalse(iterator.hasNext());
+	}
+
+	public void testGetClientPropertyKeysIteratorReturnsValidIteraotOnPropertiesExist() {
+		node.addClientProperty("A", "Aval");
+		node.addClientProperty("B", "Bval");
+		Iterator iterator = node.getClientPropertyKeysIterator();
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
+		assertEquals("A", iterator.next());
+		assertTrue(iterator.hasNext());
+		assertEquals("B", iterator.next());
+		assertFalse(iterator.hasNext());
+	}
+
+	public void testLocalToParentModifiesGivenPoint() {
+		PNode parent = new PNode();
+		parent.addChild(node);
+
+		node.scale(0.5);
+
+		Point2D point = new Point2D.Double(5, 6);
+		node.localToParent(point);
+		assertTrue(5 != point.getX());
+		assertTrue(6 != point.getY());
+	}
+
+	public void testLocalToParentDoesWorkWithOrphanChildWhenTransformed() {
+		node.scale(0.5);
+
+		Point2D point = new Point2D.Double(5, 6);
+		node.localToParent(point);
+		assertTrue(5 != point.getX());
+		assertTrue(6 != point.getY());
+	}
+
+	public void testLocalToParentDoesNothingWithOrphanChildWhenNotTransformed() {
+		Point2D point = new Point2D.Double(5, 6);
+		node.localToParent(point);
+		assertEquals(5, point.getX(), 0.0001);
+		assertEquals(6, point.getY(), 0.0001);
+	}
+
+	public void testParentToLocalModifiesGivenPoint() {
+		PNode parent = new PNode();
+		parent.addChild(node);
+
+		node.scale(0.5);
+
+		Point2D point = new Point2D.Double(5, 6);
+		node.parentToLocal(point);
+		assertTrue(5 != point.getX());
+		assertTrue(6 != point.getY());
+	}
+
+	public void testParentToLocalTransformsOrphanChildWhenTransformed() {
+		PNode aChild = new PNode();
+		aChild.scale(0.5);
+
+		Point2D point = new Point2D.Double(5, 6);
+		aChild.parentToLocal(point);
+		assertEquals(10, point.getX(), 0.0001);
+		assertEquals(12, point.getY(), 0.0001);
+	}
+
+	public void testGlobalToLocalWorksUnTransformedNodes() {
+		PNode parent = new PNode();
+		parent.addChild(node);
+
+		Point2D point = new Point2D.Double(10, 11);
+		node.globalToLocal(point);
+		assertEquals(10, point.getX(), 0.0001);
+		assertEquals(11, point.getY(), 0.0001);
+	}
+
+	public void testRemoveEventListener() {
+		PBasicInputEventHandler eventListener = new PBasicInputEventHandler();
+		node.addInputEventListener(eventListener);
+		assertEquals(1, node.getListenerList().getListenerCount());
+		node.removeInputEventListener(eventListener);
+		assertNull(node.getListenerList());
+
+	}
+
+	public void testAddPropertyChangeListener() {
+		node.addPropertyChangeListener(mockListener);
+		node.setBounds(0, 0, 100, 100);
+		assertEquals(1, mockListener.getPropertyChangeCount());
+	}
+
+	public void testAddPropertyChangeListenerForPropertyName() {
+		node.addPropertyChangeListener(PNode.PROPERTY_BOUNDS, mockListener);
+		node.setBounds(0, 0, 100, 100);
+		assertEquals(1, mockListener.getPropertyChangeCount());
+	}
+
+	public void testRemovePropertyChangeListener() {
+		node.addPropertyChangeListener(mockListener);
+		node.removePropertyChangeListener(mockListener);
+		node.setBounds(0, 0, 100, 100);
+		assertEquals(0, mockListener.getPropertyChangeCount());
+	}
+
+	public void testRemovePropertyChangeListenerForPropertyName() {
+		node.addPropertyChangeListener(PNode.PROPERTY_BOUNDS, mockListener);
+		node.removePropertyChangeListener(PNode.PROPERTY_BOUNDS, mockListener);
+		node.setBounds(0, 0, 100, 100);
+		assertEquals(0, mockListener.getPropertyChangeCount());
+	}
+
+	public void testPropertyChangesCascadeToParent() {
+		PNode aParent = new PNode();
+		aParent.addPropertyChangeListener(PNode.PROPERTY_BOUNDS, mockListener);
+
+		PNode aChild = new PNode();
+		aChild.setPropertyChangeParentMask(PNode.PROPERTY_CODE_BOUNDS);
+		aParent.addChild(aChild);
+
+		aChild.setBounds(0, 0, 100, 100);
+		assertEquals(1, mockListener.getPropertyChangeCount());
+	}
+
+	public void testStartEndResizeBoundsCanBeCalledWithoutResizes() {
+		node.startResizeBounds();
+		node.endResizeBounds();
+	}
+
+	public void testSetXModifiesBounds() {
+		node.setX(10);
+		assertEquals(10, node.getBounds().getX(), 0.0001);
+	}
+
+	public void testSetYModifiesBounds() {
+		node.setY(10);
+		assertEquals(10, node.getBounds().getY(), 0.0001);
+	}
+
+	public void testSetHeightModifiesBounds() {
+		node.setHeight(10);
+		assertEquals(10, node.getBounds().getHeight(), 0.0001);
+	}
+
+	public void testSetWidthModifiesBounds() {
+		node.setWidth(10);
+		assertEquals(10, node.getBounds().getWidth(), 0.0001);
+	}
+
+	public void testResetBoundsDoesSo() {
+		node.setBounds(10, 15, 100, 115);
+		node.resetBounds();
+
+		PBounds zeroBounds = new PBounds();
+		assertEquals(zeroBounds, node.getBounds());
+	}
+
+	public void testCenterBoundsOnPointWorksAsExpected() {
+		node.setBounds(0, 0, 100, 100);
+		node.centerBoundsOnPoint(0, 0);
+
+		PBounds expected = new PBounds(-50, -50, 100, 100);
+		assertEquals(expected, node.getBounds());
+	}
+
+	public void testCenterFullBoundsOnPointWorksAsExpected() {
+		PNode aParent = buildComplexSquareNode();
+
+		aParent.centerFullBoundsOnPoint(0, 0);
+
+		PBounds expected = new PBounds(-50, -50, 100, 100);
+		assertEquals(expected, aParent.getFullBounds());
+	}
+
+	private PNode buildComplexSquareNode() {
+		PNode aParent = new PNode();
+		aParent.setBounds(0, 0, 50, 100);
+
+		PNode child1 = new PNode();
+		child1.setBounds(50, 0, 50, 50);
+		aParent.addChild(child1);
+
+		PNode child2 = new PNode();
+		child2.setBounds(50, 50, 50, 50);
+		aParent.addChild(child2);
+
+		return aParent;
+	}
+
+	public void testGetUnionOfChildrenBoundsAcceptsNull() {
+		PNode node = buildComplexSquareNode();
+
+		PBounds union = node.getUnionOfChildrenBounds(null);
+
+		assertNotNull(union);
+		assertEquals(new PBounds(50, 0, 50, 100), union);
+	}
+
+	public void testGetGlobalFullBoundsIsSameWhenNoTransforms() {
+		PNode parent = new PNode();
+		PNode child = new PNode();
+		parent.addChild(child);
+		PNode grandChild = new PNode();
+		child.addChild(grandChild);
+		child.setBounds(50, 0, 50, 50);
+		grandChild.setBounds(0, 50, 50, 50);
+
+		PBounds globalFullBounds = parent.getGlobalFullBounds();
+
+		assertNotNull(globalFullBounds);
+		assertEquals(new PBounds(0, 0, 100, 100), globalFullBounds);
+	}
+
+	public void testChildBoundsStayVolatile() {
+		node.setChildBoundsVolatile(true);
+		assertTrue(node.getChildBoundsVolatile());
+	}
+
+	public void testRotatingChangesRotation() {
+		node.rotate(Math.PI);
+		assertEquals(Math.PI, node.getRotation(), 0.0001);
+	}
+
+	public void testSetRotationIsNotCummulative() {
+		node.setRotation(Math.PI);
+		node.setRotation(Math.PI);
+		assertEquals(Math.PI, node.getRotation(), 0.0001);
+	}
+
+	public void testRotateAboutPointDoesNotAffectBounds() {
+		node.setBounds(25, 25, 50, 50);
+		node.rotateAboutPoint(Math.PI, 50, 25); // It's top center point
+		assertEquals(new PBounds(25, 25, 50, 50), node.getBounds());
+	}
+
+	public void testRotateAboutPointVersion1AffectsTransformAsItShould() {
+		node.setBounds(25, 25, 50, 50);
+		node.rotateAboutPoint(Math.PI, 50, 0); // It's top center point
+
+		PAffineTransform expectedTransform = new PAffineTransform();
+		expectedTransform.translate(100, 0);
+		expectedTransform.rotate(Math.PI);
+
+		assertEquals(expectedTransform, node.getTransform());
+	}
+
+	public void testRotateAboutPointVersion2AffectsTransformAsItShould() {
+		node.setBounds(25, 25, 50, 50);
+		node.rotateAboutPoint(Math.PI, new Point2D.Double(50, 0)); // It's top
+		// center
+		// point
+
+		PAffineTransform expectedTransform = new PAffineTransform();
+		expectedTransform.translate(100, 0);
+		expectedTransform.rotate(Math.PI);
+
+		assertEquals(expectedTransform, node.getTransform());
+	}
+
+	public void testScaleAboutPointWorksAsExpected() {
+		node.setBounds(0, 0, 100, 100);
+		node.scaleAboutPoint(2, new Point2D.Double(50, 50));
+		PAffineTransform expectedTransform = new PAffineTransform();
+		expectedTransform.translate(-50, -50);
+		expectedTransform.scale(2, 2);
+
+		assertEquals(expectedTransform, node.getTransform());
+	}
+
+	public void testRotateInPlaneLeavesFullBoundsUntouched() {
+		node.setBounds(25, 25, 50, 50);
+		PBounds boundsBefore = node.getFullBounds();
+
+		node.rotateInPlace(Math.PI);
+		assertEquals(boundsBefore, node.getFullBounds());
+	}
+
+	public void testSetGlobalScaleTakesParentsScaleIntoAccount() {
+		PNode aParent = new PNode();
+		aParent.scale(2);
+
+		PNode aChild = new PNode();
+		aParent.addChild(aChild);
+
+		aChild.setGlobalScale(1);
+
+		assertEquals(0.5, aChild.getScale(), 0.0001);
+	}
+
+	public void testOffsetDoesNotTakeBoundsIntoAccount() {
+		node.setOffset(10, 20);
+		node.setBounds(50, 50, 100, 100);
+		assertEquals(10, node.getXOffset(), 0.001);
+		assertEquals(20, node.getYOffset(), 0.001);
+	}
+
+	public void testTransformByIsCummulative() {
+		node.transformBy(PAffineTransform.getScaleInstance(2, 2));
+		node.transformBy(PAffineTransform.getScaleInstance(2, 2));
+
+		assertEquals(PAffineTransform.getScaleInstance(4, 4), node
+				.getTransform());
+	}
+
+	public void testLerp() {
+		assertEquals(5, PNode.lerp(0.5, 0, 10), 0.001);
+		assertEquals(0, PNode.lerp(0, 0, 10), 0.001);
+		assertEquals(10, PNode.lerp(1, 0, 10), 0.001);
+	}
+
+	public void testAnimateToRelativePositionResultsInProperTransform() {
+		PCanvas canvas = new PCanvas();
+		PNode A = new PNode();
+		A.setBounds(0, 0, 50, 50);
+		canvas.getLayer().addChild(A);
+		PNode B = new PNode();
+		B.setBounds(0, 0, 100, 100);
+		B.setOffset(100, 100);
+		canvas.getLayer().addChild(B);
+
+		Point2D srcPt = new Point2D.Double(1.0, 0.0);
+		Point2D destPt = new Point2D.Double(0.0, 0.0);
+		A.animateToRelativePosition(srcPt, destPt, B.getGlobalBounds(), 0);
+
+		PAffineTransform expectedTransform = new PAffineTransform();
+		expectedTransform.translate(50, 100);
+
+		assertEquals(expectedTransform, A.getTransform());
+	}
+
+	public void testGetInverseTransformWorks() {
+		node.translate(50, 50);
+		node.rotate(Math.PI);
+
+		PAffineTransform expectedTransform = new PAffineTransform();
+		expectedTransform.rotate(-Math.PI);
+		expectedTransform.translate(-50, -50);
+		assertEquals(expectedTransform, node.getInverseTransform());
+	}
+
+	public void testGetInverseTransformReturnsNullWhenTransformIsNotInvertible() {
+		node
+				.setTransform(new AffineTransform(new double[] { 0, 0, 0, 0, 0,
+						0 }));
+
+		assertNull(node.getInverseTransform());
+	}
+
+	public void testSetVisibleIsRespectedOnPaint() {
+		final int[] paintCounts = new int[1];
+
+		PNode node = new PNode() {
+			public void paint(PPaintContext pc) {
+				paintCounts[0]++;
+			}
+		};
+		node.setBounds(0, 0, 100, 100);
+		node.setVisible(true);
+
+		PCanvas canvas = buildCanvasContainingNode(node);
+
+		BufferedImage img = new BufferedImage(100, 100,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics g = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.createGraphics(img);
+
+		canvas.paintComponent(g);
+
+		assertEquals(1, paintCounts[0]);
+
+		node.setVisible(false);
+		node.invalidatePaint();
+		canvas.paintComponent(g);
+		assertEquals(1, paintCounts[0]);
+
+		node.setVisible(true);
+		node.invalidatePaint();
+		canvas.paintComponent(g);
+		assertEquals(2, paintCounts[0]);
+	}
+
+	private PCanvas buildCanvasContainingNode(PNode node) {
+		PCanvas canvas = new PCanvas();
+		canvas.setSize(100, 100);
+		canvas.getLayer().addChild(node);
+		return canvas;
+	}
+
+	public void testPaintColourIsRespectedOnPaint() {
+		BufferedImage img = new BufferedImage(100, 100,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics g = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.createGraphics(img);
+
+		node.setPaint(Color.RED);
+		node.setBounds(0, 0, 100, 100);
+
+		PCanvas canvas = buildCanvasContainingNode(node);
+		canvas.paintComponent(g);
+
+		assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+	}
+
+	public void testToImageReturnsValidImage() {
+		node.setBounds(0, 0, 10, 10);
+		node.setPaint(Color.RED);
+
+		// Really don't like casting here, but... without changing the
+		// interface, I don't see a choice
+		BufferedImage img = (BufferedImage) node.toImage();
+
+		assertEquals(10, img.getHeight(null));
+		assertEquals(10, img.getWidth(null));
+		assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+		assertEquals(Color.RED.getRGB(), img.getRGB(9, 0));
+		assertEquals(Color.RED.getRGB(), img.getRGB(0, 9));
+		assertEquals(Color.RED.getRGB(), img.getRGB(9, 9));
+	}
+
+	public void testToImageWillAcceptBackgroundPaint() {
+		node.setBounds(0, 0, 10, 10);
+
+		BufferedImage img = (BufferedImage) node.toImage(10, 10, Color.BLUE);
+		assertEquals(Color.BLUE.getRGB(), img.getRGB(5, 5));
+	}
+
+	/*
+	 * The following 2 test should pass I believe, but don't public void
+	 * testToImageResultsInDesiredSizeImage() {
+	 * 
+	 * node.setBounds(0, 0, 10, 10);
+	 * 
+	 * BufferedImage img = (BufferedImage)node.toImage(20, 40, null);
+	 * assertEquals(40, img.getHeight(null)); assertEquals(20,
+	 * img.getWidth(null)); }
+	 * 
+	 * public void testToImageWithBackgroundColorGivenReturnsValidImage() {
+	 * node.setBounds(0, 0, 10, 10); node.setPaint(Color.RED);
+	 * 
+	 * BufferedImage img = (BufferedImage)node.toImage(20, 40, Color.BLUE);
+	 * assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+	 * assertEquals(Color.BLUE.getRGB(), img.getRGB(15, 25)); }
+	 */
+
+	public void testGetPickableShouldDefaultToTrue() {
+		assertTrue(node.getPickable());
+	}
+
+	public void testSetPickableFiresPropertyChange() {
+		node.addPropertyChangeListener(mockListener);
+		node.setPickable(false);
+		assertEquals(1, mockListener.getPropertyChangeCount());
+	}
+
+	public void testChildrenShouldBePickableByDefault() {
+		assertTrue(node.getChildrenPickable());
+	}
+
+	public void testSetChildrenPickableFiresPropertyChange() {
+		node.addPropertyChangeListener(mockListener);
+		node.setChildrenPickable(false);
+		assertEquals(1, mockListener.getPropertyChangeCount());
+	}
+
+	public void testByDefaultNodesShouldNotPickThemselvesBeforeTheirChildren() {
+		PCanvas canvas = new PCanvas();
+		PPickPath pickPath = new PPickPath(canvas.getCamera(), new PBounds(0,
+				0, 100, 100));
+		assertFalse(node.pick(pickPath));
+	}
+
+	public void testfullPickReturnsTrueWhenOverlapsWithChildNode() {
+		PCanvas canvas = new PCanvas();
+		node.setBounds(0, 0, 10, 10);
+
+		PNode child = new PNode();
+		child.setBounds(20, 0, 10, 10);
+		node.addChild(child);
+
+		PPickPath pickPath = new PPickPath(canvas.getCamera(), new PBounds(20,
+				0, 10, 10));
+		canvas.getLayer().addChild(node);
+		assertTrue(node.fullPick(pickPath));
+	}
+
+	public void testfullPickReturnsFalseWhenNotOverlappingWithChildNode() {
+		PCanvas canvas = new PCanvas();
+		node.setBounds(0, 0, 10, 10);
+
+		PNode child = new PNode();
+		child.setBounds(10, 0, 10, 10);
+		node.addChild(child);
+
+		PPickPath pickPath = new PPickPath(canvas.getCamera(), new PBounds(20,
+				0, 10, 10));
+		canvas.getLayer().addChild(node);
+		assertFalse(node.fullPick(pickPath));
+	}
+
+	public void testAddChildrenAddsAllChildren() {
+		Collection newChildren = new ArrayList();
+		newChildren.add(new PNode());
+		newChildren.add(new PNode());
+		newChildren.add(new PNode());
+
+		node.addChildren(newChildren);
+
+		assertEquals(3, node.getChildrenCount());
+	}
+
+	public void testRemoveChildrenWorks() {
+		Collection newChildren = new ArrayList();
+		newChildren.add(new PNode());
+		newChildren.add(new PNode());
+		newChildren.add(new PNode());
+		node.addChildren(newChildren);
+		node.addChild(new PNode());
+
+		node.removeChildren(newChildren);
+		assertEquals(1, node.getChildrenCount());
+	}
+
+	public void testGetAllNodesUnrollsTheNodeGraph() {
+		Collection newChildren = new ArrayList();
+		newChildren.add(new PNode());
+		newChildren.add(new PNode());
+		newChildren.add(new PNode());
+
+		node.addChildren(newChildren);
+
+		assertEquals(4, node.getAllNodes().size());
+	}
+
+	public void testRemoveAllChildrenDoesntCrashWhenNoChidlren() {
+		node.removeAllChildren();
+
+		// And now for the case when there once was a child
+		node.addChild(new PNode());
+		node.removeAllChildren();
+		node.removeAllChildren();
+	}
+
+	public void testRemoveFromParentDoesSo() {
+		PNode parent = new PNode();
+		parent.addChild(node);
+
+		node.removeFromParent();
+
+		assertEquals(0, parent.getChildrenCount());
+	}
+
+	public void testReplaceWithSwapsParents() {
+		PNode parent = new PNode();
+		parent.addChild(node);
+
+		PNode newNode = new PNode();
+		node.replaceWith(newNode);
+		assertNull(node.getParent());
+
+		assertEquals(parent, newNode.getParent());
+	}
+
+	public void testGetChildrenIteratorReturnsIteratorEvenWithNoChildren() {
+		ListIterator iterator = node.getChildrenIterator();
+		assertNotNull(iterator);
+		assertFalse(iterator.hasNext());
+	}
+
+	public void testGetChildrenIteratorReturnsValidIteratorWhenHasChildren() {
+		PNode child = new PNode();
+		node.addChild(child);
+
+		ListIterator iterator = node.getChildrenIterator();
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
+		assertEquals(child, iterator.next());
+		assertFalse(iterator.hasNext());
+	}
+
+	public void testGetAllNodesDoesntIgnoreFilter() {
+		PNodeFilter nullFilter = new PNodeFilter() {
+
+			public boolean accept(PNode aNode) {
+				return false;
+			}
+
+			public boolean acceptChildrenOf(PNode aNode) {
+				return true;
+			}
+		};
+
+		node.addChild(new PNode());
+		node.addChild(new PNode());
+		node.addChild(new PNode());
+		Collection nodes = node.getAllNodes(nullFilter, null);
+		assertNotNull(nodes);
+		assertTrue(nodes.isEmpty());
+	}
+
+	public void testAncestryMethods() {
+		PNode child = new PNode();
+		node.addChild(child);
+
+		PNode grandChild = new PNode();
+		child.addChild(grandChild);
+
+		PNode unrelated = new PNode();
+
+		assertTrue(node.isAncestorOf(child));
+		assertTrue(node.isAncestorOf(grandChild));
+		assertTrue(child.isDescendentOf(node));
+		assertTrue(grandChild.isDescendentOf(node));
+
+		assertFalse(node.isAncestorOf(unrelated));
+		assertFalse(grandChild.isDescendentOf(unrelated));
+	}
+	
+	public void testMoveToBackMovesNodeToBeFirstChild() {
+		PNode parent = new PNode();		
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());
+		parent.addChild(node);
+		node.moveToBack();
+		assertEquals(0, parent.indexOfChild(node));		
+	}
+
+	public void testMoveToFrontMovesNodeToBeLastChild() {
+		PNode parent = new PNode();		
+		parent.addChild(node);
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());		
+		node.moveToFront();
+		assertEquals(2, parent.indexOfChild(node));		
+	}
+	
+	public void testMoveInBackOfMovesNodeToBeforeSibling() {
+		PNode parent = new PNode();		
+		PNode sibling = new PNode();
+		
+		parent.addChild(node);
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());
+		parent.addChild(sibling);
+		
+		node.moveInBackOf(sibling);
+		assertEquals(2, parent.indexOfChild(node));		
+	}
+	
+	public void testMoveInFrontOfMovesNodeToAfterSibling() {
+		PNode parent = new PNode();		
+		PNode sibling = new PNode();
+		
+		parent.addChild(node);
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());
+		parent.addChild(sibling);
+		
+		node.moveInFrontOf(sibling);
+		assertEquals(3, parent.indexOfChild(node));		
+	}
+	
+	public void testMoveInFrontOfDoesNothingIfNotSibling() {
+		PNode parent = new PNode();		
+		PNode stranger = new PNode();
+		
+		parent.addChild(node);
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());		
+		
+		node.moveInFrontOf(stranger);
+		assertEquals(0, parent.indexOfChild(node));		
+	}
+	
+	public void testMoveInBackOfDoesNothingIfNotSibling() {
+		PNode parent = new PNode();		
+		PNode stranger = new PNode();
+		
+		parent.addChild(node);
+		parent.addChild(new PNode());
+		parent.addChild(new PNode());		
+		
+		node.moveInBackOf(stranger);
+		assertEquals(0, parent.indexOfChild(node));		
+	}
+	
+	public void testIsDescendentOfRootHandlesOrphans() {
+		PNode orphan = new PNode();
+		
+		assertFalse(orphan.isDescendentOfRoot());
+		orphan.addChild(node);
+		assertFalse(node.isDescendentOfRoot());		
+	}
+	
+	public void testIsDescendentOfRootHandlesDescendentsOfRoot() {
+		PCanvas canvas = new PCanvas();
+		canvas.getLayer().addChild(node);
+		
+		assertTrue(node.isDescendentOfRoot());
+	}
+	
+	public void testGetGlobalRationTakesParentsIntoAccount() {
+		PNode parent = new PNode();
+		parent.rotate(Math.PI/4d);
+		parent.addChild(node);
+		
+		node.rotate(Math.PI/4d);
+		
+		assertEquals(Math.PI/2d, node.getGlobalRotation(), 0.001);
+	}
+	
+	public void testSetGlobalRationTakesParentsIntoAccount() {
+		PNode parent = new PNode();
+		parent.rotate(Math.PI/4d);
+		parent.addChild(node);
+		
+		node.setGlobalRotation(Math.PI/2d);
+		
+		assertEquals(Math.PI/4d, node.getRotation(), 0.001);
+	}
+	
+	public void testSetGlobalRationWorksWhenNoParent() {
+		node.setGlobalRotation(Math.PI/2d);
+		
+		assertEquals(Math.PI/2d, node.getRotation(), 0.001);
+	}
+	
+	public void testSetOccludedPersistes() {
+		node.setOccluded(true);
+		assertTrue(node.getOccluded());
+	}
+
+	private class MockPropertyChangeListener implements PropertyChangeListener {
+		private List changes = new ArrayList();
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			changes.add(evt);
+		}		
+
+		public int getPropertyChangeCount() {
+			return changes.size();
+		}
+	}
 }

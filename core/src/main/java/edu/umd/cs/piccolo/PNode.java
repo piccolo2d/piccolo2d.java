@@ -408,7 +408,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PInterpolatingActivity animateToColor(Color destColor, long duration) {
+    public PColorActivity animateToColor(Color destColor, long duration) {
         if (duration == 0) {
             setPaint(destColor);
             return null;
@@ -425,7 +425,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             };
 
             PColorActivity ca = new PColorActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destColor);
-            addActivity(ca);
+            addActivity(ca);            
             return ca;
         }
     }
@@ -1142,7 +1142,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Notify this node that you will beging to repeadily call <code>setBounds
+     * Notify this node that you will begin to repeatedly call <code>setBounds
      * </code>. When you are done call <code>endResizeBounds</code> to let the
      * node know that you are done.
      */
@@ -2021,13 +2021,15 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            this transform's node
      * @param millis Number of milliseconds over which to perform the animation
      */
-    public void position(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
+    public PActivity animateToRelativePosition(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
         double srcx, srcy;
         double destx, desty;
         double dx, dy;
         Point2D pt1, pt2;
 
-        if (parent != null) {
+        if (parent == null) {
+        	return null;
+        } else {
             // First compute translation amount in global coordinates
             Rectangle2D srcBounds = getGlobalFullBounds();
             srcx = lerp(srcPt.getX(), srcBounds.getX(), srcBounds.getX() + srcBounds.getWidth());
@@ -2046,9 +2048,48 @@ public class PNode implements Cloneable, Serializable, Printable {
             // Finally, animate change
             PAffineTransform at = new PAffineTransform(getTransformReference(true));
             at.translate(dx, dy);
-            animateToTransform(at, millis);
+            return animateToTransform(at, millis);
         }
     }
+    
+    /**
+     * @deprecated Since it just delegates to animateToRelativePosition
+     * This method uses animateToRelativePosition to do its dirty work.
+     * 
+     * It will calculate the necessary transform in order to make this node
+     * appear at a particular position relative to the specified bounding box.
+     * The source point specifies a point in the unit square (0, 0) - (1, 1)
+     * that represents an anchor point on the corresponding node to this
+     * transform. The destination point specifies an anchor point on the
+     * reference node. The position method then computes the transform that
+     * results in transforming this node so that the source anchor point
+     * coincides with the reference anchor point. This can be useful for layout
+     * algorithms as it is straightforward to position one object relative to
+     * another.
+     * <p>
+     * For example, If you have two nodes, A and B, and you call
+     * 
+     * <PRE>
+     * Point2D srcPt = new Point2D.Double(1.0, 0.0);
+     * Point2D destPt = new Point2D.Double(0.0, 0.0);
+     * A.position(srcPt, destPt, B.getGlobalBounds(), 750, null);
+     * </PRE>
+     * 
+     * The result is that A will move so that its upper-right corner is at the
+     * same place as the upper-left corner of B, and the transition will be
+     * smoothly animated over a period of 750 milliseconds.
+     * 
+     * @param srcPt The anchor point on this transform's node (normalized to a
+     *            unit square)
+     * @param destPt The anchor point on destination bounds (normalized to a
+     *            unit square)
+     * @param destBounds The bounds (in global coordinates) used to calculate
+     *            this transform's node
+     * @param millis Number of milliseconds over which to perform the animation
+     */
+    public void position(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
+        animateToRelativePosition(srcPt, destPt, destBounds, millis);
+    };
 
     /**
      * Return a copy of the transform associated with this node.
@@ -2250,7 +2291,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     // ****************************************************************
-    // Occluding - Methods to suppor occluding optimization. Not yet
+    // Occluding - Methods to support occluding optimization. Not yet
     // complete.
     // ****************************************************************
 
@@ -2422,7 +2463,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Return a new Image of the requested size representing this node and all
      * of its children. If backGroundPaint is null the resulting image will have
-     * transparent regions, else those regions will be filled with the
+     * transparent regions, otherwise those regions will be filled with the
      * backgroundPaint.
      * 
      * @param width pixel width of the resulting image
