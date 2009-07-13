@@ -110,4 +110,25 @@ public class PSwingTest extends TestCase {
         pSwing.paint(graphics);
         assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
     }
+    
+    public void testHidingComponentHidesPSwing() throws InterruptedException {        
+        JPanel panel = new JPanel();
+        PSwing pSwing = new PSwing(panel);
+        panel.setPreferredSize(new Dimension(100, 100));
+        pSwing.setBounds(0, 0, 00, 100);
+        panel.setVisible(false);
+        
+        // Wow, do I hate this next line. Turns out that the event dispatch 
+        // thread needs time to push the component hidden method before this test passes
+        // There has to be a way of forcing this without a sleep
+        Thread.sleep(50);
+        assertFalse(pSwing.getVisible());
+    }
+    
+    public void testHidingPNodeHidesComponent() {
+        JPanel panel = new JPanel();
+        PSwing pSwing = new PSwing(panel);
+        pSwing.setVisible(false);
+        assertFalse(panel.isVisible());
+    }
 }

@@ -240,11 +240,25 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         component.putClientProperty( PSWING_PROPERTY, this );
         init( component );
         component.revalidate();
+        
         component.addPropertyChangeListener( new PropertyChangeListener() {
             public void propertyChange( PropertyChangeEvent evt ) {
                 reshape();
             }
         } );
+        
+        component.addComponentListener(new ComponentAdapter() {
+            public void componentHidden(ComponentEvent e) {
+                System.out.println("Hiding component");
+                setVisible(false);
+            }
+
+            public void componentShown(ComponentEvent e) {
+                System.out.println("Showing component");
+                setVisible(true);
+            }
+        });
+        
         reshape();
         listenForCanvas( this );
     }
@@ -388,6 +402,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
         manager.unlockRepaint( component );
     }
+    
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        component.setVisible(visible);
+    }
 
     /**
      * Tells whether the buffer for the image of the Swing components
@@ -497,7 +516,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         init( component );
     }
 
-        ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     ///////Start methods for automatic canvas detection
     ////////////////////////////////////////////////////////////
     /**
