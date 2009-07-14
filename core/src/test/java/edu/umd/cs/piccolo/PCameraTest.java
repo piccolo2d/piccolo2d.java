@@ -33,11 +33,17 @@ import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.activities.PActivity;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PDebug;
+import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
 public class PCameraTest extends TestCase {
@@ -50,6 +56,8 @@ public class PCameraTest extends TestCase {
 
 	public void setUp() {
 		camera = new PCamera();
+		PDebug.debugBounds = false;
+        PDebug.debugFullBounds = false;
 	}
 
 	public void testClone() {
@@ -254,6 +262,59 @@ public class PCameraTest extends TestCase {
 		assertEquals(1, camera.getViewScale(), 0.0001);
 	}
 	
+	public void testPDebugDebugBoundsPaintsBounds() throws IOException {
+        PCanvas canvas = new PCanvas();
+        
+        PNode parent = new PNode();
+        PNode child = new PNode();
+        
+        parent.addChild(child);
+        parent.setBounds(0, 0, 10, 10);
+        child.setBounds(20, 0, 10, 10);
+        canvas.setBounds(0, 0, 100, 100);
+        canvas.setSize(100, 100);
+        canvas.getLayer().addChild(parent);
+        
+        parent.setPaint(Color.GREEN);
+        child.setPaint(Color.GREEN);
+
+        
+        PDebug.debugBounds = true;
+        PDebug.debugFullBounds = false;
+        
+        BufferedImage img = new BufferedImage(100, 100,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .createGraphics(img);
+        graphics.setPaint(Color.WHITE);
+        graphics.fillRect(0, 0, 100, 100);
+        PPaintContext pc = new PPaintContext(graphics);
+        canvas.setDefaultRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);        
+        canvas.getCamera().paint(pc);
+                
+        // First Square's Bounds
+        assertPointColor(Color.RED, img, 0, 0);
+        assertPointColor(Color.RED, img, 9, 0);
+        assertPointColor(Color.RED, img, 10, 10);
+        assertPointColor(Color.RED, img, 0, 10);
+        
+        // Second Square's Bounds
+        assertPointColor(Color.RED, img, 20, 0);
+        assertPointColor(Color.RED, img, 29, 0);
+        assertPointColor(Color.RED, img, 29, 10);
+        assertPointColor(Color.RED, img, 20, 10);
+        
+        // Ensure point between the squares on the full bounds is not drawn
+        assertPointColor(Color.WHITE, img, 15, 10);        
+    }
+	
+	public void testPDebugDebugFullBoundsFillsBounds() throws IOException {      
+    }
+
+    private void assertPointColor(Color expectedColor, BufferedImage img, int x, int y) {
+        assertEquals(expectedColor.getRGB(), img.getRGB(x, y));
+    }
+	
 	class MockPComponent implements PComponent {
 
 		public void paintImmediately() {
@@ -270,6 +331,5 @@ public class PCameraTest extends TestCase {
 
 		public void setInteracting(boolean interacting) {
 		}
-
-	}
+	}	
 }
