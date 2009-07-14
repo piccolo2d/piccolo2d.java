@@ -112,20 +112,22 @@ public class PLayerTest extends TestCase {
 	
 	class MockPCamera extends PCamera {
 		class Notification {
+		    String type;
 			PBounds bounds;
 			//this should really be PLayer
 			PNode layer;
 			
-			Notification(PBounds bounds, PNode layer) {
+			Notification(String type, PBounds bounds, PNode layer) {
 				this.bounds = bounds;
 				this.layer = layer;
+				this.type = type;
 			}
 		}
 		
 		List notifications = new ArrayList();
 		
 		public void repaintFromLayer(PBounds bounds, PNode layer) {			
-			notifications.add(new Notification(bounds, layer));
+			notifications.add(new Notification("repaintFromLayer", bounds, layer));
 			super.repaintFromLayer(bounds, layer);
 		}		
 	}
