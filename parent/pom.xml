@@ -99,7 +99,7 @@
 					<optimize>false</optimize>
 					<debug>false</debug>
 					<compilerVersion>1.4</compilerVersion>
-					<showDeprecation>true</showDeprecation>
+					<showDeprecation>false</showDeprecation>
 					<showWarnings>true</showWarnings>
 					<source>1.4</source>
 					<target>1.4</target>
