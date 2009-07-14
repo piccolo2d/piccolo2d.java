@@ -6,25 +6,25 @@ import java.awt.geom.Point2D;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.event.PInputEvent;
-import edu.umd.cs.piccolo.event.PInputEventListener;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPickPath;
 
 public class PInputManagerTest extends TestCase {
 	private PInputManager manager;
+    private MockPInputEventListener mockListener;
 
 	public void setUp() {
 		manager = new PInputManager();
+		mockListener = new MockPInputEventListener();
 	}
 
 	public void testGetKeyboardFocusNullByDefault() {
 		assertNull(manager.getKeyboardFocus());
 	}
 
-	public void testSetKeyboardFocusIsPersisted() {
-		PInputEventListener listener = new MockPInputEventListener();
-		manager.setKeyboardFocus(listener);
-		assertEquals(listener, manager.getKeyboardFocus());
+	public void testSetKeyboardFocusIsPersisted() {		
+		manager.setKeyboardFocus(mockListener);
+		assertEquals(mockListener, manager.getKeyboardFocus());
 	}
 
 	public void testSetKeyboardFocusDispatchesEventsAboutFocus() {
@@ -76,16 +76,14 @@ public class PInputManagerTest extends TestCase {
 		assertEquals(new Point2D.Double(0, 0), manager.getLastCanvasPosition());
 	}	
 	
-	public void testKeyPressedDispatchesToCurrentFocus() {
-		MockPInputEventListener mockListener = new MockPInputEventListener();
+	public void testKeyPressedDispatchesToCurrentFocus() {		
 		manager.setKeyboardFocus(mockListener);
 		PInputEvent event = new PInputEvent(manager, null, null);
 		manager.keyPressed(event);
 		assertEquals(2, mockListener.getNotificationCount());
 		assertEquals(KeyEvent.KEY_PRESSED, mockListener.getNotification(1).type);
 	}
-	public void testKeyReleasedDispatchesToCurrentFocus() {
-		MockPInputEventListener mockListener = new MockPInputEventListener();
+	public void testKeyReleasedDispatchesToCurrentFocus() {		
 		manager.setKeyboardFocus(mockListener);
 		PInputEvent event = new PInputEvent(manager, null, null);
 		manager.keyReleased(event);
@@ -93,8 +91,7 @@ public class PInputManagerTest extends TestCase {
 		assertEquals(KeyEvent.KEY_RELEASED, mockListener.getNotification(1).type);
 	}
 	
-	public void testKeyTypedDispatchesToCurrentFocus() {
-		MockPInputEventListener mockListener = new MockPInputEventListener();
+	public void testKeyTypedDispatchesToCurrentFocus() {		
 		manager.setKeyboardFocus(mockListener);
 		PInputEvent event = new PInputEvent(manager, null, null);
 		manager.keyTyped(event);
@@ -104,5 +101,6 @@ public class PInputManagerTest extends TestCase {
 	
 	public void testProcessInputMayBeCalledOnFreshManager() {
 		manager.processInput();
-	}	
+	}
+	
 }
