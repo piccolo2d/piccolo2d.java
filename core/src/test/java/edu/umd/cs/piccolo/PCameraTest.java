@@ -33,13 +33,11 @@ import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.activities.PActivity;
+import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDebug;
@@ -256,11 +254,29 @@ public class PCameraTest extends TestCase {
 	}
 	
 	public void testAnimateViewToPanToBoundsDoesNotAffectScale() {
-		camera.setViewBounds(new PBounds(0, 0, 10, 10));
-		camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 30), 0);
-		
-		assertEquals(1, camera.getViewScale(), 0.0001);
-	}
+        camera.setViewBounds(new PBounds(0, 0, 10, 10));
+        camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 30), 0);
+        
+        assertEquals(1, camera.getViewScale(), 0.0001);
+    }
+	
+	public void testAnimateViewToPanToBoundsIsImmediateWhenDurationIsZero() {
+        camera.setViewBounds(new PBounds(0, 0, 10, 10));
+        PActivity activity = camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 10), 0);
+        
+        assertNull(activity);
+        assertEquals(PAffineTransform.getTranslateInstance(-15, -15), camera.getViewTransform());
+    }
+	
+	public void testAnimateViewToPanToBoundsReturnsAppropriatelyConfiguredActivity() {
+        camera.setViewBounds(new PBounds(0, 0, 10, 10));
+        PTransformActivity activity = camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 10), 100);
+        
+        assertNotNull(activity);
+        assertEquals(100, activity.getDuration());
+        assertFalse(activity.isStepping());
+        assertEquals(PAffineTransform.getTranslateInstance(-15, -15), new PAffineTransform(activity.getDestinationTransform()));
+    }
 	
 	public void testPDebugDebugBoundsPaintsBounds() throws IOException {
         PCanvas canvas = new PCanvas();
@@ -308,11 +324,25 @@ public class PCameraTest extends TestCase {
         assertPointColor(Color.WHITE, img, 15, 10);        
     }
 	
-	public void testPDebugDebugFullBoundsFillsBounds() throws IOException {      
-    }
-
     private void assertPointColor(Color expectedColor, BufferedImage img, int x, int y) {
         assertEquals(expectedColor.getRGB(), img.getRGB(x, y));
+    }
+    
+    public void testSetViewOffsetIsNotCummulative() {
+        camera.setViewOffset(100, 100);
+        camera.setViewOffset(100, 100);
+        assertEquals(100, camera.getViewTransform().getTranslateX(), 0.001);
+        assertEquals(100, camera.getViewTransform().getTranslateY(), 0.001);
+        
+    }
+    
+    public void testDefaultViewConstraintsIsNone() {
+        assertEquals(PCamera.VIEW_CONSTRAINT_NONE, camera.getViewConstraint());
+    }
+    
+    public void testSetViewContraintsPersists() {
+        camera.setViewConstraint(PCamera.VIEW_CONSTRAINT_ALL);
+        assertEquals(PCamera.VIEW_CONSTRAINT_ALL, camera.getViewConstraint());
     }
 	
 	class MockPComponent implements PComponent {

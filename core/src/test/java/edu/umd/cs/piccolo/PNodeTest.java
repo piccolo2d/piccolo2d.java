@@ -994,7 +994,7 @@ public class PNodeTest extends TestCase {
 		node.setPaint(Color.RED);
 
 		BufferedImage img = (BufferedImage) node.toImage(20, 40, Color.BLUE);
-		ImageIO.write(img, "JPEG", new File("C:\\test.jpg"));
+		
 		assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
 		assertEquals(Color.RED.getRGB(), img.getRGB(19, 0));
 		assertEquals(Color.RED.getRGB(), img.getRGB(0, 19));
