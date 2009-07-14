@@ -21,8 +21,16 @@ version=1.3-SNAPSHOT
 cwd=`pwd`
 tmp=target/site-stage
 msg="--message \"$0\""
+
 svn="svn"
 #svn="echo svn"
+cut="cut --characters=9-"
+xargs="xargs --no-run-if-empty"
+if [[ "$MACHTYPE" == "i386-apple-darwin9.0" ]] ; then
+	echo "Huh, I'm running on a Mac."
+	cut="cut -c 9-"
+	xargs="xargs"
+fi
 
 # create a fresh site
 #mvn clean install site
@@ -36,7 +44,7 @@ if [ -d $tmp ]; then
 	$svn update $tmp
 else
 	echo "Checkout $base/release-$version"
-	echo "... go, get some tea..."	
+	echo "... go, get some tea..."
 	$svn checkout $base/release-$version $tmp > /dev/null
 fi
 
@@ -48,9 +56,9 @@ cp -r examples/target/site/* $tmp/piccolo2d-examples
 
 echo "Issue local svn delete/add commands"
 cd $tmp
-find . -type f | xargs svn status --verbose 2> /dev/null | egrep -e "^\!" | cut --characters=9- | xargs --no-run-if-empty $svn delete
-find . -mindepth 1 -type d | xargs --no-run-if-empty svn status --verbose 2> /dev/null | egrep -e "^\?" | cut --characters=9- | xargs --no-run-if-empty $svn add
-find . -type f | xargs svn status --verbose 2> /dev/null | egrep -e "^\?" | cut --characters=9- | xargs --no-run-if-empty $svn add --non-recursive
+find . -type f | $xargs svn status --verbose 2> /dev/null | egrep -e "^\!" | $cut | $xargs $svn delete
+find . -mindepth 1 -type d | $xargs svn status --verbose 2> /dev/null | egrep -e "^\?" | $cut | $xargs $svn add
+find . -type f | $xargs svn status --verbose 2> /dev/null | egrep -e "^\?" | $cut | $xargs $svn add --non-recursive
 
 echo "Set mime-type"
 find . -name "*.html" | xargs $svn propset svn:mime-type text/html
@@ -70,4 +78,7 @@ echo " $ svn status $tmp"
 echo " "
 echo " Do the upload:"
 echo " $ svn commit $tmp"
-
+echo " "
+DROP=~/Dropbox/Public/piccolo2d.java
+echo " Or rsync it (without .svn directories) to $DROP:"
+echo " $ rsync --exclude=.svn --exclude=.DS_Store -a --delete --delete-excluded --compress-level=0 --progress target/site-stage $DROP"
