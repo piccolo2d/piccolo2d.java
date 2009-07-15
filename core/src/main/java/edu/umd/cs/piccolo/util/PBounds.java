@@ -227,29 +227,25 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
             double maxY = getMaxY();
             double minY = getMinY();
 
-            if (!(bMaxX > maxX && bMinX < minX)) {
-                if (bMaxX > maxX || bMinX < minX) {
-                    double difMaxX = bMaxX - maxX;
-                    double difMinX = bMinX - minX;
-                    if (Math.abs(difMaxX) < Math.abs(difMinX)) {
-                        result.width = difMaxX;
-                    }
-                    else {
-                        result.width = difMinX;
-                    }
+            if ((bMaxX > maxX) ^ (bMinX < minX)) {
+                double difMaxX = bMaxX - maxX;
+                double difMinX = bMinX - minX;
+                if (Math.abs(difMaxX) < Math.abs(difMinX)) {
+                    result.width = difMaxX;
+                }
+                else {
+                    result.width = difMinX;
                 }
             }
 
-            if (!(bMaxY > maxY && bMinY < minY)) {
-                if (bMaxY > maxY || bMinY < minY) {
-                    double difMaxY = bMaxY - maxY;
-                    double difMinY = bMinY - minY;
-                    if (Math.abs(difMaxY) < Math.abs(difMinY)) {
-                        result.height = difMaxY;
-                    }
-                    else {
-                        result.height = difMinY;
-                    }
+            if ((bMaxY > maxY) ^ (bMinY < minY)) {
+                double difMaxY = bMaxY - maxY;
+                double difMinY = bMinY - minY;
+                if (Math.abs(difMaxY) < Math.abs(difMinY)) {
+                    result.height = difMaxY;
+                }
+                else {
+                    result.height = difMinY;
                 }
             }
         }
