@@ -101,19 +101,17 @@ public class PDebug {
         processOutputTime += (System.currentTimeMillis() - startProcessingOutputTime);
         framesProcessed++;
 
-        if (PDebug.debugPrintFrameRate) {
-            if (framesProcessed % printResultsFrameRate == 0) {
+        if (framesProcessed % printResultsFrameRate == 0) {
+            if (PDebug.debugPrintFrameRate ) {
                 System.out.println("Process output frame rate: " + getOutputFPS() + " fps");
                 System.out.println("Process input frame rate: " + getInputFPS() + " fps");
                 System.out.println("Total frame rate: " + getTotalFPS() + " fps");
                 System.out.println();
                 resetFPSTiming();
             }
-        }
-
-        if (PDebug.debugPrintUsedMemory) {
-            if (framesProcessed % printResultsFrameRate == 0) {
-                System.out.println("Approximate used memory: " + getApproximateUsedMemory() / 1024 + " k");
+    
+            if (PDebug.debugPrintUsedMemory) {         
+                    System.out.println("Approximate used memory: " + getApproximateUsedMemory() / 1024 + " k");            
             }
         }
 
