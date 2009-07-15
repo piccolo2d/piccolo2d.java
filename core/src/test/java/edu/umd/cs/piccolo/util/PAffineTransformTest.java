@@ -28,70 +28,117 @@
  */
 package edu.umd.cs.piccolo.util;
 
+import java.awt.Dimension;
+import java.awt.geom.Dimension2D;
+
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PBounds;
-
 public class PAffineTransformTest extends TestCase {
+
+    private PAffineTransform at;
 
     public PAffineTransformTest(String aName) {
         super(aName);
     }
+    
+    public void setUp() {
+        at = new PAffineTransform();        
+    }
 
     public void testRotation() {
-        PAffineTransform at = new PAffineTransform();
         at.rotate(Math.toRadians(45));
         assertEquals(at.getRotation(), Math.toRadians(45), 0.000000001);
         at.setRotation(Math.toRadians(90));
         assertEquals(at.getRotation(), Math.toRadians(90), 0.000000001);
     }
 
-    public void testScale() {
-        PAffineTransform at = new PAffineTransform();
+    public void testScale() {        
         at.scaleAboutPoint(0.45, 0, 1);
         assertEquals(at.getScale(), 0.45, 0.000000001);
         at.setScale(0.11);
         assertEquals(at.getScale(), 0.11, 0.000000001);
     }
 
+    public void testTransformRectLeavesEmptyBoundsEmpty() {
+        PBounds b1 = new PBounds();       
+        at.scale(0.5, 0.5);
+        at.translate(100, 50);
+
+        at.transform(b1, b1);
+        assertTrue(b1.isEmpty());
+    }
+    
     public void testTransformRect() {
         PBounds b1 = new PBounds(0, 0, 100, 80);
         PBounds b2 = new PBounds(100, 100, 100, 80);
-
-        PAffineTransform at = new PAffineTransform();
+        
         at.scale(0.5, 0.5);
         at.translate(100, 50);
 
         at.transform(b1, b1);
         at.transform(b2, b2);
-
-        PBounds b3 = new PBounds();
-        PBounds b4 = new PBounds(0, 0, 100, 100);
-
-        assertTrue(at.transform(b3, b4).isEmpty());
-
-        assertEquals(b1.getX(), 50, 0.000000001);
-        assertEquals(b1.getY(), 25, 0.000000001);
-        assertEquals(b1.getWidth(), 50, 0.000000001);
-        assertEquals(b1.getHeight(), 40, 0.000000001);
-
-        assertEquals(b2.getX(), 100, 0.000000001);
-        assertEquals(b2.getY(), 75, 0.000000001);
-        assertEquals(b2.getWidth(), 50, 0.000000001);
-        assertEquals(b2.getHeight(), 40, 0.000000001);
-
+        
+        assertSameBounds(new PBounds(50, 25, 50, 40), b1);
+        assertSameBounds(new PBounds(100, 75, 50, 40), b2);
+       
         at.inverseTransform(b1, b1);
         at.inverseTransform(b2, b2);
 
-        assertEquals(b1.getX(), 0, 0.000000001);
-        assertEquals(b1.getY(), 0, 0.000000001);
-        assertEquals(b1.getWidth(), 100, 0.000000001);
-        assertEquals(b1.getHeight(), 80, 0.000000001);
-
-        assertEquals(b2.getX(), 100, 0.000000001);
-        assertEquals(b2.getY(), 100, 0.000000001);
-        assertEquals(b2.getWidth(), 100, 0.000000001);
-        assertEquals(b2.getHeight(), 80, 0.000000001);
+        assertSameBounds(new PBounds(0, 0, 100, 80), b1);       
+        assertSameBounds(new PBounds(100, 100, 100, 80), b2);
+    }
+    
+    public void testThrowsExceptionWhenSetting0Scale() {
+        try {            
+            at.setScale(0);
+            fail("Setting 0 scale should throw exception");
+        } catch (RuntimeException e) {
+            // expected
+        }
+    }
+    
+    public void testSetOffsetLeavesRotationUntouched() {
+        at.setRotation(Math.PI);       
+        at.setOffset(100, 50);
+        assertEquals(Math.PI, at.getRotation(), 0.001);
+    }
+    
+    public void testTransformDimensionWorks() {
+        Dimension d1 = new Dimension(100, 50);
+        at.setScale(2);
+        Dimension d2 = new Dimension(0, 0);
+        at.transform(d1, d2);
+        assertEquals(new Dimension(200, 100), d2);
+    }
+    
+    public void testTransformDimensionWorksWithSecondParamNull() {
+        Dimension d1 = new Dimension(100, 50);
+        at.setScale(2);
+        Dimension2D d2 = at.transform(d1, null);
+        assertEquals(new Dimension(200, 100), d2);
+    }
+        
+    private final void assertSameBounds(PBounds expected, PBounds actual) {
+        assertSameBounds(expected, actual, 0.0000001);
+    }
+    
+    private final void assertSameBounds(PBounds expected, PBounds actual, double errorRate) {
+        assertTrue("Expected " + expected + " but was " + actual, comparisonScore(expected, actual) > (1d-errorRate));
+    }
+    
+    
+    // % of area within full bounds covered by intersection or the two bounds.
+    // exactly covering would be 1 no overlap would be 0
+    private final double comparisonScore(PBounds b1, PBounds b2) {        
+        PBounds intersection = new PBounds();
+        PBounds union = new PBounds();
+        PBounds.intersect(b1, b2, intersection);
+        PBounds.intersect(b1, b2, union);        
+        
+        return area(intersection) / area(union);
+    }
+    
+    private final double area(PBounds b) {
+        return b.getWidth() * b.getHeight();
     }
 }
