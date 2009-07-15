@@ -2469,10 +2469,17 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param height pixel height of the resulting image
      * @return a new image representing this node and its descendents
      */
-    public Image toImage(int width, int height, Paint backGroundPaint) {        
-        GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDefaultConfiguration();
-        BufferedImage result = graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    public Image toImage(int width, int height, Paint backGroundPaint) {          
+        BufferedImage result;
+        
+        if (GraphicsEnvironment.isHeadless()) {
+            result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        } 
+        else {
+            GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            .getDefaultScreenDevice().getDefaultConfiguration();
+            result =  graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        }
 
         return toImage(result, backGroundPaint);
     }
