@@ -40,9 +40,9 @@ public class PAffineTransformTest extends TestCase {
     public PAffineTransformTest(String aName) {
         super(aName);
     }
-    
+
     public void setUp() {
-        at = new PAffineTransform();        
+        at = new PAffineTransform();
     }
 
     public void testRotation() {
@@ -52,7 +52,7 @@ public class PAffineTransformTest extends TestCase {
         assertEquals(at.getRotation(), Math.toRadians(90), 0.000000001);
     }
 
-    public void testScale() {        
+    public void testScale() {
         at.scaleAboutPoint(0.45, 0, 1);
         assertEquals(at.getScale(), 0.45, 0.000000001);
         at.setScale(0.11);
@@ -60,49 +60,50 @@ public class PAffineTransformTest extends TestCase {
     }
 
     public void testTransformRectLeavesEmptyBoundsEmpty() {
-        PBounds b1 = new PBounds();       
+        PBounds b1 = new PBounds();
         at.scale(0.5, 0.5);
         at.translate(100, 50);
 
         at.transform(b1, b1);
         assertTrue(b1.isEmpty());
     }
-    
+
     public void testTransformRect() {
         PBounds b1 = new PBounds(0, 0, 100, 80);
         PBounds b2 = new PBounds(100, 100, 100, 80);
-        
+
         at.scale(0.5, 0.5);
         at.translate(100, 50);
 
         at.transform(b1, b1);
         at.transform(b2, b2);
-        
-        assertSameBounds(new PBounds(50, 25, 50, 40), b1);
-        assertSameBounds(new PBounds(100, 75, 50, 40), b2);
-       
+
+        assertEquals(new PBounds(50, 25, 50, 40), b1);
+        assertEquals(new PBounds(100, 75, 50, 40), b2);
+
         at.inverseTransform(b1, b1);
         at.inverseTransform(b2, b2);
 
-        assertSameBounds(new PBounds(0, 0, 100, 80), b1);       
-        assertSameBounds(new PBounds(100, 100, 100, 80), b2);
+        assertEquals(new PBounds(0, 0, 100, 80), b1);
+        assertEquals(new PBounds(100, 100, 100, 80), b2);
     }
-    
+
     public void testThrowsExceptionWhenSetting0Scale() {
-        try {            
+        try {
             at.setScale(0);
             fail("Setting 0 scale should throw exception");
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e) {
             // expected
         }
     }
-    
+
     public void testSetOffsetLeavesRotationUntouched() {
-        at.setRotation(Math.PI);       
+        at.setRotation(Math.PI);
         at.setOffset(100, 50);
         assertEquals(Math.PI, at.getRotation(), 0.001);
     }
-    
+
     public void testTransformDimensionWorks() {
         Dimension d1 = new Dimension(100, 50);
         at.setScale(2);
@@ -110,34 +111,33 @@ public class PAffineTransformTest extends TestCase {
         at.transform(d1, d2);
         assertEquals(new Dimension(200, 100), d2);
     }
-    
+
     public void testTransformDimensionWorksWithSecondParamNull() {
         Dimension d1 = new Dimension(100, 50);
         at.setScale(2);
         Dimension2D d2 = at.transform(d1, null);
         assertEquals(new Dimension(200, 100), d2);
     }
-        
-    private final void assertSameBounds(PBounds expected, PBounds actual) {
-        assertSameBounds(expected, actual, 0.0000001);
+
+    private final void assertEquals(PBounds expected, PBounds actual) {
+        assertEquals(expected, actual, 0.0000001);
     }
-    
-    private final void assertSameBounds(PBounds expected, PBounds actual, double errorRate) {
-        assertTrue("Expected " + expected + " but was " + actual, comparisonScore(expected, actual) > (1d-errorRate));
+
+    private final void assertEquals(PBounds expected, PBounds actual, double errorRate) {
+        assertTrue("Expected " + expected + " but was " + actual, comparisonScore(expected, actual) > (1d - errorRate));
     }
-    
-    
+
     // % of area within full bounds covered by intersection or the two bounds.
     // exactly covering would be 1 no overlap would be 0
-    private final double comparisonScore(PBounds b1, PBounds b2) {        
+    private final double comparisonScore(PBounds b1, PBounds b2) {
         PBounds intersection = new PBounds();
         PBounds union = new PBounds();
         PBounds.intersect(b1, b2, intersection);
-        PBounds.intersect(b1, b2, union);        
-        
+        PBounds.intersect(b1, b2, union);
+
         return area(intersection) / area(union);
     }
-    
+
     private final double area(PBounds b) {
         return b.getWidth() * b.getHeight();
     }

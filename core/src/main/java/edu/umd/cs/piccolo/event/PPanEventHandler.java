@@ -102,6 +102,26 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     public void setMaxAutopanSpeed(double maxAutopanSpeed) {
         this.maxAutopanSpeed = maxAutopanSpeed;
     }
+    
+    /**
+     * Returns the minAutoPan speed in pixels per second.
+     * 
+     * @param minAutopanSpeed
+     * @return minAutopanSpeed in pixels
+     */
+    public double getMinAutoPanSpeed() {
+        return minAutopanSpeed;
+    }
+
+    /**
+     * Returns the maxAutoPan speed in pixels per second.
+     * 
+     * @param maxAutopanSpeed
+     * @return maxAutopanSpeed in pixels
+     */
+    public double getMaxAutoPanSpeed() {
+        return maxAutopanSpeed;
+    }
 
     /**
      * Do auto panning even when the mouse is not moving.
