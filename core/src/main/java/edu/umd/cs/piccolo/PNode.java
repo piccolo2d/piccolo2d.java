@@ -2678,10 +2678,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
             boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
 
-            if (thisPickable) {
-                if (pick(pickPath)) {
-                    return true;
-                }
+            if (thisPickable && pick(pickPath)) {
+                return true;                
             }
 
             if (getChildrenPickable()) {
@@ -2693,10 +2691,8 @@ public class PNode implements Cloneable, Serializable, Printable {
                 }
             }
 
-            if (thisPickable) {
-                if (pickAfterChildren(pickPath)) {
-                    return true;
-                }
+            if (thisPickable && pickAfterChildren(pickPath)) {
+                return true;                
             }
 
             pickPath.popTransform(transform);

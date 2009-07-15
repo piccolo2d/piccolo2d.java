@@ -208,10 +208,8 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
         }
 
         getMousePressedCanvasPoint().setLocation(e.getCanvasPosition());
-        if (!isDragging()) {
-            if (shouldStartDragInteraction(e)) {
-                startDrag(e);
-            }
+        if (!isDragging() && shouldStartDragInteraction(e)) {
+            startDrag(e);            
         }
     }
 
