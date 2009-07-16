@@ -35,27 +35,17 @@ import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
 import junit.framework.TestCase;
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * JUnit test class to exercise PSwing bugfixes.
  * 
  * @author Stephen Chin
  */
-public class PSwingTest extends TestCase {
-
-    public void testPSwing() {
-        PSwing pSwing = new PSwing(new JButton("test"));
-        PFrame frame = new PFrame();
-        frame.getCanvas().getLayer().addChild(pSwing);
-        frame.setVisible(true);
-    }
-
+public class PSwingTest extends TestCase {   
     public void setUp() {
         RepaintManager.setCurrentManager(new PSwingRepaintManager());
     }
