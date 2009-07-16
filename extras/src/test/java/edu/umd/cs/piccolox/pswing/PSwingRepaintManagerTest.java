@@ -50,17 +50,20 @@ public class PSwingRepaintManagerTest extends TestCase {
     public void testCurrentManager() {
         RepaintManager currentManager = RepaintManager.currentManager(null);
         assertNotNull(currentManager);
-        assertFalse(currentManager instanceof PSwingRepaintManager);
+        // TODO:  this assertion is true when running this test case in isolation
+        //    but since PSwingCanvas may have been instantiated elsewhere in the test suite
+        //    may not be true when running this test case as part of a test suite
+        //assertFalse(currentManager instanceof PSwingRepaintManager);
 
         Component awtComponent = new Canvas();
         currentManager = RepaintManager.currentManager(awtComponent);
         assertNotNull(currentManager);
-        assertFalse(currentManager instanceof PSwingRepaintManager);
+        //assertFalse(currentManager instanceof PSwingRepaintManager);
 
         JComponent swingComponent = new JPanel();
         currentManager = RepaintManager.currentManager(swingComponent);
         assertNotNull(currentManager);
-        assertFalse(currentManager instanceof PSwingRepaintManager);
+        //assertFalse(currentManager instanceof PSwingRepaintManager);
 
         PSwingCanvas pswingCanvas = new PSwingCanvas();
         currentManager = RepaintManager.currentManager(pswingCanvas);
