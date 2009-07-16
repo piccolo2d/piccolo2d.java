@@ -49,6 +49,12 @@ public final class POffscreenCanvas implements PComponent {
     /** Camera for this offscreen canvas. */
     private PCamera camera;
 
+    /** Render quality. */
+    private int renderQuality = DEFAULT_RENDER_QUALITY;
+    
+    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
+    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
+
 
     /**
      * Create a new offscreen canvas the specified width and height.
@@ -78,7 +84,7 @@ public final class POffscreenCanvas implements PComponent {
             throw new IllegalArgumentException("graphics must not be null");
         }
         PPaintContext paintContext = new PPaintContext(graphics);
-        paintContext.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
+        paintContext.setRenderQuality(renderQuality);
         camera.fullPaint(paintContext);
     }
 
@@ -105,6 +111,31 @@ public final class POffscreenCanvas implements PComponent {
      */
     public PCamera getCamera() {
         return camera;
+    }
+
+    /**
+     * Set the render quality hint for this offscreen canvas to <code>renderQuality</code>.
+     *
+     * @param renderQuality render quality hint, must be one of <code>PPaintContext.HIGH_QUALITY_RENDERING</code>
+     *    or <code>PPaintContext.LOW_QUALITY_RENDERING</code>
+     */
+    public void setRenderQuality(final int renderQuality) {
+        if ((renderQuality == PPaintContext.HIGH_QUALITY_RENDERING)
+                || (renderQuality == PPaintContext.LOW_QUALITY_RENDERING)) {
+            this.renderQuality = renderQuality;
+        } else {
+            throw new IllegalArgumentException("renderQuality must be one of PPaintContext.HIGH_QUALITY_RENDERING"
+                    + " or PPaintContext.LOW_QUALITY_RENDERING, was " + renderQuality);
+        }
+    }
+
+    /**
+     * Return the render quality hint for this offscreen canvas.
+     *
+     * @return the render quality hint for this offscreen canvas
+     */
+    public int getRenderQuality() {
+        return renderQuality;
     }
 
     /**{@inheritDoc} */

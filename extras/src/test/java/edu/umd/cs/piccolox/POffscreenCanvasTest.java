@@ -37,8 +37,7 @@ import java.awt.image.BufferedImage;
 import edu.umd.cs.piccolo.PCamera;
 
 import edu.umd.cs.piccolo.nodes.PPath;
-
-import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
 
 import junit.framework.TestCase;
 
@@ -58,21 +57,21 @@ public class POffscreenCanvasTest extends TestCase {
         assertNotNull(canvas3);
 
         try {
-            POffscreenCanvas canvas = new POffscreenCanvas(-1, 100);
+            new POffscreenCanvas(-1, 100);
             fail("ctr(-1, 100) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
             // expected
         }
         try {
-            POffscreenCanvas canvas = new POffscreenCanvas(100, -1);
+            new POffscreenCanvas(100, -1);
             fail("ctr(100, -1) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
             // expected
         }
         try {
-            POffscreenCanvas canvas = new POffscreenCanvas(-1, -1);
+            new POffscreenCanvas(-1, -1);
             fail("ctr(-1, -1) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
@@ -135,6 +134,22 @@ public class POffscreenCanvasTest extends TestCase {
             POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
             canvas.render(null);
             fail("render(null) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    public void testRenderQuality() {
+        POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        assertEquals(POffscreenCanvas.DEFAULT_RENDER_QUALITY, canvas.getRenderQuality());
+        canvas.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
+        assertEquals(PPaintContext.HIGH_QUALITY_RENDERING, canvas.getRenderQuality());
+        canvas.setRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
+        assertEquals(PPaintContext.LOW_QUALITY_RENDERING, canvas.getRenderQuality());
+
+        try {
+            canvas.setRenderQuality(-1);
         }
         catch (IllegalArgumentException e) {
             // expected
