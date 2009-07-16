@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolox.pswing;
+package edu.umd.cs.piccolo.pswingexamples;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -52,12 +52,15 @@ import javax.swing.event.ChangeListener;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PZoomEventHandler;
 import edu.umd.cs.piccolo.nodes.PText;
+import edu.umd.cs.piccolox.pswing.PComboBox;
+import edu.umd.cs.piccolox.pswing.PSwing;
+import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
  * User: Sam Reid Date: Jul 11, 2005 Time: 12:15:55 PM
  */
 
-public class TestPSwing {
+public class PSwingExample1 {
     public static void main(String[] args) {
         PSwingCanvas pCanvas = new PSwingCanvas();
         final PText pText = new PText("PText");

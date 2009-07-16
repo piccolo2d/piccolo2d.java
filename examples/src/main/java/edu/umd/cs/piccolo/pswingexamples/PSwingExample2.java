@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolox.pswing;
+package edu.umd.cs.piccolo.pswingexamples;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -69,13 +69,15 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.table.TableColumn;
 
 import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolox.pswing.PSwing;
+import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
  * User: Sam Reid Date: Jul 11, 2005 Time: 12:15:55 PM
  */
 
-public class TestPSwingFull extends JFrame {
-    public TestPSwingFull() {
+public class PSwingExample2 extends JFrame {
+    public PSwingExample2() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ClassLoader loader;
         PSwingCanvas canvas;
@@ -454,7 +456,7 @@ public class TestPSwingFull extends JFrame {
     }
 
     public static void main(String[] args) {
-        new TestPSwingFull().setVisible(true);
+        new PSwingExample2().setVisible(true);
     }
 
     public static class ZVisualLeaf extends PNode {
