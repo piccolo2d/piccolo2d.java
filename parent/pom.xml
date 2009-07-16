@@ -16,12 +16,15 @@
 		<httpbase>http://www.piccolo2d.org/java</httpbase>
 		<httpsitebase>${httpbase}/site</httpsitebase>
 		<!-- ftpbase>ftp://jcurl.org</ftpbase>
-			<ftpsitebase>${ftpbase}/site</ftpsitebase -->
+			<ftpsitebase>${ftpbase}/site</ftpsitebase
+-->
 		<scpbase>
-			<!-- @TODO Will, is there ssh access to the website? Required for artifact upload. -->
+			<!-- @TODO Will, is there ssh access to the website? Required for artifact upload.
+-->
 		</scpbase>
 		<scpsitebase>
-			<!-- @TODO Will, is there ssh access to the website? Required for maven site upload. -->
+			<!-- @TODO Will, is there ssh access to the website? Required for maven site upload.
+-->
 		</scpsitebase>
 	</properties>
 	<url>${httpsitebase}/${pom.artifactId}/${pom.version}</url>
@@ -88,7 +91,8 @@
 			<groupId>org.apache.maven.wagon</groupId>
 			<artifactId>wagon-ftp</artifactId>
 			</extension>
-			</extensions -->
+			</extensions
+-->
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -114,6 +118,12 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<formats>
+						<format>xml</format>
+						<format>html</format>                        
+					</formats>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
