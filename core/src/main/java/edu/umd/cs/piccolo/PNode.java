@@ -2131,15 +2131,13 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (transform == null) {
             return new PAffineTransform();
         }
-        else {
-            try {
-                return new PAffineTransform(transform.createInverse());
-            }
-            catch (NoninvertibleTransformException e) {
-                e.printStackTrace();
-            }
-            return null;
+        
+        try {
+            return new PAffineTransform(transform.createInverse());
         }
+        catch (NoninvertibleTransformException e) {
+            return null;    
+        }                    
     }
 
     /**
