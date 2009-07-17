@@ -49,8 +49,7 @@ public class PImageTest extends TestCase {
     }
 
     public void testToString() {
-        PImage aNode = new PImage(new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));
-        aNode.getFullBoundsReference();
+        PImage aNode = new PImage(new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));        
         assertNotNull(aNode.toString());
-    }
+    }       
 }
