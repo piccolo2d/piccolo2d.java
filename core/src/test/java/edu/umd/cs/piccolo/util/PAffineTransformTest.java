@@ -30,6 +30,8 @@ package edu.umd.cs.piccolo.util;
 
 import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.PiccoloAsserts;
@@ -118,5 +120,35 @@ public class PAffineTransformTest extends TestCase {
         at.setScale(2);
         Dimension2D d2 = at.transform(d1, null);
         assertEquals(new Dimension(200, 100), d2);
-    }    
+    }
+    
+    public void testLocalToViewDimensionThrowsExceptionWhenTransformIsNonInvertible() {
+        at.setTransform(new PAffineTransform(new double[] {0,0,0,0,0,0}));
+        try {
+            at.inverseTransform(new PDimension(1,2), null);
+            fail("Exception not thrown when inverting non-invertible transform");
+        } catch (PAffineTransformException e) {
+            // expected
+        }
+    }
+    
+    public void testLocalToViewPoint2DThrowsExceptionWhenTransformIsNonInvertible() {
+        at.setTransform(new PAffineTransform(new double[] {0,0,0,0,0,0}));
+        try {
+            at.inverseTransform(new Point2D.Double(1,2), null);
+            fail("Exception not thrown when inverting non-invertible transform");
+        } catch (PAffineTransformException e) {
+            // expected
+        }
+    }
+       
+    public void testLocalToViewRectangle2DThrowsExceptionWhenTransformIsNonInvertible() {
+        at.setTransform(new PAffineTransform(new double[] {0,0,0,0,0,0}));
+        try {
+            at.inverseTransform(new Rectangle2D.Double(1,2,3,4), null);
+            fail("Exception not thrown when inverting non-invertible transform");
+        } catch (PAffineTransformException e) {
+            // expected
+        }
+    }
 }

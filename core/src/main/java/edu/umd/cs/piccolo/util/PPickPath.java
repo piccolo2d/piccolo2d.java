@@ -287,14 +287,8 @@ public class PPickPath implements PInputEventListener {
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
      */
-    public Point2D canvasToLocal(Point2D canvasPoint, PNode nodeOnPath) {
-        try {
-            return getPathTransformTo(nodeOnPath).inverseTransform(canvasPoint, canvasPoint);
-        }
-        catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Point2D canvasToLocal(Point2D canvasPoint, PNode nodeOnPath) {        
+        return getPathTransformTo(nodeOnPath).inverseTransform(canvasPoint, canvasPoint);
     }
 
     /**

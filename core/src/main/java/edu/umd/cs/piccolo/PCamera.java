@@ -45,6 +45,7 @@ import java.util.List;
 
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.util.PAffineTransform;
+import edu.umd.cs.piccolo.util.PAffineTransformException;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDebug;
 import edu.umd.cs.piccolo.util.PDimension;
@@ -209,9 +210,9 @@ public class PCamera extends PNode {
      * 
      * @param layer the layer to be removed
      */
-    public PLayer removeLayer(PLayer layer) {        
+    public PLayer removeLayer(PLayer layer) {
         layer.removeCamera(this);
-        if (layers.remove(layer)) {            
+        if (layers.remove(layer)) {
             invalidatePaint();
             firePropertyChange(PROPERTY_CODE_LAYERS, PROPERTY_LAYERS, null, layers);
         }
@@ -675,14 +676,8 @@ public class PCamera extends PNode {
      * camera's view coordinate system. The given point is modified by this
      * method.
      */
-    public Point2D localToView(Point2D localPoint) {
-        try {
-            return viewTransform.inverseTransform(localPoint, localPoint);
-        }
-        catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Point2D localToView(Point2D localPoint) {        
+        return viewTransform.inverseTransform(localPoint, localPoint);        
     }
 
     /**
@@ -690,8 +685,8 @@ public class PCamera extends PNode {
      * camera's view coordinate system. The given dimension is modified by this
      * method.
      */
-    public Dimension2D localToView(Dimension2D localDimension) {
-        return viewTransform.inverseTransform(localDimension, localDimension);
+    public Dimension2D localToView(Dimension2D localDimension) {        
+        return viewTransform.inverseTransform(localDimension, localDimension);        
     }
 
     /**

@@ -87,8 +87,10 @@ public class PAffineTransform extends AffineTransform {
     }
 
     public void setScale(double scale) {
-        if (scale == 0)
-            throw new RuntimeException("Can't set scale to 0");
+        if (scale == 0) {
+            throw new PAffineTransformException("Can't set scale to 0", this);
+        }
+
         scaleAboutPoint(scale / getScale(), 0, 0);
     }
 
@@ -151,6 +153,15 @@ public class PAffineTransform extends AffineTransform {
         return dimDst;
     }
 
+    public Point2D inverseTransform(Point2D ptSrc, Point2D ptDst) {
+        try {
+            return super.inverseTransform(ptSrc, ptDst);
+        }
+        catch (NoninvertibleTransformException e) {
+            throw new PAffineTransformException("Could not invert Transform", e, this);
+        }
+    }
+
     public Dimension2D inverseTransform(Dimension2D dimSrc, Dimension2D dimDst) {
         if (dimDst == null) {
             dimDst = (Dimension2D) dimSrc.clone();
@@ -164,14 +175,11 @@ public class PAffineTransform extends AffineTransform {
         double m10 = getShearY();
         double det = m00 * m11 - m01 * m10;
 
-        try {
-            if (Math.abs(det) <= Double.MIN_VALUE) {
-                throw new NoninvertibleTransformException("Determinant is " + det);
-            }
+        if (Math.abs(det) > Double.MIN_VALUE) {
             dimDst.setSize((width * m11 - height * m01) / det, (height * m00 - width * m10) / det);
         }
-        catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
+        else {
+            throw new PAffineTransformException("Could not invert transform", this);
         }
 
         return dimDst;
@@ -253,16 +261,22 @@ public class PAffineTransform extends AffineTransform {
                 break;
 
             case AffineTransform.TYPE_UNIFORM_SCALE:
-                scale = 1 / getScaleX();
-                rectDst.setRect(rectSrc.getX() * scale, rectSrc.getY() * scale, rectSrc.getWidth() * scale, rectSrc
-                        .getHeight()
-                        * scale);
+                scale = getScaleX();
+                if (scale == 0) {
+                    throw new PAffineTransformException("Could not invertTransform rectangle", this);
+                }
+                    
+                rectDst.setRect(rectSrc.getX() / scale, rectSrc.getY() / scale, rectSrc.getWidth() / scale, rectSrc
+                        .getHeight() / scale);
                 break;
 
             case AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_UNIFORM_SCALE:
-                scale = 1 / getScaleX();
-                rectDst.setRect((rectSrc.getX() - getTranslateX()) * scale, (rectSrc.getY() - getTranslateY()) * scale,
-                        rectSrc.getWidth() * scale, rectSrc.getHeight() * scale);
+                scale = getScaleX();
+                if (scale == 0) {
+                    throw new PAffineTransformException("Could not invertTransform rectangle", this);
+                }
+                rectDst.setRect((rectSrc.getX() - getTranslateX()) / scale, (rectSrc.getY() - getTranslateY()) / scale,
+                        rectSrc.getWidth() / scale, rectSrc.getHeight() / scale);
                 break;
 
             default:
@@ -271,7 +285,7 @@ public class PAffineTransform extends AffineTransform {
                     inverseTransform(pts, 0, pts, 0, 4);
                 }
                 catch (NoninvertibleTransformException e) {
-                    e.printStackTrace();
+                    throw new PAffineTransformException("Could not invert transform", e, this);
                 }
                 rectFromArray(rectDst, pts);
                 break;

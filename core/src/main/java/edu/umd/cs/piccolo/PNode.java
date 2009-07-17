@@ -747,13 +747,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     public Point2D parentToLocal(Point2D parentPoint) {
         if (transform == null)
             return parentPoint;
-        try {
-            return transform.inverseTransform(parentPoint, parentPoint);
-        }
-        catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-        return null;
+        
+        return transform.inverseTransform(parentPoint, parentPoint);        
     }
 
     /**
