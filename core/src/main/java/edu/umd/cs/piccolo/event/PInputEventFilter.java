@@ -101,85 +101,72 @@ public class PInputEventFilter {
             modifiers = aEvent.getModifiers();
         }
 
-        // TODO:  this really messes up the Eclipse formatter
-        if ((!aEvent.isHandled() || acceptsAlreadyHandledEvents) && (modifiers == 0 || // if
-                                                                                       // no
-                                                                                       // modifiers
-                                                                                       // then
-                                                                                       // ignore
-                                                                                       // modifier
-                                                                                       // constraints
-                                                                                       // ,
-                                                                                       // ELSE
-                (modifiers & andMask) == andMask && // must have all modifiers
-                                                    // from the AND mask and
-                        (modifiers & orMask) != 0 && // must have at least one
-                                                     // modifier from the OR
-                                                     // mask and
-                        (modifiers & notMask) == 0)) { // can't have any
-                                                       // modifiers from the NOT
-                                                       // mask
+        if (aEvent.isHandled() && !acceptsAlreadyHandledEvents) 
+            return false;
+        
+        if ((modifiers & andMask) != andMask || (modifiers & notMask) != 0)
+            return false;
+                                                    
+        if (orMask != ALL_MODIFIERS_MASK && (modifiers & orMask) == 0)
+            return false;
+        
+        if (aEvent.isMouseEvent() && clickCount != -1 && clickCount != aEvent.getClickCount()) 
+            return false;
+        
+        switch (type) {
+            case KeyEvent.KEY_PRESSED:
+                aResult = getAcceptsKeyPressed();
+                break;
 
-            if (aEvent.isMouseEvent() && clickCount != -1 && clickCount != aEvent.getClickCount()) {
-                aResult = false;
-            }
-            else {
-                switch (type) {
-                    case KeyEvent.KEY_PRESSED:
-                        aResult = getAcceptsKeyPressed();
-                        break;
+            case KeyEvent.KEY_RELEASED:
+                aResult = getAcceptsKeyReleased();
+                break;
 
-                    case KeyEvent.KEY_RELEASED:
-                        aResult = getAcceptsKeyReleased();
-                        break;
+            case KeyEvent.KEY_TYPED:
+                aResult = getAcceptsKeyTyped();
+                break;
 
-                    case KeyEvent.KEY_TYPED:
-                        aResult = getAcceptsKeyTyped();
-                        break;
+            case MouseEvent.MOUSE_CLICKED:
+                aResult = getAcceptsMouseClicked();
+                break;
 
-                    case MouseEvent.MOUSE_CLICKED:
-                        aResult = getAcceptsMouseClicked();
-                        break;
+            case MouseEvent.MOUSE_DRAGGED:
+                aResult = getAcceptsMouseDragged();
+                break;
 
-                    case MouseEvent.MOUSE_DRAGGED:
-                        aResult = getAcceptsMouseDragged();
-                        break;
+            case MouseEvent.MOUSE_ENTERED:
+                aResult = getAcceptsMouseEntered();
+                break;
 
-                    case MouseEvent.MOUSE_ENTERED:
-                        aResult = getAcceptsMouseEntered();
-                        break;
+            case MouseEvent.MOUSE_EXITED:
+                aResult = getAcceptsMouseExited();
+                break;
 
-                    case MouseEvent.MOUSE_EXITED:
-                        aResult = getAcceptsMouseExited();
-                        break;
+            case MouseEvent.MOUSE_MOVED:
+                aResult = getAcceptsMouseMoved();
+                break;
 
-                    case MouseEvent.MOUSE_MOVED:
-                        aResult = getAcceptsMouseMoved();
-                        break;
+            case MouseEvent.MOUSE_PRESSED:
+                aResult = getAcceptsMousePressed();
+                break;
 
-                    case MouseEvent.MOUSE_PRESSED:
-                        aResult = getAcceptsMousePressed();
-                        break;
+            case MouseEvent.MOUSE_RELEASED:
+                aResult = getAcceptsMouseReleased();
+                break;
 
-                    case MouseEvent.MOUSE_RELEASED:
-                        aResult = getAcceptsMouseReleased();
-                        break;
+            case MouseWheelEvent.WHEEL_UNIT_SCROLL:
+            case MouseWheelEvent.WHEEL_BLOCK_SCROLL:
+                aResult = getAcceptsMouseWheelRotated();
+                break;
 
-                    case MouseWheelEvent.WHEEL_UNIT_SCROLL:
-                    case MouseWheelEvent.WHEEL_BLOCK_SCROLL:
-                        aResult = getAcceptsMouseWheelRotated();
-                        break;
+            case FocusEvent.FOCUS_GAINED:
+            case FocusEvent.FOCUS_LOST:
+                aResult = getAcceptsFocusEvents();
+                break;
 
-                    case FocusEvent.FOCUS_GAINED:
-                    case FocusEvent.FOCUS_LOST:
-                        aResult = getAcceptsFocusEvents();
-                        break;
-
-                    default:
-                        throw new RuntimeException("PInputEvent with bad ID");
-                }
-            }
-        }
+            default:
+                throw new RuntimeException("PInputEvent with bad ID");
+        }        
 
         if (aResult && getMarksAcceptedEventsAsHandled()) {
             aEvent.setHandled(true);
