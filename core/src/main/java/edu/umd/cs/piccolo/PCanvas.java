@@ -331,7 +331,9 @@ public class PCanvas extends JComponent implements PComponent {
      * Pop the cursor on top of the cursorStack and set it as the canvas cursor.
      */
     public void popCursor() {
-        setCursor((Cursor) cursorStack.pop());
+        if (!cursorStack.isEmpty()) {
+            setCursor((Cursor) cursorStack.pop());
+        }
     }
 
     // ****************************************************************

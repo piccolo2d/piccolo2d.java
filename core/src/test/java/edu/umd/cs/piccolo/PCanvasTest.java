@@ -37,9 +37,6 @@ public class PCanvasTest extends TestCase {
 		assertEquals(1, mockListener.getPropertyChangeCount());
 	}
 	
-	/**
-	 * This should work, but for some reason there's no getDefaultRenderQuality();
-	 */
 	public void testDefaultRenderQualityIsHigh() {		
 		assertEquals(PPaintContext.HIGH_QUALITY_RENDERING, canvas.getDefaultRenderQuality());		
 	}
@@ -76,15 +73,14 @@ public class PCanvasTest extends TestCase {
 		assertEquals(moveCursor, canvas.getCursor());				
 	}
 	
-	// I think it should behave like this, but that's just me @allain
-	/*public void testPoppingEmptyCursorStackShouldDoNothing() {
+	public void testPoppingEmptyCursorStackShouldDoNothing() {
 		try {
 			canvas.popCursor();
 		} catch (IndexOutOfBoundsException e) {
 			fail("Pop cursor shouldn't fail on an empty stack");
 		}
 		assertEquals(Cursor.getDefaultCursor(), canvas.getCursor());
-	}*/
+	}
 	
 	public void testSettingCanvasBoundsAffectsCameraBounds() {
 		canvas.setBounds(0, 0, 100, 100);
