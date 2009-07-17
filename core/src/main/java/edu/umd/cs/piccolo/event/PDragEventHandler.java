@@ -60,10 +60,7 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
     }
 
     protected boolean shouldStartDragInteraction(PInputEvent event) {
-        if (super.shouldStartDragInteraction(event)) {
-            return event.getPickedNode() != event.getTopCamera();
-        }
-        return false;
+        return super.shouldStartDragInteraction(event) && event.getPickedNode() != event.getTopCamera();
     }
 
     protected void startDrag(PInputEvent event) {

@@ -121,9 +121,13 @@ public class PLayer extends PNode {
 
     /**
      * Remove the camera from this layer's camera list.
-     */
+     */    
     public PCamera removeCamera(PCamera camera) {
-        return removeCamera(cameras.indexOf(camera));
+        if (cameras.remove(camera)) {
+            invalidatePaint();
+            firePropertyChange(PROPERTY_CODE_CAMERAS, PROPERTY_CAMERAS, null, cameras);
+        }
+        return camera;        
     }
 
     /**

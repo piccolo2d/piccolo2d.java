@@ -201,7 +201,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         height = Math.ceil(height);
     }
 
-    public PBounds inset(double dx, double dy) {
+    public PBounds inset(double dx, double dy) {        
         setRect(x + dx, y + dy, width - (dx * 2), height - (dy * 2));
         return this;
     }

@@ -68,7 +68,7 @@ public class PDimension extends Dimension2D implements Serializable {
         return height;
     }
 
-    public double getWidth() {
+    public double getWidth() {        
         return width;
     }
 

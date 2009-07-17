@@ -87,14 +87,11 @@ public class PLayerTest extends TestCase {
 		assertEquals(0, layer.getCameraCount());
 	}
 	
-	// I think PLayer should behave this way. Seems more logical since it's how
-	// the Java Collection libraries behave
-	/*
 	public void testRemovingCameraNotAttachedToCameraShouldDoNothing() {
 		PCamera strangerCamera = new PCamera();
 		layer.removeCamera(strangerCamera);
 		assertEquals(0, layer.getCameraCount());
-	}*/
+	}
 	
 	public void testRepaintFromNotifiesCameras() {
 		MockPCamera camera = new MockPCamera();

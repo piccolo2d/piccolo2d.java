@@ -204,9 +204,18 @@ public class PCamera extends PNode {
 
     /**
      * Remove the given layer from the list of layers managed by this camera.
+     * 
+     * If the layer is not found, it leaves the camera unchanged.
+     * 
+     * @param layer the layer to be removed
      */
-    public PLayer removeLayer(PLayer layer) {
-        return removeLayer(layers.indexOf(layer));
+    public PLayer removeLayer(PLayer layer) {        
+        layer.removeCamera(this);
+        if (layers.remove(layer)) {            
+            invalidatePaint();
+            firePropertyChange(PROPERTY_CODE_LAYERS, PROPERTY_LAYERS, null, layers);
+        }
+        return layer;
     }
 
     /**
@@ -258,8 +267,8 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Paint all the layers that the camera is looking at, this method is 
-     * called after the cameras view transform and clip are applied to the
+     * Paint all the layers that the camera is looking at, this method is called
+     * after the cameras view transform and clip are applied to the
      * paintContext.
      */
     protected void paintCameraView(PPaintContext paintContext) {
@@ -376,9 +385,8 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Pick all the layers that the camera is looking at, this method is 
-     * called after the cameras view transform and clip are applied to the
-     * pickPath.
+     * Pick all the layers that the camera is looking at, this method is called
+     * after the cameras view transform and clip are applied to the pickPath.
      */
     protected boolean pickCameraView(PPickPath pickPath) {
         int count = getLayerCount();

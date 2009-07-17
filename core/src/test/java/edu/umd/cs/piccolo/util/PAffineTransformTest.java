@@ -32,6 +32,7 @@ import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
 
 import junit.framework.TestCase;
+import edu.umd.cs.piccolo.PiccoloAsserts;
 
 public class PAffineTransformTest extends TestCase {
 
@@ -78,14 +79,14 @@ public class PAffineTransformTest extends TestCase {
         at.transform(b1, b1);
         at.transform(b2, b2);
 
-        assertEquals(new PBounds(50, 25, 50, 40), b1);
-        assertEquals(new PBounds(100, 75, 50, 40), b2);
+        PiccoloAsserts.assertEquals(new PBounds(50, 25, 50, 40), b1, 0.0001);
+        PiccoloAsserts.assertEquals(new PBounds(100, 75, 50, 40), b2, 0.0001);
 
         at.inverseTransform(b1, b1);
         at.inverseTransform(b2, b2);
 
-        assertEquals(new PBounds(0, 0, 100, 80), b1);
-        assertEquals(new PBounds(100, 100, 100, 80), b2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 80), b1, 0.0001);
+        PiccoloAsserts.assertEquals(new PBounds(100, 100, 100, 80), b2, 0.0001);
     }
 
     public void testThrowsExceptionWhenSetting0Scale() {
@@ -117,28 +118,5 @@ public class PAffineTransformTest extends TestCase {
         at.setScale(2);
         Dimension2D d2 = at.transform(d1, null);
         assertEquals(new Dimension(200, 100), d2);
-    }
-
-    private final void assertEquals(PBounds expected, PBounds actual) {
-        assertEquals(expected, actual, 0.0000001);
-    }
-
-    private final void assertEquals(PBounds expected, PBounds actual, double errorRate) {
-        assertTrue("Expected " + expected + " but was " + actual, comparisonScore(expected, actual) > (1d - errorRate));
-    }
-
-    // % of area within full bounds covered by intersection or the two bounds.
-    // exactly covering would be 1 no overlap would be 0
-    private final double comparisonScore(PBounds b1, PBounds b2) {
-        PBounds intersection = new PBounds();
-        PBounds union = new PBounds();
-        PBounds.intersect(b1, b2, intersection);
-        PBounds.intersect(b1, b2, union);
-
-        return area(intersection) / area(union);
-    }
-
-    private final double area(PBounds b) {
-        return b.getWidth() * b.getHeight();
-    }
+    }    
 }
