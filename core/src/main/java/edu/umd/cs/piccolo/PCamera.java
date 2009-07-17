@@ -151,7 +151,7 @@ public class PCamera extends PNode {
      * transformed from view to local in this case. Unlike most repaint methods
      * in piccolo this one must not modify the viewBounds parameter.
      */
-    public void repaintFromLayer(PBounds viewBounds, PNode repaintedLayer) {
+    public void repaintFromLayer(PBounds viewBounds, PLayer repaintedLayer) {
         TEMP_REPAINT_RECT.setRect(viewBounds);
 
         viewToLocal(TEMP_REPAINT_RECT);
@@ -159,6 +159,17 @@ public class PCamera extends PNode {
             PBounds.intersect(TEMP_REPAINT_RECT, getBoundsReference(), TEMP_REPAINT_RECT);
             repaintFrom(TEMP_REPAINT_RECT, repaintedLayer);
         }
+    }
+    
+    /**
+     * @deprected since a more specific repaintFromLayer method is available
+     * 
+     * Repaint from one of the cameras layers. The repaint region needs to be
+     * transformed from view to local in this case. Unlike most repaint methods
+     * in piccolo this one must not modify the viewBounds parameter.
+     */
+    public void repaintFromLayer(PBounds viewBounds, PNode repaintedLayer) {
+        this.repaintFromLayer(viewBounds, (PLayer)repaintedLayer);
     }
 
     // ****************************************************************

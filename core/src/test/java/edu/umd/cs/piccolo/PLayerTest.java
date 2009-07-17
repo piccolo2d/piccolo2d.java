@@ -123,7 +123,7 @@ public class PLayerTest extends TestCase {
 		
 		List notifications = new ArrayList();
 		
-		public void repaintFromLayer(PBounds bounds, PNode layer) {			
+		public void repaintFromLayer(PBounds bounds, PLayer layer) {			
 			notifications.add(new Notification("repaintFromLayer", bounds, layer));
 			super.repaintFromLayer(bounds, layer);
 		}		
