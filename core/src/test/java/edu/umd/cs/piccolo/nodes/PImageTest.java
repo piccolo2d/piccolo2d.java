@@ -28,12 +28,17 @@
  */
 package edu.umd.cs.piccolo.nodes;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
-
-import edu.umd.cs.piccolo.nodes.PImage;
 import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
 
 public class PImageTest extends TestCase {
 
@@ -52,4 +57,54 @@ public class PImageTest extends TestCase {
         PImage aNode = new PImage(new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));        
         assertNotNull(aNode.toString());
     }       
+    
+    public void testToBufferedImageReturnsCopyIfToldTo() {
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        BufferedImage copy = PImage.toBufferedImage(img, true);
+        assertNotSame(img, copy);       
+    }
+    
+    public void testCanBeCreatedFromFile() throws IOException {
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        File imgFile = File.createTempFile("test", ".jpeg");
+        imgFile.deleteOnExit();
+        ImageIO.write(img, "JPEG", imgFile);
+        
+        PImage imageNode = new PImage(imgFile.getAbsolutePath());
+        assertEquals(100, imageNode.getImage().getWidth(null));
+        assertEquals(100, imageNode.getImage().getHeight(null));
+    }
+    
+    public void testCanBeCreatedFromUrl() throws IOException {
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        File imgFile = File.createTempFile("test", ".jpeg");
+        imgFile.deleteOnExit();
+        ImageIO.write(img, "JPEG", imgFile);
+        
+        PImage imageNode = new PImage(imgFile.toURL());
+        assertEquals(100, imageNode.getImage().getWidth(null));
+        assertEquals(100, imageNode.getImage().getHeight(null));
+    }
+    
+    public void testImageCanBeSetFromFile() throws IOException {
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        File imgFile = File.createTempFile("test", ".jpeg");
+        imgFile.deleteOnExit();
+        ImageIO.write(img, "JPEG", imgFile);
+        
+        PImage imageNode = new PImage();
+        imageNode.setImage(imgFile.getAbsolutePath());
+        assertEquals(100, imageNode.getImage().getWidth(null));
+        assertEquals(100, imageNode.getImage().getHeight(null));
+    }
+    
+    public void testPaintAnEmptyImageNodeDoesNothing() {
+        PImage imageNode = new PImage();
+        
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);        
+        
+        PPaintContext paintContext = new PPaintContext(img.createGraphics());
+        imageNode.paint(paintContext);
+    }
+
 }

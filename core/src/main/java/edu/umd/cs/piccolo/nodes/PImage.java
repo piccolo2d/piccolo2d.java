@@ -151,32 +151,33 @@ public class PImage extends PNode {
         if (image != null) {
             setBounds(0, 0, getImage().getWidth(null), getImage().getHeight(null));
             invalidatePaint();
-        }
-        else {
-            image = null;
-        }
+        }       
 
         firePropertyChange(PROPERTY_CODE_IMAGE, PROPERTY_IMAGE, old, image);
     }
 
     protected void paint(PPaintContext paintContext) {
-        if (getImage() != null) {
-            double iw = image.getWidth(null);
-            double ih = image.getHeight(null);
-            PBounds b = getBoundsReference();
-            Graphics2D g2 = paintContext.getGraphics();
-
-            if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
-                g2.translate(b.x, b.y);
-                g2.scale(b.width / iw, b.height / ih);
-                g2.drawImage(image, 0, 0, null);
-                g2.scale(iw / b.width, ih / b.height);
-                g2.translate(-b.x, -b.y);
-            }
-            else {
-                g2.drawImage(image, 0, 0, null);
-            }
+        if (getImage() == null) {
+            return;
         }
+        
+        double iw = image.getWidth(null);
+        double ih = image.getHeight(null);
+        
+        PBounds b = getBoundsReference();
+        Graphics2D g2 = paintContext.getGraphics();
+
+        if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
+            g2.translate(b.x, b.y);
+            g2.scale(b.width / iw, b.height / ih);
+            g2.drawImage(image, 0, 0, null);
+            g2.scale(iw / b.width, ih / b.height);
+            g2.translate(-b.x, -b.y);
+        }
+        else {
+            g2.drawImage(image, 0, 0, null);
+        }
+
     }
 
     // ****************************************************************
@@ -209,27 +210,23 @@ public class PImage extends PNode {
      * returned.
      */
     public static BufferedImage toBufferedImage(Image image, boolean alwaysCreateCopy) {
-        if (image == null)
+        if (image == null) {
             return null;
+        }
 
         if (!alwaysCreateCopy && image instanceof BufferedImage) {
             return (BufferedImage) image;
         }
-        else {
-            GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                    .getDefaultScreenDevice().getDefaultConfiguration();
-            BufferedImage result = graphicsConfiguration.createCompatibleImage(image.getWidth(null), image
-                    .getHeight(null));
-            Graphics2D g2 = result.createGraphics();
-            g2.drawImage(image, 0, 0, null);
-            g2.dispose();
-            return result;
-        }
-    }
 
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
+        GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration();
+        BufferedImage result = graphicsConfiguration.createCompatibleImage(image.getWidth(null), image.getHeight(null));
+        Graphics2D g2 = result.createGraphics();
+        g2.drawImage(image, 0, 0, null);
+        g2.dispose();
+        return result;
+
+    }
 
     /**
      * Returns a string representing the state of this node. This method is
