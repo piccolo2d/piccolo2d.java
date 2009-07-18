@@ -202,6 +202,7 @@ public final class PSwingMemoryLeakExample extends JFrame {
         int count = Integer.parseInt(active.getText());
         count++;
         active.setText(String.valueOf(count));
+        canvas.repaint();
     }
 
     /**
@@ -211,6 +212,7 @@ public final class PSwingMemoryLeakExample extends JFrame {
         int count = Integer.parseInt(active.getText());
         count--;
         active.setText(String.valueOf(count));
+        canvas.repaint();
     }
 
     /**
@@ -220,14 +222,20 @@ public final class PSwingMemoryLeakExample extends JFrame {
         int count = Integer.parseInt(finalized.getText());
         count++;
         finalized.setText(String.valueOf(count));
+        canvas.repaint();
     }
 
     /**
      * Update memory.
      */
-    private void updateMemory() {
-        System.gc();
-        System.runFinalization();
+    private void updateMemory() {        
+        new Thread(new Runnable() {
+                /** {@inheritDoc} */
+                public void run() {
+                    System.gc();
+                    System.runFinalization();
+                }
+            }).run();
 
         long total = Runtime.getRuntime().totalMemory();
         totalMemory.setText(String.valueOf(total));
@@ -235,6 +243,7 @@ public final class PSwingMemoryLeakExample extends JFrame {
         freeMemory.setText(String.valueOf(free));
         long used = (total - free);
         usedMemory.setText(String.valueOf(used));
+        canvas.repaint();
     }
 
 
