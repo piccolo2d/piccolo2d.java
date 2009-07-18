@@ -70,7 +70,6 @@ import java.util.Vector;
  * @author Sam R. Reid
  */
 public class PSwingRepaintManager extends RepaintManager {
-    private ArrayList swingWrappers = new ArrayList();
 
     // The components that are currently painting
     // This needs to be a vector for thread safety
@@ -131,7 +130,7 @@ public class PSwingRepaintManager extends RepaintManager {
         // need to translate the repaint request since the component may
         // be offset inside another component.
         for (Component comp = c; comp != null && comp.isLightweight() && !captureRepaint; comp = comp.getParent()) {
-            if (swingWrappers.contains(comp.getParent())) {
+            if (comp.getParent() instanceof PSwingCanvas.SwingWrapper) {
                 if (comp instanceof JComponent) {
                     captureRepaint = true;
                     capturedComponent = (JComponent) comp;
@@ -194,9 +193,5 @@ public class PSwingRepaintManager extends RepaintManager {
         else {
             super.addInvalidComponent(invalidComponent);
         }
-    }
-
-    void addPSwingCanvas(PSwingCanvas swingWrapper) {
-        swingWrappers.add(swingWrapper.getSwingWrapper());
     }
 }

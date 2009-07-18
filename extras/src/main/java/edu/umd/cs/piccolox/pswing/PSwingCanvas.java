@@ -66,7 +66,6 @@ public class PSwingCanvas extends PCanvas {
             pSwingRepaintManager = new PSwingRepaintManager();
             RepaintManager.setCurrentManager(pSwingRepaintManager);
         }
-        pSwingRepaintManager.addPSwingCanvas(this);
     }
 
     JComponent getSwingWrapper() {
@@ -81,7 +80,7 @@ public class PSwingCanvas extends PCanvas {
         swingWrapper.remove(pSwing.getComponent());
     }
 
-    private static class SwingWrapper extends JComponent {
+    static class SwingWrapper extends JComponent {
         private PSwingCanvas pSwingCanvas;
 
         public SwingWrapper(PSwingCanvas pSwingCanvas) {
