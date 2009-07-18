@@ -34,6 +34,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -218,14 +219,21 @@ public class PImage extends PNode {
             return (BufferedImage) image;
         }
 
-        GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDefaultConfiguration();
-        BufferedImage result = graphicsConfiguration.createCompatibleImage(image.getWidth(null), image.getHeight(null));
+        BufferedImage result;
+        
+        if (GraphicsEnvironment.isHeadless()) {
+            result = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        } 
+        else {
+            GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            .getDefaultScreenDevice().getDefaultConfiguration();
+            result =  graphicsConfiguration.createCompatibleImage(image.getWidth(null), image.getHeight(null));
+        }
+        
         Graphics2D g2 = result.createGraphics();
         g2.drawImage(image, 0, 0, null);
         g2.dispose();
         return result;
-
     }
 
     /**
