@@ -11,28 +11,95 @@ import edu.umd.cs.piccolo.util.PPickPath;
 
 public class PInputEventTest extends TestCase {
     private PCanvas canvas;
+	private MouseEvent swingEvent;
+	private PInputEvent mouseEvent;
 
     public void setUp() {
         canvas = new PCanvas();
         canvas.setPreferredSize(new Dimension(100, 100));
         canvas.setBounds(0, 0, 100, 100);
+        swingEvent = buildSwingClick(5, 5);
+
+        mouseEvent = new PInputEvent(canvas.getRoot().getDefaultInputManager(), swingEvent, canvas.getCamera());        
     }
 
     public void testGetCameraUsesInputSourceIfPathIsNull() {
-        InputEvent swingEvent = buildSwingClick(5, 5);
-
-        PInputEvent event = new PInputEvent(canvas.getRoot().getDefaultInputManager(), swingEvent, canvas.getCamera());
-        assertEquals(canvas.getCamera(), event.getCamera());
+        assertEquals(canvas.getCamera(), mouseEvent.getCamera());
     }
 
     public void testInputManagerShouldBeSameAsGivenToConstructor() {
-        InputEvent swingEvent = buildSwingClick(5, 5);
+        assertSame(canvas.getRoot().getDefaultInputManager(), mouseEvent.getInputManager());
+    }
+    
+    public void testComponentIsComponentPassedToSwingEvent() {
+    	assertEquals(canvas, mouseEvent.getComponent());
+    }
+    
+    public void testKeyboardAccessorsThrowExceptionsOnMousEvents() {
+    	try {
+    		mouseEvent.getKeyChar();
+    	} catch (IllegalStateException e) {
+    		//expected
+    	}
+    	
+    	try {
+    		mouseEvent.getKeyCode();
+    	} catch (IllegalStateException e) {
+    		//expected
+    	}
 
-        PInputEvent event = new PInputEvent(canvas.getRoot().getDefaultInputManager(), swingEvent, canvas.getCamera());
-        assertSame(canvas.getRoot().getDefaultInputManager(), event.getInputManager());
+    	try {
+    		mouseEvent.getKeyLocation();
+    	} catch (IllegalStateException e) {
+    		//expected
+    	}
+    	
+    	try {
+    		mouseEvent.isActionKey();
+    	} catch (IllegalStateException e) {
+    		//expected
+    	}
+
+    }
+    
+    public void testCorrectlyIdentifiesPositiveLeftMouseClick() {
+    	assertTrue(mouseEvent.isLeftMouseButton());    	
+    }
+ 
+	public void testCorrectlyIdentifiesNegativeRightMouseClick() {
+		assertFalse(mouseEvent.isRightMouseButton());
+	}
+    
+    public void testCorrectlyIdentifiesNegativeMiddleMouseClick() {    	
+    	assertFalse(mouseEvent.isMiddleMouseButton());    	
+    }
+    
+    public void testEventsAreNotHandledByDefault() {
+    	assertFalse(mouseEvent.isHandled());
     }
 
+    public void testSetHandledPersists() {
+    	mouseEvent.setHandled(true);
+    	assertTrue(mouseEvent.isHandled());
+    }
+    
+    public void testHandledEventCanBeUnHandled() {
+    	mouseEvent.setHandled(true);
+    	mouseEvent.setHandled(false);
+    	assertFalse(mouseEvent.isHandled());
+    }
+    
+    public void testReturnsCorrectModifiers() {
+    	assertEquals(InputEvent.BUTTON1_MASK, mouseEvent.getModifiers());
+    }
+    
+    public void testGetButtonUsesWhatWasPassedToMouseEvent() {
+    	assertEquals(MouseEvent.BUTTON1, mouseEvent.getButton());
+    }
+
+    
     private MouseEvent buildSwingClick(int x, int y) {
-        return new MouseEvent(canvas, 1, System.currentTimeMillis(), MouseEvent.MOUSE_CLICKED, x, y, 1, false);
-    }
+        return new MouseEvent(canvas, 1, System.currentTimeMillis(), InputEvent.BUTTON1_MASK, x, y, 1, false, MouseEvent.BUTTON1);
+    }        
+        
 }

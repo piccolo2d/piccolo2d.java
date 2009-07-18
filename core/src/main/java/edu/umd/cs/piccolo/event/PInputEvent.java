@@ -407,11 +407,7 @@ public class PInputEvent {
         pickPath.canvasToLocal(r, getCamera());
         return (PDimension) getCamera().localToView(r);
     }
-
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
+    
     /**
      * Returns a string representation of this object for debugging purposes.
      */
