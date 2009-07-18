@@ -45,6 +45,7 @@ import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -133,7 +134,12 @@ public class PrintExample extends PFrame {
         });
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                print();
+                try {
+                    print();
+                }
+                catch (PrinterException e) {
+                    JOptionPane.showMessageDialog(PrintExample.this, "An error occured while printing");
+                }
             }
         });
         JPanel contentPane = new JPanel();
@@ -258,15 +264,17 @@ public class PrintExample extends PFrame {
 
     /**
      * Print the canvas.
+     * 
+     * @throws PrinterException
      */
-    private void print()
-    {
+    private void print() throws PrinterException {
         PrinterJob printJob = PrinterJob.getPrinterJob();
         printJob.setPrintable(new Printable() {
             public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
                 if (pageIndex > 0) {
                     return (NO_SUCH_PAGE);
-                } else {
+                }
+                else {
                     Graphics2D g2 = (Graphics2D) graphics;
                     g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
                     getCanvas().printAll(g2);
@@ -275,11 +283,7 @@ public class PrintExample extends PFrame {
             }
         });
         if (printJob.printDialog()) {
-            try {
-                printJob.print();
-            } catch (PrinterException e) {
-                e.printStackTrace();
-            }
+            printJob.print();
         }
     }
 
