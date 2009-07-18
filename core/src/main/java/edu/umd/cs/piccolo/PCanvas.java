@@ -35,6 +35,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyEventPostProcessor;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -42,6 +46,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.FocusManager;
 import javax.swing.JComponent;
@@ -90,21 +96,31 @@ public class PCanvas extends JComponent implements PComponent {
 
     /**
      * Construct a canvas with the basic scene graph consisting of a root,
-     * camera, and layer. Event handlers for zooming and panning are
-     * automatically installed.
+     * camera, and layer. Zooming and panning are automatically installed.
      */
     public PCanvas() {
         CURRENT_ZCANVAS = this;
         cursorStack = new PStack();
-        setCamera(createDefaultCamera());
-        installInputSources();
+        setCamera(createDefaultCamera());                               
         setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         setAnimatingRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
         setInteractingRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
         setPanEventHandler(new PPanEventHandler());
         setZoomEventHandler(new PZoomEventHandler());
         setBackground(Color.WHITE);
-        setOpaque( true );
+        setOpaque(true);
+        
+        addHierarchyListener(new HierarchyListener() {            
+            public void hierarchyChanged(HierarchyEvent e) {
+                if (e.getComponent() == PCanvas.this) {
+                    if (getParent() == null) {
+                        removeInputSources();
+                    } else if (isEnabled()) {
+                        installInputSources();
+                    }
+                }                
+            }
+        });
     }
 
     protected PCamera createDefaultCamera() {
@@ -353,7 +369,7 @@ public class PCanvas extends JComponent implements PComponent {
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
-        if (isEnabled()) {
+        if (isEnabled() && getParent() != null) {
             installInputSources();
         }
         else {
@@ -608,12 +624,13 @@ public class PCanvas extends JComponent implements PComponent {
         PDebug.startProcessingOutput();
 
         Graphics2D g2 = (Graphics2D) g.create();
-        
-		// support for non-opaque canvases
-        // see http://groups.google.com/group/piccolo2d-dev/browse_thread/thread/134e2792d3a54cf
-        if ( isOpaque() ) {
-            g2.setColor( getBackground() );
-            g2.fillRect( 0, 0, getWidth(), getHeight() );
+
+        // support for non-opaque canvases
+        // see
+        // http://groups.google.com/group/piccolo2d-dev/browse_thread/thread/134e2792d3a54cf
+        if (isOpaque()) {
+            g2.setColor(getBackground());
+            g2.fillRect(0, 0, getWidth(), getHeight());
         }
 
         // create new paint context and set render quality to lowest common
