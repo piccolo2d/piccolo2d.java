@@ -83,6 +83,7 @@ public class PText extends PNode {
     public PText() {
         super();
         setTextPaint(Color.BLACK);
+        text = "";
     }
 
     public PText(String aText) {
@@ -185,7 +186,7 @@ public class PText extends PNode {
      */
     public void setText(String aText) {
         String old = text;
-        text = aText;
+        text = (aText == null) ? "" : aText;
         lines = null;
         recomputeLayout();
         invalidatePaint();

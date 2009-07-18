@@ -38,28 +38,48 @@ public class PTextTest extends TestCase {
         super(name);
     }
 
-    public void testCopy() {
-        PText aNode = new PText("Boo");
-        aNode = (PText) aNode.clone();
-        assertNotNull(aNode.getText());
-        assertNotNull(aNode.getFont());
+    public void testClone() {
+        PText textNode = new PText("Boo");
+        PText clonedNode = (PText) textNode.clone();        
+        assertEquals("Boo", clonedNode.getText());
+        assertEquals(textNode.getFont(), clonedNode.getFont());
     }
 
-    public void testEmptyString() {
-        PText t = new PText();
-        t.setText("hello world");
-        t.setText("");
-        t.setText(null);
+    public void testTextIsEmptyByDefault() {
+    	PText textNode = new PText();
+    	assertEquals("", textNode.getText());
     }
 
+    public void testTextMayBeAssignedEmptyString() {
+    	PText textNode = new PText("Before");
+    	textNode.setText("");
+    	assertEquals("", textNode.getText());
+    }
+    
+    public void testTextNullGetsInterpretedAsEmptyString() {
+    	PText text = new PText("Before");
+    	text.setText(null);
+    	assertEquals("", text.getText());
+    }
+
+ 
+    public void testBoundsGrowWithTextByDefault() {
+    	PText text123 = new PText("123");        
+    	double width123 = text123.getBounds().getWidth();
+    	
+    	PText text1234 = new PText("1234");        
+    	
+    	double width1234 = text1234.getBounds().getWidth();
+    	
+        assertTrue(width123 < width1234); 
+    }
+    
     public void testBoundsOfEmptyString() {
         PText t = new PText();
-        t.setText("hello world");
-        assertTrue(t.getBoundsReference().getWidth() > 0);
         t.setText("");
-        assertTrue(t.getBoundsReference().getWidth() == 0);
+        assertEquals(0, t.getBoundsReference().getWidth(), 0.000001);
         t.setText(null);
-        assertTrue(t.getBoundsReference().getWidth() == 0);
+        assertEquals(0, t.getBoundsReference().getWidth(), 0.000001);
     }
 
     public void testToString() {
