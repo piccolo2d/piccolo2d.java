@@ -57,14 +57,13 @@ public final class PSwingMemoryLeakExample extends JFrame {
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    /** Active Instances Counter. */
-    private final PText activeInstanceCounter;
+    /** Active instances. */
+    private final PText active;
 
-    /** Garbage Collected Counter. */
-    private final PText gcInstanceCounter;
+    /** Finalized instances. */
+    private final PText finalized;
 
-    
-    /** Memory. */
+    /** Free memory. */
     private final PText freeMemory;
 
     /** Total memory. */
@@ -87,9 +86,9 @@ public final class PSwingMemoryLeakExample extends JFrame {
         super("PSwing memory leak example");
 
         PText label0 = new PText("Number of active PSwingCanvases:");
-        activeInstanceCounter = new PText("0");
+        active = new PText("0");
         PText label4 = new PText("Number of finalized PSwingCanvases:");
-        gcInstanceCounter = new PText("0");
+        finalized = new PText("0");
         PText label1 = new PText("Total memory:");
         totalMemory = new PText("0");
         PText label2 = new PText("Free memory:");
@@ -98,9 +97,9 @@ public final class PSwingMemoryLeakExample extends JFrame {
         usedMemory = new PText("0");
 
         label0.offset(20.0d, 20.0d);
-        activeInstanceCounter.offset(label0.getFullBounds().getWidth() + 50.0d, 20.0d);
+        active.offset(label0.getFullBounds().getWidth() + 50.0d, 20.0d);
         label4.offset(20.0d, 40.0d);
-        gcInstanceCounter.offset(label4.getFullBounds().getWidth() + 50.0d, 40.0d);
+        finalized.offset(label4.getFullBounds().getWidth() + 50.0d, 40.0d);
         label1.offset(20.0d, 60.0d);
         totalMemory.offset(label1.getFullBounds().getWidth() + 40.0d, 60.0d);
         label2.offset(20.0d, 80.0d);
@@ -110,19 +109,19 @@ public final class PSwingMemoryLeakExample extends JFrame {
 
         canvas = new PCanvas();
         canvas.getCamera().addChild(label0);
-        canvas.getCamera().addChild(activeInstanceCounter);
+        canvas.getCamera().addChild(active);
         canvas.getCamera().addChild(label4);
-        canvas.getCamera().addChild(gcInstanceCounter);
+        canvas.getCamera().addChild(finalized);
         canvas.getCamera().addChild(label1);
         canvas.getCamera().addChild(totalMemory);
         canvas.getCamera().addChild(label2);
         canvas.getCamera().addChild(freeMemory);
         canvas.getCamera().addChild(label3);
         canvas.getCamera().addChild(usedMemory);
-        canvas.setPreferredSize(new Dimension(400, 100));
+        canvas.setPreferredSize(new Dimension(400, 110));
 
         mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(400, 300));
+        mainPanel.setPreferredSize(new Dimension(400, 290));
         mainPanel.setLayout(new FlowLayout());
 
         getContentPane().setLayout(new BorderLayout());
@@ -138,8 +137,9 @@ public final class PSwingMemoryLeakExample extends JFrame {
                 JLabel label = new JLabel("Label" + id);
                 PSwing pswing = new PSwing(label);
                 PSwingCanvas pswingCanvas = new PSwingCanvas() {
+                    /** {@inheritDoc} */
                     public void finalize() {
-                        gcInstanceCounter.setText(String.valueOf(Integer.parseInt(gcInstanceCounter.getText())+1));
+                        incrementFinalized();
                     }
                 };
                 pswingCanvas.getLayer().addChild(pswing);
@@ -150,7 +150,7 @@ public final class PSwingMemoryLeakExample extends JFrame {
                 mainPanel.repaint();
 
                 id++;
-                incrementCounter();
+                incrementActive();
             }
         });
         add.setDelay(5);
@@ -169,10 +169,7 @@ public final class PSwingMemoryLeakExample extends JFrame {
                     mainPanel.invalidate();
                     mainPanel.validate();
                     mainPanel.repaint();
-                    decrementCounter();
-                    
-                    System.gc();
-                    System.runFinalization();
+                    decrementActive();
                 }
             }
         });
@@ -199,21 +196,30 @@ public final class PSwingMemoryLeakExample extends JFrame {
     }
 
     /**
-     * Increment counter.
+     * Increment active.
      */
-    private void incrementCounter() {
-        int count = Integer.parseInt(activeInstanceCounter.getText());
+    private void incrementActive() {
+        int count = Integer.parseInt(active.getText());
         count++;
-        activeInstanceCounter.setText(String.valueOf(count));
+        active.setText(String.valueOf(count));
     }
 
     /**
-     * Decrement counter.
+     * Decrement active.
      */
-    private void decrementCounter() {
-        int count = Integer.parseInt(activeInstanceCounter.getText());
+    private void decrementActive() {
+        int count = Integer.parseInt(active.getText());
         count--;
-        activeInstanceCounter.setText(String.valueOf(count));
+        active.setText(String.valueOf(count));
+    }
+
+    /**
+     * Increment finalized.
+     */
+    private void incrementFinalized() {
+        int count = Integer.parseInt(finalized.getText());
+        count++;
+        finalized.setText(String.valueOf(count));
     }
 
     /**
@@ -221,6 +227,8 @@ public final class PSwingMemoryLeakExample extends JFrame {
      */
     private void updateMemory() {
         System.gc();
+        System.runFinalization();
+
         long total = Runtime.getRuntime().totalMemory();
         totalMemory.setText(String.valueOf(total));
         long free = Runtime.getRuntime().freeMemory();

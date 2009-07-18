@@ -41,7 +41,6 @@ import java.awt.*;
  * @author Sam R. Reid
  * @author Lance E. Good
  */
-
 public class PSwingCanvas extends PCanvas {
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
     private SwingWrapper swingWrapper;
@@ -80,19 +79,35 @@ public class PSwingCanvas extends PCanvas {
         swingWrapper.remove(pSwing.getComponent());
     }
 
+    /**
+     * JComponent wrapper for a PSwingCanvas.  Used by PSwingRepaintManager.
+     */
     static class SwingWrapper extends JComponent {
+
+        /** PSwingCanvas to wrap. */
         private PSwingCanvas pSwingCanvas;
 
-        public SwingWrapper(PSwingCanvas pSwingCanvas) {
-            this.pSwingCanvas = pSwingCanvas;
+
+        /**
+         * Create a new JComponent wrapper for the specified PSwingCanvas.
+         *
+         * @param canvas PSwingCanvas to wrap
+         */
+        SwingWrapper(final PSwingCanvas canvas) {
+            this.canvas = canvas;
             setSize(new Dimension(0, 0));
             setPreferredSize(new Dimension(0, 0));
             putClientProperty(SWING_WRAPPER_KEY, SWING_WRAPPER_KEY);
         }
 
-        public PSwingCanvas getPSwingCanvas() {
-            return pSwingCanvas;
+
+        /**
+         * Return the PSwingCanvas this JComponent wrapper is wrapping.
+         *
+         * @return the PSwingCanvas this JComponent wrapper is wrapping
+         */
+        PSwingCanvas getPSwingCanvas() {
+            return canvas;
         }
     }
-
 }
