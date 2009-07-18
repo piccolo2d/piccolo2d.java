@@ -91,7 +91,7 @@ public class PCanvasTest extends TestCase {
 		assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds());
 	}
 	    
-    public void testMemoryLeakWithPCanvas() throws InterruptedException {                  
+    public void testMemoryLeak() throws InterruptedException {                  
         JPanel panel = new JPanel();       
         for (int i=0; i < 10; i++) {            
             PCanvas canvas = new PCanvas() {
