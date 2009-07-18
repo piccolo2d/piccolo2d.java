@@ -41,7 +41,7 @@ public class PNotificationCenterTest extends TestCase {
         super(name);
     }
 
-    public void testToString() {
+    public void testToString() throws SecurityException, NoSuchMethodException {
         PNotificationCenter center = PNotificationCenter.defaultCenter();
 
         center.addListener(this, "changed1", "propertyChanged", this);

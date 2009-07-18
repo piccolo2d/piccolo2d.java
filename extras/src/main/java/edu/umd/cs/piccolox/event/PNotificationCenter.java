@@ -93,8 +93,12 @@ public class PNotificationCenter {
      * null then the listener will receive all notifications with an object
      * matching 'object'. If 'object' is null the listener will receive all
      * notifications with the name 'notificationName'.
+     * 
+     * @return whether or not the listener has been added
+     * @throws SecurityException
      */
-    public void addListener(Object listener, String callbackMethodName, String notificationName, Object object) {
+    public boolean addListener(Object listener, String callbackMethodName, String notificationName, Object object)
+            throws SecurityException {
         processKeyQueue();
 
         Object name = notificationName;
@@ -104,14 +108,16 @@ public class PNotificationCenter {
             method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });
         }
         catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            return;
+            return false;
         }
 
-        if (name == null)
+        if (name == null) {
             name = NULL_MARKER;
-        if (object == null)
+        }
+        
+        if (object == null) {
             object = NULL_MARKER;
+        }
 
         Object key = new CompoundKey(name, object);
         Object value = new CompoundValue(listener, method);
@@ -125,6 +131,8 @@ public class PNotificationCenter {
         if (!list.contains(value)) {
             list.add(value);
         }
+        
+        return true;
     }
 
     // ****************************************************************
