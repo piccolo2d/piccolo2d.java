@@ -28,18 +28,32 @@
  */
 package edu.umd.cs.piccolo.nodes;
 
-import junit.framework.TestCase;
+import java.awt.Color;
+import java.awt.Font;
+import java.beans.PropertyChangeListener;
 
-import edu.umd.cs.piccolo.nodes.PText;
+import javax.swing.JLabel;
+
+import edu.umd.cs.piccolo.MockPropertyChangeListener;
+
+import junit.framework.TestCase;
 
 public class PTextTest extends TestCase {
 
-    public PTextTest(String name) {
+    private PText textNode;
+	private MockPropertyChangeListener mockListener;
+
+	public PTextTest(String name) {
         super(name);
     }
 
+    public void setUp() {
+    	textNode = new PText();
+    	mockListener = new MockPropertyChangeListener();
+    }
+    
     public void testClone() {
-        PText textNode = new PText("Boo");
+        textNode.setText("Boo");
         PText clonedNode = (PText) textNode.clone();        
         assertEquals("Boo", clonedNode.getText());
         assertEquals(textNode.getFont(), clonedNode.getFont());
@@ -50,16 +64,14 @@ public class PTextTest extends TestCase {
     	assertEquals("", textNode.getText());
     }
 
-    public void testTextMayBeAssignedEmptyString() {
-    	PText textNode = new PText("Before");
+    public void testTextMayBeAssignedEmptyString() {    	
     	textNode.setText("");
     	assertEquals("", textNode.getText());
     }
     
-    public void testTextNullGetsInterpretedAsEmptyString() {
-    	PText text = new PText("Before");
-    	text.setText(null);
-    	assertEquals("", text.getText());
+    public void testTextNullGetsInterpretedAsEmptyString() {    	    
+    	textNode.setText(null);
+    	assertEquals("", textNode.getText());
     }
 
  
@@ -75,16 +87,78 @@ public class PTextTest extends TestCase {
     }
     
     public void testBoundsOfEmptyString() {
-        PText t = new PText();
-        t.setText("");
-        assertEquals(0, t.getBoundsReference().getWidth(), 0.000001);
-        t.setText(null);
-        assertEquals(0, t.getBoundsReference().getWidth(), 0.000001);
+        textNode.setText("");
+        assertEquals(0, textNode.getBoundsReference().getWidth(), 0.000001);
+        textNode.setText(null);
+        assertEquals(0, textNode.getBoundsReference().getWidth(), 0.000001);
     }
 
     public void testToString() {
-        PText t = new PText();
-        t.setText("hello world");
-        assertNotNull(t.toString());
+        textNode.setText("hello world");
+        assertNotNull(textNode.toString());
+    }
+    
+    public void testJustificationIsLeftByDefault() {
+    	assertEquals(JLabel.LEFT_ALIGNMENT, textNode.getJustification(), 0.000001);
+    }
+    
+    public void testSetJustificationPersists() {
+    	textNode.setJustification(JLabel.RIGHT_ALIGNMENT);
+    	assertEquals(JLabel.RIGHT_ALIGNMENT, textNode.getJustification(), 0.000001);
+    }
+    
+    public void testTextPaintIsBlackByDefault() {
+    	assertEquals(Color.BLACK, textNode.getTextPaint());
+    }
+    
+    public void testSetTextPaintPersists() {    	
+    	textNode.setTextPaint(Color.RED);
+    	assertEquals(Color.RED, textNode.getTextPaint());
+    }
+    
+    public void testConstrainWidthToTextTrueByDefault() {
+    	assertTrue(textNode.isConstrainWidthToTextWidth());
+    }
+
+    public void testConstrainHeightToTextTrueByDefault() {
+    	assertTrue(textNode.isConstrainHeightToTextHeight());
+    }
+    
+    public void testConstrainWidthPersists() {
+    	textNode.setConstrainWidthToTextWidth(true);
+    	assertTrue(textNode.isConstrainWidthToTextWidth());
+    }
+    
+    public void testConstrainHeightPersists() {
+    	textNode.setConstrainHeightToTextHeight(true);
+    	assertTrue(textNode.isConstrainHeightToTextHeight());
+    }
+    
+    public void testDefaultGreekThreshold() {
+    	assertEquals(PText.DEFAULT_GREEK_THRESHOLD, textNode.getGreekThreshold(), 0.000001);
+    }
+    
+    public void testSetGreekThreshold() {
+    	textNode.setGreekThreshold(2);
+    	assertEquals(2, textNode.getGreekThreshold(), 0.000001);
+    }
+    
+    public void testDefaultFont() {
+    	assertEquals(PText.DEFAULT_FONT, textNode.getFont());
+    }
+    
+    public void testSetFontPersists() {
+    	Font newFont = new Font("Arial", Font.BOLD, 10);
+    	textNode.setFont(newFont);
+    	assertEquals(newFont, textNode.getFont());
+    }
+    
+    public void testSetFontFiresPropertyChangedEvent() {    	
+    	textNode.addPropertyChangeListener(PText.PROPERTY_FONT, mockListener);
+    	Font newFont = new Font("Arial", Font.BOLD, 10);
+    	textNode.setFont(newFont);
+    	
+    	assertEquals(1, mockListener.getPropertyChangeCount());
+    	assertEquals(PText.PROPERTY_FONT, mockListener.getPropertyChange(0).getPropertyName());
     }
 }
