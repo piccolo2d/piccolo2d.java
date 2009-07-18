@@ -85,7 +85,7 @@ public class PSwingCanvas extends PCanvas {
     static class SwingWrapper extends JComponent {
 
         /** PSwingCanvas to wrap. */
-        private PSwingCanvas pSwingCanvas;
+        private PSwingCanvas canvas;
 
 
         /**
