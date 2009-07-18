@@ -43,13 +43,13 @@ import java.awt.*;
  */
 public class PSwingCanvas extends PCanvas {
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
-    private SwingWrapper swingWrapper;
+    private ChildWrapper swingWrapper;
 
     /**
      * Construct a new PSwingCanvas.
      */
     public PSwingCanvas() {
-        swingWrapper = new SwingWrapper(this);
+        swingWrapper = new ChildWrapper();
         add(swingWrapper);
         initRepaintManager();
         new PSwingEventHandler(this, getCamera()).setActive(true);
@@ -71,43 +71,27 @@ public class PSwingCanvas extends PCanvas {
         return swingWrapper;
     }
 
-    public void addPSwing(PSwing pSwing) {
+    void addPSwing(PSwing pSwing) {
         swingWrapper.add(pSwing.getComponent());
     }
 
-    public void removePSwing(PSwing pSwing) {
+    void removePSwing(PSwing pSwing) {
         swingWrapper.remove(pSwing.getComponent());
     }
 
     /**
      * JComponent wrapper for a PSwingCanvas.  Used by PSwingRepaintManager.
      */
-    static class SwingWrapper extends JComponent {
-
-        /** PSwingCanvas to wrap. */
-        private PSwingCanvas canvas;
-
-
+    static class ChildWrapper extends JComponent {
         /**
          * Create a new JComponent wrapper for the specified PSwingCanvas.
          *
          * @param canvas PSwingCanvas to wrap
          */
-        SwingWrapper(final PSwingCanvas canvas) {
-            this.canvas = canvas;
+        public ChildWrapper() {         
             setSize(new Dimension(0, 0));
             setPreferredSize(new Dimension(0, 0));
             putClientProperty(SWING_WRAPPER_KEY, SWING_WRAPPER_KEY);
-        }
-
-
-        /**
-         * Return the PSwingCanvas this JComponent wrapper is wrapping.
-         *
-         * @return the PSwingCanvas this JComponent wrapper is wrapping
-         */
-        PSwingCanvas getPSwingCanvas() {
-            return canvas;
-        }
+        }        
     }
 }

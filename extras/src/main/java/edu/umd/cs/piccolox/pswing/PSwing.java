@@ -28,21 +28,20 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -50,6 +49,15 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+
+import edu.umd.cs.piccolo.PCamera;
+import edu.umd.cs.piccolo.PLayer;
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
 
 /*
  This message was sent to Sun on August 27, 1999
@@ -212,7 +220,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     // /////Following fields are for automatic canvas/camera detection
     // //////////////////////////////////////////////////////////
     /*
-     * /keep track of which nodes we've attached listeners to since no built in
+     * Keep track of which nodes we've attached listeners to since no built in
      * support in PNode
      */
     private ArrayList listeningTo = new ArrayList();
@@ -250,13 +258,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         });
 
         component.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                System.out.println("Hiding component");
+            public void componentHidden(ComponentEvent e) {                
                 setVisible(false);
             }
 
-            public void componentShown(ComponentEvent e) {
-                System.out.println("Showing component");
+            public void componentShown(ComponentEvent e) {                
                 setVisible(true);
             }
         });
