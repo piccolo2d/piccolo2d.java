@@ -915,7 +915,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public PAffineTransform getGlobalToLocalTransform(PAffineTransform dest) {   
         dest = getLocalToGlobalTransform(dest);
-        dest.setTransform(dest.createInverse());
+        try {
+            dest.setTransform(dest.createInverse());
+        } catch (NoninvertibleTransformException e) {
+            throw new PAffineTransformException(e, dest);
+        }
         return dest;               
     }
 
@@ -2121,7 +2125,11 @@ public class PNode implements Cloneable, Serializable, Printable {
             return new PAffineTransform();
         }
                 
-        return new PAffineTransform(transform.createInverse());                            
+        try {
+            return new PAffineTransform(transform.createInverse());
+        } catch (NoninvertibleTransformException e) {
+            throw new PAffineTransformException(e, transform);
+        }
     }
 
     /**

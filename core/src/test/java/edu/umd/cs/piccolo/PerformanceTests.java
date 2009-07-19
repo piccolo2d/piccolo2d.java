@@ -55,9 +55,9 @@ public class PerformanceTests extends TestCase {
     }
 
     public void testRunPerformanceTests() {
-        if (1==1)
+        if (1 == 1)
             return;
-        
+
         // three times to warm up JVM
         for (int i = 0; i < 3; i++) {
             addNodes();
@@ -189,7 +189,7 @@ public class PerformanceTests extends TestCase {
         log.startTest();
         // parent.validateFullBounds(); now protected.
         parent.getFullBoundsReference(); // calls validateFullBounds as a side
-                                         // effect.
+        // effect.
         log.endTest("Validate Layout after translate " + NUMBER_NODES + " nodes");
 
         log.startTest();
@@ -213,7 +213,7 @@ public class PerformanceTests extends TestCase {
 
         // parent.validateFullBounds(); // now protected
         parent.getFullBoundsReference(); // calls validateFullBounds as a side
-                                         // effect.
+        // effect.
 
         log.startTest();
         for (int i = 0; i < NUMBER_NODES; i++) {
@@ -297,18 +297,18 @@ public class PerformanceTests extends TestCase {
 
     }
 
-    public void renderSpeed() {
+    public void renderSpeed() throws NoninvertibleTransformException {
         Random r = new Random();
         PAffineTransform at = new PAffineTransform();
         at.setScale(r.nextFloat());
         at.translate(r.nextFloat(), r.nextFloat());
-    
+
         log.startTest();
         for (int i = 0; i < NUMBER_NODES; i++) {
             at.createInverse();
         }
         log.endTest("Create inverse transform " + NUMBER_NODES + " times");
-  
+
         int height = 400;
         int width = 400;
 

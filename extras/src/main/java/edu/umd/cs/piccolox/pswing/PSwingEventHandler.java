@@ -33,6 +33,7 @@ import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventListener;
+import edu.umd.cs.piccolo.util.PAffineTransformException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -359,7 +360,12 @@ public class PSwingEventHandler implements PInputEventListener {
     }
 
     private void cameraToLocal(PCamera topCamera, Point2D pt, PNode node) {
-        AffineTransform inverse = topCamera.getViewTransform().createInverse();
+        AffineTransform inverse;
+        try {
+             inverse = topCamera.getViewTransform().createInverse();
+        } catch (NoninvertibleTransformException e) {
+            throw new PAffineTransformException(e, topCamera.getViewTransform());
+        }
       
         /*
          * Only apply the camera's view transform when this node is a descendant

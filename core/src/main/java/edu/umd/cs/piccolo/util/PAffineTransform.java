@@ -333,17 +333,5 @@ public class PAffineTransform extends AffineTransform {
             }
         }
         aRectangle.setRect(minX, minY, maxX - minX, maxY - minY);
-    }
-    /**
-     * Creates an inverse transform of this PAffineTransform
-     * 
-     * If it's not possible then it throws a PAffineTransformException
-     */
-    public AffineTransform createInverse() {
-        try {
-            return super.createInverse();            
-        } catch (NoninvertibleTransformException e) {
-            throw new PAffineTransformException(e, this);
-        }
-    }
+    }    
 }
