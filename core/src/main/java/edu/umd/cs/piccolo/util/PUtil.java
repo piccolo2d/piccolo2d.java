@@ -96,70 +96,74 @@ public class PUtil {
         return c;
     }
 
-    public static void writeStroke(Stroke aStroke, ObjectOutputStream out) throws IOException {
-        if (aStroke instanceof Serializable) {
+    public static void writeStroke(Stroke stroke, ObjectOutputStream out) throws IOException {
+        if (stroke instanceof Serializable) {
             out.writeBoolean(true);
             out.writeBoolean(true);
-            out.writeObject(aStroke);
+            out.writeObject(stroke);
         }
-        else if (aStroke instanceof BasicStroke) {
+        else if (stroke instanceof BasicStroke) {
             out.writeBoolean(true);
             out.writeBoolean(false);
-            BasicStroke s = (BasicStroke) aStroke;
-
-            float[] dash = s.getDashArray();
-
-            if (dash == null) {
-                out.write(0);
-            }
-            else {
-                out.write(dash.length);
-                for (int i = 0; i < dash.length; i++) {
-                    out.writeFloat(dash[i]);
-                }
-            }
-
-            out.writeFloat(s.getLineWidth());
-            out.writeInt(s.getEndCap());
-            out.writeInt(s.getLineJoin());
-            out.writeFloat(s.getMiterLimit());
-            out.writeFloat(s.getDashPhase());
+            writeBasicStroke((BasicStroke) stroke, out);
         }
         else {
             out.writeBoolean(false);
         }
     }
 
-    public static Stroke readStroke(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        boolean wroteStroke = in.readBoolean();
-        if (wroteStroke) {
-            boolean serializedStroke = in.readBoolean();
-            if (serializedStroke) {
-                return (Stroke) in.readObject();
-            }
-            else {
-                float[] dash = null;
-                int dashLength = in.read();
+    private static void writeBasicStroke(BasicStroke basicStroke, ObjectOutputStream out) throws IOException {
+        float[] dash = basicStroke.getDashArray();
 
-                if (dashLength != 0) {
-                    dash = new float[dashLength];
-                    for (int i = 0; i < dashLength; i++) {
-                        dash[i] = in.readFloat();
-                    }
-                }
-
-                float lineWidth = in.readFloat();
-                int endCap = in.readInt();
-                int lineJoin = in.readInt();
-                float miterLimit = in.readFloat();
-                float dashPhase = in.readFloat();
-
-                return new BasicStroke(lineWidth, endCap, lineJoin, miterLimit, dash, dashPhase);
-            }
+        if (dash == null) {
+            out.write(0);
         }
         else {
+            out.write(dash.length);
+            for (int i = 0; i < dash.length; i++) {
+                out.writeFloat(dash[i]);
+            }
+        }
+
+        out.writeFloat(basicStroke.getLineWidth());
+        out.writeInt(basicStroke.getEndCap());
+        out.writeInt(basicStroke.getLineJoin());
+        out.writeFloat(basicStroke.getMiterLimit());
+        out.writeFloat(basicStroke.getDashPhase());
+    }
+
+    public static Stroke readStroke(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        boolean wroteStroke = in.readBoolean();
+        if (!wroteStroke) {
             return null;
         }
+        
+        boolean serializedStroke = in.readBoolean();
+        if (serializedStroke) {
+            return (Stroke) in.readObject();
+        }
+        
+        return readBasicStroke(in);        
+    }
+
+    private static Stroke readBasicStroke(ObjectInputStream in) throws IOException {
+        float[] dash = null;
+        int dashLength = in.read();
+
+        if (dashLength != 0) {
+            dash = new float[dashLength];
+            for (int i = 0; i < dashLength; i++) {
+                dash[i] = in.readFloat();
+            }
+        }
+
+        float lineWidth = in.readFloat();
+        int endCap = in.readInt();
+        int lineJoin = in.readInt();
+        float miterLimit = in.readFloat();
+        float dashPhase = in.readFloat();
+
+        return new BasicStroke(lineWidth, endCap, lineJoin, miterLimit, dash, dashPhase);
     }
 
     private static final int PATH_IS_DONE = -1;

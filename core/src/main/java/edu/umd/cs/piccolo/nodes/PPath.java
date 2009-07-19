@@ -102,7 +102,7 @@ public class PPath extends PNode {
     private static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
     private static final Color DEFAULT_STROKE_PAINT = Color.black;
 
-    private transient GeneralPath path;
+    protected transient GeneralPath path;
     private transient GeneralPath resizePath;
     private transient Stroke stroke;
     private transient boolean updatingBoundsFromPath;
@@ -152,6 +152,7 @@ public class PPath extends PNode {
         return result;
     }
 
+    
     public PPath() {
         strokePaint = DEFAULT_STROKE_PAINT;
         stroke = DEFAULT_STROKE;
@@ -225,10 +226,9 @@ public class PPath extends PNode {
      * need to take this into consideration.
      */
     protected void internalUpdateBounds(double x, double y, double width, double height) {
-        if (updatingBoundsFromPath)
+        if (updatingBoundsFromPath || path == null) {
             return;
-        if (path == null)
-            return;
+        }
 
         if (resizePath != null) {
             path.reset();

@@ -28,6 +28,9 @@
  */
 package edu.umd.cs.piccolo.nodes;
 
+import java.awt.Color;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,48 +39,139 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import junit.framework.TestCase;
-import edu.umd.cs.piccolo.nodes.PPath;
+import edu.umd.cs.piccolo.MockPropertyChangeListener;
+import edu.umd.cs.piccolo.PiccoloAsserts;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PObjectOutputStream;
 
 public class PPathTest extends TestCase {
 
-    public PPathTest(String name) {
-        super(name);
+    private MockPropertyChangeListener mockListener;
+
+    public void setUp() {
+        mockListener = new MockPropertyChangeListener();
+    }
+    
+	public void testStrokeIsNotNullByDefault() {
+	    PPath path = new PPath();
+	    assertNotNull(path.getStroke());	    
+	}
+	
+	public void testStrokePaintIsBlackByDefault() {
+	    PPath path = new PPath();
+	    assertEquals(Color.BLACK, path.getStrokePaint());
+	}
+	
+	public void testClone() {
+		PPath p = PPath.createEllipse(0, 0, 100, 100);
+		PBounds b = p.getBounds();
+		p = (PPath) p.clone();
+		assertEquals(p.getBounds(), b);
+	}
+
+	public void testSerialization() throws IOException, ClassNotFoundException {
+		final PPath srcPath = PPath.createEllipse(0, 0, 100, 100);
+		final PBounds srcBounds = srcPath.getBounds();
+
+		File file = File.createTempFile("test", "ser");
+		
+		serializeToFile(srcPath, file);
+
+		PPath resultPath = deserializeFromFile(srcBounds, file);
+
+		assertEquals(resultPath.getBounds(), srcBounds);
+	}
+
+	private PPath deserializeFromFile(PBounds b, File file)
+			throws FileNotFoundException, IOException, ClassNotFoundException {
+		PPath path;
+		FileInputStream fin = new FileInputStream(file);
+		ObjectInputStream in = new ObjectInputStream(fin);
+		path = (PPath) in.readObject();		
+		file.delete();
+		
+		return path;
+	}
+
+	private void serializeToFile(PPath p, File file)
+			throws FileNotFoundException, IOException {
+		FileOutputStream fout = new FileOutputStream(file);
+		PObjectOutputStream out = new PObjectOutputStream(fout);
+		out.writeObjectTree(p);
+		out.flush();
+		out.close();
+	}
+	
+    public void testCreateRectangleReturnsValidPPath() {
+        PPath path = PPath.createRectangle(0, 0, 100, 50);
+        assertNotNull(path);
+
+        // Seems like rounding is affecting the bounds greatly
+        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 1);
     }
 
-    public void testCopy() {
-        PPath p = PPath.createEllipse(0, 0, 100, 100);
-        PBounds b = p.getBounds();
-        p = (PPath) p.clone();
-        assertEquals(p.getBounds(), b);
+    public void testCreateEllipseReturnsValidPPath() {
+        PPath path = PPath.createEllipse(0, 0, 100, 50);
+        assertNotNull(path);
+
+        // Seems like rounding is affecting the bounds greatly
+        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 1);
+    }
+    
+    public void testCreateRoundedRectReturnsValidPPath() {
+        PPath path = PPath.createRoundRectangle(0, 0, 100, 50, 10, 10);
+        assertNotNull(path);
+
+        // Seems like rounding is affecting the bounds greatly
+        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 1);
+    }
+    
+    public void testCreateLineReturnsValidPPath() {
+        PPath path = PPath.createLine(0,0, 100,0);
+        assertNotNull(path);
+
+        // Seems like rounding is affecting the bounds greatly
+        PiccoloAsserts.assertEquals(new PBounds(0,0,100,0), path.getBounds(), 1);
+    }
+    
+    public void testCreatePolyLinePoint2DReturnsValidPPath() {
+        PPath path = PPath.createPolyline(new Point2D[] {
+                new Point2D.Double(0, 0),
+                new Point2D.Double(100, 50),
+                new Point2D.Double(100, 0)
+        });
+        assertNotNull(path);
+
+        // Seems like rounding is affecting the bounds greatly
+        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 2);
+    }
+    
+    public void testCreatePolyLineFloatsReturnsValidPPath() {
+        PPath path = PPath.createPolyline(new float[] { 0, 100, 100}, new float[] { 0, 50, 0 });
+        assertNotNull(path);
+
+        // Seems like rounding is affecting the bounds greatly
+        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 2);
+    }
+    
+    public void testSetStrokePaintPersists() {
+        PPath path = new PPath();
+        path.setStrokePaint(Color.RED);
+        assertEquals(Color.RED, path.getStrokePaint());
+    }
+    
+    public void testSetStrokeFiresPropertyChangeEvent() {
+        PPath path = new PPath();
+        path.addPropertyChangeListener(PPath.PROPERTY_STROKE_PAINT, mockListener);
+        path.setStrokePaint(Color.RED);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+    
+    public void testChangingPathFiresPropertyChangeEvent() {
+        PPath path = new PPath();
+        path.addPropertyChangeListener(PPath.PROPERTY_PATH, mockListener);
+        path.append(new Rectangle2D.Double(0, 0, 100, 50), true);
+        assertEquals(1, mockListener.getPropertyChangeCount());
     }
 
-    public void testSaveToFile() {
-        PPath p = PPath.createEllipse(0, 0, 100, 100);
-        PBounds b = p.getBounds();
-        try {
-            File file = new File("myfile");
-            FileOutputStream fout = new FileOutputStream(file);
-            PObjectOutputStream out = new PObjectOutputStream(fout);
-            out.writeObjectTree(p);
-            out.flush();
-            out.close();
-
-            FileInputStream fin = new FileInputStream(file);
-            ObjectInputStream in = new ObjectInputStream(fin);
-            p = (PPath) in.readObject();
-            assertEquals(p.getBounds(), b);
-            file.delete();
-        }
-        catch (FileNotFoundException e) {
-            assertTrue(false);
-        }
-        catch (ClassNotFoundException e) {
-            assertTrue(false);
-        }
-        catch (IOException e) {
-            assertTrue(false);
-        }
-    }
 }

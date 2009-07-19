@@ -387,8 +387,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         manager.lockRepaint(component);
 
         RenderingHints oldHints = g2.getRenderingHints();
-
-        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+        
+        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         component.paint(g2);
 
         g2.setRenderingHints(oldHints);

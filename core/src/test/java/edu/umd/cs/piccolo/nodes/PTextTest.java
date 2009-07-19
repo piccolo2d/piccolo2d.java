@@ -30,13 +30,11 @@ package edu.umd.cs.piccolo.nodes;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 
-import edu.umd.cs.piccolo.MockPropertyChangeListener;
-
 import junit.framework.TestCase;
+import edu.umd.cs.piccolo.MockPropertyChangeListener;
 
 public class PTextTest extends TestCase {
 
@@ -73,7 +71,6 @@ public class PTextTest extends TestCase {
     	textNode.setText(null);
     	assertEquals("", textNode.getText());
     }
-
  
     public void testBoundsGrowWithTextByDefault() {
     	PText text123 = new PText("123");        

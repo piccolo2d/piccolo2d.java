@@ -28,8 +28,6 @@
  */
 package edu.umd.cs.piccolo.nodes;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,20 +35,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
-import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 public class PImageTest extends TestCase {
 
-    public PImageTest(String name) {
-        super(name);
-    }
+    public void testClone() {
+        final PImage srcNode = new PImage(new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));
+        final PImage clonedNode = (PImage) srcNode.clone();
+        assertNotNull(clonedNode.getImage());
 
-    public void testCopy() {
-        PImage aNode = new PImage(new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));
-        aNode = (PImage) aNode.clone();
-        assertNotNull(aNode.getImage());
-        assertEquals(aNode.getBounds(), new PBounds(0, 0, 100, 100));
+        assertEquals(srcNode.getImage().getWidth(null), clonedNode.getImage().getWidth(null));
+        assertEquals(srcNode.getImage().getHeight(null), clonedNode.getImage().getHeight(null));
+        
+        assertEquals(srcNode.getBounds(), clonedNode.getBounds());
     }
 
     public void testToString() {
@@ -81,7 +78,7 @@ public class PImageTest extends TestCase {
         imgFile.deleteOnExit();
         ImageIO.write(img, "JPEG", imgFile);
         
-        PImage imageNode = new PImage(imgFile.toURL());
+        PImage imageNode = new PImage(imgFile.toURI().toURL());
         assertEquals(100, imageNode.getImage().getWidth(null));
         assertEquals(100, imageNode.getImage().getHeight(null));
     }
