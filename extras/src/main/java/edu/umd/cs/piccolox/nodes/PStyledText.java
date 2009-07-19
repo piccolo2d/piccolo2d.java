@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -138,71 +139,75 @@ public class PStyledText extends PNode {
         int pos = 0;
 
         // First get the actual text and stick it in an Attributed String
+
+        stringContents = new ArrayList();
+        pEnds = new ArrayList();
+
+        String documentString;
         try {
+            documentString = document.getText(0, document.getLength());
+        }
+        catch (BadLocationException e) {
+            // Since this the location we're providing comes from directly
+            // querying the document, this is impossible in a single threaded model
+            return;
+        }
+        
+        StringTokenizer tokenizer = new StringTokenizer(documentString, "\n", true);
 
-            stringContents = new ArrayList();
-            pEnds = new ArrayList();
+        // lastNewLine is used to detect the case when two newlines follow
+        // in direct succession
+        // & lastNewLine should be true to start in case the first character
+        // is a newline
+        boolean lastNewLine = true;
+        for (int i = 0; tokenizer.hasMoreTokens(); i++) {
+            String token = tokenizer.nextToken();
 
-            String s = document.getText(0, document.getLength());
-            StringTokenizer tokenizer = new StringTokenizer(s, "\n", true);
-
-            // lastNewLine is used to detect the case when two newlines follow
-            // in direct succession
-            // & lastNewLine should be true to start in case the first character
-            // is a newline
-            boolean lastNewLine = true;
-            for (int i = 0; tokenizer.hasMoreTokens(); i++) {
-                String token = tokenizer.nextToken();
-
-                // If the token
-                if (token.equals("\n")) {
-                    if (lastNewLine) {
-                        stringContents.add(new AttributedString(" "));
-                        pEnds.add(new RunInfo(pos, pos + 1));
-
-                        pos = pos + 1;
-
-                        lastNewLine = true;
-                    }
-                    else {
-                        pos = pos + 1;
-
-                        lastNewLine = true;
-                    }
-                }
-                // If the token is empty - create an attributed string with a
-                // single space
-                // since LineBreakMeasurers don't work with an empty string
-                // - note that this case should only arise if the document is
-                // empty
-                else if (token.equals("")) {
+            // If the token
+            if (token.equals("\n")) {
+                if (lastNewLine) {
                     stringContents.add(new AttributedString(" "));
-                    pEnds.add(new RunInfo(pos, pos));
+                    pEnds.add(new RunInfo(pos, pos + 1));
 
-                    lastNewLine = false;
+                    pos = pos + 1;
+
+                    lastNewLine = true;
                 }
-                // This is the normal case - where we have some text
                 else {
-                    stringContents.add(new AttributedString(token));
-                    pEnds.add(new RunInfo(pos, pos + token.length()));
+                    pos = pos + 1;
 
-                    // Increment the position
-                    pos = pos + token.length();
-
-                    lastNewLine = false;
+                    lastNewLine = true;
                 }
             }
-
-            // Add one more newline if the last character was a newline
-            if (lastNewLine) {
+            // If the token is empty - create an attributed string with a
+            // single space
+            // since LineBreakMeasurers don't work with an empty string
+            // - note that this case should only arise if the document is
+            // empty
+            else if (token.equals("")) {
                 stringContents.add(new AttributedString(" "));
-                pEnds.add(new RunInfo(pos, pos + 1));
+                pEnds.add(new RunInfo(pos, pos));
+
+                lastNewLine = false;
+            }
+            // This is the normal case - where we have some text
+            else {
+                stringContents.add(new AttributedString(token));
+                pEnds.add(new RunInfo(pos, pos + token.length()));
+
+                // Increment the position
+                pos = pos + token.length();
 
                 lastNewLine = false;
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+
+        // Add one more newline if the last character was a newline
+        if (lastNewLine) {
+            stringContents.add(new AttributedString(" "));
+            pEnds.add(new RunInfo(pos, pos + 1));
+
+            lastNewLine = false;
         }
 
         // The default style context - which will be reused

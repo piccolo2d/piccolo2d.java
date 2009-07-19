@@ -46,6 +46,7 @@ import java.awt.print.Book;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -73,6 +74,7 @@ import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.event.PInputEventListener;
 import edu.umd.cs.piccolo.util.PAffineTransform;
+import edu.umd.cs.piccolo.util.PAffineTransformException;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PNodeFilter;
 import edu.umd.cs.piccolo.util.PObjectOutputStream;
@@ -646,13 +648,11 @@ public class PNode implements Cloneable, Serializable, Printable {
             return (PNode) new ObjectInputStream(new ByteArrayInputStream(ser)).readObject();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+            return null;
+        }        
     }
 
     // ****************************************************************
@@ -913,16 +913,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return The inverse of the concatenation of transforms from the root down
      *         to this node.
      */
-    public PAffineTransform getGlobalToLocalTransform(PAffineTransform dest) {
-        try {
-            dest = getLocalToGlobalTransform(dest);
-            dest.setTransform(dest.createInverse());
-            return dest;
-        }
-        catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public PAffineTransform getGlobalToLocalTransform(PAffineTransform dest) {   
+        dest = getLocalToGlobalTransform(dest);
+        dest.setTransform(dest.createInverse());
+        return dest;               
     }
 
     // ****************************************************************
@@ -2126,13 +2120,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (transform == null) {
             return new PAffineTransform();
         }
-        
-        try {
-            return new PAffineTransform(transform.createInverse());
-        }
-        catch (NoninvertibleTransformException e) {
-            return null;    
-        }                    
+                
+        return new PAffineTransform(transform.createInverse());                            
     }
 
     /**
@@ -2521,7 +2510,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             try {
                 printJob.print();
             }
-            catch (Exception e) {
+            catch (PrinterException e) {
                 System.out.println("Error Printing");
                 e.printStackTrace();
             }

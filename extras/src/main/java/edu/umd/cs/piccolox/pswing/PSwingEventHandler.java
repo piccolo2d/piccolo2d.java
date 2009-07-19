@@ -359,14 +359,8 @@ public class PSwingEventHandler implements PInputEventListener {
     }
 
     private void cameraToLocal(PCamera topCamera, Point2D pt, PNode node) {
-        AffineTransform inverse = null;
-        try {
-            inverse = topCamera.getViewTransform().createInverse();
-        }
-        catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-
+        AffineTransform inverse = topCamera.getViewTransform().createInverse();
+      
         /*
          * Only apply the camera's view transform when this node is a descendant
          * of PLayer
@@ -413,22 +407,7 @@ public class PSwingEventHandler implements PInputEventListener {
                 new Exception("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
                         + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName()).printStackTrace();
             }
-        }
-
-        /*
-         * if( !( EventQueue.getCurrentEvent() instanceof MouseEvent ) ) { new
-         * Exception(
-         * "EventQueue.getCurrentEvent was not a MouseEvent, consider making PInputEvent.getSourceSwingEvent public.  Actual event: "
-         * + EventQueue.getCurrentEvent() + ", class=" +
-         * EventQueue.getCurrentEvent().getClass().getName()
-         * ).printStackTrace(); } if( aEvent.isMouseEvent() &&
-         * EventQueue.getCurrentEvent() instanceof MouseEvent ) { MouseEvent
-         * sourceSwingEvent = (MouseEvent)EventQueue.getCurrentEvent();
-         * PSwingMouseEvent pSwingMouseEvent =
-         * PSwingMouseEvent.createMouseEvent( sourceSwingEvent.getID(),
-         * sourceSwingEvent, aEvent ); if( !recursing ) { recursing = true;
-         * dispatchEvent( pSwingMouseEvent, aEvent ); recursing = false; } }
-         */
+        }        
     }
 
     /**

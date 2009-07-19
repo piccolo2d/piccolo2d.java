@@ -302,17 +302,13 @@ public class PerformanceTests extends TestCase {
         PAffineTransform at = new PAffineTransform();
         at.setScale(r.nextFloat());
         at.translate(r.nextFloat(), r.nextFloat());
-
-        try {
-            log.startTest();
-            for (int i = 0; i < NUMBER_NODES; i++) {
-                at.createInverse();
-            }
-            log.endTest("Create inverse transform " + NUMBER_NODES + " times");
+    
+        log.startTest();
+        for (int i = 0; i < NUMBER_NODES; i++) {
+            at.createInverse();
         }
-        catch (NoninvertibleTransformException e) {
-        }
-
+        log.endTest("Create inverse transform " + NUMBER_NODES + " times");
+  
         int height = 400;
         int width = 400;
 
@@ -325,11 +321,7 @@ public class PerformanceTests extends TestCase {
         transorm1.translate(0.5, 10.1);
         PAffineTransform transorm2 = null;
 
-        try {
-            transorm2 = new PAffineTransform(transorm1.createInverse());
-        }
-        catch (NoninvertibleTransformException e) {
-        }
+        transorm2 = new PAffineTransform(transorm1.createInverse());
 
         GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice().getDefaultConfiguration();

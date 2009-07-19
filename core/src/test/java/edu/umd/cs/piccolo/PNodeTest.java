@@ -53,6 +53,7 @@ import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.activities.PColorActivity.Target;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.util.PAffineTransform;
+import edu.umd.cs.piccolo.util.PAffineTransformException;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDimension;
 import edu.umd.cs.piccolo.util.PNodeFilter;
@@ -874,10 +875,15 @@ public class PNodeTest extends TestCase {
         assertEquals(expectedTransform, node.getInverseTransform());
     }
 
-    public void testGetInverseTransformReturnsNullWhenTransformIsNotInvertible() {
+    public void testGetInverseTransformThrowsExceptionWhenTransformIsNotInvertible() {
         node.setTransform(new AffineTransform(new double[] { 0, 0, 0, 0, 0, 0 }));
 
-        assertNull(node.getInverseTransform());
+        try {
+            node.getInverseTransform();
+            fail("Exception not thrown");
+        } catch (PAffineTransformException e) {
+            // expected
+        }
     }
 
     public void testSetVisibleIsRespectedOnPaint() {

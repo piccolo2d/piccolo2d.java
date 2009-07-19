@@ -39,6 +39,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -105,11 +106,17 @@ public class PNotificationCenter {
         Method method = null;
 
         try {
-            method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });
+            method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });                                
         }
         catch (NoSuchMethodException e) {
             return false;
         }
+        
+        int modifiers = method.getModifiers();
+        
+        if (!Modifier.isPublic(modifiers)) {
+            return false;
+        }  
 
         if (name == null) {
             name = NULL_MARKER;
@@ -119,17 +126,17 @@ public class PNotificationCenter {
             object = NULL_MARKER;
         }
 
-        Object key = new CompoundKey(name, object);
-        Object value = new CompoundValue(listener, method);
+        Object key = new NotificationKey(name, object);
+        Object notificationTarget = new NotificationTarget(listener, method);
 
         List list = (List) listenersMap.get(key);
         if (list == null) {
             list = new ArrayList();
-            listenersMap.put(new CompoundKey(name, object, keyQueue), list);
+            listenersMap.put(new NotificationKey(name, object, keyQueue), list);
         }
 
-        if (!list.contains(value)) {
-            list.add(value);
+        if (!list.contains(notificationTarget)) {
+            list.add(notificationTarget);
         }
         
         return true;
@@ -205,55 +212,61 @@ public class PNotificationCenter {
 
         if (name != null) {
             if (object != null) { // both are specified
-                listenersList = (List) listenersMap.get(new CompoundKey(name, object));
+                listenersList = (List) listenersMap.get(new NotificationKey(name, object));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
                 }
-                listenersList = (List) listenersMap.get(new CompoundKey(name, NULL_MARKER));
+                listenersList = (List) listenersMap.get(new NotificationKey(name, NULL_MARKER));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
                 }
-                listenersList = (List) listenersMap.get(new CompoundKey(NULL_MARKER, object));
+                listenersList = (List) listenersMap.get(new NotificationKey(NULL_MARKER, object));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
                 }
             }
             else { // object is null
-                listenersList = (List) listenersMap.get(new CompoundKey(name, NULL_MARKER));
+                listenersList = (List) listenersMap.get(new NotificationKey(name, NULL_MARKER));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
                 }
             }
         }
         else if (object != null) { // name is null
-            listenersList = (List) listenersMap.get(new CompoundKey(NULL_MARKER, object));
+            listenersList = (List) listenersMap.get(new NotificationKey(NULL_MARKER, object));
             if (listenersList != null) {
                 mergedListeners.addAll(listenersList);
             }
         }
 
-        Object key = new CompoundKey(NULL_MARKER, NULL_MARKER);
+        Object key = new NotificationKey(NULL_MARKER, NULL_MARKER);
         listenersList = (List) listenersMap.get(key);
         if (listenersList != null) {
             mergedListeners.addAll(listenersList);
         }
+        
+        dispatchNotifications(aNotification, mergedListeners);
+    }
 
-        CompoundValue value;
-        Iterator it = mergedListeners.iterator();
+    private void dispatchNotifications(PNotification aNotification, List listeners) {
+        NotificationTarget listener;
+        Iterator it = listeners.iterator();
 
         while (it.hasNext()) {
-            value = (CompoundValue) it.next();
-            if (value.get() == null) {
+            listener = (NotificationTarget) it.next();
+            if (listener.get() == null) {
                 it.remove();
             }
             else {
                 try {
-                    value.getMethod().invoke(value.get(), new Object[] { aNotification });
+                    listener.getMethod().invoke(listener.get(), new Object[] { aNotification });
                 }
-                catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                catch (IllegalAccessException e) {                    
+                    // it's impossible add listeners that are not public
                 }
                 catch (InvocationTargetException e) {
+                    // Since this is how Swing handles Exceptions that get thrown on listeners,
+                    // it's probably ok to do it here.
                     e.printStackTrace();
                 }
             }
@@ -269,7 +282,7 @@ public class PNotificationCenter {
 
         Iterator it = listenersMap.keySet().iterator();
         while (it.hasNext()) {
-            CompoundKey key = (CompoundKey) it.next();
+            NotificationKey key = (NotificationKey) it.next();
             if ((name == null) || (name == key.name())) {
                 if ((object == null) || (object == key.get())) {
                     result.add(key);
@@ -292,7 +305,7 @@ public class PNotificationCenter {
 
         Iterator it = list.iterator();
         while (it.hasNext()) {
-            Object observer = ((CompoundValue) it.next()).get();
+            Object observer = ((NotificationTarget) it.next()).get();
             if ((observer == null) || (listener == observer)) {
                 it.remove();
             }
@@ -304,24 +317,24 @@ public class PNotificationCenter {
     }
 
     protected void processKeyQueue() {
-        CompoundKey key;
-        while ((key = (CompoundKey) keyQueue.poll()) != null) {
+        NotificationKey key;
+        while ((key = (NotificationKey) keyQueue.poll()) != null) {
             listenersMap.remove(key);
         }
     }
 
-    protected static class CompoundKey extends WeakReference {
+    protected static class NotificationKey extends WeakReference {
 
         private Object name;
         private int hashCode;
 
-        public CompoundKey(Object aName, Object anObject) {
+        public NotificationKey(Object aName, Object anObject) {
             super(anObject);
             name = aName;
             hashCode = aName.hashCode() + anObject.hashCode();
         }
 
-        public CompoundKey(Object aName, Object anObject, ReferenceQueue aQueue) {
+        public NotificationKey(Object aName, Object anObject, ReferenceQueue aQueue) {
             super(anObject, aQueue);
             name = aName;
             hashCode = aName.hashCode() + anObject.hashCode();
@@ -338,7 +351,7 @@ public class PNotificationCenter {
         public boolean equals(Object anObject) {
             if (this == anObject)
                 return true;
-            CompoundKey key = (CompoundKey) anObject;
+            NotificationKey key = (NotificationKey) anObject;
             if (name == key.name || (name != null && name.equals(key.name))) {
                 Object object = get();
                 if (object != null) {
@@ -355,12 +368,12 @@ public class PNotificationCenter {
         }
     }
 
-    protected static class CompoundValue extends WeakReference {
+    protected static class NotificationTarget extends WeakReference {
 
         protected int hashCode;
         protected Method method;
 
-        public CompoundValue(Object object, Method method) {
+        public NotificationTarget(Object object, Method method) {
             super(object);
             hashCode = object.hashCode();
             this.method = method;
@@ -377,7 +390,7 @@ public class PNotificationCenter {
         public boolean equals(Object object) {
             if (this == object)
                 return true;
-            CompoundValue value = (CompoundValue) object;
+            NotificationTarget value = (NotificationTarget) object;
             if (method == value.method || (method != null && method.equals(value.method))) {
                 Object o = get();
                 if (o != null) {
