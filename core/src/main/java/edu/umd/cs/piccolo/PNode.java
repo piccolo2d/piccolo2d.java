@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -3194,5 +3195,18 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         return result.toString();
+    }
+    
+    public PInputEventListener[] getInputEventListeners() {
+        if (listenerList == null || listenerList.getListenerCount() == 0)
+            return new PInputEventListener[] {};
+        
+        EventListener[] listeners = listenerList.getListeners(PInputEventListener.class);
+        
+        PInputEventListener[] result = new PInputEventListener[listeners.length];
+        for (int i=0; i<listeners.length; i++) {
+            result[i] = (PInputEventListener) listeners[i];
+        }
+        return result;
     }
 }

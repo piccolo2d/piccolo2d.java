@@ -688,4 +688,8 @@ public class PCanvas extends JComponent implements PComponent {
     public int getInteractingRenderQuality() {
         return interactingRenderQuality;
     }
+
+    public PInputEventListener[] getInputEventListeners() {        
+        return camera.getInputEventListeners();
+    }
 }
