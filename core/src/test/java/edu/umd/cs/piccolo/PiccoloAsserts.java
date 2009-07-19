@@ -44,7 +44,7 @@ import edu.umd.cs.piccolo.util.PDimension;
 public final class PiccoloAsserts {
     private PiccoloAsserts() {
         // Nothing to do
-    }   
+    }
 
     public static final void assertEquals(PBounds expected, PBounds actual, double errorRate) {
         assertEquals("Expected " + expected + " but was " + actual, expected, actual, errorRate);
@@ -57,12 +57,19 @@ public final class PiccoloAsserts {
         Assert.assertEquals(message, expected.getHeight(), actual.getHeight(), errorRate);
     }
 
-    public static void assertEquals(PDimension expected, Dimension2D actual, double errorRate) {        
+    public static void assertEquals(PDimension expected, Dimension2D actual, double errorRate) {
         assertEquals("Expected " + expected + " but was " + actual, expected, actual, errorRate);
     }
-    
-    public static void assertEquals(String message, PDimension expected, Dimension2D actual, double errorRate) {        
+
+    public static void assertEquals(String message, PDimension expected, Dimension2D actual, double errorRate) {
         Assert.assertEquals(message, expected.getWidth(), actual.getWidth(), errorRate);
         Assert.assertEquals(message, expected.getHeight(), actual.getHeight(), errorRate);
+    }
+
+    public static void assertEquals(String[] expected, String[] actual) {
+        Assert.assertEquals("arrays are not same size", expected.length, actual.length);
+        for (int i = 0; i < expected.length; i++) {
+            Assert.assertEquals(expected[i], expected[i]);
+        }
     }
 }
