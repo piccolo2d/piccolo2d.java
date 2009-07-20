@@ -102,7 +102,7 @@ public class PPath extends PNode {
     private static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
     private static final Color DEFAULT_STROKE_PAINT = Color.black;
 
-    protected transient GeneralPath path;
+    private transient GeneralPath path;
     private transient GeneralPath resizePath;
     private transient Stroke stroke;
     private transient boolean updatingBoundsFromPath;
