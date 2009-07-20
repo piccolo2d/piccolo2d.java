@@ -182,6 +182,17 @@
             <format>xml</format>
             <format>html</format>
           </formats>
+          <instrumentation>
+            <ignores>
+              <ignore>edu.umd.cs.piccolo.examples.*</ignore>
+              <ignore>edu.umd.cs.piccolo.examples.pswing.*</ignore>
+              <ignore>edu.umd.cs.piccolo.examples.swt.*</ignore>
+              <ignore>edu.umd.cs.piccolo.tutorial.*</ignore>              
+            </ignores>
+            <excludes>
+              <exclude>edu/umd/cs/piccolo/examples/**</exclude>              
+            </excludes>
+          </instrumentation>
         </configuration>
         <executions>
           <execution>
