@@ -87,11 +87,13 @@
   <developers>
     <developer>
       <id>allain.lalonde</id>
-      <name>allain.lalonde</name>
+      <name>Allain Lalonde</name>
       <roles>
         <role>developer</role>
       </roles>
-      <timezone>-6</timezone>
+      <email>allain@machete.ca</email>
+      <url>http://www.machete.ca</url>
+      <timezone>-5</timezone>
     </developer>
     <developer>
       <id>bederson</id>
