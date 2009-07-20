@@ -29,8 +29,7 @@ public class PObjectOutputStreamTest extends TestCase {
         assertTrue("Header not output", outputBytes.length > 0);
     }
     
-    public void testWriteConditionalObjectAcceptsNull() throws IOException {
-        outStream.writeConditionalObject("A");
+    public void testWriteConditionalObjectAcceptsNull() throws IOException {        
         
     }
 }
