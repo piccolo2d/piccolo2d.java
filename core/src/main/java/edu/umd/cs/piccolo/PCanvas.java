@@ -35,8 +35,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyEventPostProcessor;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.InputEvent;
@@ -46,8 +44,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.FocusManager;
 import javax.swing.JComponent;
