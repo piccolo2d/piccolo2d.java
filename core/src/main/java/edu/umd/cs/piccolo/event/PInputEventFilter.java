@@ -104,11 +104,13 @@ public class PInputEventFilter {
         if (aEvent.isHandled() && !acceptsAlreadyHandledEvents) 
             return false;
         
-        if ((modifiers & andMask) != andMask || (modifiers & notMask) != 0)
-            return false;
-                                                    
-        if (orMask != ALL_MODIFIERS_MASK && (modifiers & orMask) == 0)
-            return false;
+        if (modifiers != 0) {
+            if ((modifiers & andMask) != andMask || (modifiers & notMask) != 0)
+                return false;
+                                                        
+            if (orMask != ALL_MODIFIERS_MASK && (modifiers & orMask) == 0)
+                return false;
+        }
         
         if (aEvent.isMouseEvent() && clickCount != -1 && clickCount != aEvent.getClickCount()) 
             return false;

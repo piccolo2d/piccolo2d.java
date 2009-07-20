@@ -207,7 +207,7 @@ public class PInputEventFilterTest extends TestCase {
     }
 
     private PInputEvent buildTestEvent() {
-        return buildTestEvent(0);
+        return buildTestEvent(InputEvent.BUTTON1_MASK);
     }
 
     private PInputEvent buildTestEvent(int modifiers) {
