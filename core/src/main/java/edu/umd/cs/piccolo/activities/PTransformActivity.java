@@ -29,7 +29,6 @@
 package edu.umd.cs.piccolo.activities;
 
 import java.awt.geom.AffineTransform;
-import java.util.Arrays;
 
 import edu.umd.cs.piccolo.util.PAffineTransform;
 
@@ -154,11 +153,25 @@ public class PTransformActivity extends PInterpolatingActivity {
     protected String paramString() {
         StringBuffer result = new StringBuffer();
 
-        result.append("source=" + (source == null ? "null" : Arrays.toString(source)));
-        result.append(",destination=" + (destination == null ? "null" : Arrays.toString(destination)));
+        result.append("source=" + (source == null ? "null" : toString(source)));
+        result.append(",destination=" + (destination == null ? "null" : toString(destination)));
         result.append(',');
         result.append(super.paramString());
 
+        return result.toString();
+    }
+    
+    // here since 1.4 doesn't support Arrays.toString(double[] ...)
+    // should be removed when we migrate to 1.5
+    private String toString(double[] array) {
+        StringBuffer result = new StringBuffer('[');
+        for (int i=0; i<array.length; i++) {
+            result.append(array[i]);
+            result.append(',');            
+        }
+        result.deleteCharAt(result.length()-1);
+        result.append(']');
+        
         return result.toString();
     }
 }
