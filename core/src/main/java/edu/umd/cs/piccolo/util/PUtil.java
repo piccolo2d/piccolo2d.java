@@ -54,8 +54,12 @@ import edu.umd.cs.piccolo.PRoot;
  */
 public class PUtil {
 
-    public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
-    public static Enumeration NULL_ENUMERATION = new Enumeration() {
+    public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
+    public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
+    private static final int PATH_IS_DONE = -1;
+
+    public static final Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
+    public static final Enumeration NULL_ENUMERATION = new Enumeration() {
         public boolean hasMoreElements() {
             return false;
         }
@@ -64,10 +68,8 @@ public class PUtil {
             return null;
         }
     };
-    public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
-    public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
 
-    public static OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
+    public static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
         public void close() {
         }
 
@@ -137,13 +139,13 @@ public class PUtil {
         if (!wroteStroke) {
             return null;
         }
-        
+
         boolean serializedStroke = in.readBoolean();
         if (serializedStroke) {
             return (Stroke) in.readObject();
         }
-        
-        return readBasicStroke(in);        
+
+        return readBasicStroke(in);
     }
 
     private static Stroke readBasicStroke(ObjectInputStream in) throws IOException {
@@ -165,8 +167,6 @@ public class PUtil {
 
         return new BasicStroke(lineWidth, endCap, lineJoin, miterLimit, dash, dashPhase);
     }
-
-    private static final int PATH_IS_DONE = -1;
 
     public static GeneralPath readPath(ObjectInputStream in) throws IOException, ClassNotFoundException {
         GeneralPath path = new GeneralPath();
