@@ -106,22 +106,22 @@ public class PNotificationCenter {
         Method method = null;
 
         try {
-            method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });                                
+            method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });
         }
         catch (NoSuchMethodException e) {
             return false;
         }
-        
+
         int modifiers = method.getModifiers();
-        
+
         if (!Modifier.isPublic(modifiers)) {
             return false;
-        }  
+        }
 
         if (name == null) {
             name = NULL_MARKER;
         }
-        
+
         if (object == null) {
             object = NULL_MARKER;
         }
@@ -138,7 +138,7 @@ public class PNotificationCenter {
         if (!list.contains(notificationTarget)) {
             list.add(notificationTarget);
         }
-        
+
         return true;
     }
 
@@ -211,7 +211,12 @@ public class PNotificationCenter {
         Object object = aNotification.getObject();
 
         if (name != null) {
-            if (object != null) { // both are specified
+            if (object == null) {// object is null
+                listenersList = (List) listenersMap.get(new NotificationKey(name, NULL_MARKER));
+                if (listenersList != null) {
+                    mergedListeners.addAll(listenersList);
+                }
+            } else { // both are specified
                 listenersList = (List) listenersMap.get(new NotificationKey(name, object));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
@@ -223,13 +228,7 @@ public class PNotificationCenter {
                 listenersList = (List) listenersMap.get(new NotificationKey(NULL_MARKER, object));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
-                }
-            }
-            else { // object is null
-                listenersList = (List) listenersMap.get(new NotificationKey(name, NULL_MARKER));
-                if (listenersList != null) {
-                    mergedListeners.addAll(listenersList);
-                }
+                }                    
             }
         }
         else if (object != null) { // name is null
@@ -244,7 +243,7 @@ public class PNotificationCenter {
         if (listenersList != null) {
             mergedListeners.addAll(listenersList);
         }
-        
+
         dispatchNotifications(aNotification, mergedListeners);
     }
 
@@ -261,12 +260,12 @@ public class PNotificationCenter {
                 try {
                     listener.getMethod().invoke(listener.get(), new Object[] { aNotification });
                 }
-                catch (IllegalAccessException e) {                    
+                catch (IllegalAccessException e) {
                     // it's impossible add listeners that are not public
                 }
                 catch (InvocationTargetException e) {
-                    // Since this is how Swing handles Exceptions that get thrown on listeners,
-                    // it's probably ok to do it here.
+                    // Since this is how Swing handles Exceptions that get
+                    // thrown on listeners, it's probably ok to do it here.
                     e.printStackTrace();
                 }
             }
@@ -283,7 +282,7 @@ public class PNotificationCenter {
         Iterator it = listenersMap.keySet().iterator();
         while (it.hasNext()) {
             NotificationKey key = (NotificationKey) it.next();
-            if ((name == null) || (name == key.name())) {
+            if (name == null || name.equals(key.name())) {
                 if ((object == null) || (object == key.get())) {
                     result.add(key);
                 }
@@ -351,16 +350,18 @@ public class PNotificationCenter {
         public boolean equals(Object anObject) {
             if (this == anObject)
                 return true;
+
+            if (!(anObject instanceof NotificationKey))
+                return false;
+
             NotificationKey key = (NotificationKey) anObject;
-            if (name == key.name || (name != null && name.equals(key.name))) {
-                Object object = get();
-                if (object != null) {
-                    if (object == (key.get())) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+
+            if (name != key.name && (name == null || !name.equals(key.name)))
+                return false;
+
+            Object object = get();
+
+            return object != null && object == key.get();
         }
 
         public String toString() {
@@ -390,16 +391,17 @@ public class PNotificationCenter {
         public boolean equals(Object object) {
             if (this == object)
                 return true;
-            NotificationTarget value = (NotificationTarget) object;
-            if (method == value.method || (method != null && method.equals(value.method))) {
-                Object o = get();
-                if (o != null) {
-                    if (o == value.get()) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+
+            if (!(object instanceof NotificationTarget))
+                return false;
+
+            NotificationTarget target = (NotificationTarget) object;
+            if (method != target.method && (method == null || !method.equals(target.method)))
+                return false;
+
+            Object o = get();
+            
+            return (o != null) && (o == target.get());
         }
 
         public String toString() {
