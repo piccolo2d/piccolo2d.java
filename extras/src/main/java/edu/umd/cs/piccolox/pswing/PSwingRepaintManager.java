@@ -28,13 +28,14 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import edu.umd.cs.piccolo.util.PBounds;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.awt.Component;
 import java.util.Vector;
+
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
+
+import edu.umd.cs.piccolo.util.PBounds;
 
 /**
  * This RepaintManager replaces the default Swing implementation, and is used to

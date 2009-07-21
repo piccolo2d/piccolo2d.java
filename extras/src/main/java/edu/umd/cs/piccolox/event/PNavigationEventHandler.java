@@ -260,7 +260,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
             case WEST: {
                 return (nodeCenter.getX() < highlightCenter.getX())
                         && (nodeCenter.getY() > ytest1 && nodeCenter.getY() < ytest2);
-            }
+            }            
         }
         return false;
     }

@@ -6,8 +6,6 @@ import java.awt.event.MouseEvent;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPickPath;
 
 public class PInputEventTest extends TestCase {
     private PCanvas canvas;

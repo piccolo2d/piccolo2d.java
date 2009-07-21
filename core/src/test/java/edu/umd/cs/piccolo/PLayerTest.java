@@ -1,17 +1,11 @@
 package edu.umd.cs.piccolo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PObjectOutputStream;
 
 public class PLayerTest extends TestCase {
 	private PLayer layer;

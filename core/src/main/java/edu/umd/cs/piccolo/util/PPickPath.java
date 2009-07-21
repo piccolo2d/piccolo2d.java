@@ -29,7 +29,6 @@
 package edu.umd.cs.piccolo.util;
 
 import java.awt.geom.Dimension2D;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
