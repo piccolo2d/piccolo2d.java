@@ -53,10 +53,10 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class GridExample extends PFrame {
 
-    static protected Line2D gridLine = new Line2D.Double();
-    static protected Stroke gridStroke = new BasicStroke(1);
-    static protected Color gridPaint = Color.BLACK;
-    static protected double gridSpacing = 20;
+    protected Line2D gridLine = new Line2D.Double();
+    protected Stroke gridStroke = new BasicStroke(1);
+    protected Color gridPaint = Color.BLACK;
+    protected double gridSpacing = 20;
 
     public GridExample() {
         this(null);
