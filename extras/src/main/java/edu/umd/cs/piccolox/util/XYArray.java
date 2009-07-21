@@ -32,9 +32,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public class XYArray implements MutablePoints {
+public class XYArray implements MutablePoints, Cloneable {
     // the coordinates are stored as alternating x and y pairs
-
     private double[] points = null;
 
     // the number of valid x, y pairs,
@@ -42,56 +41,59 @@ public class XYArray implements MutablePoints {
 
     private int numPoints = 0;
 
+    public XYArray(double[] points) {
+        initPoints(points, points.length / 2);
+    }
+
+    public XYArray(int n) {
+        initPoints(null, n);
+    }
+
+    public XYArray() {
+        this(0);
+    }
+
+    
     public int getPointCount() {
         return numPoints;
     }
 
     // normalize an index, negative counts from end
 
-    private int i(int i) {
-        if (i < 0) {
-            i = numPoints + i;
-        }
+    private int normalize(int i) {
         if (i >= numPoints) {
             throw new IllegalArgumentException("The point index " + i + " is not below " + numPoints);
         }
-        return i;
+
+        return (i < 0) ? numPoints + i : i;
     }
 
-    // various get and set methods
-
-    // from Points
-
     public double getX(int i) {
-        i = i(i);
-        return points[i * 2];
+        return points[normalize(i) * 2];
     }
 
     public double getY(int i) {
-        i = i(i);
-        return points[i * 2 + 1];
+        return points[normalize(i) * 2 + 1];
     }
 
     public Point2D getPoint(int i, Point2D dst) {
-        i = i(i);
-        dst.setLocation(points[i * 2], points[i * 2 + 1]);
+        int pointIndex = normalize(i);
+        dst.setLocation(points[pointIndex * 2], points[pointIndex * 2 + 1]);
         return dst;
     }
 
     public void setX(int i, double x) {
-        i = i(i);
-        points[i * 2] = x;
+        points[normalize(i) * 2] = x;
     }
 
     public void setY(int i, double y) {
-        i = i(i);
-        points[i * 2 + 1] = y;
+        points[normalize(i) * 2 + 1] = y;
     }
 
     public void setPoint(int i, double x, double y) {
-        i = i(i);
-        points[i * 2] = x;
-        points[i * 2 + 1] = y;
+        int pointIndex = normalize(i);
+        points[pointIndex * 2] = x;
+        points[pointIndex * 2 + 1] = y;
     }
 
     public void setPoint(int i, Point2D pt) {
@@ -115,10 +117,6 @@ public class XYArray implements MutablePoints {
         return dst;
     }
 
-    //
-
-    // initialization of points array
-
     public static double[] initPoints(double[] points, int n, double[] old) {
         if (points == null || n * 2 > points.length) {
             points = new double[n * 2];
@@ -134,36 +132,23 @@ public class XYArray implements MutablePoints {
         numPoints = (points != null ? points.length / 2 : 0);
     }
 
-    // constructors
-
-    public XYArray(double[] points) {
-        initPoints(points, points.length / 2);
-    }
-
-    public XYArray(int n) {
-        initPoints(null, n);
-    }
-
-    public XYArray() {
-        this(0);
-    }
-
-    // adding points to points array
-
     public void addPoints(int pos, Points pts, int start, int end) {
         if (end < 0) {
             end = pts.getPointCount() + end + 1;
         }
         int n = numPoints + end - start;
         points = initPoints(points, n, points);
-        int pos1 = pos * 2, pos2 = (pos + end - start) * 2, len = (numPoints - pos) * 2;
+        int pos1 = pos * 2;
+        int pos2 = (pos + end - start) * 2;
+        int len = (numPoints - pos) * 2;
+        
         System.arraycopy(points, pos1, points, pos2, len);
+        
         numPoints = n;
-        if (pts == null) {
-            return;
-        }
-        for (int count = 0; start < end; count++, start++) {
-            setPoint(pos + count, pts.getX(start), pts.getY(start));
+        if (pts != null) {
+            for (int count = 0; start < end; count++, start++) {
+                setPoint(pos + count, pts.getX(start), pts.getY(start));
+            }
         }
     }
 
@@ -180,9 +165,7 @@ public class XYArray implements MutablePoints {
         newList.appendPoints(pts);
         return newList;
     }
-
-    // from MutablePoints
-
+    
     public void addPoint(int pos, double x, double y) {
         addPoints(pos, null, 0, 1);
         setPoint(pos, x, y);
@@ -203,20 +186,18 @@ public class XYArray implements MutablePoints {
     public void removeAllPoints() {
         removePoints(0, numPoints);
     }
-
-    //
-
+    
     public Object clone() {
         XYArray ps = null;
+        
         try {
             ps = (XYArray) (super.clone());
-        }
-        catch (CloneNotSupportedException e) {
-        }
-        if (ps != null) {
             ps.points = initPoints(ps.points, numPoints, points);
             ps.numPoints = numPoints;
         }
+        catch (CloneNotSupportedException e) {
+        }
+
         return (ps);
     }
 }
