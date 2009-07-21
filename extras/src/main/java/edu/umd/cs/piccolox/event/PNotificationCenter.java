@@ -216,7 +216,8 @@ public class PNotificationCenter {
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
                 }
-            } else { // both are specified
+            }
+            else { // both are specified
                 listenersList = (List) listenersMap.get(new NotificationKey(name, object));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
@@ -228,7 +229,7 @@ public class PNotificationCenter {
                 listenersList = (List) listenersMap.get(new NotificationKey(NULL_MARKER, object));
                 if (listenersList != null) {
                     mergedListeners.addAll(listenersList);
-                }                    
+                }
             }
         }
         else if (object != null) { // name is null
@@ -279,13 +280,12 @@ public class PNotificationCenter {
     protected List matchingKeys(String name, Object object) {
         List result = new LinkedList();
 
+        NotificationKey searchKey = new NotificationKey(name, object);
         Iterator it = listenersMap.keySet().iterator();
         while (it.hasNext()) {
             NotificationKey key = (NotificationKey) it.next();
-            if (name == null || name.equals(key.name())) {
-                if ((object == null) || (object == key.get())) {
-                    result.add(key);
-                }
+            if (searchKey.equals(key)) {
+                result.add(key);
             }
         }
 
@@ -400,7 +400,7 @@ public class PNotificationCenter {
                 return false;
 
             Object o = get();
-            
+
             return (o != null) && (o == target.get());
         }
 
