@@ -57,6 +57,7 @@ import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
+import edu.umd.cs.piccolo.event.PInputEventFilter;
 import edu.umd.cs.piccolox.nodes.PStyledText;
 
 /**
@@ -78,6 +79,9 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
     public PStyledTextEventHandler(PCanvas canvas) {
         super();
 
+        PInputEventFilter filter = new PInputEventFilter();
+        filter.setOrMask(InputEvent.BUTTON1_MASK | InputEvent.BUTTON3_MASK);
+        this.setEventFilter(filter);
         this.canvas = canvas;
         initEditor(createDefaultEditor());
     }
@@ -166,7 +170,11 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
     public void mousePressed(PInputEvent inputEvent) {
         PNode pickedNode = inputEvent.getPickedNode();
 
-        stopEditing();
+        stopEditing(inputEvent);
+
+        if (inputEvent.getButton() != MouseEvent.BUTTON1) {
+            return;
+        }
 
         if (pickedNode instanceof PStyledText) {
             startEditing(inputEvent, (PStyledText) pickedNode);
@@ -204,23 +212,26 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         editedText = text;
     }
 
-    public void stopEditing() {
-        if (editedText != null) {
-            editedText.getDocument().removeDocumentListener(docListener);
-            editedText.setEditing(false);
-
-            if (editedText.getDocument().getLength() == 0) {
-                editedText.removeFromParent();
-            }
-            else {
-                editedText.syncWithDocument();
-            }
-
-            editor.setVisible(false);
-            canvas.repaint();
-
-            editedText = null;
+    public void stopEditing(PInputEvent event) {
+        if (editedText == null) {
+            return;
         }
+
+        editedText.getDocument().removeDocumentListener(docListener);
+        editedText.setEditing(false);
+
+        if (editedText.getDocument().getLength() == 0) {
+            editedText.removeFromParent();
+        }
+        else {
+            editedText.syncWithDocument();
+        }
+
+        editedText.setScale(1.0 / event.getCamera().getViewScale());
+        editor.setVisible(false);
+        canvas.repaint();
+
+        editedText = null;
     }
 
     public void dispatchEventToEditor(final PInputEvent e) {
