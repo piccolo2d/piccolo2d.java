@@ -105,11 +105,11 @@
     </developer>
     <developer>
       <id>heuermh</id>
-      <name>heuermh</name>
+      <name>Michael L Heuer</name>
       <roles>
         <role>developer</role>
       </roles>
-      <timezone>-8</timezone>
+      <timezone>-6</timezone>
     </developer>
     <developer>
       <id>jesse</id>
