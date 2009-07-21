@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolo.activities;
 
 import java.awt.geom.AffineTransform;
+import java.util.Arrays;
 
 import edu.umd.cs.piccolo.util.PAffineTransform;
 
@@ -153,8 +154,8 @@ public class PTransformActivity extends PInterpolatingActivity {
     protected String paramString() {
         StringBuffer result = new StringBuffer();
 
-        result.append("source=" + (source == null ? "null" : source.toString()));
-        result.append(",destination=" + (destination == null ? "null" : destination.toString()));
+        result.append("source=" + (source == null ? "null" : Arrays.toString(source)));
+        result.append(",destination=" + (destination == null ? "null" : Arrays.toString(destination)));
         result.append(',');
         result.append(super.paramString());
 
