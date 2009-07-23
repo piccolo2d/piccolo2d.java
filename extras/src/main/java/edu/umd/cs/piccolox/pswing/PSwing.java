@@ -32,8 +32,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -50,8 +52,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.RepaintManager;
+import javax.swing.border.Border;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PLayer;
@@ -213,7 +219,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     private JComponent component = null;
     private double minFontSize = Double.MAX_VALUE;
     private Stroke defaultStroke = new BasicStroke();
-    private Font defaultFont = new Font("Serif", Font.PLAIN, 12);    
+    private Font defaultFont = new Font("Serif", Font.PLAIN, 12);
     private PSwingCanvas canvas;
 
     // //////////////////////////////////////////////////////////
@@ -258,11 +264,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         });
 
         component.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {                
+            public void componentHidden(ComponentEvent e) {
                 setVisible(false);
             }
 
-            public void componentShown(ComponentEvent e) {                
+            public void componentShown(ComponentEvent e) {
                 setVisible(true);
             }
         });
@@ -288,8 +294,19 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * bounds of this PNode.
      */
     void reshape() {
-        component.setBounds(0, 0, component.getPreferredSize().width, component.getPreferredSize().height);
-        setBounds(0, 0, component.getPreferredSize().width, component.getPreferredSize().height);
+        Border border = component.getBorder();
+        
+        int width = (int) Math.max(component.getMinimumSize().width, component.getPreferredSize().width);
+        int height = (int) Math.max(component.getMinimumSize().height, component.getPreferredSize().height);
+        
+        if (border != null) {
+            Insets borderInsets = border.getBorderInsets(component);
+            width += borderInsets.left + borderInsets.right; 
+            height += borderInsets.top + borderInsets.bottom; 
+        }   
+        
+        component.setBounds(0, 0, width, height);
+        setBounds(0, 0, width, height);
     }
 
     /**
@@ -324,13 +341,39 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             component.revalidate();
         }
 
+        if (component instanceof JLabel) {                  
+            JLabel label = (JLabel)component;
+            enforceNoEllipsis(label.getText(), label.getIcon(), label.getIconTextGap(), g2);           
+        } 
+        else if (component instanceof JButton) {
+            JButton button = (JButton)component;
+            enforceNoEllipsis(button.getText(), button.getIcon(), button.getIconTextGap(), g2);
+        }
+
         if (shouldRenderGreek(renderContext)) {
             paintAsGreek(g2);
         }
         else {
             paint(g2);
         }
+    }
 
+    private void enforceNoEllipsis(String text, Icon icon, int iconGap, Graphics2D g2) {      
+        Rectangle2D textBounds = component.getFontMetrics(component.getFont()).getStringBounds(text, g2);            
+        double minAcceptableWidth = textBounds.getWidth();
+        double minAcceptableHeight = textBounds.getHeight();
+        
+        if (icon != null) {            
+            minAcceptableWidth += icon.getIconWidth();
+            minAcceptableWidth += iconGap;
+            minAcceptableHeight = Math.max(icon.getIconHeight(), minAcceptableHeight);
+        }
+        
+        if (component.getMinimumSize().getWidth() < minAcceptableWidth ) {
+            Dimension newMinimumSize = new Dimension((int)Math.ceil(minAcceptableWidth), (int)Math.ceil(minAcceptableHeight));                
+            component.setMinimumSize(newMinimumSize);
+            reshape();                
+        }
     }
 
     protected boolean shouldRenderGreek(PPaintContext renderContext) {
@@ -387,8 +430,10 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         manager.lockRepaint(component);
 
         RenderingHints oldHints = g2.getRenderingHints();
-        
+
         g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        
         component.paint(g2);
 
         g2.setRenderingHints(oldHints);
@@ -399,7 +444,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         component.setVisible(visible);
-    }   
+    }
 
     /**
      * Repaints the specified portion of this visual component Note that the
@@ -419,14 +464,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * copy of these bounds
      */
     public void computeBounds() {
-        reshape();
-        // if( !component.getBounds().isEmpty() ) {
-        // Dimension d = component.getPreferredSize();
-        // getBoundsReference().setRect( 0, 0, d.getWidth(), d.getHeight() );
-        // if( !component.getSize().equals( d ) ) {
-        // component.setBounds( 0, 0, (int)d.getWidth(), (int)d.getHeight() );
-        // }
-        // }
+        reshape();       
     }
 
     /**

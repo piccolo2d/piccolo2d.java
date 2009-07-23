@@ -30,14 +30,17 @@ package edu.umd.cs.piccolo.examples.pswing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -227,11 +230,32 @@ public class PSwingExample2 extends JFrame {
 
         // A JLabel
         JLabel label = new JLabel("A JLabel", SwingConstants.CENTER);
-
         swing = new PSwing(label);
         leaf = new ZVisualLeaf(swing);
         transform = new PNode();
         transform.translate(-500, 0);
+        transform.addChild(leaf);
+        canvas.getLayer().addChild(transform);
+        
+        label = new JLabel("A JLabel", SwingConstants.CENTER);
+        label.setIcon(new Icon() {
+
+            public int getIconHeight() {
+                return 20;
+            }
+
+            public int getIconWidth() {
+                return 20;
+            }
+
+            public void paintIcon(Component c, Graphics g, int x, int y) {
+                g.setColor(Color.BLUE);
+                g.drawRect(0, 0, 20, 20);
+            }});
+        swing = new PSwing(label);
+        leaf = new ZVisualLeaf(swing);
+        transform = new PNode();
+        transform.translate(-500, 30);
         transform.addChild(leaf);
         canvas.getLayer().addChild(transform);
 
