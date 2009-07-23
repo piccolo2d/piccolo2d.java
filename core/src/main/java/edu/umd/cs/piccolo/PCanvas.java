@@ -97,7 +97,7 @@ public class PCanvas extends JComponent implements PComponent {
     public PCanvas() {
         CURRENT_ZCANVAS = this;
         cursorStack = new PStack();
-        setCamera(createDefaultCamera());                               
+        setCamera(createDefaultCamera());
         setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         setAnimatingRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
         setInteractingRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
@@ -105,16 +105,17 @@ public class PCanvas extends JComponent implements PComponent {
         setZoomEventHandler(new PZoomEventHandler());
         setBackground(Color.WHITE);
         setOpaque(true);
-        
-        addHierarchyListener(new HierarchyListener() {            
+
+        addHierarchyListener(new HierarchyListener() {
             public void hierarchyChanged(HierarchyEvent e) {
                 if (e.getComponent() == PCanvas.this) {
                     if (getParent() == null) {
                         removeInputSources();
-                    } else if (isEnabled()) {
+                    }
+                    else if (isEnabled()) {
                         installInputSources();
                     }
-                }                
+                }
             }
         });
     }
@@ -420,12 +421,28 @@ public class PCanvas extends JComponent implements PComponent {
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_EXITED);
                 }
 
-                public void mousePressed(MouseEvent rawEvent) {
+                public void mousePressed(MouseEvent e) {
                     requestFocus();
 
                     boolean shouldBalanceEvent = false;
 
-                    MouseEvent e = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_PRESSED);
+                    if (e.getButton() == MouseEvent.NOBUTTON) {
+                        if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
+                            e = new MouseEvent((Component) e.getSource(), MouseEvent.MOUSE_PRESSED, e.getWhen(), e
+                                    .getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                                    MouseEvent.BUTTON1);
+                        }
+                        else if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) == MouseEvent.BUTTON2_MASK) {
+                            e = new MouseEvent((Component) e.getSource(), MouseEvent.MOUSE_PRESSED, e.getWhen(), e
+                                    .getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                                    MouseEvent.BUTTON2);
+                        }
+                        else if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) == MouseEvent.BUTTON3_MASK) {
+                            e = new MouseEvent((Component) e.getSource(), MouseEvent.MOUSE_PRESSED, e.getWhen(), e
+                                    .getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                                    MouseEvent.BUTTON3);
+                        }
+                    }
 
                     switch (e.getButton()) {
                         case MouseEvent.BUTTON1:
@@ -459,12 +476,28 @@ public class PCanvas extends JComponent implements PComponent {
 
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
                 }
-							
-                public void mouseReleased(MouseEvent rawEvent) {
+
+                public void mouseReleased(MouseEvent e) {
                     boolean shouldBalanceEvent = false;
 
-                    MouseEvent e = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_RELEASED);
-
+                    if (e.getButton() == MouseEvent.NOBUTTON) {
+                        if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
+                            e = new MouseEvent((Component) e.getSource(), MouseEvent.MOUSE_RELEASED, e.getWhen(), e
+                                    .getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                                    MouseEvent.BUTTON1);
+                        }
+                        else if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) == MouseEvent.BUTTON2_MASK) {
+                            e = new MouseEvent((Component) e.getSource(), MouseEvent.MOUSE_RELEASED, e.getWhen(), e
+                                    .getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                                    MouseEvent.BUTTON2);
+                        }
+                        else if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) == MouseEvent.BUTTON3_MASK) {
+                            e = new MouseEvent((Component) e.getSource(), MouseEvent.MOUSE_RELEASED, e.getWhen(), e
+                                    .getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                                    MouseEvent.BUTTON3);
+                        }
+                    }
+                    
                     switch (e.getButton()) {
                         case MouseEvent.BUTTON1:
                             if (!isButton1Pressed) {
@@ -497,28 +530,28 @@ public class PCanvas extends JComponent implements PComponent {
 
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_RELEASED);
                 }
-                
-              	private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, int eventType) {
-									if (rawEvent.getButton() != MouseEvent.NOBUTTON) {
-									    if ((rawEvent.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
-									        return new MouseEvent((Component) rawEvent.getSource(), eventType, rawEvent.getWhen(), rawEvent
-									                .getModifiers(), rawEvent.getX(), rawEvent.getY(), rawEvent.getClickCount(), rawEvent.isPopupTrigger(),
-									                MouseEvent.BUTTON1);
-									    }
-									    else if ((rawEvent.getModifiers() & MouseEvent.BUTTON2_MASK) == MouseEvent.BUTTON2_MASK) {
-									        return new MouseEvent((Component) rawEvent.getSource(), eventType, rawEvent.getWhen(), rawEvent
-									                .getModifiers(), rawEvent.getX(), rawEvent.getY(), rawEvent.getClickCount(), rawEvent.isPopupTrigger(),
-									                MouseEvent.BUTTON2);
-									    }
-									    else if ((rawEvent.getModifiers() & MouseEvent.BUTTON3_MASK) == MouseEvent.BUTTON3_MASK) {
-									        return new MouseEvent((Component) rawEvent.getSource(), eventType, rawEvent.getWhen(), rawEvent
-									                .getModifiers(), rawEvent.getX(), rawEvent.getY(), rawEvent.getClickCount(), rawEvent.isPopupTrigger(),
-									                MouseEvent.BUTTON3);
-									    }
-									}
-									
-									return rawEvent;
-								}
+
+                private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, int eventType) {
+                    if (rawEvent.getButton() != MouseEvent.NOBUTTON) {
+                        if ((rawEvent.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
+                            return new MouseEvent((Component) rawEvent.getSource(), eventType, rawEvent.getWhen(),
+                                    rawEvent.getModifiers(), rawEvent.getX(), rawEvent.getY(),
+                                    rawEvent.getClickCount(), rawEvent.isPopupTrigger(), MouseEvent.BUTTON1);
+                        }
+                        else if ((rawEvent.getModifiers() & MouseEvent.BUTTON2_MASK) == MouseEvent.BUTTON2_MASK) {
+                            return new MouseEvent((Component) rawEvent.getSource(), eventType, rawEvent.getWhen(),
+                                    rawEvent.getModifiers(), rawEvent.getX(), rawEvent.getY(),
+                                    rawEvent.getClickCount(), rawEvent.isPopupTrigger(), MouseEvent.BUTTON2);
+                        }
+                        else if ((rawEvent.getModifiers() & MouseEvent.BUTTON3_MASK) == MouseEvent.BUTTON3_MASK) {
+                            return new MouseEvent((Component) rawEvent.getSource(), eventType, rawEvent.getWhen(),
+                                    rawEvent.getModifiers(), rawEvent.getX(), rawEvent.getY(),
+                                    rawEvent.getClickCount(), rawEvent.isPopupTrigger(), MouseEvent.BUTTON3);
+                        }
+                    }
+
+                    return rawEvent;
+                }
 
             };
             addMouseListener(mouseListener);
@@ -676,7 +709,7 @@ public class PCanvas extends JComponent implements PComponent {
         return interactingRenderQuality;
     }
 
-    public PInputEventListener[] getInputEventListeners() {        
+    public PInputEventListener[] getInputEventListeners() {
         return camera.getInputEventListeners();
     }
 }
