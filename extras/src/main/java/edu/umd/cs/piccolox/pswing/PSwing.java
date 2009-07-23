@@ -297,12 +297,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         Border border = component.getBorder();
         
         int width = (int) Math.max(component.getMinimumSize().width, component.getPreferredSize().width);
-        int height = (int) Math.max(component.getMinimumSize().height, component.getPreferredSize().height);
+        int height = (int) component.getPreferredSize().height;
         
         if (border != null) {
             Insets borderInsets = border.getBorderInsets(component);
             width += borderInsets.left + borderInsets.right; 
-            height += borderInsets.top + borderInsets.bottom; 
         }   
         
         component.setBounds(0, 0, width, height);
