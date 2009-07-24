@@ -29,7 +29,6 @@
 package edu.umd.cs.piccolox.pswing;
 
 import java.awt.Component;
-import java.awt.geom.Point2D;
 import java.util.Vector;
 
 import javax.swing.JComponent;
