@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolox.pswing;
 
 import java.awt.Component;
+import java.awt.geom.Point2D;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -73,133 +74,126 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public class PSwingRepaintManager extends RepaintManager {
 
-	// The components that are currently painting
-	// This needs to be a vector for thread safety
-	private Vector paintingComponents = new Vector();
+    // The components that are currently painting
+    // This needs to be a vector for thread safety
+    private Vector paintingComponents = new Vector();
 
-	/**
-	 * Locks repaint for a particular (Swing) component displayed by PCanvas
-	 * 
-	 * @param c
-	 *            The component for which the repaint is to be locked
-	 */
-	public void lockRepaint(JComponent c) {
-		paintingComponents.addElement(c);
-	}
+    /**
+     * Locks repaint for a particular (Swing) component displayed by PCanvas
+     * 
+     * @param c The component for which the repaint is to be locked
+     */
+    public void lockRepaint(JComponent c) {
+        paintingComponents.addElement(c);
+    }
 
-	/**
-	 * Unlocks repaint for a particular (Swing) component displayed by PCanvas
-	 * 
-	 * @param c
-	 *            The component for which the repaint is to be unlocked
-	 */
-	public void unlockRepaint(JComponent c) {
-		paintingComponents.remove(c);
-	}
+    /**
+     * Unlocks repaint for a particular (Swing) component displayed by PCanvas
+     * 
+     * @param c The component for which the repaint is to be unlocked
+     */
+    public void unlockRepaint(JComponent c) {
+        paintingComponents.remove(c);
+    }
 
-	/**
-	 * Returns true if repaint is currently locked for a component and false
-	 * otherwise
-	 * 
-	 * @param c
-	 *            The component for which the repaint status is desired
-	 * @return Whether the component is currently painting
-	 */
-	public boolean isPainting(JComponent c) {
-		return paintingComponents.contains(c);
-	}
+    /**
+     * Returns true if repaint is currently locked for a component and false
+     * otherwise
+     * 
+     * @param c The component for which the repaint status is desired
+     * @return Whether the component is currently painting
+     */
+    public boolean isPainting(JComponent c) {
+        return paintingComponents.contains(c);
+    }
 
-	/**
-	 * This is the method "repaint" now calls in the Swing components.
-	 * Overridden to capture repaint calls from those Swing components which are
-	 * being used as Piccolo visual components and to call the Piccolo repaint
-	 * mechanism rather than the traditional Component hierarchy repaint
-	 * mechanism. Otherwise, behaves like the superclass.
-	 * 
-	 * @param c
-	 *            Component to be repainted
-	 * @param x
-	 *            X coordinate of the dirty region in the component
-	 * @param y
-	 *            Y coordinate of the dirty region in the component
-	 * @param w
-	 *            Width of the dirty region in the component
-	 * @param h
-	 *            Height of the dirty region in the component
-	 */
-	public synchronized void addDirtyRegion(JComponent c, int x, int y,
-			final int w, final int h) {
-		boolean captureRepaint = false;
-		JComponent childComponent = null;
+    /**
+     * This is the method "repaint" now calls in the Swing components.
+     * Overridden to capture repaint calls from those Swing components which are
+     * being used as Piccolo visual components and to call the Piccolo repaint
+     * mechanism rather than the traditional Component hierarchy repaint
+     * mechanism. Otherwise, behaves like the superclass.
+     * 
+     * @param component Component to be repainted
+     * @param x X coordinate of the dirty region in the component
+     * @param y Y coordinate of the dirty region in the component
+     * @param width Width of the dirty region in the component
+     * @param height Height of the dirty region in the component
+     */
+    public synchronized void addDirtyRegion(JComponent component, int x, int y, final int width, final int height) {
+        boolean captureRepaint = false;
+        JComponent childComponent = null;
+        
+        int captureX = x;
+        int captureY = y;
 
-		int captureX = x, captureY = y;
+        // We have to check to see if the PCanvas
+        // (ie. the SwingWrapper) is in the components ancestry. If so,
+        // we will want to capture that repaint. However, we also will
+        // need to translate the repaint request since the component may
+        // be offset inside another component.
+        for (Component comp = component; comp != null && comp.isLightweight(); comp = comp.getParent()) {
+            if (comp.getParent() instanceof PSwingCanvas.ChildWrapper) {
+                captureRepaint = true;
+                childComponent = (JComponent) comp;
+                break;
+            }
+            else {
+                // Adds to the offset since the component is nested
+                captureX += comp.getLocation().getX();
+                captureY += comp.getLocation().getY();                
+            }
+        }
 
-		// We have to check to see if the PCanvas
-		// (ie. the SwingWrapper) is in the components ancestry. If so,
-		// we will want to capture that repaint. However, we also will
-		// need to translate the repaint request since the component may
-		// be offset inside another component.
-		for (Component comp = c; comp != null && comp.isLightweight(); comp = comp
-				.getParent()) {
-			if (comp.getParent() instanceof PSwingCanvas.ChildWrapper) {
-				captureRepaint = true;
-				childComponent = (JComponent) comp;
-				break;
-			} else {
-				// Adds to the offset since the component is nested
-				captureX += comp.getLocation().getX();
-				captureY += comp.getLocation().getY();
-			}
-		}
+        // Now we check to see if we should capture the repaint and act
+        // accordingly
+        if (captureRepaint) {
+            if (!isPainting(childComponent)) { 
+                double repaintW = Math.min(childComponent.getWidth() - captureX, width);
+                double repaintH = Math.min(childComponent.getHeight() - captureY, height);
 
-		// Now we check to see if we should capture the repaint and act
-		// accordingly
-		if (captureRepaint) {
-			if (!isPainting(childComponent)) {
-				dispatchRepaint(childComponent, new PBounds(captureX, captureY,	w, h));
-			}
-		} else {
-			super.addDirtyRegion(c, x, y, w, h);
-		}
-	}
+                dispatchRepaint(childComponent, new PBounds(captureX, captureY, repaintW, repaintH));
+            }
+        }
+        else {
+            super.addDirtyRegion(component, x, y, width, height);
+        }
+    }
 
-	private void dispatchRepaint(JComponent childComponent,
-			final PBounds repaintBounds) {
-		final PSwing pSwing = (PSwing) childComponent
-				.getClientProperty(PSwing.PSWING_PROPERTY);
+    private void dispatchRepaint(JComponent childComponent, final PBounds repaintBounds) {
+        final PSwing pSwing = (PSwing) childComponent.getClientProperty(PSwing.PSWING_PROPERTY);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				pSwing.repaint(repaintBounds);
-			}
-		});
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                pSwing.repaint(repaintBounds);
+            }
+        });
+    }
 
-	/**
-	 * This is the method "revalidate" calls in the Swing components. Overridden
-	 * to capture revalidate calls from those Swing components being used as
-	 * Piccolo visual components and to update Piccolo's visual component
-	 * wrapper bounds (these are stored separately from the Swing component).
-	 * Otherwise, behaves like the superclass.
-	 * 
-	 * @param invalidComponent
-	 *            The Swing component that needs validation
-	 */
-	public synchronized void addInvalidComponent(JComponent invalidComponent) {
-		final JComponent capturedComponent = invalidComponent;
+    /**
+     * This is the method "revalidate" calls in the Swing components. Overridden
+     * to capture revalidate calls from those Swing components being used as
+     * Piccolo visual components and to update Piccolo's visual component
+     * wrapper bounds (these are stored separately from the Swing component).
+     * Otherwise, behaves like the superclass.
+     * 
+     * @param invalidComponent The Swing component that needs validation
+     */
+    public synchronized void addInvalidComponent(JComponent invalidComponent) {
+        final JComponent capturedComponent = invalidComponent;
 
-		if (capturedComponent.getParent() == null
-				|| !(capturedComponent.getParent() instanceof PSwingCanvas.ChildWrapper)) {
-			super.addInvalidComponent(invalidComponent);
-		} else {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					capturedComponent.validate();
-					PSwing pSwing = (PSwing) capturedComponent
-							.getClientProperty(PSwing.PSWING_PROPERTY);
-					pSwing.reshape();
-				}
-			});
-		}
-	}
+        if (capturedComponent.getParent() == null
+                || !(capturedComponent.getParent() instanceof PSwingCanvas.ChildWrapper)) {
+            super.addInvalidComponent(invalidComponent);
+        }
+        else {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    capturedComponent.validate();
+                    PSwing pSwing = (PSwing) capturedComponent.getClientProperty(PSwing.PSWING_PROPERTY);
+                    pSwing.reshape();
+                }
+            });
+        }
+    }
 }
