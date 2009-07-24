@@ -590,19 +590,11 @@ public class PCanvas extends JComponent implements PComponent {
      * those events to piccolo.
      */
     protected void removeInputSources() {
-        if (mouseListener != null) {
-            removeMouseListener(mouseListener);
-        }
-        if (mouseMotionListener != null) {
-            removeMouseMotionListener(mouseMotionListener);
-        }
-        if (mouseWheelListener != null) {
-            removeMouseWheelListener(mouseWheelListener);
-        }
-        if (keyEventPostProcessor != null) {
-            FocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(keyEventPostProcessor);
-        }
-
+        removeMouseListener(mouseListener);
+        removeMouseMotionListener(mouseMotionListener);
+        removeMouseWheelListener(mouseWheelListener);
+        FocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(keyEventPostProcessor);
+    
         mouseListener = null;
         mouseMotionListener = null;
         mouseWheelListener = null;
