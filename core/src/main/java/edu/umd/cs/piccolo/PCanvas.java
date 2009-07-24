@@ -457,12 +457,7 @@ public class PCanvas extends JComponent implements PComponent {
                     }
 
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
-                }
-
-                private void sendRetypedMouseEventToInputManager(MouseEvent e, int newType) {
-                    MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
-                    sendInputEventToInputManager(retypedEvent, newType);
-                }
+                }               
 
                 /** {@inheritDoc} */
                 public void mouseReleased(MouseEvent e) {
@@ -536,7 +531,11 @@ public class PCanvas extends JComponent implements PComponent {
                     return new MouseEvent((Component) e.getSource(), newType, e.getWhen(), e.getModifiers(), e.getX(),
                             e.getY(), e.getClickCount(), e.isPopupTrigger(), newButton);
                 }
-
+                
+                private void sendRetypedMouseEventToInputManager(MouseEvent e, int newType) {
+                    MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
+                    sendInputEventToInputManager(retypedEvent, newType);
+                }
             };
             addMouseListener(mouseListener);
         }
