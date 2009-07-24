@@ -518,7 +518,7 @@ public class PCanvas extends JComponent implements PComponent {
                         newButton = MouseEvent.BUTTON3;
                     }
 
-                    return (newButton == 0) ? rawEvent : buildModifiedMouseEvent(rawEvent, eventType, newButton);
+                    return buildModifiedMouseEvent(rawEvent, eventType, newButton);                    
                 }
 
                 private boolean hasButtonModifier(final MouseEvent event, int buttonMask) {
