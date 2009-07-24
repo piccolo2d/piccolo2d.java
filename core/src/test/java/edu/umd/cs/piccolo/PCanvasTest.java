@@ -45,7 +45,7 @@ public class PCanvasTest extends TestCase {
 
     public void testSetInteractingFiresChangeEvent() {
         MockPropertyChangeListener mockListener = new MockPropertyChangeListener();
-        canvas.addPropertyChangeListener(PCanvas.INTERATING_CHANGED_NOTIFICATION, mockListener);
+        canvas.addPropertyChangeListener(PCanvas.INTERACTING_CHANGED_NOTIFICATION, mockListener);
         canvas.setInteracting(true);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }

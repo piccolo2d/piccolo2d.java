@@ -71,7 +71,11 @@ import edu.umd.cs.piccolo.util.PUtil;
  */
 public class PCanvas extends JComponent implements PComponent {
 
+    /**
+     * @deprecated this is a typo and clients should change their code to reflect the correct spelling
+     */
     public static final String INTERATING_CHANGED_NOTIFICATION = "INTERATING_CHANGED_NOTIFICATION";
+    public static final String INTERACTING_CHANGED_NOTIFICATION = "INTERACTING_CHANGED_NOTIFICATION";
 
     public static PCanvas CURRENT_ZCANVAS = null;
 
@@ -244,7 +248,7 @@ public class PCanvas extends JComponent implements PComponent {
      * canvas will normally render at a lower quality that is faster.
      */
     public boolean getInteracting() {
-        return interacting > 0;
+        return interacting > 0 || getRoot().getInteracting();
     }
 
     /**
@@ -286,7 +290,7 @@ public class PCanvas extends JComponent implements PComponent {
         isInteracting = getInteracting();
 
         if (wasInteracting != isInteracting) {
-            firePropertyChange(INTERATING_CHANGED_NOTIFICATION, wasInteracting, isInteracting);
+            firePropertyChange(INTERACTING_CHANGED_NOTIFICATION, wasInteracting, isInteracting);
         }
     }
 

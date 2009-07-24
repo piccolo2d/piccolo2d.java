@@ -60,10 +60,13 @@ public class PRoot extends PNode {
      */
     public static final String PROPERTY_INPUT_SOURCES = "inputSources";
     public static final int PROPERTY_CODE_INPUT_SOURCES = 1 << 14;
+    public static final String PROPERTY_INTERACTING_CHANGED = "INTERACTING_CHANGED_NOTIFICATION";
+    public static final int PROPERTY_CODE_INTERACTING_CHANGED = 1 << 13;
 
     protected transient boolean processingInputs;
     protected transient boolean processInputsScheduled;
 
+    private transient int interacting;
     private PInputManager defaultInputManager;
     private transient List inputSources;
     private transient long globalTime;
@@ -160,6 +163,55 @@ public class PRoot extends PNode {
             addInputSource(defaultInputManager);
         }
         return defaultInputManager;
+    }
+
+    /**
+     * Return true if this root has been marked as interacting. If so the root
+     * will normally render at a lower quality that is faster.
+     * 
+     * @return True if this root has user interaction taking place
+     */
+    public boolean getInteracting() {
+        return interacting > 0;
+    }
+
+    /**
+     * Set if this root is interacting. If so the root will normally render at a
+     * lower quality that is faster. Also repaints the root if the the
+     * interaction has ended.
+     * <p/>
+     * This has similar functionality to the setInteracting method on Canvas,
+     * but this is the appropriate place to mark interactions that may occur in
+     * multiple canvases if this Root is shared.
+     * 
+     * @param isInteracting True if this root has user interaction taking place
+     * @see PCanvas#setInteracting(boolean)
+     */
+    public void setInteracting(boolean isInteracting) {
+        boolean wasInteracting = getInteracting();
+
+        if (isInteracting) {
+            interacting++;
+        }
+        else {
+            interacting--;
+        }
+
+        isInteracting = getInteracting();
+        if (!isInteracting) {
+            // force all the child cameras to repaint
+            for (int i = 0; i < getChildrenCount(); i++) {
+                PNode child = getChild(i);
+                if (child instanceof PCamera) {
+                    child.repaint();
+                }
+            }
+
+        }
+        if (wasInteracting != isInteracting) {
+            firePropertyChange(PROPERTY_CODE_INTERACTING_CHANGED, PROPERTY_INTERACTING_CHANGED, Boolean
+                    .valueOf(wasInteracting), Boolean.valueOf(isInteracting));
+        }
     }
 
     /**
