@@ -453,18 +453,22 @@ public class PCanvas extends JComponent implements PComponent {
                     }
 
                     if (shouldBalanceEvent) {
-                        MouseEvent balanceEvent = buildRetypedMouseEvent(e, MouseEvent.MOUSE_RELEASED);
-                        sendInputEventToInputManager(balanceEvent, MouseEvent.MOUSE_RELEASED);
+                        sendRetypedMouseEventToInputManager(e, MouseEvent.MOUSE_RELEASED);
                     }
 
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
+                }
+
+                private void sendRetypedMouseEventToInputManager(MouseEvent e, int newType) {
+                    MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
+                    sendInputEventToInputManager(retypedEvent, newType);
                 }
 
                 /** {@inheritDoc} */
                 public void mouseReleased(MouseEvent e) {
                     boolean shouldBalanceEvent = false;
 
-                    e = copyButtonsFromModifiers(e, MouseEvent.MOUSE_PRESSED);
+                    e = copyButtonsFromModifiers(e, MouseEvent.MOUSE_RELEASED);
 
                     switch (e.getButton()) {
                         case MouseEvent.BUTTON1:
@@ -490,8 +494,7 @@ public class PCanvas extends JComponent implements PComponent {
                     }
 
                     if (shouldBalanceEvent) {
-                        MouseEvent balanceEvent = buildRetypedMouseEvent(e, MouseEvent.MOUSE_PRESSED);
-                        sendInputEventToInputManager(balanceEvent, MouseEvent.MOUSE_PRESSED);
+                        sendRetypedMouseEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
                     }
 
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_RELEASED);
