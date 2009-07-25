@@ -121,7 +121,7 @@ public class SWTGraphics2D extends Graphics2D {
             SWTShapeManager.transform(aRect, transform.createInverse());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return aRect;
     }
@@ -182,7 +182,7 @@ public class SWTGraphics2D extends Graphics2D {
             SWTShapeManager.transform(aRect, transform.createInverse());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return aRect;
     }
@@ -311,7 +311,7 @@ public class SWTGraphics2D extends Graphics2D {
                 sizeInt = Integer.parseInt(size.substring(size.indexOf("=") + 1, size.length()));
             }
             catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
             cachedFont = new org.eclipse.swt.graphics.Font(device,

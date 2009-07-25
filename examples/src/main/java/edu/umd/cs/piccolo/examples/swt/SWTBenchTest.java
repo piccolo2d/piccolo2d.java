@@ -399,8 +399,7 @@ public class SWTBenchTest extends Canvas {
             results = new int[NUM_CONTEXTS][NUM_TESTS];
         }
         catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException(e);
         }
     }
 
