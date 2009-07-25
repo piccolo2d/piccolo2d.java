@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.regex.Pattern;
 
 import javax.swing.text.MutableAttributeSet;
 
@@ -73,6 +74,38 @@ public class PNodeTest extends TestCase {
     public void setUp() {
         node = new PNode();
         mockListener = new MockPropertyChangeListener();
+    }
+
+    public void testSetName() {
+        PNode n = new PNode(null);
+        n.setName("_.");
+        assertEquals("_.", n.getName());
+        n.setName("_-");
+        assertEquals("_-", n.getName());
+        try {
+            n.setName("-_");
+            fail();
+        }
+        catch (IllegalArgumentException e) {
+        }
+        try {
+            n.setName("");
+            fail();
+        }
+        catch (IllegalArgumentException e) {
+        }
+        try {
+            n.setName("a:b");
+            fail();
+        }
+        catch (IllegalArgumentException e) {
+        }
+        try {
+            n.setName("0name");
+            fail();
+        }
+        catch (IllegalArgumentException e) {
+        }
     }
 
     public void testCenterBaseBoundsOnPoint() {
@@ -881,7 +914,8 @@ public class PNodeTest extends TestCase {
         try {
             node.getInverseTransform();
             fail("Exception not thrown");
-        } catch (PAffineTransformException e) {
+        }
+        catch (PAffineTransformException e) {
             // expected
         }
     }
