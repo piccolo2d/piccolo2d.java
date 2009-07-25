@@ -234,22 +234,4 @@ public class PImage extends PNode {
         g2.dispose();
         return result;
     }
-
-    /**
-     * Returns a string representing the state of this node. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this node's state
-     */
-    protected String paramString() {
-        StringBuffer result = new StringBuffer();
-
-        result.append("image=" + (image == null ? "null" : image.toString()));
-        result.append(',');
-        result.append(super.paramString());
-
-        return result.toString();
-    }
 }
