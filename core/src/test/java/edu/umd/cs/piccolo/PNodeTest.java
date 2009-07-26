@@ -76,35 +76,77 @@ public class PNodeTest extends TestCase {
         mockListener = new MockPropertyChangeListener();
     }
 
-    public void testSetName() {
-        PNode n = new PNode(null);
-        n.setName("_.");
-        assertEquals("_.", n.getName());
-        n.setName("_-");
-        assertEquals("_-", n.getName());
+    public void testDefaultNameIsNull() {
+        assertNull(node.getName());
+    }
+
+    public void testConstructorWithNameAcceptsNull() {
+        node = new PNode(null);
+        assertNull(node.getName());
+    }
+
+    public void testConstructorWithInvaliNameThrowsException() {
         try {
-            n.setName("-_");
+            node = new PNode("-_");
+            fail("Invalid name for constructor should throw exception");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    public void testSetNamePersists() {
+        node.setName("name");
+        assertEquals("name", node.getName());
+    }
+
+    public void testNameMayContainPeriods() {
+        node.setName("_.");
+        assertEquals("_.", node.getName());
+    }
+
+    public void testNameMayStartWithUnderscore() {
+        node.setName("_-");
+        assertEquals("_-", node.getName());
+    }
+
+    public void testNameMayNotStartWithDash() {
+        try {
+            node.setName("-_");
             fail();
         }
         catch (IllegalArgumentException e) {
+            // expected
         }
+    }
+
+    public void testNameMayNotBeEmptyString() {
         try {
-            n.setName("");
+            node.setName("");
             fail();
         }
         catch (IllegalArgumentException e) {
+            // expected
         }
+    }
+
+    public void testNameMayNotContainColons() {
         try {
-            n.setName("a:b");
+            node.setName("a:b");
             fail();
         }
         catch (IllegalArgumentException e) {
+            // expected
         }
+    }
+
+    public void testNameMayNotStartWithADigit() {
         try {
-            n.setName("0name");
+            node.setName("0name");
             fail();
         }
         catch (IllegalArgumentException e) {
+            // expected
         }
     }
 
