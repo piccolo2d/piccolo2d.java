@@ -85,8 +85,6 @@ public class PSwingCanvas extends PCanvas {
     static class ChildWrapper extends JComponent {
         /**
          * Create a new JComponent wrapper for the specified PSwingCanvas.
-         *
-         * @param canvas PSwingCanvas to wrap
          */
         public ChildWrapper() {         
             setSize(new Dimension(0, 0));
