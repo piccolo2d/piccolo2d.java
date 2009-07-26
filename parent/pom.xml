@@ -13,6 +13,8 @@
 		as zooming, animation and multiple representations.
 	</description>
 	<properties>
+		<!-- http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<httpbase>http://www.piccolo2d.org/java</httpbase>
 		<httpsitebase>${httpbase}/site</httpsitebase>
 		<!--
