@@ -19,7 +19,7 @@
 	</description>
   <scm>
 	<connection>
-		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/core
+		scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/core
 	</connection>
 	<developerConnection>
 		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/core

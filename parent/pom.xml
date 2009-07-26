@@ -255,9 +255,9 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-changelog-plugin</artifactId>
-				<configuration>				
+				<!-- configuration>
 					<connectionType>connection</connectionType>
-				</configuration>
+				</configuration -->
 			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
@@ -333,7 +333,7 @@
 			<distributionManagement>
 				<site>
 					<id>dropbox.p2d.trunk</id>
-					<url>file://${HOME}/Dropbox/Public/piccolo2d.java/site-stage</url>
+					<url>file://${HOME}/Dropbox/Public/piccolo2d.java/site-stage/</url>
 				</site>
 			</distributionManagement>
 		</profile>
