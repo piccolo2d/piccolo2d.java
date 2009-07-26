@@ -237,12 +237,12 @@
 			<plugin>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 			</plugin>
-			<plugin>
+			<!-- plugin>
 				<artifactId>maven-changelog-plugin</artifactId>
 				<configuration>				
 					<connectionType>connection</connectionType>
 				</configuration>
-			</plugin>
+			</plugin-->
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
 			</plugin>
