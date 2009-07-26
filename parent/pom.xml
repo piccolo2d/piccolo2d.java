@@ -239,6 +239,9 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-changelog-plugin</artifactId>
+				<configuration>				
+					<connectionType>connection</connectionType>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
