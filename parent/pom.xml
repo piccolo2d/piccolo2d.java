@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.piccolo2d</groupId>
 	<artifactId>piccolo2d-parent</artifactId>
@@ -12,7 +13,9 @@
 		as zooming, animation and multiple representations.
 	</description>
 	<properties>
-		<!-- http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
+		<!--
+			http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding
+		-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<httpbase>http://www.piccolo2d.org/java</httpbase>
 		<httpsitebase>${httpbase}/site</httpsitebase>
@@ -231,9 +234,10 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-changelog-plugin</artifactId>
-				<!-- configuration>
-					<connectionType>connection</connectionType>
-				</configuration -->
+				<!--
+					configuration> <connectionType>connection</connectionType>
+					</configuration
+				-->
 			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
@@ -276,6 +280,7 @@
 					<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
 					<xmlOutput>true</xmlOutput>
 					<xmlOutputDirectory>target/site</xmlOutputDirectory>
+					<includeTests>false</includeTests>
 					<!--
 						<xmlOutput>true|false</xmlOutput> <xmlOutputDirectory>directory
 						location of xml findbugs report</xmlOutputDirectory>
@@ -315,21 +320,13 @@
 		</plugins>
 	</reporting>
 	<distributionManagement>
-		<!-- use a ~/.m2/settings.xml like this:
-<settings>
-	<profiles>
-		<profile>
-			<id>piccolo2d</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<piccolo2d.file.site.base>file:///var/www/piccolo2d/</piccolo2d.file.site.base>
-			</properties>
-		</profile>
-	</profiles>
-</settings>
--->
+		<!--
+			use a ~/.m2/settings.xml like this: <settings> <profiles> <profile>
+			<id>piccolo2d</id> <activation>
+			<activeByDefault>true</activeByDefault> </activation> <properties>
+			<piccolo2d.file.site.base>file:///var/www/piccolo2d/</piccolo2d.file.site.base>
+			</properties> </profile> </profiles> </settings>
+		-->
 		<site>
 			<id>maven.site</id>
 			<url>${piccolo2d.file.site.base}</url>

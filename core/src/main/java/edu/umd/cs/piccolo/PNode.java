@@ -333,13 +333,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @throws IllegalArgumentException with nested @link ParseException.
      */
     public void setName(final String name) {
-        if (name != null) {
-            if (!nameValuePat.matcher(name).matches()) {
-                RuntimeException e = new IllegalArgumentException("'" + name + "' doesn't match '"
-                        + nameValuePat.pattern() + "'");
-                e.initCause(new ParseException(name, 0));
-                throw e;
-            }
+        if (name != null && !nameValuePat.matcher(name).matches()) {
+            RuntimeException e = new IllegalArgumentException("'" + name + "' doesn't match '" + nameValuePat.pattern()
+                    + "'");
+            e.initCause(new ParseException(name, 0));
+            throw e;
         }
         this.name = name;
     }
