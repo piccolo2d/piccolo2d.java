@@ -39,6 +39,10 @@
 		<url>http://code.google.com/p/piccolo2d/issues/list</url>
 	</issueManagement>
 	<inceptionYear>1995</inceptionYear>
+	<ciManagement>
+		<system>hudson</system>
+		<url>http://allain.homelinux.org:2121/</url>
+	</ciManagement>
 	<mailingLists>
 		<mailingList>
 			<name>Piccolo2D Announce</name>
