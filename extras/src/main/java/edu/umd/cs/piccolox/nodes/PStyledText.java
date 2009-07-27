@@ -42,6 +42,7 @@ import java.awt.geom.Rectangle2D;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -132,16 +133,8 @@ public class PStyledText extends PNode {
     }
 
     public void syncWithDocument() {
-        // The paragraph start and end indices
-        ArrayList pEnds = null;
-
-        // The current position in the specified range
-        int pos = 0;
-
         // First get the actual text and stick it in an Attributed String
-
         stringContents = new ArrayList();
-        pEnds = new ArrayList();
 
         String documentString;
         try {
@@ -149,10 +142,176 @@ public class PStyledText extends PNode {
         }
         catch (BadLocationException e) {
             // Since this the location we're providing comes from directly
-            // querying the document, this is impossible in a single threaded model
+            // querying the document, this is impossible in a single threaded
+            // model
             return;
         }
-        
+
+        // The paragraph start and end indices
+        ArrayList pEnds = extractParagraphRanges(documentString);
+
+        // The default style context - which will be reused
+        StyleContext styleContext = StyleContext.getDefaultStyleContext();
+
+        int pos;
+        RunInfo paragraphRange = null;
+
+        AttributedString attributedString;
+
+        Iterator contentIterator = stringContents.iterator();
+        Iterator paragraphIterator = pEnds.iterator();
+        while (contentIterator.hasNext() && paragraphIterator.hasNext()) {
+            paragraphRange = (RunInfo) paragraphIterator.next();
+            attributedString = (AttributedString) contentIterator.next();
+            pos = paragraphRange.startIndex;
+
+            // The current element will be used as a temp variable while
+            // searching for the leaf element at the current position
+            Element curElement = null;
+
+            // Small assumption here that there is one root element - can fix
+            // for more general support later
+            Element rootElement = document.getDefaultRootElement();
+
+            // If the string is length 0 then we just need to add the attributes
+            // once
+            if (paragraphRange.isEmpty()) {
+                curElement = drillDownFromRoot(pos, rootElement);
+
+                // These are the mandatory attributes
+                AttributeSet attributes = curElement.getAttributes();
+                Color foreground = styleContext.getForeground(attributes);
+
+                attributedString.addAttribute(TextAttribute.FOREGROUND, foreground, (int) Math.max(0, curElement
+                        .getStartOffset()
+                        - paragraphRange.startIndex), (int) Math.min(paragraphRange.length(), curElement.getEndOffset()
+                        - paragraphRange.startIndex));
+
+                // These are the optional attributes
+                Font font = extractFont(styleContext, pos, rootElement, attributes);
+                applyFontAttribute(paragraphRange, attributedString, curElement, font);
+                applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
+                applyUnderlineAttribute(paragraphRange, attributedString, curElement, attributes);
+                applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);
+            }
+            else {
+                // OK, now we loop until we find all the leaf elements in the
+                // range
+                while (pos < paragraphRange.endIndex) {
+                    curElement = drillDownFromRoot(pos, rootElement);
+
+                    // These are the mandatory attributes
+                    AttributeSet attributes = curElement.getAttributes();
+                    Color foreground = styleContext.getForeground(attributes);
+
+                    attributedString.addAttribute(TextAttribute.FOREGROUND, foreground, (int) Math.max(0, curElement
+                            .getStartOffset()
+                            - paragraphRange.startIndex), (int) Math.min(paragraphRange.length(), curElement
+                            .getEndOffset()
+                            - paragraphRange.startIndex));
+
+                    Font font = extractFont(styleContext, pos, rootElement, attributes);
+                    applyFontAttribute(paragraphRange, attributedString, curElement, font);
+
+                    // These are the optional attributes
+
+                    applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
+
+                    applyUnderlineAttribute(paragraphRange, attributedString, curElement, attributes);
+
+                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);
+
+                    // And set the position to the end of the given attribute
+                    pos = curElement.getEndOffset();
+                }
+            }
+        }
+
+        recomputeLayout();
+    }
+
+    private Element drillDownFromRoot(int pos, Element rootElement) {
+        Element curElement;
+        // Before each pass, start at the root
+        curElement = rootElement;
+
+        // Now we descend the hierarchy until we get to a leaf
+        while (!curElement.isLeaf()) {
+            curElement = curElement.getElement(curElement.getElementIndex(pos));
+        }
+        return curElement;
+    }
+
+    private void applyFontAttribute(RunInfo paragraphRange, AttributedString attributedString, Element curElement,
+            Font font) {
+        if (font != null) {
+            attributedString.addAttribute(TextAttribute.FONT, font, (int) Math.max(0, curElement.getStartOffset()
+                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    curElement.getEndOffset() - paragraphRange.startIndex));
+        }
+    }
+
+    private void applyStrikeThroughAttribute(RunInfo paragraphRange, AttributedString attributedString,
+            Element curElement, AttributeSet attributes) {
+        boolean strikethrough = StyleConstants.isStrikeThrough(attributes);
+        if (strikethrough) {
+            attributedString.addAttribute(TextAttribute.STRIKETHROUGH, Boolean.TRUE, (int) Math.max(0, curElement
+                    .getStartOffset()
+                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    curElement.getEndOffset() - paragraphRange.startIndex));
+        }
+    }
+
+    private void applyUnderlineAttribute(RunInfo paragraphRange, AttributedString attributedString, Element curElement,
+            AttributeSet attributes) {
+        boolean underline = StyleConstants.isUnderline(attributes);
+        if (underline) {
+            attributedString.addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE, (int) Math.max(0, curElement
+                    .getStartOffset()
+                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    curElement.getEndOffset() - paragraphRange.startIndex));
+        }
+    }
+
+    private void applyBackgroundAttribute(StyleContext style, RunInfo paragraphRange,
+            AttributedString attributedString, Element curElement, AttributeSet attributes) {
+        Color background = (attributes.isDefined(StyleConstants.Background)) ? style.getBackground(attributes) : null;
+        if (background != null) {
+            attributedString.addAttribute(TextAttribute.BACKGROUND, background, (int) Math.max(0, curElement
+                    .getStartOffset()
+                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    curElement.getEndOffset() - paragraphRange.startIndex));
+        }
+    }
+
+    private Font extractFont(StyleContext style, int pos, Element rootElement, AttributeSet attributes) {
+        Font font = (attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily)) ? style
+                .getFont(attributes)
+                : null;
+        if (font == null) {
+            if (document instanceof DefaultStyledDocument) {
+                font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos).getAttributes());
+                if (font == null) {
+                    font = style.getFont(((DefaultStyledDocument) document).getParagraphElement(pos).getAttributes());
+                }
+                if (font == null) {
+                    font = style.getFont(rootElement.getAttributes());
+                }
+            }
+            else {
+                font = style.getFont(rootElement.getAttributes());
+            }
+        }
+        return font;
+    }
+
+    private ArrayList extractParagraphRanges(String documentString) {
+        // The paragraph start and end indices
+        ArrayList paragraphRanges = new ArrayList();
+
+        // The current position in the specified range
+        int pos = 0;
+
         StringTokenizer tokenizer = new StringTokenizer(documentString, "\n", true);
 
         // lastNewLine is used to detect the case when two newlines follow
@@ -160,6 +319,7 @@ public class PStyledText extends PNode {
         // & lastNewLine should be true to start in case the first character
         // is a newline
         boolean lastNewLine = true;
+
         for (int i = 0; tokenizer.hasMoreTokens(); i++) {
             String token = tokenizer.nextToken();
 
@@ -167,33 +327,27 @@ public class PStyledText extends PNode {
             if (token.equals("\n")) {
                 if (lastNewLine) {
                     stringContents.add(new AttributedString(" "));
-                    pEnds.add(new RunInfo(pos, pos + 1));
-
-                    pos = pos + 1;
-
-                    lastNewLine = true;
+                    paragraphRanges.add(new RunInfo(pos, pos + 1));
                 }
-                else {
-                    pos = pos + 1;
 
-                    lastNewLine = true;
-                }
+                pos = pos + 1;
+
+                lastNewLine = true;
             }
             // If the token is empty - create an attributed string with a
-            // single space
-            // since LineBreakMeasurers don't work with an empty string
-            // - note that this case should only arise if the document is
-            // empty
+            // single space since LineBreakMeasurers don't work with an empty
+            // string
+            // - note that this case should only arise if the document is empty
             else if (token.equals("")) {
                 stringContents.add(new AttributedString(" "));
-                pEnds.add(new RunInfo(pos, pos));
+                paragraphRanges.add(new RunInfo(pos, pos));
 
                 lastNewLine = false;
             }
             // This is the normal case - where we have some text
             else {
                 stringContents.add(new AttributedString(token));
-                pEnds.add(new RunInfo(pos, pos + token.length()));
+                paragraphRanges.add(new RunInfo(pos, pos + token.length()));
 
                 // Increment the position
                 pos = pos + token.length();
@@ -205,175 +359,10 @@ public class PStyledText extends PNode {
         // Add one more newline if the last character was a newline
         if (lastNewLine) {
             stringContents.add(new AttributedString(" "));
-            pEnds.add(new RunInfo(pos, pos + 1));
-
-            lastNewLine = false;
+            paragraphRanges.add(new RunInfo(pos, pos + 1));
         }
 
-        // The default style context - which will be reused
-        StyleContext style = StyleContext.getDefaultStyleContext();
-
-        RunInfo pEnd = null;
-        for (int i = 0; i < stringContents.size(); i++) {
-            pEnd = (RunInfo) pEnds.get(i);
-            pos = pEnd.runStart;
-
-            // The current element will be used as a temp variable while
-            // searching
-            // for the leaf element at the current position
-            Element curElement = null;
-
-            // Small assumption here that there is one root element - can fix
-            // for more general support later
-            Element rootElement = document.getDefaultRootElement();
-
-            // If the string is length 0 then we just need to add the attributes
-            // once
-            if (pEnd.runStart != pEnd.runLimit) {
-                // OK, now we loop until we find all the leaf elements in the
-                // range
-                while (pos < pEnd.runLimit) {
-
-                    // Before each pass, start at the root
-                    curElement = rootElement;
-
-                    // Now we descend the hierarchy until we get to a leaf
-                    while (!curElement.isLeaf()) {
-                        curElement = curElement.getElement(curElement.getElementIndex(pos));
-                    }
-
-                    // These are the mandatory attributes
-
-                    AttributeSet attributes = curElement.getAttributes();
-                    Color foreground = style.getForeground(attributes);
-
-                    ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.FOREGROUND, foreground,
-                            (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(
-                                    pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-
-                    Font font = (attributes.isDefined(StyleConstants.FontSize) || attributes
-                            .isDefined(StyleConstants.FontFamily)) ? style.getFont(attributes) : null;
-                    if (font == null) {
-                        if (document instanceof DefaultStyledDocument) {
-                            font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos)
-                                    .getAttributes());
-                            if (font == null) {
-                                font = style.getFont(((DefaultStyledDocument) document).getParagraphElement(pos)
-                                        .getAttributes());
-                            }
-                            if (font == null) {
-                                font = style.getFont(rootElement.getAttributes());
-                            }
-                        }
-                        else {
-                            font = style.getFont(rootElement.getAttributes());
-                        }
-                    }
-                    if (font != null) {
-                        ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.FONT, font, (int) Math
-                                .max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(pEnd.runLimit
-                                - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                    }
-
-                    // These are the optional attributes
-
-                    Color background = (attributes.isDefined(StyleConstants.Background)) ? style
-                            .getBackground(attributes) : null;
-                    if (background != null) {
-                        ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.BACKGROUND, background,
-                                (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(
-                                        pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                    }
-
-                    boolean underline = StyleConstants.isUnderline(attributes);
-                    if (underline) {
-                        ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE,
-                                (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(
-                                        pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                    }
-
-                    boolean strikethrough = StyleConstants.isStrikeThrough(attributes);
-                    if (strikethrough) {
-                        ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.STRIKETHROUGH,
-                                Boolean.TRUE, (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart),
-                                (int) Math
-                                        .min(pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                    }
-
-                    // And set the position to the end of the given attribute
-                    pos = curElement.getEndOffset();
-                }
-            }
-            else {
-                // Before each pass, start at the root
-                curElement = rootElement;
-
-                // Now we descend the hierarchy until we get to a leaf
-                while (!curElement.isLeaf()) {
-                    curElement = curElement.getElement(curElement.getElementIndex(pos));
-                }
-
-                // These are the mandatory attributes
-
-                AttributeSet attributes = curElement.getAttributes();
-                Color foreground = style.getForeground(attributes);
-
-                ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.FOREGROUND, foreground,
-                        (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(pEnd.runLimit
-                                - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-
-                // These are the optional attributes
-
-                Font font = (attributes.isDefined(StyleConstants.FontSize) || attributes
-                        .isDefined(StyleConstants.FontFamily)) ? style.getFont(attributes) : null;
-                if (font == null) {
-                    if (document instanceof DefaultStyledDocument) {
-                        font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos)
-                                .getAttributes());
-                        if (font == null) {
-                            font = style.getFont(((DefaultStyledDocument) document).getParagraphElement(pos)
-                                    .getAttributes());
-                        }
-                        if (font == null) {
-                            font = style.getFont(rootElement.getAttributes());
-                        }
-                    }
-                    else {
-                        font = style.getFont(rootElement.getAttributes());
-                    }
-                }
-                
-                if (font != null) {
-                    ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.FONT, font, (int) Math.max(0,
-                            curElement.getStartOffset() - pEnd.runStart), (int) Math.min(pEnd.runLimit - pEnd.runStart,
-                            curElement.getEndOffset() - pEnd.runStart));
-                }
-
-                Color background = (attributes.isDefined(StyleConstants.Background)) ? style.getBackground(attributes)
-                        : null;
-                if (background != null) {
-                    ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.BACKGROUND, background,
-                            (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(
-                                    pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                }
-
-                boolean underline = StyleConstants.isUnderline(attributes);
-                if (underline) {
-                    ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE,
-                            (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(
-                                    pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                }
-
-                boolean strikethrough = StyleConstants.isStrikeThrough(attributes);
-                if (strikethrough) {
-                    ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.STRIKETHROUGH, Boolean.TRUE,
-                            (int) Math.max(0, curElement.getStartOffset() - pEnd.runStart), (int) Math.min(
-                                    pEnd.runLimit - pEnd.runStart, curElement.getEndOffset() - pEnd.runStart));
-                }
-            }
-        }
-
-        recomputeLayout();
+        return paragraphRanges;
     }
 
     /**
@@ -391,30 +380,17 @@ public class PStyledText extends PNode {
         double textWidth = 0;
         double textHeight = 0;
 
-        for (int i = 0; i < stringContents.size(); i++) {
+        Iterator contentIterator = stringContents.iterator();
 
-            AttributedString ats = (AttributedString) stringContents.get(i);
+        while (contentIterator.hasNext()) {
+            AttributedString ats = (AttributedString) contentIterator.next();
             AttributedCharacterIterator itr = ats.getIterator();
 
             LineBreakMeasurer measurer;
             ArrayList breakList = null;
 
-            // First we have to do an initial pass with a LineBreakMeasurer to
-            // find out where Swing is going to break the lines - i.e.
-            // because it doesn't use fractional metrics
-
             measurer = new LineBreakMeasurer(itr, SWING_FRC);
-            breakList = new ArrayList();
-            while (measurer.getPosition() < itr.getEndIndex()) {
-                if (constrainWidthToTextWidth) {
-                    measurer.nextLayout(Float.MAX_VALUE);
-                }
-                else {
-                    measurer.nextLayout((float) Math.ceil(getWidth() - insets.left - insets.right));
-                }
-
-                breakList.add(new Integer(measurer.getPosition()));
-            }
+            breakList = extractLineBreaks(itr, measurer);
 
             measurer = new LineBreakMeasurer(itr, PPaintContext.RENDER_QUALITY_HIGH_FRC);
 
@@ -475,20 +451,43 @@ public class PStyledText extends PNode {
 
         lines = (LineInfo[]) linesList.toArray(new LineInfo[0]);
 
-        if (constrainWidthToTextWidth || constrainHeightToTextHeight) {
-            double newWidth = getWidth();
-            double newHeight = getHeight();
+        constrainDimensionsIfNeeded(textWidth, textHeight);
+    }
 
-            if (constrainWidthToTextWidth) {
-                newWidth = textWidth + insets.left + insets.right;
-            }
+    private void constrainDimensionsIfNeeded(double textWidth, double textHeight) {
+        if (!constrainWidthToTextWidth && !constrainHeightToTextHeight)
+            return;
 
-            if (constrainHeightToTextHeight) {
-                newHeight = Math.max(textHeight, getInitialFontHeight()) + insets.top + insets.bottom;
-            }
+        double newWidth = getWidth();
+        double newHeight = getHeight();
 
-            super.setBounds(getX(), getY(), newWidth, newHeight);
+        if (constrainWidthToTextWidth) {
+            newWidth = textWidth + insets.left + insets.right;
         }
+
+        if (constrainHeightToTextHeight) {
+            newHeight = Math.max(textHeight, getInitialFontHeight()) + insets.top + insets.bottom;
+        }
+
+        super.setBounds(getX(), getY(), newWidth, newHeight);
+    }
+
+    // Because swing doesn't use fractional font metrics by default, we use
+    // LineBreakMeasurer to find out where Swing is going to break them
+    private ArrayList extractLineBreaks(AttributedCharacterIterator itr, LineBreakMeasurer measurer) {
+        ArrayList breakList;
+        breakList = new ArrayList();
+        while (measurer.getPosition() < itr.getEndIndex()) {
+            if (constrainWidthToTextWidth) {
+                measurer.nextLayout(Float.MAX_VALUE);
+            }
+            else {
+                measurer.nextLayout((float) Math.ceil(getWidth() - insets.left - insets.right));
+            }
+
+            breakList.add(new Integer(measurer.getPosition()));
+        }
+        return breakList;
     }
 
     /**
@@ -518,13 +517,14 @@ public class PStyledText extends PNode {
     }
 
     protected void paint(PPaintContext paintContext) {
+        if (lines == null || lines.length == 0)
+            return;       
+        
         float x = (float) (getX() + insets.left);
         float y = (float) (getY() + insets.top);
         float bottomY = (float) (getY() + getHeight() - insets.bottom);
 
-        if (lines == null || lines.length == 0) {
-            return;
-        }
+        
 
         Graphics2D g2 = paintContext.getGraphics();
 
@@ -534,27 +534,27 @@ public class PStyledText extends PNode {
         }
 
         float curX;
+        LineInfo lineInfo;
         for (int i = 0; i < lines.length; i++) {
-            y += lines[i].maxAscent;
+            lineInfo = lines[i];
+            y += lineInfo.maxAscent;
             curX = x;
 
             if (bottomY < y) {
                 return;
             }
 
-            for (int j = 0; j < lines[i].segments.size(); j++) {
-                SegmentInfo sInfo = (SegmentInfo) lines[i].segments.get(j);
+            for (int j = 0; j < lineInfo.segments.size(); j++) {
+                SegmentInfo sInfo = (SegmentInfo) lineInfo.segments.get(j);
                 float width = sInfo.layout.getAdvance();
-
+                
                 if (sInfo.background != null) {
                     g2.setPaint(sInfo.background);
-                    g2.fill(new Rectangle2D.Double(curX, y - lines[i].maxAscent, width, lines[i].maxAscent
-                            + lines[i].maxDescent + lines[i].leading));
+                    g2.fill(new Rectangle2D.Double(curX, y - lineInfo.maxAscent, width, lineInfo.maxAscent
+                            + lineInfo.maxDescent + lineInfo.leading));
                 }
 
-                if (sInfo.font != null) {
-                    g2.setFont(sInfo.font);
-                }
+                sInfo.applyFont(g2);
 
                 // Manually set the paint - this is specified in the
                 // AttributedString but seems to be
@@ -566,16 +566,16 @@ public class PStyledText extends PNode {
 
                 // Draw the underline and the strikethrough after the text
                 if (sInfo.underline != null) {
-                    paintLine.setLine(x, y + lines[i].maxDescent / 2, x + width, y + lines[i].maxDescent / 2);
+                    paintLine.setLine(x, y + lineInfo.maxDescent / 2, x + width, y + lineInfo.maxDescent / 2);
                     g2.draw(paintLine);
                 }
 
                 curX = curX + width;
             }
 
-            y += lines[i].maxDescent + lines[i].leading;
+            y += lineInfo.maxDescent + lineInfo.leading;
         }
-    }
+    }    
 
     public void fullPaint(PPaintContext paintContext) {
         if (!editing) {
@@ -631,18 +631,26 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Simple class to represent an integer run
+     * Simple class to represent an range within the document
      */
     protected static class RunInfo {
-        public int runStart;
-        public int runLimit;
+        public int startIndex;
+        public int endIndex;
 
         public RunInfo() {
         }
 
         public RunInfo(int runStart, int runLimit) {
-            this.runStart = runStart;
-            this.runLimit = runLimit;
+            this.startIndex = runStart;
+            this.endIndex = runLimit;
+        }
+
+        public boolean isEmpty() {
+            return startIndex == endIndex;
+        }
+
+        public int length() {
+            return endIndex - startIndex;
         }
     }
 
@@ -679,6 +687,12 @@ public class PStyledText extends PNode {
         public Boolean underline;
 
         public SegmentInfo() {
+        }
+        
+        public void applyFont(Graphics2D g2) {
+            if (font != null) {
+                g2.setFont(font);
+            }
         }
     }
 }
