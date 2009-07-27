@@ -318,24 +318,25 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	<profiles>
-		<profile>
-			<id>hudson</id>
-			<distributionManagement>
-				<site>
-					<id>hudson.p2d.trunk</id>
-					<url>file:///var/www/piccolo2d/</url>
-				</site>
-			</distributionManagement>
-		</profile>
-		<profile>
-			<id>dropbox</id>
-			<distributionManagement>
-				<site>
-					<id>dropbox.p2d.trunk</id>
-					<url>file://${HOME}/Dropbox/Public/piccolo2d.java/site-stage/</url>
-				</site>
-			</distributionManagement>
-		</profile>
-	</profiles>
+	<distributionManagement>
+<!-- use a ~/.m2/settings.xml like this:
+<settings>
+  <profiles>
+    <profile>
+      <id>always</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <piccolo2d.file.site.base>file:///var/www/piccolo2d/</piccolo2d.file.site.base>
+      </properties>
+    </profile>
+  </profiles>
+</settings>
+-->
+		<site>
+			<id>maven.site</id>
+			<url>${piccolo2d.file.site.base}</url>
+		</site>
+	</distributionManagement>
 </project>
