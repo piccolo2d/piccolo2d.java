@@ -26,7 +26,7 @@
   </dependencies>
   <scm>
 	<connection>
-		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/extras
+		scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/extras
 	</connection>
 	<developerConnection>
 		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/extras

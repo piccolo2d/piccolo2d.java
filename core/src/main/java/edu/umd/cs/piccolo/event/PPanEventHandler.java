@@ -106,7 +106,6 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     /**
      * Returns the minAutoPan speed in pixels per second.
      * 
-     * @param minAutopanSpeed
      * @return minAutopanSpeed in pixels
      */
     public double getMinAutoPanSpeed() {
@@ -116,7 +115,6 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     /**
      * Returns the maxAutoPan speed in pixels per second.
      * 
-     * @param maxAutopanSpeed
      * @return maxAutopanSpeed in pixels
      */
     public double getMaxAutoPanSpeed() {

@@ -160,7 +160,7 @@ public class PCamera extends PNode {
     }
     
     /**
-     * @deprected since a more specific repaintFromLayer method is available
+     * @deprecated since a more specific repaintFromLayer method is available
      * 
      * Repaint from one of the cameras layers. The repaint region needs to be
      * transformed from view to local in this case. Unlike most repaint methods

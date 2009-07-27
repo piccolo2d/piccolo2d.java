@@ -31,7 +31,7 @@
   </dependencies>
   <scm>
 	<connection>
-		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
+		scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
 	</connection>
 	<developerConnection>
 		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
