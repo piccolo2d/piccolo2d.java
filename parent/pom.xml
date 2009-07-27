@@ -178,34 +178,6 @@
 					<connectionType>developerConnection</connectionType>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<configuration>
-					<formats>
-						<format>xml</format>
-						<format>html</format>
-					</formats>
-					<instrumentation>
-						<ignores>
-							<ignore>edu.umd.cs.piccolo.examples.*</ignore>
-							<ignore>edu.umd.cs.piccolo.examples.pswing.*</ignore>
-							<ignore>edu.umd.cs.piccolo.examples.swt.*</ignore>
-							<ignore>edu.umd.cs.piccolo.tutorial.*</ignore>
-						</ignores>
-						<excludes>
-							<exclude>edu/umd/cs/piccolo/examples/**</exclude>
-						</excludes>
-					</instrumentation>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -315,23 +287,40 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<formats>
+						<format>xml</format>
+						<format>html</format>
+					</formats>
+					<instrumentation>
+						<ignores>
+							<ignore>edu.umd.cs.piccolo.examples.*</ignore>
+							<ignore>edu.umd.cs.piccolo.examples.pswing.*</ignore>
+							<ignore>edu.umd.cs.piccolo.examples.swt.*</ignore>
+							<ignore>edu.umd.cs.piccolo.tutorial.*</ignore>
+						</ignores>
+						<excludes>
+							<exclude>edu/umd/cs/piccolo/examples/**</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
 	<distributionManagement>
-<!-- use a ~/.m2/settings.xml like this:
+		<!-- use a ~/.m2/settings.xml like this:
 <settings>
-  <profiles>
-    <profile>
-      <id>piccolo2d</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <piccolo2d.file.site.base>file:///var/www/piccolo2d/</piccolo2d.file.site.base>
-      </properties>
-    </profile>
-  </profiles>
+	<profiles>
+		<profile>
+			<id>piccolo2d</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<piccolo2d.file.site.base>file:///var/www/piccolo2d/</piccolo2d.file.site.base>
+			</properties>
+		</profile>
+	</profiles>
 </settings>
 -->
 		<site>
