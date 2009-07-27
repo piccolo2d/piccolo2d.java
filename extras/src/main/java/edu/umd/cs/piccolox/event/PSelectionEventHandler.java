@@ -629,10 +629,8 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
             if (node instanceof PLayer) {
                 for (Iterator i = selectableParents.iterator(); i.hasNext();) {
                     PNode parent = (PNode) i.next();
-                    if (parent instanceof PCamera) {
-                        if (((PCamera) parent).indexOfLayer((PLayer) node) != -1) {
-                            return true;
-                        }
+                    if (parent instanceof PCamera && ((PCamera) parent).indexOfLayer((PLayer) node) != -1) {
+                        return true;
                     }
                 }
             }

@@ -150,21 +150,22 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         PStyledText newText = new PStyledText();
 
         Document doc = editor.getUI().getEditorKit(editor).createDefaultDocument();
-        if (doc instanceof StyledDocument) {
-            if (!doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontFamily)
-                    || !doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontSize)) {
+        if (doc instanceof StyledDocument && missingFontFamilyOrSize(doc)) {
+            Font eFont = editor.getFont();
+            SimpleAttributeSet sas = new SimpleAttributeSet();
+            sas.addAttribute(StyleConstants.FontFamily, eFont.getFamily());
+            sas.addAttribute(StyleConstants.FontSize, new Integer(eFont.getSize()));
 
-                Font eFont = editor.getFont();
-                SimpleAttributeSet sas = new SimpleAttributeSet();
-                sas.addAttribute(StyleConstants.FontFamily, eFont.getFamily());
-                sas.addAttribute(StyleConstants.FontSize, new Integer(eFont.getSize()));
-
-                ((StyledDocument) doc).setParagraphAttributes(0, doc.getLength(), sas, false);
-            }
+            ((StyledDocument) doc).setParagraphAttributes(0, doc.getLength(), sas, false);       
         }
         newText.setDocument(doc);
 
         return newText;
+    }
+
+    private boolean missingFontFamilyOrSize(Document doc) {
+        return !doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontFamily)
+                || !doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontSize);
     }
 
     public void mousePressed(PInputEvent inputEvent) {

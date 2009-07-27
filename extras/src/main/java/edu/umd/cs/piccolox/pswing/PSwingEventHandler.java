@@ -103,11 +103,9 @@ public class PSwingEventHandler implements PInputEventListener {
                 listenNode.removeInputEventListener(this);
             }
         }
-        else if (!this.active && active) {
-            if (listenNode != null) {
-                this.active = true;
-                listenNode.addInputEventListener(this);
-            }
+        else if (!this.active && active && listenNode != null) {
+            this.active = true;
+            listenNode.addInputEventListener(this);
         }
     }
 

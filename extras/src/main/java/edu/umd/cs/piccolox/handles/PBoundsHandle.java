@@ -110,8 +110,9 @@ public class PBoundsHandle extends PHandle {
             }
 
             public void mouseExited(PInputEvent aEvent) {
-                PPickPath focus = aEvent.getInputManager().getMouseFocus();
                 if (cursorPushed) {
+                    PPickPath focus = aEvent.getInputManager().getMouseFocus();
+
                     if (focus == null || focus.getPickedNode() != PBoundsHandle.this) {
                         aEvent.popCursor();
                         cursorPushed = false;

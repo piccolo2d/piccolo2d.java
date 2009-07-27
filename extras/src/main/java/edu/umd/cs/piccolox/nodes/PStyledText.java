@@ -342,6 +342,7 @@ public class PStyledText extends PNode {
                         font = style.getFont(rootElement.getAttributes());
                     }
                 }
+                
                 if (font != null) {
                     ((AttributedString) stringContents.get(i)).addAttribute(TextAttribute.FONT, font, (int) Math.max(0,
                             curElement.getStartOffset() - pEnd.runStart), (int) Math.min(pEnd.runLimit - pEnd.runStart,

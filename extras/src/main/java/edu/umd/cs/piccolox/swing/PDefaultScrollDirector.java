@@ -206,46 +206,44 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      * @param y The new y position
      */
     public void setViewPosition(double x, double y) {
-        if (camera != null) {
-            // If a scroll is in progress - we ignore new scrolls -
-            // if we didn't, since the scrollbars depend on the camera location
-            // we can end up with an infinite loop
-            if (!scrollInProgress) {
-                scrollInProgress = true;
+        // Bail out if scrollInProgress because we can end up with an infinite
+        // loop since the scrollbars depend on the camera location
+        if (camera == null || scrollInProgress)
+            return;
 
-                // Get the union of all the layers' bounds
-                PBounds layerBounds = new PBounds();
-                List layers = camera.getLayersReference();
-                for (Iterator i = layers.iterator(); i.hasNext();) {
-                    PLayer layer = (PLayer) i.next();
-                    layerBounds.add(layer.getFullBoundsReference());
-                }
+        scrollInProgress = true;
 
-                PAffineTransform at = camera.getViewTransform();
-                at.transform(layerBounds, layerBounds);
-
-                // Union the camera bounds
-                PBounds viewBounds = camera.getBoundsReference();
-                layerBounds.add(viewBounds);
-
-                // Now find the new view position in view coordinates
-                Point2D newPoint = new Point2D.Double(layerBounds.getX() + x, layerBounds.getY() + y);
-
-                // Now transform the new view position into global coords
-                camera.localToView(newPoint);
-
-                // Compute the new matrix values to put the camera at the
-                // correct location
-                double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
-                double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
-
-                at.setTransform(at.getScaleX(), at.getShearY(), at.getShearX(), at.getScaleY(), newX, newY);
-
-                // Now actually set the camera's transform
-                camera.setViewTransform(at);
-                scrollInProgress = false;
-            }
+        // Get the union of all the layers' bounds
+        PBounds layerBounds = new PBounds();
+        List layers = camera.getLayersReference();
+        for (Iterator i = layers.iterator(); i.hasNext();) {
+            PLayer layer = (PLayer) i.next();
+            layerBounds.add(layer.getFullBoundsReference());
         }
+
+        PAffineTransform at = camera.getViewTransform();
+        at.transform(layerBounds, layerBounds);
+
+        // Union the camera bounds
+        PBounds viewBounds = camera.getBoundsReference();
+        layerBounds.add(viewBounds);
+
+        // Now find the new view position in view coordinates
+        Point2D newPoint = new Point2D.Double(layerBounds.getX() + x, layerBounds.getY() + y);
+
+        // Now transform the new view position into global coords
+        camera.localToView(newPoint);
+
+        // Compute the new matrix values to put the camera at the
+        // correct location
+        double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
+        double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
+
+        at.setTransform(at.getScaleX(), at.getShearY(), at.getShearX(), at.getScaleY(), newX, newY);
+
+        // Now actually set the camera's transform
+        camera.setViewTransform(at);
+        scrollInProgress = false;
     }
 
     /**
@@ -254,9 +252,9 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      */
     public void propertyChange(PropertyChangeEvent pce) {
         boolean isRelevantViewEvent = (PCamera.PROPERTY_VIEW_TRANSFORM == pce.getPropertyName());
-        boolean isRelevantBoundsEvent = (PNode.PROPERTY_BOUNDS == pce.getPropertyName() || PNode.PROPERTY_FULL_BOUNDS == pce
-                .getPropertyName())
+        boolean isRelevantBoundsEvent = isBoundsChangedEvent(pce)
                 && (pce.getSource() == camera || pce.getSource() == view.getRoot());
+
         if (isRelevantViewEvent || isRelevantBoundsEvent) {
             if (shouldRevalidateScrollPane()) {
                 scrollPane.revalidate();
@@ -265,6 +263,10 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
                 viewPort.fireStateChanged();
             }
         }
+    }
+
+    private boolean isBoundsChangedEvent(PropertyChangeEvent pce) {
+        return (PNode.PROPERTY_BOUNDS == pce.getPropertyName() || PNode.PROPERTY_FULL_BOUNDS == pce.getPropertyName());
     }
 
     /**
