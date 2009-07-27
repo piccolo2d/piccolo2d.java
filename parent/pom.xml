@@ -324,7 +324,7 @@
 			<distributionManagement>
 				<site>
 					<id>hudson.p2d.trunk</id>
-					<url>file:///tmp/piccolo2d-trunk/</url>
+					<url>file:///var/www/piccolo2d/</url>
 				</site>
 			</distributionManagement>
 		</profile>
