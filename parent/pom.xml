@@ -323,7 +323,7 @@
 <settings>
   <profiles>
     <profile>
-      <id>always</id>
+      <id>piccolo2d</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
