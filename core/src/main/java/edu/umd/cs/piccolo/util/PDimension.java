@@ -41,7 +41,12 @@ import java.io.Serializable;
  * @author Jesse Grosjean
  */
 public class PDimension extends Dimension2D implements Serializable {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     public double width;
     public double height;
 

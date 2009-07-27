@@ -69,6 +69,12 @@ import edu.umd.cs.piccolo.util.PUtil;
 public class PCamera extends PNode {
 
     /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The property name that identifies a change in the set of this camera's
      * layers (see {@link #getLayer getLayer}, {@link #getLayerCount
      * getLayerCount}, {@link #getLayersReference getLayersReference}). A
@@ -158,16 +164,17 @@ public class PCamera extends PNode {
             repaintFrom(TEMP_REPAINT_RECT, repaintedLayer);
         }
     }
-    
+
     /**
      * @deprecated since a more specific repaintFromLayer method is available
      * 
-     * Repaint from one of the cameras layers. The repaint region needs to be
-     * transformed from view to local in this case. Unlike most repaint methods
-     * in piccolo this one must not modify the viewBounds parameter.
+     *             Repaint from one of the cameras layers. The repaint region
+     *             needs to be transformed from view to local in this case.
+     *             Unlike most repaint methods in piccolo this one must not
+     *             modify the viewBounds parameter.
      */
-    public void repaintFromLayer(PBounds viewBounds, PNode repaintedLayer) {
-        this.repaintFromLayer(viewBounds, (PLayer)repaintedLayer);
+    public void repaintFromLayer(PBounds viewBounds, PNode repaintedLayer) {        
+        this.repaintFromLayer(viewBounds, (PLayer) repaintedLayer);
     }
 
     // ****************************************************************
@@ -640,6 +647,9 @@ public class PCamera extends PNode {
                 layerBounds.setRect(layerBounds.getCenterX(), layerBounds.getCenterY(), 0, 0);
                 constraintDelta = viewBounds.deltaRequiredToContain(layerBounds);
                 break;
+            default:
+
+                throw new RuntimeException("Invalid View Constraint");
         }
 
         viewTransform.translate(-constraintDelta.width, -constraintDelta.height);
@@ -685,8 +695,8 @@ public class PCamera extends PNode {
      * camera's view coordinate system. The given point is modified by this
      * method.
      */
-    public Point2D localToView(Point2D localPoint) {        
-        return viewTransform.inverseTransform(localPoint, localPoint);        
+    public Point2D localToView(Point2D localPoint) {
+        return viewTransform.inverseTransform(localPoint, localPoint);
     }
 
     /**
@@ -694,8 +704,8 @@ public class PCamera extends PNode {
      * camera's view coordinate system. The given dimension is modified by this
      * method.
      */
-    public Dimension2D localToView(Dimension2D localDimension) {        
-        return viewTransform.inverseTransform(localDimension, localDimension);        
+    public Dimension2D localToView(Dimension2D localDimension) {
+        return viewTransform.inverseTransform(localDimension, localDimension);
     }
 
     /**

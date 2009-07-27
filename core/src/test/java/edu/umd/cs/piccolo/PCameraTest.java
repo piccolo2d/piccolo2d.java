@@ -348,7 +348,7 @@ public class PCameraTest extends TestCase {
         assertEquals(PCamera.VIEW_CONSTRAINT_ALL, camera.getViewConstraint());
     }
     
-    class MockPComponent implements PComponent {
+    static class MockPComponent implements PComponent {
 
         public void paintImmediately() {
         }

@@ -98,6 +98,11 @@ import edu.umd.cs.piccolo.util.PUtil;
  * @author Jesse Grosjean
  */
 public class PNode implements Cloneable, Serializable, Printable {
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * The property name that identifies a change in this node's client
@@ -536,7 +541,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             };
 
             PColorActivity ca = new PColorActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destColor);
-            addActivity(ca);            
+            addActivity(ca);
             return ca;
         }
     }
@@ -761,7 +766,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
         catch (ClassNotFoundException e) {
             return null;
-        }        
+        }
     }
 
     // ****************************************************************
@@ -856,8 +861,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     public Point2D parentToLocal(Point2D parentPoint) {
         if (transform == null)
             return parentPoint;
-        
-        return transform.inverseTransform(parentPoint, parentPoint);        
+
+        return transform.inverseTransform(parentPoint, parentPoint);
     }
 
     /**
@@ -1022,14 +1027,15 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return The inverse of the concatenation of transforms from the root down
      *         to this node.
      */
-    public PAffineTransform getGlobalToLocalTransform(PAffineTransform dest) {   
+    public PAffineTransform getGlobalToLocalTransform(PAffineTransform dest) {
         dest = getLocalToGlobalTransform(dest);
         try {
             dest.setTransform(dest.createInverse());
-        } catch (NoninvertibleTransformException e) {
+        }
+        catch (NoninvertibleTransformException e) {
             throw new PAffineTransformException(e, dest);
         }
-        return dest;               
+        return dest;
     }
 
     // ****************************************************************
@@ -1245,8 +1251,9 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Notify this node that you will begin to repeatedly call <code>setBounds
-     * </code>. When you are done call <code>endResizeBounds</code> to let the
-     * node know that you are done.
+     * </code>. When you
+     * are done call <code>endResizeBounds</code> to let the node know that you
+     * are done.
      */
     public void startResizeBounds() {
     }
@@ -2130,8 +2137,9 @@ public class PNode implements Cloneable, Serializable, Printable {
         Point2D pt1, pt2;
 
         if (parent == null) {
-        	return null;
-        } else {
+            return null;
+        }
+        else {
             // First compute translation amount in global coordinates
             Rectangle2D srcBounds = getGlobalFullBounds();
             srcx = lerp(srcPt.getX(), srcBounds.getX(), srcBounds.getX() + srcBounds.getWidth());
@@ -2153,32 +2161,34 @@ public class PNode implements Cloneable, Serializable, Printable {
             return animateToTransform(at, millis);
         }
     }
-    
+
     /**
      * @deprecated in favor of animateToRelativePosition
      * 
-     * It will calculate the necessary transform in order to make this node
-     * appear at a particular position relative to the specified bounding box.
-     * The source point specifies a point in the unit square (0, 0) - (1, 1)
-     * that represents an anchor point on the corresponding node to this
-     * transform. The destination point specifies an anchor point on the
-     * reference node. The position method then computes the transform that
-     * results in transforming this node so that the source anchor point
-     * coincides with the reference anchor point. This can be useful for layout
-     * algorithms as it is straightforward to position one object relative to
-     * another.
-     * <p>
-     * For example, If you have two nodes, A and B, and you call
+     *             It will calculate the necessary transform in order to make
+     *             this node appear at a particular position relative to the
+     *             specified bounding box. The source point specifies a point in
+     *             the unit square (0, 0) - (1, 1) that represents an anchor
+     *             point on the corresponding node to this transform. The
+     *             destination point specifies an anchor point on the reference
+     *             node. The position method then computes the transform that
+     *             results in transforming this node so that the source anchor
+     *             point coincides with the reference anchor point. This can be
+     *             useful for layout algorithms as it is straightforward to
+     *             position one object relative to another.
+     *             <p>
+     *             For example, If you have two nodes, A and B, and you call
      * 
-     * <PRE>
+     *             <PRE>
      * Point2D srcPt = new Point2D.Double(1.0, 0.0);
      * Point2D destPt = new Point2D.Double(0.0, 0.0);
      * A.position(srcPt, destPt, B.getGlobalBounds(), 750, null);
      * </PRE>
      * 
-     * The result is that A will move so that its upper-right corner is at the
-     * same place as the upper-left corner of B, and the transition will be
-     * smoothly animated over a period of 750 milliseconds.
+     *             The result is that A will move so that its upper-right corner
+     *             is at the same place as the upper-left corner of B, and the
+     *             transition will be smoothly animated over a period of 750
+     *             milliseconds.
      * 
      * @param srcPt The anchor point on this transform's node (normalized to a
      *            unit square)
@@ -2233,10 +2243,11 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (transform == null) {
             return new PAffineTransform();
         }
-                
+
         try {
             return new PAffineTransform(transform.createInverse());
-        } catch (NoninvertibleTransformException e) {
+        }
+        catch (NoninvertibleTransformException e) {
             throw new PAffineTransformException(e, transform);
         }
     }
@@ -2568,16 +2579,16 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param height pixel height of the resulting image
      * @return a new image representing this node and its descendents
      */
-    public Image toImage(int width, int height, Paint backGroundPaint) {          
+    public Image toImage(int width, int height, Paint backGroundPaint) {
         BufferedImage result;
-        
+
         if (GraphicsEnvironment.isHeadless()) {
             result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        } 
+        }
         else {
             GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            .getDefaultScreenDevice().getDefaultConfiguration();
-            result =  graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+                    .getDefaultScreenDevice().getDefaultConfiguration();
+            result = graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
         }
 
         return toImage(result, backGroundPaint);
@@ -2777,7 +2788,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
 
             if (thisPickable && pick(pickPath)) {
-                return true;                
+                return true;
             }
 
             if (getChildrenPickable()) {
@@ -2790,7 +2801,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             }
 
             if (thisPickable && pickAfterChildren(pickPath)) {
-                return true;                
+                return true;
             }
 
             pickPath.popTransform(transform);
@@ -3267,15 +3278,15 @@ public class PNode implements Cloneable, Serializable, Printable {
     protected final String paramString() {
         return "this Method (paramString) is deprecated and will go away in the next release.";
     }
-    
+
     public PInputEventListener[] getInputEventListeners() {
         if (listenerList == null || listenerList.getListenerCount() == 0)
             return new PInputEventListener[] {};
-        
+
         EventListener[] listeners = listenerList.getListeners(PInputEventListener.class);
-        
+
         PInputEventListener[] result = new PInputEventListener[listeners.length];
-        for (int i=0; i<listeners.length; i++) {
+        for (int i = 0; i < listeners.length; i++) {
             result[i] = (PInputEventListener) listeners[i];
         }
         return result;

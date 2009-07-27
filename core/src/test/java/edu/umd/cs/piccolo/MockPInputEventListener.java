@@ -7,7 +7,7 @@ import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventListener;
 
 public class MockPInputEventListener implements PInputEventListener {
-	class Notification {
+	static class Notification {
 		public PInputEvent event;
 		public int type;
 		

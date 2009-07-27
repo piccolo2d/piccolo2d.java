@@ -52,6 +52,12 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PText extends PNode {
 
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
 	/**
 	 * The property name that identifies a change of this node's text (see
 	 * {@link #getText getText}). Both old and new value will be set in any

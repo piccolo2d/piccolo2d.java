@@ -1,7 +1,12 @@
 package edu.umd.cs.piccolo.util;
 
 public class PAffineTransformException extends RuntimeException {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     private final PAffineTransform errantTransform;
 
     public PAffineTransformException(PAffineTransform errantTransform) {

@@ -54,7 +54,12 @@ import edu.umd.cs.piccolo.util.PObjectOutputStream;
  * @author Jesse Grosjean
  */
 public class PLayer extends PNode {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     /**
      * The property name that identifies a change in the set of this layer's
      * cameras (see {@link #getCamera getCamera}, {@link #getCameraCount

@@ -58,6 +58,12 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 public class PImage extends PNode {
 
     /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
+    /**
      * The property name that identifies a change of this node's image (see
      * {@link #getImage getImage}). Both old and new value will be set correctly
      * to Image objects in any property change event.

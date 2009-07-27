@@ -71,6 +71,12 @@ import edu.umd.cs.piccolo.util.PUtil;
 public class PPath extends PNode {
 
     /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
+    /**
      * The property name that identifies a change of this node's stroke paint
      * (see {@link #getStrokePaint getStrokePaint}). Both old and new value will
      * be set correctly to Paint objects in any property change event.

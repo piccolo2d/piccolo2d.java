@@ -114,7 +114,7 @@ public class PRootTest extends TestCase {
         assertTrue(activity.isActivityFished());
     }
 
-    private final class MockInputSource implements PRoot.InputSource {
+    private static final class MockInputSource implements PRoot.InputSource {
         private int processInputCalls;
 
         public int getProcessInputCalls() {
@@ -126,7 +126,7 @@ public class PRootTest extends TestCase {
         }
     }
     
-    private final class MockPActivity extends PActivity {
+    private static final class MockPActivity extends PActivity {
         private boolean activityStarted;
         private boolean activityFinished;
 

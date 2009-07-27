@@ -39,7 +39,12 @@ import java.util.ArrayList;
  * @author Jesse Grosjean
  */
 public class PStack extends ArrayList {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     public PStack() {
     }
 

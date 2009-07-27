@@ -51,7 +51,12 @@ import java.io.Serializable;
  * @author Jesse Grosjean
  */
 public class PBounds extends Rectangle2D.Double implements Serializable {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     private boolean isEmpty = true;
 
     public PBounds() {

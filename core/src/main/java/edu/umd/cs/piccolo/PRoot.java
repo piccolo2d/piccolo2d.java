@@ -53,6 +53,12 @@ import edu.umd.cs.piccolo.util.PNodeFilter;
 public class PRoot extends PNode {
 
     /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The property name that identifies a change in the set of this root's
      * input sources (see {@link InputSource InputSource}). In any property
      * change event the new value will be a reference to the list of this root's

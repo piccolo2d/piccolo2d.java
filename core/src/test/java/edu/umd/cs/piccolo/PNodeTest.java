@@ -42,7 +42,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ListIterator;
-import java.util.regex.Pattern;
 
 import javax.swing.text.MutableAttributeSet;
 

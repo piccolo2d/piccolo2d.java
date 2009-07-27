@@ -43,7 +43,12 @@ import java.awt.geom.Rectangle2D;
  * @author Jesse Grosjean
  */
 public class PAffineTransform extends AffineTransform {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     private static double[] PTS1 = new double[8];
     private static double[] PTS2 = new double[8];
 

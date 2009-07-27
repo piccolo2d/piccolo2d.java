@@ -70,7 +70,12 @@ import edu.umd.cs.piccolo.util.PUtil;
  * @author Jesse Grosjean
  */
 public class PCanvas extends JComponent implements PComponent {
-
+    /**
+     * Allows for future serialization code to understand versioned binary
+     * formats.
+     */
+    private static final long serialVersionUID = 1L;
+    
     /**
      * @deprecated this is a typo and clients should change their code to
      *             reflect the correct spelling
@@ -90,10 +95,10 @@ public class PCanvas extends JComponent implements PComponent {
     private PZoomEventHandler zoomEventHandler;
     private boolean paintingImmediately;
     private boolean animatingOnLastPaint;
-    private MouseListener mouseListener;
-    private KeyEventPostProcessor keyEventPostProcessor;
-    private MouseWheelListener mouseWheelListener;
-    private MouseMotionListener mouseMotionListener;
+    private transient MouseListener mouseListener;
+    private transient KeyEventPostProcessor keyEventPostProcessor;
+    private transient MouseWheelListener mouseWheelListener;
+    private transient MouseMotionListener mouseMotionListener;
 
     /**
      * Construct a canvas with the basic scene graph consisting of a root,
