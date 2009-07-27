@@ -156,8 +156,8 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     }
 
     protected double validatePanningSpeed(double delta) {
-        double minDelta = minAutopanSpeed / (1000 / getDragActivity().getStepRate());
-        double maxDelta = maxAutopanSpeed / (1000 / getDragActivity().getStepRate());
+        double minDelta = minAutopanSpeed / (1000d / getDragActivity().getStepRate());
+        double maxDelta = maxAutopanSpeed / (1000d / getDragActivity().getStepRate());
 
         boolean deltaNegative = delta < 0;
         delta = Math.abs(delta);
