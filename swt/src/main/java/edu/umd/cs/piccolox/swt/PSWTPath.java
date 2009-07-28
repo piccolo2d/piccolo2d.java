@@ -383,8 +383,7 @@ public class PSWTPath extends PNode {
             return new Line2D.Double(l2.getP1(), l2.getP2());
         }
         else {
-            // either throw an exception or don't. But don't just write to sysout
-            // new Exception().printStackTrace();
+            new Exception().printStackTrace();
             GeneralPath aPath = new GeneralPath();
             aPath.append(aShape, false);
             return aPath;

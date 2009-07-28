@@ -267,8 +267,7 @@ public class PNotificationCenter {
                 catch (InvocationTargetException e) {
                     // Since this is how Swing handles Exceptions that get
                     // thrown on listeners, it's probably ok to do it here.
-                    // mro: if Swing does it wrong we don't have to.
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }

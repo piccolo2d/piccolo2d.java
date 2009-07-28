@@ -360,12 +360,11 @@ public class PSwingEventHandler implements PInputEventListener {
     private void cameraToLocal(PCamera topCamera, Point2D pt, PNode node) {
         AffineTransform inverse;
         try {
-            inverse = topCamera.getViewTransform().createInverse();
-        }
-        catch (NoninvertibleTransformException e) {
+             inverse = topCamera.getViewTransform().createInverse();
+        } catch (NoninvertibleTransformException e) {
             throw new PAffineTransformException(e, topCamera.getViewTransform());
         }
-
+      
         /*
          * Only apply the camera's view transform when this node is a descendant
          * of PLayer
@@ -409,11 +408,10 @@ public class PSwingEventHandler implements PInputEventListener {
                 }
             }
             else {
-                // what was that? an exception to format syslog output?
-                throw new RuntimeException("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
-                        + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName());
+                new Exception("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
+                        + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName()).printStackTrace();
             }
-        }
+        }        
     }
 
     /**
