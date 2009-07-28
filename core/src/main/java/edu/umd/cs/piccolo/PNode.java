@@ -241,6 +241,24 @@ public class PNode implements Cloneable, Serializable, Printable {
     private boolean childBoundsInvalid;
     private boolean occluded;
 
+    private String name;
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Calls {@link PNode} followed by {@link PNode#setName(String)}.
+     */
+    public PNode(final String name) {
+        this();
+        setName(name);
+    }
+
     /**
      * Constructs a new PNode.
      * <P>
