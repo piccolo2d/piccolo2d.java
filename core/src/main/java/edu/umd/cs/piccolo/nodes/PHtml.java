@@ -56,13 +56,12 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PHtml extends PNode {
 
-    /**
-     * Allows for future serialization code to understand versioned binary
-     * formats.
-     */
     private static final long serialVersionUID = 1L;
 
+    // FIXME: imagine <img alt="2>1" src="here comes the meat" />
     private static final Pattern tagPattern = Pattern.compile("</?[^>]+>");
+    // FIXME: imagine <a href="where to go"
+    // title="this is not the href='gotcha!' " />
     private static final Pattern linkPattern = Pattern.compile("<a .*href=(\\\"([^\\\"]*)\\\"|\\\'([^\\\"]*)\\\')");
 
     private static final Font DEFAULT_FONT = new JTextField().getFont();
@@ -72,24 +71,29 @@ public class PHtml extends PNode {
      * The property name that identifies a change of this node's font (see
      * {@link #getFont getFont}). Both old and new value will be set in any
      * property change event.
+     * 
+     * FIXME what's that?
      */
     public static final String PROPERTY_FONT = "font";
+    // FIXME what's that?
     public static final int PROPERTY_CODE_FONT = 1 << 20;
 
     /**
      * The property name that identifies a change of this node's html (see
      * {@link #getHTML getHTML}). Both old and new value will be set in any
-     * property change event.
+     * property change event. FIXME what's that?
      */
     public static final String PROPERTY_HTML = "html";
+    // FIXME what's that?
     public static final int PROPERTY_CODE_HTML = 1 << 21;
 
     /**
      * The property name that identifies a change of this node's html color (see
      * {@link #getHtml getHTMLColor}). Both old and new value will be set in any
-     * property change event.
+     * property change event. FIXME what's that?
      */
     public static final String PROPERTY_HTML_COLOR = "html color";
+    // FIXME what's that?
     public static final int PROPERTY_CODE_HTML_COLOR = 1 << 22;
 
     private final JLabel htmlLabel;
@@ -117,6 +121,8 @@ public class PHtml extends PNode {
     }
 
     /**
+     * FIXME better name innerHtml as w3c does?
+     * 
      * @return HTML being rendered by this node
      */
     public String getHTML() {
@@ -125,6 +131,8 @@ public class PHtml extends PNode {
 
     /**
      * Changes the HTML being rendered by this node
+     * 
+     * FIXME better name innerHtml as w3c does?
      * 
      * @param newHtml
      */
@@ -138,6 +146,7 @@ public class PHtml extends PNode {
     }
 
     private boolean isNewHtml(final String html) {
+        // FIXME NPE if both are null - can this happen?
         return htmlLabel.getText() != null && html == null || htmlLabel.getText() == null && html != null
                 || !htmlLabel.getText().equals(html);
     }
@@ -165,6 +174,8 @@ public class PHtml extends PNode {
     /**
      * Gets the color used to render the HTML. If you want to get the paint used
      * for the node, use getPaint.
+     * 
+     * FIXME be more consistent - either always HTML or Html but don't mix.
      * 
      * @return the color used to render the HTML.
      */
@@ -210,7 +221,7 @@ public class PHtml extends PNode {
         return boundsChanged;
     }
 
-    /*
+    /**
      * Paints the node. The HTML string is painted last, so it appears on top of
      * any child nodes.
      * 
@@ -228,6 +239,9 @@ public class PHtml extends PNode {
 
     /**
      * Returns the address specified in the link under the given point.
+     * 
+     * FIXME this method looks shaky - can you refactor to get it into a test
+     * harness?
      * 
      * @param clickedPoint
      * @return String containing value of href for clicked link, or null if no
