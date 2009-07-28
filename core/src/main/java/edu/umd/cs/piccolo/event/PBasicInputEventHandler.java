@@ -185,29 +185,10 @@ public class PBasicInputEventHandler implements PInputEventListener {
     public void keyboardFocusLost(final PInputEvent event) {
     }
 
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
     /**
-     * Returns a string representation of this object for debugging purposes.
-     */
-    public String toString() {
-        final String result = super.toString().replaceAll(".*\\.", "");
-        return result + "[" + paramString() + "]";
-    }
-
-    /**
-     * Returns a string representing the state of this node. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this node's state
+     * @deprecated see http://code.google.com/p/piccolo2d/issues/detail?id=99
      */
     protected String paramString() {
-        final StringBuffer result = new StringBuffer();
-        result.append("eventFilter=" + eventFilter == null ? "null" : eventFilter.toString());
-        return result.toString();
+        return "";
     }
 }

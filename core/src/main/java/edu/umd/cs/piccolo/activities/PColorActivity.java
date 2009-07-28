@@ -127,27 +127,4 @@ public class PColorActivity extends PInterpolatingActivity {
         final float alpha = source.getAlpha() + zeroToOne * (destination.getAlpha() - source.getAlpha());
         target.setColor(new Color(red / 255, green / 255, blue / 255, alpha / 255));
     }
-
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
-    /**
-     * Returns a string representing the state of this object. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this object's state
-     */
-    protected String paramString() {
-        final StringBuffer result = new StringBuffer();
-
-        result.append("source=" + (source == null ? "null" : source.toString()));
-        result.append(",destination=" + (destination == null ? "null" : destination.toString()));
-        result.append(',');
-        result.append(super.paramString());
-
-        return result.toString();
-    }
 }

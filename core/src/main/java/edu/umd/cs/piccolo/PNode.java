@@ -3214,53 +3214,11 @@ public class PNode implements Cloneable, Serializable, Printable {
         parent = (PNode) in.readObject();
     }
 
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
     /**
-     * Returns a string representation of this object for debugging purposes.
-     */
-    public String toString() {
-        final String result = super.toString().replaceAll(".*\\.", "");
-        return result + "[" + paramString() + "]";
-    }
-
-    /**
-     * Returns a string representing the state of this node. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this node's state
+     * @deprecated see http://code.google.com/p/piccolo2d/issues/detail?id=99
      */
     protected String paramString() {
-        final StringBuffer result = new StringBuffer();
-
-        result.append("bounds=" + (bounds == null ? "null" : bounds.toString()));
-        result.append(",fullBounds=" + (fullBoundsCache == null ? "null" : fullBoundsCache.toString()));
-        result.append(",transform=" + (transform == null ? "null" : transform.toString()));
-        result.append(",paint=" + (paint == null ? "null" : paint.toString()));
-        result.append(",transparency=" + transparency);
-        result.append(",childrenCount=" + getChildrenCount());
-
-        if (fullBoundsInvalid) {
-            result.append(",fullBoundsInvalid");
-        }
-
-        if (pickable) {
-            result.append(",pickable");
-        }
-
-        if (childrenPickable) {
-            result.append(",childrenPickable");
-        }
-
-        if (visible) {
-            result.append(",visible");
-        }
-
-        return result.toString();
+        return "";
     }
 
     public PInputEventListener[] getInputEventListeners() {

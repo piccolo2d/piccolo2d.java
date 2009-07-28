@@ -139,41 +139,4 @@ public class PTransformActivity extends PInterpolatingActivity {
 
         target.setTransform(STATIC_TRANSFORM);
     }
-
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
-    /**
-     * Returns a string representing the state of this activity. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this activity's state
-     */
-    protected String paramString() {
-        final StringBuffer result = new StringBuffer();
-
-        result.append("source=" + (source == null ? "null" : toString(source)));
-        result.append(",destination=" + (destination == null ? "null" : toString(destination)));
-        result.append(',');
-        result.append(super.paramString());
-
-        return result.toString();
-    }
-
-    // here since 1.4 doesn't support Arrays.toString(double[] ...)
-    // should be removed when we migrate to 1.5
-    private String toString(final double[] array) {
-        final StringBuffer result = new StringBuffer('[');
-        for (int i = 0; i < array.length; i++) {
-            result.append(array[i]);
-            result.append(',');
-        }
-        result.deleteCharAt(result.length() - 1);
-        result.append(']');
-
-        return result.toString();
-    }
 }

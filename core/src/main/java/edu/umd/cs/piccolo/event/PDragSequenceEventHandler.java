@@ -236,32 +236,4 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
             sequenceInitiatedButton = MouseEvent.NOBUTTON;
         }
     }
-
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
-    /**
-     * Returns a string representing the state of this node. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this node's state
-     */
-    protected String paramString() {
-        final StringBuffer result = new StringBuffer();
-
-        result.append("minDragStartDistance=" + minDragStartDistance);
-        result.append(",mousePressedCanvasPoint="
-                + (mousePressedCanvasPoint == null ? "null" : mousePressedCanvasPoint.toString()));
-        result.append(",sequenceInitiatedButton=" + sequenceInitiatedButton);
-        if (isDragging) {
-            result.append(",dragging");
-        }
-        result.append(',');
-        result.append(super.paramString());
-
-        return result.toString();
-    }
 }

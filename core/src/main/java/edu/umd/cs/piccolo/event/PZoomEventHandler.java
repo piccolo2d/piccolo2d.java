@@ -140,28 +140,4 @@ public class PZoomEventHandler extends PDragSequenceEventHandler {
 
         camera.scaleViewAboutPoint(scaleDelta, viewZoomPoint.getX(), viewZoomPoint.getY());
     }
-
-    // ****************************************************************
-    // Debugging - methods for debugging
-    // ****************************************************************
-
-    /**
-     * Returns a string representing the state of this node. This method is
-     * intended to be used only for debugging purposes, and the content and
-     * format of the returned string may vary between implementations. The
-     * returned string may be empty but may not be <code>null</code>.
-     * 
-     * @return a string representation of this node's state
-     */
-    protected String paramString() {
-        final StringBuffer result = new StringBuffer();
-
-        result.append("minScale=" + minScale);
-        result.append(",maxScale=" + maxScale);
-        result.append(",viewZoomPoint=" + (viewZoomPoint == null ? "null" : viewZoomPoint.toString()));
-        result.append(',');
-        result.append(super.paramString());
-
-        return result.toString();
-    }
 }
