@@ -50,6 +50,9 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * hood so you have the same restrictions regarding html as you have when using
  * standard Swing components (HTML 3.2 + subset of CSS 1.0).
  * 
+ * FIXME: so it's not necessary well-formed? Atts like <a href=unquoted /> are
+ * ok?
+ * 
  * @author Chris Malley (cmal...@pixelzoom.com)
  * @author Sam Reid
  * @author Allain Lalonde
