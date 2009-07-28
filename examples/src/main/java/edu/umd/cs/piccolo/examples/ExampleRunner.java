@@ -85,10 +85,10 @@ public class ExampleRunner extends JFrame {
         addExampleButtons(panel, new Class[] { ActivityExample.class, AngleNodeExample.class,
                 BirdsEyeViewExample.class, CameraExample.class, CenterExample.class, ChartLabelExample.class,
                 ClipExample.class, CompositeExample.class, DynamicExample.class, EventHandlerExample.class,
-                FullScreenNodeExample.class, GraphEditorExample.class, GraphEditorExample.class, GridExample.class,
-                GroupExample.class, HandleExample.class, HierarchyZoomExample.class, KeyEventFocusExample.class,
+                FullScreenNodeExample.class, GraphEditorExample.class, GridExample.class, GroupExample.class,
+                HandleExample.class, HelloWorldExample.class, HierarchyZoomExample.class, KeyEventFocusExample.class,
                 LayoutExample.class, LensExample.class, NavigationExample.class, NodeCacheExample.class,
-                NodeEventExample.class, NodeEventExample.class, NodeLinkExample.class, PanToExample.class,
+                NodeEventExample.class, NodeExample.class, NodeLinkExample.class, PanToExample.class,
                 PathExample.class, PositionExample.class, PositionPathActivityExample.class, PulseExample.class,
                 ScrollingExample.class, SelectionExample.class, SquiggleExample.class, StickyExample.class,
                 StickyHandleLayerExample.class, StrokeExample.class, TextExample.class, TooltipExample.class,
@@ -111,7 +111,8 @@ public class ExampleRunner extends JFrame {
                     example.setDefaultCloseOperation(PFrame.DISPOSE_ON_CLOSE);
                 }
                 catch (Exception e) {
-                    JOptionPane.showMessageDialog(ExampleRunner.this, "A problem was encountered running the example");
+                    JOptionPane.showMessageDialog(ExampleRunner.this,
+                            "A problem was encountered running the example.\n\n" + e.getMessage());
                 }
             }
         });
