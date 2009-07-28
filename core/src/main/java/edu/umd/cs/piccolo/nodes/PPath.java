@@ -426,4 +426,28 @@ public class PPath extends PNode {
         stroke = PUtil.readStroke(in);
         path = PUtil.readPath(in);
     }
+
+    // ****************************************************************
+    // Debugging - methods for debugging
+    // ****************************************************************
+
+    /**
+     * Returns a string representing the state of this node. This method is
+     * intended to be used only for debugging purposes, and the content and
+     * format of the returned string may vary between implementations. The
+     * returned string may be empty but may not be <code>null</code>.
+     * 
+     * @return a string representation of this node's state
+     */
+    protected String paramString() {
+        StringBuffer result = new StringBuffer();
+
+        result.append("path=" + (path == null ? "null" : path.toString()));
+        result.append(",stroke=" + (stroke == null ? "null" : stroke.toString()));
+        result.append(",strokePaint=" + (strokePaint == null ? "null" : strokePaint.toString()));
+        result.append(',');
+        result.append(super.paramString());
+
+        return result.toString();
+    }
 }
