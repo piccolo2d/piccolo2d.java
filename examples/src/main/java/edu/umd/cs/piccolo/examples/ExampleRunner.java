@@ -86,13 +86,13 @@ public class ExampleRunner extends JFrame {
                 BirdsEyeViewExample.class, CameraExample.class, CenterExample.class, ChartLabelExample.class,
                 ClipExample.class, CompositeExample.class, DynamicExample.class, EventHandlerExample.class,
                 FullScreenNodeExample.class, GraphEditorExample.class, GridExample.class, GroupExample.class,
-                HandleExample.class, HelloWorldExample.class, HierarchyZoomExample.class, KeyEventFocusExample.class,
-                LayoutExample.class, LensExample.class, NavigationExample.class, NodeCacheExample.class,
-                NodeEventExample.class, NodeExample.class, NodeLinkExample.class, PanToExample.class,
-                PathExample.class, PositionExample.class, PositionPathActivityExample.class, PulseExample.class,
-                ScrollingExample.class, SelectionExample.class, SquiggleExample.class, StickyExample.class,
-                StickyHandleLayerExample.class, StrokeExample.class, TextExample.class, TooltipExample.class,
-                TwoCanvasExample.class, WaitForActivitiesExample.class });
+                HandleExample.class, HelloWorldExample.class, HierarchyZoomExample.class, HTMLExample.class,
+                KeyEventFocusExample.class, LayoutExample.class, LensExample.class, NavigationExample.class,
+                NodeCacheExample.class, NodeEventExample.class, NodeExample.class, NodeLinkExample.class,
+                PanToExample.class, PathExample.class, PositionExample.class, PositionPathActivityExample.class,
+                PulseExample.class, ScrollingExample.class, SelectionExample.class, SquiggleExample.class,
+                StickyExample.class, StickyHandleLayerExample.class, StrokeExample.class, TextExample.class,
+                TooltipExample.class, TwoCanvasExample.class, WaitForActivitiesExample.class });
     }
 
     private void addExampleButtons(JPanel panel, Class[] exampleClasses) {
