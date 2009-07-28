@@ -53,11 +53,12 @@ public abstract class PPathActivity extends PInterpolatingActivity {
 
     protected float[] knots;
 
-    public PPathActivity(long duration, long stepRate, float[] knots) {
+    public PPathActivity(final long duration, final long stepRate, final float[] knots) {
         this(duration, stepRate, 0, PInterpolatingActivity.SOURCE_TO_DESTINATION, knots);
     }
 
-    public PPathActivity(long duration, long stepRate, int loopCount, int mode, float[] knots) {
+    public PPathActivity(final long duration, final long stepRate, final int loopCount, final int mode,
+            final float[] knots) {
         super(duration, stepRate, loopCount, mode);
         setKnots(knots);
     }
@@ -66,7 +67,7 @@ public abstract class PPathActivity extends PInterpolatingActivity {
         return knots.length;
     }
 
-    public void setKnots(float[] knots) {
+    public void setKnots(final float[] knots) {
         this.knots = knots;
     }
 
@@ -74,15 +75,15 @@ public abstract class PPathActivity extends PInterpolatingActivity {
         return knots;
     }
 
-    public void setKnot(int index, float knot) {
+    public void setKnot(final int index, final float knot) {
         knots[index] = knot;
     }
 
-    public float getKnot(int index) {
+    public float getKnot(final int index) {
         return knots[index];
     }
 
-    public void setRelativeTargetValue(float zeroToOne) {
+    public void setRelativeTargetValue(final float zeroToOne) {
         int currentKnotIndex = 0;
 
         while (zeroToOne > knots[currentKnotIndex]) {
@@ -92,13 +93,15 @@ public abstract class PPathActivity extends PInterpolatingActivity {
         int startKnot = currentKnotIndex - 1;
         int endKnot = currentKnotIndex;
 
-        if (startKnot < 0)
+        if (startKnot < 0) {
             startKnot = 0;
-        if (endKnot > getKnotsLength() - 1)
+        }
+        if (endKnot > getKnotsLength() - 1) {
             endKnot = getKnotsLength() - 1;
+        }
 
-        float currentRange = knots[endKnot] - knots[startKnot];
-        float currentPointOnRange = zeroToOne - knots[startKnot];
+        final float currentRange = knots[endKnot] - knots[startKnot];
+        final float currentPointOnRange = zeroToOne - knots[startKnot];
         float normalizedPointOnRange = currentPointOnRange;
 
         if (currentRange != 0) {

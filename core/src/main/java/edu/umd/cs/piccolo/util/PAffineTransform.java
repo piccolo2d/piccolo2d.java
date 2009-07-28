@@ -48,7 +48,7 @@ public class PAffineTransform extends AffineTransform {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     private static double[] PTS1 = new double[8];
     private static double[] PTS2 = new double[8];
 
@@ -56,27 +56,29 @@ public class PAffineTransform extends AffineTransform {
         super();
     }
 
-    public PAffineTransform(double[] flatmatrix) {
+    public PAffineTransform(final double[] flatmatrix) {
         super(flatmatrix);
     }
 
-    public PAffineTransform(float[] flatmatrix) {
+    public PAffineTransform(final float[] flatmatrix) {
         super(flatmatrix);
     }
 
-    public PAffineTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
+    public PAffineTransform(final double m00, final double m10, final double m01, final double m11, final double m02,
+            final double m12) {
         super(m00, m10, m01, m11, m02, m12);
     }
 
-    public PAffineTransform(float m00, float m10, float m01, float m11, float m02, float m12) {
+    public PAffineTransform(final float m00, final float m10, final float m01, final float m11, final float m02,
+            final float m12) {
         super(m00, m10, m01, m11, m02, m12);
     }
 
-    public PAffineTransform(AffineTransform tx) {
+    public PAffineTransform(final AffineTransform tx) {
         super(tx);
     }
 
-    public void scaleAboutPoint(double scale, double x, double y) {
+    public void scaleAboutPoint(final double scale, final double x, final double y) {
         translate(x, y);
         scale(scale, scale);
         translate(-x, -y);
@@ -91,7 +93,7 @@ public class PAffineTransform extends AffineTransform {
         return Point2D.distance(PTS2[0], PTS2[1], PTS2[2], PTS2[3]);
     }
 
-    public void setScale(double scale) {
+    public void setScale(final double scale) {
         if (scale == 0) {
             throw new PAffineTransformException("Can't set scale to 0", this);
         }
@@ -99,7 +101,7 @@ public class PAffineTransform extends AffineTransform {
         scaleAboutPoint(scale / getScale(), 0, 0);
     }
 
-    public void setOffset(double tx, double ty) {
+    public void setOffset(final double tx, final double ty) {
         setTransform(getScaleX(), getShearY(), getShearX(), getScaleY(), tx, ty);
     }
 
@@ -117,8 +119,8 @@ public class PAffineTransform extends AffineTransform {
 
         transform(PTS1, 0, PTS2, 0, 2);
 
-        double dy = Math.abs(PTS2[3] - PTS2[1]);
-        double l = Point2D.distance(PTS2[0], PTS2[1], PTS2[2], PTS2[3]);
+        final double dy = Math.abs(PTS2[3] - PTS2[1]);
+        final double l = Point2D.distance(PTS2[0], PTS2[1], PTS2[2], PTS2[3]);
         double rotation = Math.asin(dy / l);
 
         // correct for quadrant
@@ -142,11 +144,11 @@ public class PAffineTransform extends AffineTransform {
     /**
      * Set rotation in radians.
      */
-    public void setRotation(double theta) {
+    public void setRotation(final double theta) {
         rotate(theta - getRotation());
     }
 
-    public Dimension2D transform(Dimension2D dimSrc, Dimension2D dimDst) {
+    public Dimension2D transform(final Dimension2D dimSrc, Dimension2D dimDst) {
         if (dimDst == null) {
             dimDst = (Dimension2D) dimSrc.clone();
         }
@@ -158,27 +160,27 @@ public class PAffineTransform extends AffineTransform {
         return dimDst;
     }
 
-    public Point2D inverseTransform(Point2D ptSrc, Point2D ptDst) {
+    public Point2D inverseTransform(final Point2D ptSrc, final Point2D ptDst) {
         try {
             return super.inverseTransform(ptSrc, ptDst);
         }
-        catch (NoninvertibleTransformException e) {
+        catch (final NoninvertibleTransformException e) {
             throw new PAffineTransformException("Could not invert Transform", e, this);
         }
     }
 
-    public Dimension2D inverseTransform(Dimension2D dimSrc, Dimension2D dimDst) {
+    public Dimension2D inverseTransform(final Dimension2D dimSrc, Dimension2D dimDst) {
         if (dimDst == null) {
             dimDst = (Dimension2D) dimSrc.clone();
         }
 
-        double width = dimSrc.getWidth();
-        double height = dimSrc.getHeight();
-        double m00 = getScaleX();
-        double m11 = getScaleY();
-        double m01 = getShearX();
-        double m10 = getShearY();
-        double det = m00 * m11 - m01 * m10;
+        final double width = dimSrc.getWidth();
+        final double height = dimSrc.getHeight();
+        final double m00 = getScaleX();
+        final double m11 = getScaleY();
+        final double m01 = getShearX();
+        final double m10 = getShearY();
+        final double det = m00 * m11 - m01 * m10;
 
         if (Math.abs(det) > Double.MIN_VALUE) {
             dimDst.setSize((width * m11 - height * m01) / det, (height * m00 - width * m10) / det);
@@ -190,7 +192,7 @@ public class PAffineTransform extends AffineTransform {
         return dimDst;
     }
 
-    public Rectangle2D transform(Rectangle2D rectSrc, Rectangle2D rectDst) {
+    public Rectangle2D transform(final Rectangle2D rectSrc, Rectangle2D rectDst) {
         if (rectDst == null) {
             rectDst = (Rectangle2D) rectSrc.clone();
         }
@@ -207,8 +209,9 @@ public class PAffineTransform extends AffineTransform {
 
         switch (getType()) {
             case AffineTransform.TYPE_IDENTITY:
-                if (rectSrc != rectDst)
+                if (rectSrc != rectDst) {
                     rectDst.setRect(rectSrc);
+                }
                 break;
 
             case AffineTransform.TYPE_TRANSLATION:
@@ -225,12 +228,12 @@ public class PAffineTransform extends AffineTransform {
 
             case AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_UNIFORM_SCALE:
                 scale = getScaleX();
-                rectDst.setRect((rectSrc.getX() * scale) + getTranslateX(), (rectSrc.getY() * scale) + getTranslateY(),
+                rectDst.setRect(rectSrc.getX() * scale + getTranslateX(), rectSrc.getY() * scale + getTranslateY(),
                         rectSrc.getWidth() * scale, rectSrc.getHeight() * scale);
                 break;
 
             default:
-                double[] pts = rectToArray(rectSrc);
+                final double[] pts = rectToArray(rectSrc);
                 transform(pts, 0, pts, 0, 4);
                 rectFromArray(rectDst, pts);
                 break;
@@ -239,7 +242,7 @@ public class PAffineTransform extends AffineTransform {
         return rectDst;
     }
 
-    public Rectangle2D inverseTransform(Rectangle2D rectSrc, Rectangle2D rectDst) {
+    public Rectangle2D inverseTransform(final Rectangle2D rectSrc, Rectangle2D rectDst) {
         if (rectDst == null) {
             rectDst = (Rectangle2D) rectSrc.clone();
         }
@@ -256,8 +259,9 @@ public class PAffineTransform extends AffineTransform {
 
         switch (getType()) {
             case AffineTransform.TYPE_IDENTITY:
-                if (rectSrc != rectDst)
+                if (rectSrc != rectDst) {
                     rectDst.setRect(rectSrc);
+                }
                 break;
 
             case AffineTransform.TYPE_TRANSLATION:
@@ -270,9 +274,10 @@ public class PAffineTransform extends AffineTransform {
                 if (scale == 0) {
                     throw new PAffineTransformException("Could not invertTransform rectangle", this);
                 }
-                    
+
                 rectDst.setRect(rectSrc.getX() / scale, rectSrc.getY() / scale, rectSrc.getWidth() / scale, rectSrc
-                        .getHeight() / scale);
+                        .getHeight()
+                        / scale);
                 break;
 
             case AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_UNIFORM_SCALE:
@@ -285,11 +290,11 @@ public class PAffineTransform extends AffineTransform {
                 break;
 
             default:
-                double[] pts = rectToArray(rectSrc);
+                final double[] pts = rectToArray(rectSrc);
                 try {
                     inverseTransform(pts, 0, pts, 0, 4);
                 }
-                catch (NoninvertibleTransformException e) {
+                catch (final NoninvertibleTransformException e) {
                     throw new PAffineTransformException("Could not invert transform", e, this);
                 }
                 rectFromArray(rectDst, pts);
@@ -299,7 +304,7 @@ public class PAffineTransform extends AffineTransform {
         return rectDst;
     }
 
-    private static double[] rectToArray(Rectangle2D aRectangle) {
+    private static double[] rectToArray(final Rectangle2D aRectangle) {
         PTS1[0] = aRectangle.getX();
         PTS1[1] = aRectangle.getY();
         PTS1[2] = PTS1[0] + aRectangle.getWidth();
@@ -311,7 +316,7 @@ public class PAffineTransform extends AffineTransform {
         return PTS1;
     }
 
-    private static void rectFromArray(Rectangle2D aRectangle, double[] pts) {
+    private static void rectFromArray(final Rectangle2D aRectangle, final double[] pts) {
         double minX = pts[0];
         double minY = pts[1];
         double maxX = pts[0];
@@ -322,7 +327,7 @@ public class PAffineTransform extends AffineTransform {
 
         for (int i = 1; i < 4; i++) {
             x = pts[2 * i];
-            y = pts[(2 * i) + 1];
+            y = pts[2 * i + 1];
 
             if (x < minX) {
                 minX = x;
@@ -338,5 +343,5 @@ public class PAffineTransform extends AffineTransform {
             }
         }
         aRectangle.setRect(minX, minY, maxX - minX, maxY - minY);
-    }    
+    }
 }

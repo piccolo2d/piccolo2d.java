@@ -42,19 +42,24 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class KeyEventFocusExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public KeyEventFocusExample() {
         this(null);
     }
 
-    public KeyEventFocusExample(PCanvas aCanvas) {
+    public KeyEventFocusExample(final PCanvas aCanvas) {
         super("KeyEventFocusExample", false, aCanvas);
     }
 
     public void initialize() {
         // Create a green and red node and add them to canvas layer.
-        PCanvas canvas = getCanvas();
-        PNode nodeGreen = PPath.createRectangle(0, 0, 100, 100);
-        PNode nodeRed = PPath.createRectangle(0, 0, 100, 100);
+        final PCanvas canvas = getCanvas();
+        final PNode nodeGreen = PPath.createRectangle(0, 0, 100, 100);
+        final PNode nodeRed = PPath.createRectangle(0, 0, 100, 100);
         nodeRed.translate(200, 0);
         nodeGreen.setPaint(Color.green);
         nodeRed.setPaint(Color.red);
@@ -67,7 +72,7 @@ public class KeyEventFocusExample extends PFrame {
         // when
         // the key is pressed and the event listener has keyboard focus.
         nodeGreen.addInputEventListener(new PBasicInputEventHandler() {
-            public void keyPressed(PInputEvent event) {
+            public void keyPressed(final PInputEvent event) {
                 System.out.println("green keypressed");
             }
 
@@ -79,42 +84,42 @@ public class KeyEventFocusExample extends PFrame {
             // with it will set the keyfocus to itself. Now it will receive key
             // events
             // until someone else gets the focus.
-            public void mousePressed(PInputEvent event) {
+            public void mousePressed(final PInputEvent event) {
                 event.getInputManager().setKeyboardFocus(event.getPath());
                 System.out.println("green mousepressed");
             }
 
-            public void keyboardFocusGained(PInputEvent event) {
+            public void keyboardFocusGained(final PInputEvent event) {
                 System.out.println("green focus gained");
             }
 
-            public void keyboardFocusLost(PInputEvent event) {
+            public void keyboardFocusLost(final PInputEvent event) {
                 System.out.println("green focus lost");
             }
         });
 
         // do the same thing with the red node.
         nodeRed.addInputEventListener(new PBasicInputEventHandler() {
-            public void keyPressed(PInputEvent event) {
+            public void keyPressed(final PInputEvent event) {
                 System.out.println("red keypressed");
             }
 
-            public void mousePressed(PInputEvent event) {
+            public void mousePressed(final PInputEvent event) {
                 event.getInputManager().setKeyboardFocus(event.getPath());
                 System.out.println("red mousepressed");
             }
 
-            public void keyboardFocusGained(PInputEvent event) {
+            public void keyboardFocusGained(final PInputEvent event) {
                 System.out.println("red focus gained");
             }
 
-            public void keyboardFocusLost(PInputEvent event) {
+            public void keyboardFocusLost(final PInputEvent event) {
                 System.out.println("red focus lost");
             }
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new KeyEventFocusExample();
     }
 }

@@ -28,10 +28,12 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import edu.umd.cs.piccolo.PCanvas;
+import java.awt.Dimension;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+
+import edu.umd.cs.piccolo.PCanvas;
 
 /**
  * The <b>PSwingCanvas</b> is a PCanvas that can display Swing components with
@@ -42,8 +44,12 @@ import java.awt.*;
  * @author Lance E. Good
  */
 public class PSwingCanvas extends PCanvas {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
-    private ChildWrapper swingWrapper;
+    private final ChildWrapper swingWrapper;
 
     /**
      * Construct a new PSwingCanvas.
@@ -56,7 +62,7 @@ public class PSwingCanvas extends PCanvas {
     }
 
     private void initRepaintManager() {
-        RepaintManager repaintManager = RepaintManager.currentManager(this);
+        final RepaintManager repaintManager = RepaintManager.currentManager(this);
         PSwingRepaintManager pSwingRepaintManager;
         if (repaintManager instanceof PSwingRepaintManager) {
             pSwingRepaintManager = (PSwingRepaintManager) repaintManager;
@@ -71,25 +77,30 @@ public class PSwingCanvas extends PCanvas {
         return swingWrapper;
     }
 
-    void addPSwing(PSwing pSwing) {
+    void addPSwing(final PSwing pSwing) {
         swingWrapper.add(pSwing.getComponent());
     }
 
-    void removePSwing(PSwing pSwing) {
+    void removePSwing(final PSwing pSwing) {
         swingWrapper.remove(pSwing.getComponent());
     }
 
     /**
-     * JComponent wrapper for a PSwingCanvas.  Used by PSwingRepaintManager.
+     * JComponent wrapper for a PSwingCanvas. Used by PSwingRepaintManager.
      */
     static class ChildWrapper extends JComponent {
         /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * Create a new JComponent wrapper for the specified PSwingCanvas.
          */
-        public ChildWrapper() {         
+        public ChildWrapper() {
             setSize(new Dimension(0, 0));
             setPreferredSize(new Dimension(0, 0));
             putClientProperty(SWING_WRAPPER_KEY, SWING_WRAPPER_KEY);
-        }        
+        }
     }
 }

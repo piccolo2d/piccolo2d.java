@@ -42,6 +42,10 @@ import edu.umd.cs.piccolo.PCanvas;
  */
 public class PApplet extends JApplet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private PCanvas canvas;
 
     public void init() {

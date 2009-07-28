@@ -56,29 +56,29 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     private boolean isEmpty = true;
 
     public PBounds() {
         super();
     }
 
-    public PBounds(PBounds aBounds) {
+    public PBounds(final PBounds aBounds) {
         this(aBounds.x, aBounds.y, aBounds.width, aBounds.height);
         isEmpty = aBounds.isEmpty();
     }
 
-    public PBounds(Rectangle2D aBounds) {
+    public PBounds(final Rectangle2D aBounds) {
         this(aBounds.getX(), aBounds.getY(), aBounds.getWidth(), aBounds.getHeight());
         isEmpty = aBounds.isEmpty();
     }
 
-    public PBounds(Point2D aCenterPoint, double insetX, double insetY) {
+    public PBounds(final Point2D aCenterPoint, final double insetX, final double insetY) {
         this(aCenterPoint.getX(), aCenterPoint.getY(), 0, 0);
         inset(insetX, insetY);
     }
 
-    public PBounds(double x, double y, double width, double height) {
+    public PBounds(final double x, final double y, final double width, final double height) {
         super(x, y, width, height);
         isEmpty = false;
     }
@@ -105,12 +105,12 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return this;
     }
 
-    public void setRect(Rectangle2D r) {
+    public void setRect(final Rectangle2D r) {
         super.setRect(r);
         isEmpty = false;
     }
 
-    public void setRect(PBounds b) {
+    public void setRect(final PBounds b) {
         isEmpty = b.isEmpty;
         x = b.x;
         y = b.y;
@@ -118,15 +118,15 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         height = b.height;
     }
 
-    public void setRect(double x, double y, double w, double h) {
+    public void setRect(final double x, final double y, final double w, final double h) {
         this.x = x;
         this.y = y;
-        this.width = w;
-        this.height = h;
+        width = w;
+        height = h;
         isEmpty = false;
     }
 
-    public void add(double newx, double newy) {
+    public void add(final double newx, final double newy) {
         if (isEmpty) {
             setRect(newx, newy, 0, 0);
             isEmpty = false;
@@ -136,7 +136,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         }
     }
 
-    public void add(Rectangle2D r) {
+    public void add(final Rectangle2D r) {
         if (isEmpty) {
             setRect(r);
         }
@@ -146,7 +146,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
     }
 
     // optimized add when adding two PBounds together.
-    public void add(PBounds r) {
+    public void add(final PBounds r) {
         if (r.isEmpty) {
             return;
         }
@@ -158,10 +158,10 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
             isEmpty = false;
         }
         else {
-            double x1 = (x <= r.x) ? x : r.x;
-            double y1 = (y <= r.y) ? y : r.y;
-            double x2 = ((x + width) >= (r.x + r.width)) ? (x + width) : (r.x + r.width);
-            double y2 = ((y + height) >= (r.y + r.height)) ? (y + height) : (r.y + r.height);
+            final double x1 = x <= r.x ? x : r.x;
+            final double y1 = y <= r.y ? y : r.y;
+            final double x2 = x + width >= r.x + r.width ? x + width : r.x + r.width;
+            final double y2 = y + height >= r.y + r.height ? y + height : r.y + r.height;
 
             x = x1;
             y = y1;
@@ -175,7 +175,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return new Point2D.Double(x, y);
     }
 
-    public PBounds setOrigin(double x, double y) {
+    public PBounds setOrigin(final double x, final double y) {
         this.x = x;
         this.y = y;
         isEmpty = false;
@@ -186,7 +186,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return new PDimension(width, height);
     }
 
-    public void setSize(double width, double height) {
+    public void setSize(final double width, final double height) {
         setRect(x, y, width, height);
     }
 
@@ -194,7 +194,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return new Point2D.Double(getCenterX(), getCenterY());
     }
 
-    public PBounds moveBy(double dx, double dy) {
+    public PBounds moveBy(final double dx, final double dy) {
         setOrigin(x + dx, y + dy);
         return this;
     }
@@ -206,35 +206,35 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         height = Math.ceil(height);
     }
 
-    public PBounds inset(double dx, double dy) {        
-        setRect(x + dx, y + dy, width - (dx * 2), height - (dy * 2));
+    public PBounds inset(final double dx, final double dy) {
+        setRect(x + dx, y + dy, width - dx * 2, height - dy * 2);
         return this;
     }
 
-    public PDimension deltaRequiredToCenter(Rectangle2D b) {
-        PDimension result = new PDimension();
-        double xDelta = getCenterX() - b.getCenterX();
-        double yDelta = getCenterY() - b.getCenterY();
+    public PDimension deltaRequiredToCenter(final Rectangle2D b) {
+        final PDimension result = new PDimension();
+        final double xDelta = getCenterX() - b.getCenterX();
+        final double yDelta = getCenterY() - b.getCenterY();
         result.setSize(xDelta, yDelta);
         return result;
     }
 
-    public PDimension deltaRequiredToContain(Rectangle2D b) {
-        PDimension result = new PDimension();
+    public PDimension deltaRequiredToContain(final Rectangle2D b) {
+        final PDimension result = new PDimension();
 
         if (!contains(b)) {
-            double bMaxX = b.getMaxX();
-            double bMinX = b.getMinX();
-            double bMaxY = b.getMaxY();
-            double bMinY = b.getMinY();
-            double maxX = getMaxX();
-            double minX = getMinX();
-            double maxY = getMaxY();
-            double minY = getMinY();
+            final double bMaxX = b.getMaxX();
+            final double bMinX = b.getMinX();
+            final double bMaxY = b.getMaxY();
+            final double bMinY = b.getMinY();
+            final double maxX = getMaxX();
+            final double minX = getMinX();
+            final double maxY = getMaxY();
+            final double minY = getMinY();
 
-            if ((bMaxX > maxX) ^ (bMinX < minX)) {
-                double difMaxX = bMaxX - maxX;
-                double difMinX = bMinX - minX;
+            if (bMaxX > maxX ^ bMinX < minX) {
+                final double difMaxX = bMaxX - maxX;
+                final double difMinX = bMinX - minX;
                 if (Math.abs(difMaxX) < Math.abs(difMinX)) {
                     result.width = difMaxX;
                 }
@@ -243,9 +243,9 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
                 }
             }
 
-            if ((bMaxY > maxY) ^ (bMinY < minY)) {
-                double difMaxY = bMaxY - maxY;
-                double difMinY = bMinY - minY;
+            if (bMaxY > maxY ^ bMinY < minY) {
+                final double difMaxY = bMaxY - maxY;
+                final double difMinY = bMinY - minY;
                 if (Math.abs(difMaxY) < Math.abs(difMinY)) {
                     result.height = difMaxY;
                 }
@@ -258,7 +258,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return result;
     }
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeDouble(x);
         out.writeDouble(y);
@@ -266,7 +266,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         out.writeDouble(height);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         x = in.readDouble();
         y = in.readDouble();
@@ -275,7 +275,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
     }
 
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append(getClass().getName().replaceAll(".*\\.", ""));
         result.append('[');

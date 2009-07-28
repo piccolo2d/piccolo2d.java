@@ -13,23 +13,24 @@ public class PObjectOutputStreamTest extends TestCase {
         outByteStream = new ByteArrayOutputStream();
         outStream = new PObjectOutputStream(outByteStream);
     }
-    
+
     public void testToByteArrayThrowsExceptionOnNull() throws IOException {
         try {
-            PObjectOutputStream.toByteArray(null); 
-        } catch (NullPointerException e) {
+            PObjectOutputStream.toByteArray(null);
+        }
+        catch (final NullPointerException e) {
             // expected
         }
     }
-    
+
     public void testToByteArrayOnEmptyStreamWorks() throws IOException {
         outStream.flush();
-        byte[] outputBytes = outByteStream.toByteArray();
+        final byte[] outputBytes = outByteStream.toByteArray();
         assertNotNull(outputBytes);
         assertTrue("Header not output", outputBytes.length > 0);
     }
-    
-    public void testWriteConditionalObjectAcceptsNull() throws IOException {        
-        
+
+    public void testWriteConditionalObjectAcceptsNull() throws IOException {
+
     }
 }

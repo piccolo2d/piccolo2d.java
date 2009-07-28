@@ -44,18 +44,23 @@ import edu.umd.cs.piccolox.event.PSelectionEventHandler;
  */
 public class SelectionExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public SelectionExample() {
         this(null);
     }
 
-    public SelectionExample(PCanvas aCanvas) {
+    public SelectionExample(final PCanvas aCanvas) {
         super("SelectionExample", false, aCanvas);
     }
 
     public void initialize() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                PNode rect = PPath.createRectangle(i * 60, j * 60, 50, 50);
+                final PNode rect = PPath.createRectangle(i * 60, j * 60, 50, 50);
                 rect.setPaint(Color.blue);
                 getCanvas().getLayer().addChild(rect);
             }
@@ -66,8 +71,8 @@ public class SelectionExample extends PFrame {
         getCanvas().removeInputEventListener(getCanvas().getZoomEventHandler());
 
         // Create a selection event handler
-        PSelectionEventHandler selectionEventHandler = new PSelectionEventHandler(getCanvas().getLayer(), getCanvas()
-                .getLayer());
+        final PSelectionEventHandler selectionEventHandler = new PSelectionEventHandler(getCanvas().getLayer(),
+                getCanvas().getLayer());
         getCanvas().addInputEventListener(selectionEventHandler);
         getCanvas().getRoot().getDefaultInputManager().setKeyboardFocus(selectionEventHandler);
 
@@ -75,11 +80,11 @@ public class SelectionExample extends PFrame {
                 PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, selectionEventHandler);
     }
 
-    public void selectionChanged(PNotification notfication) {
+    public void selectionChanged(final PNotification notfication) {
         System.out.println("selection changed");
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new SelectionExample();
     }
 }

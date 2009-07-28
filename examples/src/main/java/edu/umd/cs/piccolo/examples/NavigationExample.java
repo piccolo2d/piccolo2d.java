@@ -40,24 +40,29 @@ import edu.umd.cs.piccolox.event.PNavigationEventHandler;
 
 public class NavigationExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public NavigationExample() {
         this(null);
     }
 
-    public NavigationExample(PCanvas aCanvas) {
+    public NavigationExample(final PCanvas aCanvas) {
         super("NavigationExample", false, aCanvas);
     }
 
     public void initialize() {
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
 
-        Random random = new Random();
+        final Random random = new Random();
         for (int i = 0; i < 1000; i++) {
-            PPath each = PPath.createRectangle(0, 0, 100, 80);
+            final PPath each = PPath.createRectangle(0, 0, 100, 80);
             each.scale(random.nextFloat() * 2);
             each.offset(random.nextFloat() * 10000, random.nextFloat() * 10000);
             each.setPaint(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
-            each.setStroke(new BasicStroke(1 + (10 * random.nextFloat())));
+            each.setStroke(new BasicStroke(1 + 10 * random.nextFloat()));
             each.setStrokePaint(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
             layer.addChild(each);
         }
@@ -65,7 +70,7 @@ public class NavigationExample extends PFrame {
         getCanvas().addInputEventListener(new PNavigationEventHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new NavigationExample();
     }
 }

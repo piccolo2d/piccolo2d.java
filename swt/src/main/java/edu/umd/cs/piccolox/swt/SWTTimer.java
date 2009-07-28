@@ -40,6 +40,11 @@ import org.eclipse.swt.widgets.Display;
  */
 public class SWTTimer extends Timer {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     private boolean notify = false;
 
     int initialDelay, delay;
@@ -84,10 +89,10 @@ public class SWTTimer extends Timer {
      * @param delay
      * @param listener
      */
-    public SWTTimer(Display display, int delay, ActionListener listener) {
+    public SWTTimer(final Display display, final int delay, final ActionListener listener) {
         super(delay, listener);
         this.delay = delay;
-        this.initialDelay = delay;
+        initialDelay = delay;
 
         doPostEvent = new SWTDoPostEvent();
         this.display = display;
@@ -99,9 +104,9 @@ public class SWTTimer extends Timer {
      * 
      * @param e the action event to fire
      */
-    protected void fireActionPerformed(ActionEvent e) {
+    protected void fireActionPerformed(final ActionEvent e) {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        final Object[] listeners = listenerList.getListenerList();
 
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -126,7 +131,7 @@ public class SWTTimer extends Timer {
      * @param delay the delay in milliseconds
      * @see #setInitialDelay
      */
-    public void setDelay(int delay) {
+    public void setDelay(final int delay) {
         if (delay < 0) {
             throw new IllegalArgumentException("Invalid delay: " + delay);
         }
@@ -156,7 +161,7 @@ public class SWTTimer extends Timer {
      * 
      * @see #setDelay
      */
-    public void setInitialDelay(int initialDelay) {
+    public void setInitialDelay(final int initialDelay) {
         if (initialDelay < 0) {
             throw new IllegalArgumentException("Invalid initial delay: " + initialDelay);
         }
@@ -182,7 +187,7 @@ public class SWTTimer extends Timer {
      * @param flag specify <code>false</code> to make the timer stop after
      *            sending its first action event
      */
-    public void setRepeats(boolean flag) {
+    public void setRepeats(final boolean flag) {
         repeats = flag;
     }
 
@@ -208,8 +213,8 @@ public class SWTTimer extends Timer {
      * 
      * @param flag specify <code>false</code> to turn off coalescing
      */
-    public void setCoalesce(boolean flag) {
-        boolean old = coalesce;
+    public void setCoalesce(final boolean flag) {
+        final boolean old = coalesce;
         coalesce = flag;
         if (!old && coalesce) {
             // We must do this as otherwise if the Timer once notified

@@ -33,7 +33,6 @@ import java.awt.Graphics2D;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PComponent;
-
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PUtil;
@@ -51,14 +50,16 @@ public final class POffscreenCanvas implements PComponent {
 
     /** Render quality. */
     private int renderQuality = DEFAULT_RENDER_QUALITY;
-    
-    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
-    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
 
+    /**
+     * Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>
+     * .
+     */
+    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
 
     /**
      * Create a new offscreen canvas the specified width and height.
-     *
+     * 
      * @param width width of this offscreen canvas, must be at least zero
      * @param height height of this offscreen canvas, must be at least zero
      */
@@ -73,24 +74,24 @@ public final class POffscreenCanvas implements PComponent {
         setCamera(PUtil.createBasicScenegraph());
     }
 
-
     /**
      * Render this offscreen canvas to the specified graphics.
-     *
-     * @param graphics graphics to render this offscreen canvas to, must not be null
+     * 
+     * @param graphics graphics to render this offscreen canvas to, must not be
+     *            null
      */
     public void render(final Graphics2D graphics) {
         if (graphics == null) {
             throw new IllegalArgumentException("graphics must not be null");
         }
-        PPaintContext paintContext = new PPaintContext(graphics);
+        final PPaintContext paintContext = new PPaintContext(graphics);
         paintContext.setRenderQuality(renderQuality);
         camera.fullPaint(paintContext);
     }
 
     /**
      * Set the camera for this offscreen canvas to <code>camera</code>.
-     *
+     * 
      * @param camera camera for this offscreen canvas
      */
     public void setCamera(final PCamera camera) {
@@ -106,7 +107,7 @@ public final class POffscreenCanvas implements PComponent {
 
     /**
      * Return the camera for this offscreen canvas.
-     *
+     * 
      * @return the camera for this offscreen canvas
      */
     public PCamera getCamera() {
@@ -114,16 +115,19 @@ public final class POffscreenCanvas implements PComponent {
     }
 
     /**
-     * Set the render quality hint for this offscreen canvas to <code>renderQuality</code>.
-     *
-     * @param renderQuality render quality hint, must be one of <code>PPaintContext.HIGH_QUALITY_RENDERING</code>
-     *    or <code>PPaintContext.LOW_QUALITY_RENDERING</code>
+     * Set the render quality hint for this offscreen canvas to
+     * <code>renderQuality</code>.
+     * 
+     * @param renderQuality render quality hint, must be one of
+     *            <code>PPaintContext.HIGH_QUALITY_RENDERING</code> or
+     *            <code>PPaintContext.LOW_QUALITY_RENDERING</code>
      */
     public void setRenderQuality(final int renderQuality) {
-        if ((renderQuality == PPaintContext.HIGH_QUALITY_RENDERING)
-                || (renderQuality == PPaintContext.LOW_QUALITY_RENDERING)) {
+        if (renderQuality == PPaintContext.HIGH_QUALITY_RENDERING
+                || renderQuality == PPaintContext.LOW_QUALITY_RENDERING) {
             this.renderQuality = renderQuality;
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("renderQuality must be one of PPaintContext.HIGH_QUALITY_RENDERING"
                     + " or PPaintContext.LOW_QUALITY_RENDERING, was " + renderQuality);
         }
@@ -131,34 +135,34 @@ public final class POffscreenCanvas implements PComponent {
 
     /**
      * Return the render quality hint for this offscreen canvas.
-     *
+     * 
      * @return the render quality hint for this offscreen canvas
      */
     public int getRenderQuality() {
         return renderQuality;
     }
 
-    /**{@inheritDoc} */
+    /** {@inheritDoc} */
     public final void paintImmediately() {
         // empty
     }
 
-    /**{@inheritDoc} */
+    /** {@inheritDoc} */
     public final void popCursor() {
         // empty
     }
 
-    /**{@inheritDoc} */
+    /** {@inheritDoc} */
     public final void pushCursor(final Cursor cursor) {
         // empty
     }
 
-    /**{@inheritDoc} */
+    /** {@inheritDoc} */
     public final void repaint(final PBounds repaintBounds) {
         // empty
     }
 
-    /**{@inheritDoc} */
+    /** {@inheritDoc} */
     public final void setInteracting(final boolean interacting) {
         // empty
     }

@@ -206,6 +206,10 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 public class PSwing extends PNode implements Serializable, PropertyChangeListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    /**
      * Used as a hashtable key for this object in the Swing component's client
      * properties.
      */
@@ -215,7 +219,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /**
      * The cutoff at which the Swing component is rendered greek
      */
-    private double renderCutoff = 0.3;
+    private final double renderCutoff = 0.3;
     private JComponent component = null;
     private double minFontSize = Double.MAX_VALUE;
     private Stroke defaultStroke = new BasicStroke();
@@ -229,12 +233,12 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * Keep track of which nodes we've attached listeners to since no built in
      * support in PNode
      */
-    private ArrayList listeningTo = new ArrayList();
+    private final ArrayList listeningTo = new ArrayList();
 
     /* The parent listener for camera/canvas changes */
-    private PropertyChangeListener parentListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent evt) {
-            PNode parent = (PNode) evt.getNewValue();
+    private final PropertyChangeListener parentListener = new PropertyChangeListener() {
+        public void propertyChange(final PropertyChangeEvent evt) {
+            final PNode parent = (PNode) evt.getNewValue();
             clearListeners((PNode) evt.getOldValue());
             if (parent != null) {
                 listenForCanvas(parent);
@@ -251,24 +255,24 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param component The swing component to be wrapped
      */
-    public PSwing(JComponent component) {
+    public PSwing(final JComponent component) {
         this.component = component;
         component.putClientProperty(PSWING_PROPERTY, this);
         init(component);
         component.revalidate();
 
         component.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 reshape();
             }
         });
 
         component.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
+            public void componentHidden(final ComponentEvent e) {
                 setVisible(false);
             }
 
-            public void componentShown(ComponentEvent e) {
+            public void componentShown(final ComponentEvent e) {
                 setVisible(true);
             }
         });
@@ -285,7 +289,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @param component
      * @deprecated
      */
-    public PSwing(PSwingCanvas pSwingCanvas, JComponent component) {
+    public PSwing(final PSwingCanvas pSwingCanvas, final JComponent component) {
         this(component);
     }
 
@@ -294,16 +298,16 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * bounds of this PNode.
      */
     void reshape() {
-        Border border = component.getBorder();
-        
-        int width = (int) Math.max(component.getMinimumSize().width, component.getPreferredSize().width);
-        int height = (int) component.getPreferredSize().height;
-        
+        final Border border = component.getBorder();
+
+        int width = Math.max(component.getMinimumSize().width, component.getPreferredSize().width);
+        final int height = component.getPreferredSize().height;
+
         if (border != null) {
-            Insets borderInsets = border.getBorderInsets(component);
-            width += borderInsets.left + borderInsets.right; 
-        }   
-        
+            final Insets borderInsets = border.getBorderInsets(component);
+            width += borderInsets.left + borderInsets.right;
+        }
+
         component.setBounds(0, 0, width, height);
         setBounds(0, 0, width, height);
     }
@@ -321,8 +325,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param renderContext Contains information about current render.
      */
-    public void paint(PPaintContext renderContext) {
-        Graphics2D g2 = renderContext.getGraphics();
+    public void paint(final PPaintContext renderContext) {
+        final Graphics2D g2 = renderContext.getGraphics();
 
         if (defaultStroke == null) {
             defaultStroke = new BasicStroke();
@@ -340,12 +344,12 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             component.revalidate();
         }
 
-        if (component instanceof JLabel) {                  
-            JLabel label = (JLabel)component;
-            enforceNoEllipsis(label.getText(), label.getIcon(), label.getIconTextGap(), g2);           
-        } 
+        if (component instanceof JLabel) {
+            final JLabel label = (JLabel) component;
+            enforceNoEllipsis(label.getText(), label.getIcon(), label.getIconTextGap(), g2);
+        }
         else if (component instanceof JButton) {
-            JButton button = (JButton)component;
+            final JButton button = (JButton) component;
             enforceNoEllipsis(button.getText(), button.getIcon(), button.getIconTextGap(), g2);
         }
 
@@ -357,28 +361,28 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         }
     }
 
-    private void enforceNoEllipsis(String text, Icon icon, int iconGap, Graphics2D g2) {      
-        Rectangle2D textBounds = component.getFontMetrics(component.getFont()).getStringBounds(text, g2);            
+    private void enforceNoEllipsis(final String text, final Icon icon, final int iconGap, final Graphics2D g2) {
+        final Rectangle2D textBounds = component.getFontMetrics(component.getFont()).getStringBounds(text, g2);
         double minAcceptableWidth = textBounds.getWidth();
         double minAcceptableHeight = textBounds.getHeight();
-        
-        if (icon != null) {            
+
+        if (icon != null) {
             minAcceptableWidth += icon.getIconWidth();
             minAcceptableWidth += iconGap;
             minAcceptableHeight = Math.max(icon.getIconHeight(), minAcceptableHeight);
         }
-        
-        if (component.getMinimumSize().getWidth() < minAcceptableWidth ) {
-            Dimension newMinimumSize = new Dimension((int)Math.ceil(minAcceptableWidth), (int)Math.ceil(minAcceptableHeight));                
+
+        if (component.getMinimumSize().getWidth() < minAcceptableWidth) {
+            final Dimension newMinimumSize = new Dimension((int) Math.ceil(minAcceptableWidth), (int) Math
+                    .ceil(minAcceptableHeight));
             component.setMinimumSize(newMinimumSize);
-            reshape();                
+            reshape();
         }
     }
 
-    protected boolean shouldRenderGreek(PPaintContext renderContext) {
-        return (renderContext.getScale() < renderCutoff
+    protected boolean shouldRenderGreek(final PPaintContext renderContext) {
+        return renderContext.getScale() < renderCutoff
         // && pSwingCanvas.getInteracting()
-                )
                 || minFontSize * renderContext.getScale() < 0.5;
     }
 
@@ -387,10 +391,10 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param g2 The graphics used to render the filled rectangle
      */
-    public void paintAsGreek(Graphics2D g2) {
-        Color background = component.getBackground();
-        Color foreground = component.getForeground();
-        Rectangle2D rect = getBounds();
+    public void paintAsGreek(final Graphics2D g2) {
+        final Color background = component.getBackground();
+        final Color foreground = component.getForeground();
+        final Rectangle2D rect = getBounds();
 
         if (background != null) {
             g2.setColor(background);
@@ -408,8 +412,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * associated with this PSwing.
      */
     public void removeFromSwingWrapper() {
-        if (canvas != null && Arrays.asList(this.canvas.getSwingWrapper().getComponents()).contains(component)) {
-            this.canvas.getSwingWrapper().remove(component);
+        if (canvas != null && Arrays.asList(canvas.getSwingWrapper().getComponents()).contains(component)) {
+            canvas.getSwingWrapper().remove(component);
         }
     }
 
@@ -419,20 +423,20 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param g2 graphics context for rendering the JComponent
      */
-    public void paint(Graphics2D g2) {
+    public void paint(final Graphics2D g2) {
         if (component.getBounds().isEmpty()) {
             // The component has not been initialized yet.
             return;
         }
 
-        PSwingRepaintManager manager = (PSwingRepaintManager) RepaintManager.currentManager(component);
+        final PSwingRepaintManager manager = (PSwingRepaintManager) RepaintManager.currentManager(component);
         manager.lockRepaint(component);
 
-        RenderingHints oldHints = g2.getRenderingHints();
+        final RenderingHints oldHints = g2.getRenderingHints();
 
         g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        
+
         component.paint(g2);
 
         g2.setRenderingHints(oldHints);
@@ -440,7 +444,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         manager.unlockRepaint(component);
     }
 
-    public void setVisible(boolean visible) {
+    public void setVisible(final boolean visible) {
         super.setVisible(visible);
         component.setVisible(visible);
     }
@@ -451,8 +455,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param repaintBounds
      */
-    public void repaint(PBounds repaintBounds) {
-        Shape sh = getTransform().createTransformedShape(repaintBounds);
+    public void repaint(final PBounds repaintBounds) {
+        final Shape sh = getTransform().createTransformedShape(repaintBounds);
         TEMP_REPAINT_BOUNDS2.setRect(sh.getBounds2D());
         repaintFrom(TEMP_REPAINT_BOUNDS2, this);
     }
@@ -463,7 +467,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * copy of these bounds
      */
     public void computeBounds() {
-        reshape();       
+        reshape();
     }
 
     /**
@@ -487,13 +491,13 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param c The Component to be recursively unDoubleBuffered
      */
-    void init(Component c) {
+    void init(final Component c) {
         if (c.getFont() != null) {
             minFontSize = Math.min(minFontSize, c.getFont().getSize());
         }
 
         if (c instanceof Container) {
-            Component[] children = ((Container) c).getComponents();
+            final Component[] children = ((Container) c).getComponents();
             if (children != null) {
                 for (int j = 0; j < children.length; j++) {
                     init(children[j]);
@@ -510,11 +514,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             ((JComponent) c).setDoubleBuffered(false);
             c.addPropertyChangeListener("font", this);
             c.addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent e) {
+                public void componentResized(final ComponentEvent e) {
                     computeBounds();
                 }
 
-                public void componentShown(ComponentEvent e) {
+                public void componentShown(final ComponentEvent e) {
                     computeBounds();
                 }
             });
@@ -524,13 +528,13 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /**
      * Listens for changes in font on components rooted at this PSwing
      */
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         if (component.isAncestorOf((Component) evt.getSource()) && ((Component) evt.getSource()).getFont() != null) {
             minFontSize = Math.min(minFontSize, ((Component) evt.getSource()).getFont().getSize());
         }
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         init(component);
     }
@@ -547,26 +551,26 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @param node The child node at which to begin a parent-based traversal for
      *            adding listeners.
      */
-    private void listenForCanvas(PNode node) {
+    private void listenForCanvas(final PNode node) {
         // need to get the full tree for this node
         PNode p = node;
         while (p != null) {
             listenToNode(p);
 
-            PNode parent = p;
+            final PNode parent = p;
             // System.out.println( "parent = " + parent.getClass() );
             if (parent instanceof PCamera) {
-                PCamera cam = (PCamera) parent;
+                final PCamera cam = (PCamera) parent;
                 if (cam.getComponent() instanceof PSwingCanvas) {
                     updateCanvas((PSwingCanvas) cam.getComponent());
                 }
             }
             else if (parent instanceof PLayer) {
-                PLayer player = (PLayer) parent;
+                final PLayer player = (PLayer) parent;
                 // System.out.println( "Found player: with " +
                 // player.getCameraCount() + " cameras" );
                 for (int i = 0; i < player.getCameraCount(); i++) {
-                    PCamera cam = player.getCamera(i);
+                    final PCamera cam = player.getCamera(i);
                     if (cam.getComponent() instanceof PSwingCanvas) {
                         updateCanvas((PSwingCanvas) cam.getComponent());
                         break;
@@ -583,7 +587,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param node the node to listen to for parent/pcamera/pcanvas changes
      */
-    private void listenToNode(PNode node) {
+    private void listenToNode(final PNode node) {
         // System.out.println( "listeningTo.size() = " + listeningTo.size() );
         if (!listeningTo(node)) {
             listeningTo.add(node);
@@ -599,9 +603,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @return true if this PSwing is already listening to the specified node
      *         for camera/canvas changes
      */
-    private boolean listeningTo(PNode node) {
+    private boolean listeningTo(final PNode node) {
         for (int i = 0; i < listeningTo.size(); i++) {
-            PNode pNode = (PNode) listeningTo.get(i);
+            final PNode pNode = (PNode) listeningTo.get(i);
             if (pNode == node) {
                 return true;
             }
@@ -615,7 +619,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param fromParent Parent to start with for clearing listeners
      */
-    private void clearListeners(PNode fromParent) {
+    private void clearListeners(final PNode fromParent) {
         if (fromParent == null) {
             return;
         }
@@ -632,7 +636,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param newCanvas the new PSwingCanvas (may be null)
      */
-    private void updateCanvas(PSwingCanvas newCanvas) {
+    private void updateCanvas(final PSwingCanvas newCanvas) {
         if (newCanvas != canvas) {
             if (canvas != null) {
                 canvas.removePSwing(this);

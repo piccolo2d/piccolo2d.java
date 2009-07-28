@@ -61,24 +61,24 @@ import edu.umd.cs.piccolo.util.PPickPath;
  */
 public class PInputEvent {
 
-    private InputEvent inputEvent;
+    private final InputEvent inputEvent;
     private PPickPath pickPath;
-    private PInputManager inputManager;
+    private final PInputManager inputManager;
     private boolean handled;
 
-    public PInputEvent(PInputManager inputManager, InputEvent event) {
+    public PInputEvent(final PInputManager inputManager, final InputEvent event) {
         super();
         inputEvent = event;
         this.inputManager = inputManager;
     }
 
-    public void pushCursor(Cursor cursor) {
-        PComponent component = getTopCamera().getComponent();
+    public void pushCursor(final Cursor cursor) {
+        final PComponent component = getTopCamera().getComponent();
         component.pushCursor(cursor);
     }
 
     public void popCursor() {
-        PComponent component = getTopCamera().getComponent();
+        final PComponent component = getTopCamera().getComponent();
         component.popCursor();
     }
 
@@ -135,7 +135,7 @@ public class PInputEvent {
         return pickPath;
     }
 
-    public void setPath(PPickPath path) {
+    public void setPath(final PPickPath path) {
         pickPath = path;
     }
 
@@ -153,7 +153,7 @@ public class PInputEvent {
 
     public int getKeyCode() {
         if (isKeyEvent()) {
-            KeyEvent e = (KeyEvent) inputEvent;
+            final KeyEvent e = (KeyEvent) inputEvent;
             return e.getKeyCode();
         }
         throw new IllegalStateException("Can't get keycode from mouse event");
@@ -161,7 +161,7 @@ public class PInputEvent {
 
     public char getKeyChar() {
         if (isKeyEvent()) {
-            KeyEvent e = (KeyEvent) inputEvent;
+            final KeyEvent e = (KeyEvent) inputEvent;
             return e.getKeyChar();
         }
         throw new IllegalStateException("Can't get keychar from mouse event");
@@ -169,7 +169,7 @@ public class PInputEvent {
 
     public int getKeyLocation() {
         if (isKeyEvent()) {
-            KeyEvent e = (KeyEvent) inputEvent;
+            final KeyEvent e = (KeyEvent) inputEvent;
             return e.getKeyLocation();
         }
         throw new IllegalStateException("Can't get keylocation from mouse event");
@@ -177,7 +177,7 @@ public class PInputEvent {
 
     public boolean isActionKey() {
         if (isKeyEvent()) {
-            KeyEvent e = (KeyEvent) inputEvent;
+            final KeyEvent e = (KeyEvent) inputEvent;
             return e.isActionKey();
         }
         throw new IllegalStateException("Can't get isActionKey from mouse event");
@@ -276,7 +276,7 @@ public class PInputEvent {
      * other event handlers that might conflict are expected to ignore events
      * that have already been handled.
      */
-    public void setHandled(boolean handled) {
+    public void setHandled(final boolean handled) {
         this.handled = handled;
     }
 
@@ -364,16 +364,16 @@ public class PInputEvent {
      * coordinates.
      */
     public PDimension getCanvasDelta() {
-        Point2D last = inputManager.getLastCanvasPosition();
-        Point2D current = inputManager.getCurrentCanvasPosition();
+        final Point2D last = inputManager.getLastCanvasPosition();
+        final Point2D current = inputManager.getCurrentCanvasPosition();
         return new PDimension(current.getX() - last.getX(), current.getY() - last.getY());
     }
 
     /**
      * Return the mouse position relative to a given node on the pick path.
      */
-    public Point2D getPositionRelativeTo(PNode nodeOnPath) {
-        Point2D r = getCanvasPosition();
+    public Point2D getPositionRelativeTo(final PNode nodeOnPath) {
+        final Point2D r = getCanvasPosition();
         return pickPath.canvasToLocal(r, nodeOnPath);
     }
 
@@ -381,8 +381,8 @@ public class PInputEvent {
      * Return the delta between the last and current mouse positions relative to
      * a given node on the pick path.
      */
-    public PDimension getDeltaRelativeTo(PNode nodeOnPath) {
-        PDimension r = getCanvasDelta();
+    public PDimension getDeltaRelativeTo(final PNode nodeOnPath) {
+        final PDimension r = getCanvasDelta();
         return (PDimension) pickPath.canvasToLocal(r, nodeOnPath);
     }
 
@@ -391,7 +391,7 @@ public class PInputEvent {
      * bottom camera.
      */
     public Point2D getPosition() {
-        Point2D r = getCanvasPosition();
+        final Point2D r = getCanvasPosition();
         pickPath.canvasToLocal(r, getCamera());
         return getCamera().localToView(r);
     }
@@ -401,16 +401,16 @@ public class PInputEvent {
      * through the view transform of the bottom camera.
      */
     public PDimension getDelta() {
-        PDimension r = getCanvasDelta();
+        final PDimension r = getCanvasDelta();
         pickPath.canvasToLocal(r, getCamera());
         return (PDimension) getCamera().localToView(r);
     }
-    
+
     /**
      * Returns a string representation of this object for debugging purposes.
      */
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append(super.toString().replaceAll(".*\\.", ""));
         result.append('[');

@@ -79,14 +79,14 @@ public class PSWTCanvas extends Composite implements PComponent {
     private boolean doubleBuffered = true;
 
     private PCamera camera;
-    private PStack cursorStack;
+    private final PStack cursorStack;
     private Cursor curCursor;
     private int interacting;
     private int defaultRenderQuality;
     private int animatingRenderQuality;
     private int interactingRenderQuality;
-    private PPanEventHandler panEventHandler;
-    private PZoomEventHandler zoomEventHandler;
+    private final PPanEventHandler panEventHandler;
+    private final PZoomEventHandler zoomEventHandler;
     private boolean paintingImmediately;
     private boolean animatingOnLastPaint;
 
@@ -95,7 +95,7 @@ public class PSWTCanvas extends Composite implements PComponent {
      * camera, and layer. Event handlers for zooming and panning are
      * automatically installed.
      */
-    public PSWTCanvas(Composite parent, int style) {
+    public PSWTCanvas(final Composite parent, final int style) {
         super(parent, style | SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE);
 
         CURRENT_CANVAS = this;
@@ -112,7 +112,7 @@ public class PSWTCanvas extends Composite implements PComponent {
 
         // Add a paint listener to call paint
         addPaintListener(new PaintListener() {
-            public void paintControl(PaintEvent pe) {
+            public void paintControl(final PaintEvent pe) {
                 paintComponent(pe.gc, pe.x, pe.y, pe.width, pe.height);
             }
         });
@@ -121,7 +121,7 @@ public class PSWTCanvas extends Composite implements PComponent {
         // Colors
         SWTGraphics2D.incrementGCCount();
         addDisposeListener(new DisposeListener() {
-            public void widgetDisposed(DisposeEvent de) {
+            public void widgetDisposed(final DisposeEvent de) {
                 getRoot().getActivityScheduler().removeAllActivities();
                 SWTGraphics2D.decrementGCCount();
             }
@@ -164,7 +164,7 @@ public class PSWTCanvas extends Composite implements PComponent {
      * canvas go through this camera. And this is the camera that paints this
      * canvas.
      */
-    public void setCamera(PCamera newCamera) {
+    public void setCamera(final PCamera newCamera) {
         if (camera != null) {
             camera.setComponent(null);
         }
@@ -174,7 +174,7 @@ public class PSWTCanvas extends Composite implements PComponent {
         if (camera != null) {
             camera.setComponent(this);
 
-            Rectangle swtRect = getBounds();
+            final Rectangle swtRect = getBounds();
 
             camera.setBounds(new Rectangle2D.Double(swtRect.x, swtRect.y, swtRect.width, swtRect.height));
         }
@@ -197,21 +197,21 @@ public class PSWTCanvas extends Composite implements PComponent {
     /**
      * Add an input listener to the camera associated with this canvas.
      */
-    public void addInputEventListener(PInputEventListener listener) {
+    public void addInputEventListener(final PInputEventListener listener) {
         getCamera().addInputEventListener(listener);
     }
 
     /**
      * Remove an input listener to the camera associated with this canvas.
      */
-    public void removeInputEventListener(PInputEventListener listener) {
+    public void removeInputEventListener(final PInputEventListener listener) {
         getCamera().removeInputEventListener(listener);
     }
 
     public PCamera createBasicSceneGraph() {
-        PRoot r = new PSWTRoot(this);
-        PLayer l = new PLayer();
-        PCamera c = new PCamera();
+        final PRoot r = new PSWTRoot(this);
+        final PLayer l = new PLayer();
+        final PCamera c = new PCamera();
 
         r.addChild(c);
         r.addChild(l);
@@ -246,7 +246,7 @@ public class PSWTCanvas extends Composite implements PComponent {
      * Set if this canvas is interacting. If so the canvas will normally render
      * at a lower quality that is faster.
      */
-    public void setInteracting(boolean isInteracting) {
+    public void setInteracting(final boolean isInteracting) {
         if (isInteracting) {
             interacting++;
         }
@@ -271,8 +271,8 @@ public class PSWTCanvas extends Composite implements PComponent {
      * Set whether this canvas should use double buffering - the default is no
      * double buffering
      */
-    public void setDoubleBuffered(boolean dBuffered) {
-        this.doubleBuffered = dBuffered;
+    public void setDoubleBuffered(final boolean dBuffered) {
+        doubleBuffered = dBuffered;
     }
 
     /**
@@ -282,7 +282,7 @@ public class PSWTCanvas extends Composite implements PComponent {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setDefaultRenderQuality(int requestedQuality) {
+    public void setDefaultRenderQuality(final int requestedQuality) {
         defaultRenderQuality = requestedQuality;
         repaint();
     }
@@ -295,7 +295,7 @@ public class PSWTCanvas extends Composite implements PComponent {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setAnimatingRenderQuality(int requestedQuality) {
+    public void setAnimatingRenderQuality(final int requestedQuality) {
         animatingRenderQuality = requestedQuality;
         repaint();
     }
@@ -308,7 +308,7 @@ public class PSWTCanvas extends Composite implements PComponent {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setInteractingRenderQuality(int requestedQuality) {
+    public void setInteractingRenderQuality(final int requestedQuality) {
         interactingRenderQuality = requestedQuality;
         repaint();
     }
@@ -317,46 +317,46 @@ public class PSWTCanvas extends Composite implements PComponent {
      * Set the canvas cursor, and remember the previous cursor on the cursor
      * stack.
      */
-    public void pushCursor(java.awt.Cursor cursor) {
+    public void pushCursor(final java.awt.Cursor cursor) {
         Cursor aCursor = null;
         if (cursor.getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZEN);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEN);
         }
         else if (cursor.getType() == java.awt.Cursor.NE_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZENE);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZENE);
         }
         else if (cursor.getType() == java.awt.Cursor.NW_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZENW);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZENW);
         }
         else if (cursor.getType() == java.awt.Cursor.S_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZES);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZES);
         }
         else if (cursor.getType() == java.awt.Cursor.SE_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZESE);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZESE);
         }
         else if (cursor.getType() == java.awt.Cursor.SW_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZESW);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZESW);
         }
         else if (cursor.getType() == java.awt.Cursor.E_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZEE);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEE);
         }
         else if (cursor.getType() == java.awt.Cursor.W_RESIZE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZEW);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEW);
         }
         else if (cursor.getType() == java.awt.Cursor.TEXT_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_IBEAM);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_IBEAM);
         }
         else if (cursor.getType() == java.awt.Cursor.HAND_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_HAND);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
         }
         else if (cursor.getType() == java.awt.Cursor.MOVE_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_SIZEALL);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEALL);
         }
         else if (cursor.getType() == java.awt.Cursor.CROSSHAIR_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_CROSS);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_CROSS);
         }
         else if (cursor.getType() == java.awt.Cursor.WAIT_CURSOR) {
-            aCursor = new Cursor(this.getDisplay(), SWT.CURSOR_WAIT);
+            aCursor = new Cursor(getDisplay(), SWT.CURSOR_WAIT);
         }
 
         if (aCursor != null) {
@@ -404,8 +404,8 @@ public class PSWTCanvas extends Composite implements PComponent {
      * those events to piccolo.
      */
     protected void installInputSources() {
-        this.addMouseListener(new MouseListener() {
-            public void mouseDown(MouseEvent me) {
+        addMouseListener(new MouseListener() {
+            public void mouseDown(final MouseEvent me) {
                 boolean shouldBalanceEvent = false;
 
                 switch (me.button) {
@@ -430,17 +430,17 @@ public class PSWTCanvas extends Composite implements PComponent {
                 }
 
                 if (shouldBalanceEvent) {
-                    java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
+                    final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
                             java.awt.event.MouseEvent.MOUSE_RELEASED, 1);
                     sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
                 }
 
-                java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
+                final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
                         java.awt.event.MouseEvent.MOUSE_PRESSED, 1);
                 sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
             }
 
-            public void mouseUp(MouseEvent me) {
+            public void mouseUp(final MouseEvent me) {
                 boolean shouldBalanceEvent = false;
 
                 switch (me.button) {
@@ -465,12 +465,12 @@ public class PSWTCanvas extends Composite implements PComponent {
                 }
 
                 if (shouldBalanceEvent) {
-                    java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
+                    final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
                             java.awt.event.MouseEvent.MOUSE_PRESSED, 1);
                     sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
                 }
 
-                java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
+                final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
                         java.awt.event.MouseEvent.MOUSE_RELEASED, 1);
                 sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
             }
@@ -487,40 +487,40 @@ public class PSWTCanvas extends Composite implements PComponent {
             }
         });
 
-        this.addMouseMoveListener(new MouseMoveListener() {
-            public void mouseMove(MouseEvent me) {
+        addMouseMoveListener(new MouseMoveListener() {
+            public void mouseMove(final MouseEvent me) {
                 if (isButton1Pressed || isButton2Pressed || isButton3Pressed) {
-                    java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
+                    final java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
                             java.awt.event.MouseEvent.MOUSE_DRAGGED, 1);
                     sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_DRAGGED);
                 }
                 else {
-                    java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
+                    final java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
                             java.awt.event.MouseEvent.MOUSE_MOVED, 1);
                     sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_MOVED);
                 }
             }
         });
 
-        this.addKeyListener(new KeyListener() {
-            public void keyPressed(KeyEvent ke) {
-                java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_PRESSED);
+        addKeyListener(new KeyListener() {
+            public void keyPressed(final KeyEvent ke) {
+                final java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_PRESSED);
                 sendInputEventToInputManager(inputEvent, java.awt.event.KeyEvent.KEY_PRESSED);
             }
 
-            public void keyReleased(KeyEvent ke) {
-                java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_RELEASED);
+            public void keyReleased(final KeyEvent ke) {
+                final java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_RELEASED);
                 sendInputEventToInputManager(inputEvent, java.awt.event.KeyEvent.KEY_RELEASED);
             }
         });
 
     }
 
-    protected void sendInputEventToInputManager(InputEvent e, int type) {
+    protected void sendInputEventToInputManager(final InputEvent e, final int type) {
         getRoot().getDefaultInputManager().processEventFromCamera(e, type, getCamera());
     }
 
-    public void setBounds(int x, int y, final int w, final int h) {
+    public void setBounds(final int x, final int y, final int w, final int h) {
         camera.setBounds(camera.getX(), camera.getY(), w, h);
 
         if (backBuffer == null || backBuffer.getBounds().width < w || backBuffer.getBounds().height < h) {
@@ -534,14 +534,14 @@ public class PSWTCanvas extends Composite implements PComponent {
         super.redraw();
     }
 
-    public void repaint(PBounds bounds) {
+    public void repaint(final PBounds bounds) {
         bounds.expandNearestIntegerDimensions();
         bounds.inset(-1, -1);
 
         redraw((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height, true);
     }
 
-    public void paintComponent(GC gc, int x, int y, int w, int h) {
+    public void paintComponent(final GC gc, final int x, final int y, final int w, final int h) {
         PDebug.startProcessingOutput();
 
         GC imageGC = null;
@@ -557,20 +557,20 @@ public class PSWTCanvas extends Composite implements PComponent {
         g2.setColor(Color.white);
         g2.setBackground(Color.white);
 
-        Rectangle rect = getBounds();
+        final Rectangle rect = getBounds();
         g2.fillRect(0, 0, rect.width, rect.height);
 
         // This fixes a problem with standard debugging of region management in
         // SWT
         if (PDebug.debugRegionManagement) {
-            Rectangle r = gc.getClipping();
-            Rectangle2D r2 = new Rectangle2D.Double(r.x, r.y, r.width, r.height);
+            final Rectangle r = gc.getClipping();
+            final Rectangle2D r2 = new Rectangle2D.Double(r.x, r.y, r.width, r.height);
             g2.setBackground(PDebug.getDebugPaintColor());
             g2.fill(r2);
         }
 
         // create new paint context and set render quality
-        PPaintContext paintContext = new PPaintContext(g2);
+        final PPaintContext paintContext = new PPaintContext(g2);
         if (getInteracting() || getAnimating()) {
             if (interactingRenderQuality > animatingRenderQuality) {
                 paintContext.setRenderQuality(interactingRenderQuality);
@@ -594,7 +594,7 @@ public class PSWTCanvas extends Composite implements PComponent {
         }
         animatingOnLastPaint = getAnimating();
 
-        boolean region = PDebug.debugRegionManagement;
+        final boolean region = PDebug.debugRegionManagement;
         PDebug.debugRegionManagement = false;
         PDebug.endProcessingOutput(g2);
         PDebug.debugRegionManagement = region;

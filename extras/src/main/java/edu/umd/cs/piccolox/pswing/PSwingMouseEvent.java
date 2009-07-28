@@ -28,16 +28,16 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.event.PInputEvent;
-import edu.umd.cs.piccolo.util.PPickPath;
-
-import java.awt.*;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.event.PInputEvent;
+import edu.umd.cs.piccolo.util.PPickPath;
 
 /**
  * <b>PMouseEvent</b> is an event which indicates that a mouse action occurred
@@ -75,8 +75,12 @@ import java.io.Serializable;
  * @author Lance E. Good
  */
 public class PSwingMouseEvent extends MouseEvent implements Serializable {
-    private int id;
-    private PInputEvent event;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private final int id;
+    private final PInputEvent event;
 
     /**
      * Constructs a new PMouse event from a Java MouseEvent.
@@ -85,7 +89,7 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      *            MOUSE_ENTERED, MOUSE_EXITED)
      * @param e The original Java mouse event when in MOUSE_RELEASED events.
      */
-    protected PSwingMouseEvent(int id, MouseEvent e, PInputEvent event) {
+    protected PSwingMouseEvent(final int id, final MouseEvent e, final PInputEvent event) {
         super((Component) e.getSource(), e.getID(), e.getWhen(), e.getModifiers(), e.getX(), e.getY(), e
                 .getClickCount(), e.isPopupTrigger());
         this.id = id;
@@ -100,8 +104,8 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * @param e The original Java mouse event when in MOUSE_DRAGGED and
      *            MOUSE_RELEASED events.
      */
-    public static PSwingMouseEvent createMouseEvent(int id, MouseEvent e, PInputEvent pEvent) {
-        if (id == PSwingMouseEvent.MOUSE_MOVED || id == PSwingMouseEvent.MOUSE_DRAGGED) {
+    public static PSwingMouseEvent createMouseEvent(final int id, final MouseEvent e, final PInputEvent pEvent) {
+        if (id == MouseEvent.MOUSE_MOVED || id == MouseEvent.MOUSE_DRAGGED) {
             return new PSwingMouseMotionEvent(id, e, pEvent);
         }
         else {
@@ -223,23 +227,23 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * 
      * @param listener the MouseListener or MouseMotionListener to dispatch to.
      */
-    public void dispatchTo(Object listener) {
+    public void dispatchTo(final Object listener) {
         if (listener instanceof MouseListener) {
-            MouseListener mouseListener = (MouseListener) listener;
+            final MouseListener mouseListener = (MouseListener) listener;
             switch (getID()) {
-                case PSwingMouseEvent.MOUSE_CLICKED:
+                case MouseEvent.MOUSE_CLICKED:
                     mouseListener.mouseClicked(this);
                     break;
-                case PSwingMouseEvent.MOUSE_ENTERED:
+                case MouseEvent.MOUSE_ENTERED:
                     mouseListener.mouseEntered(this);
                     break;
-                case PSwingMouseEvent.MOUSE_EXITED:
+                case MouseEvent.MOUSE_EXITED:
                     mouseListener.mouseExited(this);
                     break;
-                case PSwingMouseEvent.MOUSE_PRESSED:
+                case MouseEvent.MOUSE_PRESSED:
                     mouseListener.mousePressed(this);
                     break;
-                case PSwingMouseEvent.MOUSE_RELEASED:
+                case MouseEvent.MOUSE_RELEASED:
                     mouseListener.mouseReleased(this);
                     break;
                 default:
@@ -247,12 +251,12 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
             }
         }
         else {
-            MouseMotionListener mouseMotionListener = (MouseMotionListener) listener;
+            final MouseMotionListener mouseMotionListener = (MouseMotionListener) listener;
             switch (getID()) {
-                case PSwingMouseEvent.MOUSE_DRAGGED:
+                case MouseEvent.MOUSE_DRAGGED:
                     mouseMotionListener.mouseDragged(this);
                     break;
-                case PSwingMouseEvent.MOUSE_MOVED:
+                case MouseEvent.MOUSE_MOVED:
                     mouseMotionListener.mouseMoved(this);
                     break;
                 default:
@@ -268,7 +272,7 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * 
      * @param aSource
      */
-    public void setSource(Object aSource) {
+    public void setSource(final Object aSource) {
         source = aSource;
     }
 }

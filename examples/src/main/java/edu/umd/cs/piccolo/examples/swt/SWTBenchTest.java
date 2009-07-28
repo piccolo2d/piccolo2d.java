@@ -28,10 +28,17 @@
  */
 package edu.umd.cs.piccolo.examples.swt;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Random;
-import java.io.*;
-import java.awt.*;
-import java.awt.geom.*;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -116,78 +123,78 @@ public class SWTBenchTest extends Canvas {
     static String testNames[] = { "line", "rect", "fill rect", "oval", "fill oval", "poly", "fill poly", "text",
             "image", "scaled image", "mask image", "alpha image", "argb image", };
 
-    void testDrawLine(SWTGraphics2D g, Random r) {
+    void testDrawLine(final SWTGraphics2D g, final Random r) {
         g.drawLine(rand(r), rand(r), rand(r), rand(r));
     }
 
-    void testDrawRect(SWTGraphics2D g, Random r) {
+    void testDrawRect(final SWTGraphics2D g, final Random r) {
         g.drawRect(rand(r), rand(r), rand(r), rand(r));
     }
 
-    void testFillRect(SWTGraphics2D g, Random r) {
+    void testFillRect(final SWTGraphics2D g, final Random r) {
         g.fillRect(rand(r), rand(r), rand(r), rand(r));
     }
 
-    void testDrawOval(SWTGraphics2D g, Random r) {
+    void testDrawOval(final SWTGraphics2D g, final Random r) {
         g.drawOval(rand(r), rand(r), rand(r), rand(r));
     }
 
-    void testFillOval(SWTGraphics2D g, Random r) {
+    void testFillOval(final SWTGraphics2D g, final Random r) {
         g.fillOval(rand(r), rand(r), rand(r), rand(r));
     }
 
-    void genPoly(Random r) {
+    void genPoly(final Random r) {
         for (int i = 0; i < pts.length / 2; i++) {
             pts[2 * i] = rand(r);
             pts[2 * i + 1] = rand(r);
         }
     }
 
-    void testDrawPoly(SWTGraphics2D g, Random r) {
+    void testDrawPoly(final SWTGraphics2D g, final Random r) {
         genPoly(r);
         g.drawPolyline(pts);
     }
 
-    void testFillPoly(SWTGraphics2D g, Random r) {
+    void testFillPoly(final SWTGraphics2D g, final Random r) {
         genPoly(r);
         g.fillPolygon(pts);
     }
 
-    void testDrawText(SWTGraphics2D g, Random r) {
+    void testDrawText(final SWTGraphics2D g, final Random r) {
         g.drawString("Abcdefghijklmnop", rand(r), rand(r));
     }
 
     // Basic image
-    void testDrawImg1(SWTGraphics2D g, Random r) {
+    void testDrawImg1(final SWTGraphics2D g, final Random r) {
         g.drawImage(testImageOpaque, rand(r), rand(r));
     }
 
     // Scaled image
-    void testDrawImg2(SWTGraphics2D g, Random r) {
-        Rectangle rect = testImageOpaque.getBounds();
+    void testDrawImg2(final SWTGraphics2D g, final Random r) {
+        final Rectangle rect = testImageOpaque.getBounds();
         g.drawImage(testImageOpaque, 0, 0, rect.width, rect.height, rand(r), rand(r), rand(r), rand(r));
     }
 
     // Bitmask image (unscaled)
-    void testDrawImg3(SWTGraphics2D g, Random r) {
+    void testDrawImg3(final SWTGraphics2D g, final Random r) {
         g.drawImage(testImageBitmask, rand(r), rand(r));
     }
 
     // Translucent image (unscaled)
-    void testDrawImg4(SWTGraphics2D g, Random r) {
+    void testDrawImg4(final SWTGraphics2D g, final Random r) {
         g.drawImage(testImageTranslucent, rand(r), rand(r));
     }
 
     // Buffered image (unscaled)
-    void testDrawImg5(SWTGraphics2D g, Random r) {
+    void testDrawImg5(final SWTGraphics2D g, final Random r) {
         g.drawImage(testImageARGB, rand(r), rand(r));
     }
 
-    Image loadImage(Display display, String name) {
+    Image loadImage(final Display display, final String name) {
         try {
-            InputStream stream = SWTBenchTest.class.getResourceAsStream(name);
+            final InputStream stream = SWTBenchTest.class.getResourceAsStream(name);
             if (stream != null) {
-                ImageData imageData = new ImageData(stream);
+                final ImageData imageData = new ImageData(stream);
                 return new Image(display, imageData);
                 // if (imageData != null) {
                 // ImageData mask = imageData.getTransparencyMask();
@@ -196,12 +203,12 @@ public class SWTBenchTest extends Canvas {
 
             }
         }
-        catch (Exception e) {
+        catch (final Exception e) {
         }
         return null;
     }
 
-    SWTBenchTest(Composite parent, int style) {
+    SWTBenchTest(final Composite parent, final int style) {
         super(parent, style);
 
         testImageOpaque = loadImage(getDisplay(), "opaque.jpg");
@@ -209,24 +216,24 @@ public class SWTBenchTest extends Canvas {
         testImageTranslucent = loadImage(getDisplay(), "translucent.png");
         testImageARGB = new Image(getDisplay(), 128, 128);
 
-        GC tmpGC = new GC(testImageARGB);
+        final GC tmpGC = new GC(testImageARGB);
         tmpGC.drawImage(testImageTranslucent, 0, 0);
         tmpGC.dispose();
 
         addPaintListener(new PaintListener() {
-            public void paintControl(PaintEvent pe) {
+            public void paintControl(final PaintEvent pe) {
                 runAll(new SWTGraphics2D(pe.gc, getDisplay()));
             }
         });
     }
 
-    void setupTransform(Graphics2D g, Random r) {
+    void setupTransform(final Graphics2D g, final Random r) {
         transform.setToIdentity();
 
         switch (abs(r.nextInt()) % 5) {
             default:
                 // case 0: // UNIFORM SCALE
-                double s = r.nextDouble();
+                final double s = r.nextDouble();
                 transform.scale(5 * s + 0.1, 5 * s + 0.1);
                 break;
             // case 1: // NON-UNIFORM SCALE
@@ -250,15 +257,15 @@ public class SWTBenchTest extends Canvas {
         g.setTransform(transform);
     }
 
-    void setupClip(Graphics2D g, Random r) {
+    void setupClip(final Graphics2D g, final Random r) {
         // g.setClip(rand(r), rand(r), rand(r), rand(r));
     }
 
-    void setupBlend(Graphics2D g, Random r) {
+    void setupBlend(final Graphics2D g, final Random r) {
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, r.nextFloat()));
     }
 
-    void setup(int ctx, Graphics2D g, Random r) {
+    void setup(final int ctx, final Graphics2D g, final Random r) {
         switch (ctx) {
             case CTX_NORMAL:
                 break;
@@ -277,7 +284,7 @@ public class SWTBenchTest extends Canvas {
         }
     }
 
-    void test(int testNum, SWTGraphics2D g, Random r) {
+    void test(final int testNum, final SWTGraphics2D g, final Random r) {
 
         g.setColor(colors[abs(r.nextInt()) % colors.length]);
         g.setBackground(colors[abs(r.nextInt()) % colors.length]);
@@ -325,28 +332,29 @@ public class SWTBenchTest extends Canvas {
         }
     }
 
-    void runTest(SWTGraphics2D g, int ctx, int testNum) {
-        Random r1 = new Random(1);
-        Random r2 = new Random(1);
+    void runTest(final SWTGraphics2D g, final int ctx, final int testNum) {
+        final Random r1 = new Random(1);
+        final Random r2 = new Random(1);
 
         System.out.println("Test: " + testNames[testNum]);
-        long t1 = System.currentTimeMillis();
+        final long t1 = System.currentTimeMillis();
         int i = 0;
         while (true) {
-            if (i % 10 == 0)
+            if (i % 10 == 0) {
                 setup(ctx, g, r1);
+            }
             test(testNum, g, r2);
             i++;
-            long t2 = System.currentTimeMillis();
+            final long t2 = System.currentTimeMillis();
             if (t2 - t1 >= 5000) {
                 break;
             }
         }
         results[ctx][testNum] += i / 5;
-        System.out.println("Shapes per second: " + (results[ctx][testNum]));
+        System.out.println("Shapes per second: " + results[ctx][testNum]);
     }
 
-    void runAll(SWTGraphics2D g) {
+    void runAll(final SWTGraphics2D g) {
         System.out.println("BENCHMARKING: " + g);
 
         if (antialiased) {
@@ -369,18 +377,20 @@ public class SWTBenchTest extends Canvas {
         }
 
         String fileName = g.getClass().getName().replace('.', '_');
-        if (offscreen)
+        if (offscreen) {
             fileName += "-offscreen";
-        if (antialiased)
+        }
+        if (antialiased) {
             fileName += "-antialiased";
+        }
         dumpResults(fileName + ".txt");
         System.exit(0);
     }
 
-    void dumpResults(String fileName) {
+    void dumpResults(final String fileName) {
         try {
-            FileOutputStream fout = new FileOutputStream(fileName);
-            PrintWriter out = new PrintWriter(fout);
+            final FileOutputStream fout = new FileOutputStream(fileName);
+            final PrintWriter out = new PrintWriter(fout);
             out.print('\t');
             for (int i = 0; i < NUM_TESTS; i++) {
                 out.print(testNames[i]);
@@ -398,42 +408,44 @@ public class SWTBenchTest extends Canvas {
             out.close();
             results = new int[NUM_CONTEXTS][NUM_TESTS];
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    public Point computeSize(int wHint, int hHint) {
+    public Point computeSize(final int wHint, final int hHint) {
         return new Point(512, 512);
     }
 
-    public Point computeSize(int wHint, int hHint, boolean changed) {
+    public Point computeSize(final int wHint, final int hHint, final boolean changed) {
         return computeSize(wHint, hHint);
     }
 
-    final static int abs(int x) {
-        return (x < 0 ? -x : x);
+    final static int abs(final int x) {
+        return x < 0 ? -x : x;
     }
 
-    final static double rand(Random r) {
+    final static double rand(final Random r) {
         return abs(r.nextInt()) % 500;
     }
 
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         // Create frame
-        Display display = new Display();
-        Shell shell = new Shell(display);
+        final Display display = new Display();
+        final Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
 
         // Add bench test
-        SWTBenchTest m = new SWTBenchTest(shell, SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND);
+        final SWTBenchTest m = new SWTBenchTest(shell, SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND);
         m.setSize(512, 512);
         for (int i = 0; i < args.length; i++) {
-            if (args[i].intern() == "-offscreen")
+            if (args[i].intern() == "-offscreen") {
                 m.offscreen = true;
-            else if (args[i].intern() == "-anti")
+            }
+            else if (args[i].intern() == "-anti") {
                 m.antialiased = true;
+            }
             else {
                 System.out.println("Usage: java BenchTest [-anti] [-offscreen]");
                 System.exit(1);
@@ -444,8 +456,9 @@ public class SWTBenchTest extends Canvas {
         shell.open();
 
         while (!shell.isDisposed()) {
-            if (!display.readAndDispatch())
+            if (!display.readAndDispatch()) {
                 display.sleep();
+            }
         }
         display.dispose();
     }

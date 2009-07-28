@@ -48,18 +48,23 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class PulseExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PulseExample() {
         this(null);
     }
 
-    public PulseExample(PCanvas aCanvas) {
+    public PulseExample(final PCanvas aCanvas) {
         super("PulseExample", false, aCanvas);
     }
 
     public void initialize() {
-        PRoot root = getCanvas().getRoot();
-        PLayer layer = getCanvas().getLayer();
-        PActivityScheduler scheduler = root.getActivityScheduler();
+        final PRoot root = getCanvas().getRoot();
+        final PLayer layer = getCanvas().getLayer();
+        final PActivityScheduler scheduler = root.getActivityScheduler();
 
         final PNode singlePulse = PPath.createRectangle(0, 0, 100, 80);
         final PPath repeatePulse = PPath.createRectangle(100, 80, 100, 80);
@@ -70,38 +75,38 @@ public class PulseExample extends PFrame {
         layer.addChild(repeateReversePulse);
 
         // animate from source to destination color in one second,
-        PColorActivity singlePulseActivity = new PColorActivity(1000, 0, 1,
+        final PColorActivity singlePulseActivity = new PColorActivity(1000, 0, 1,
                 PInterpolatingActivity.SOURCE_TO_DESTINATION, new PColorActivity.Target() {
                     public Color getColor() {
                         return (Color) singlePulse.getPaint();
                     }
 
-                    public void setColor(Color color) {
+                    public void setColor(final Color color) {
                         singlePulse.setPaint(color);
                     }
                 }, Color.ORANGE);
 
         // animate from source to destination color in one second, loop 5 times
-        PColorActivity repeatPulseActivity = new PColorActivity(1000, 0, 5,
+        final PColorActivity repeatPulseActivity = new PColorActivity(1000, 0, 5,
                 PInterpolatingActivity.SOURCE_TO_DESTINATION, new PColorActivity.Target() {
                     public Color getColor() {
                         return (Color) repeatePulse.getPaint();
                     }
 
-                    public void setColor(Color color) {
+                    public void setColor(final Color color) {
                         repeatePulse.setPaint(color);
                     }
                 }, Color.BLUE);
 
         // animate from source to destination to source color in one second,
         // loop 10 times
-        PColorActivity repeatReversePulseActivity = new PColorActivity(500, 0, 10,
+        final PColorActivity repeatReversePulseActivity = new PColorActivity(500, 0, 10,
                 PInterpolatingActivity.SOURCE_TO_DESTINATION_TO_SOURCE, new PColorActivity.Target() {
                     public Color getColor() {
                         return (Color) repeateReversePulse.getPaint();
                     }
 
-                    public void setColor(Color color) {
+                    public void setColor(final Color color) {
                         repeateReversePulse.setPaint(color);
                     }
                 }, Color.GREEN);
@@ -111,7 +116,7 @@ public class PulseExample extends PFrame {
         scheduler.addActivity(repeatReversePulseActivity);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PulseExample();
     }
 }

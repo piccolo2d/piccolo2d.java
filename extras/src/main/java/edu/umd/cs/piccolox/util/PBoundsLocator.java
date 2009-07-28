@@ -44,41 +44,45 @@ import edu.umd.cs.piccolo.PNode;
  */
 public class PBoundsLocator extends PNodeLocator {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private int side;
 
-    public static PBoundsLocator createEastLocator(PNode node) {
+    public static PBoundsLocator createEastLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.EAST);
     }
 
-    public static PBoundsLocator createNorthEastLocator(PNode node) {
+    public static PBoundsLocator createNorthEastLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.NORTH_EAST);
     }
 
-    public static PBoundsLocator createNorthWestLocator(PNode node) {
+    public static PBoundsLocator createNorthWestLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.NORTH_WEST);
     }
 
-    public static PBoundsLocator createNorthLocator(PNode node) {
+    public static PBoundsLocator createNorthLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.NORTH);
     }
 
-    public static PBoundsLocator createSouthLocator(PNode node) {
+    public static PBoundsLocator createSouthLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.SOUTH);
     }
 
-    public static PBoundsLocator createWestLocator(PNode node) {
+    public static PBoundsLocator createWestLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.WEST);
     }
 
-    public static PBoundsLocator createSouthWestLocator(PNode node) {
+    public static PBoundsLocator createSouthWestLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.SOUTH_WEST);
     }
 
-    public static PBoundsLocator createSouthEastLocator(PNode node) {
+    public static PBoundsLocator createSouthEastLocator(final PNode node) {
         return new PBoundsLocator(node, SwingConstants.SOUTH_EAST);
     }
 
-    public PBoundsLocator(PNode node, int aSide) {
+    public PBoundsLocator(final PNode node, final int aSide) {
         super(node);
         side = aSide;
     }
@@ -87,12 +91,12 @@ public class PBoundsLocator extends PNodeLocator {
         return side;
     }
 
-    public void setSide(int side) {
+    public void setSide(final int side) {
         this.side = side;
     }
 
     public double locateX() {
-        Rectangle2D aBounds = node.getBoundsReference();
+        final Rectangle2D aBounds = node.getBoundsReference();
 
         switch (side) {
             case SwingConstants.NORTH_WEST:
@@ -107,18 +111,18 @@ public class PBoundsLocator extends PNodeLocator {
 
             case SwingConstants.NORTH:
             case SwingConstants.SOUTH:
-                return aBounds.getX() + (aBounds.getWidth() / 2);
+                return aBounds.getX() + aBounds.getWidth() / 2;
         }
         return -1;
     }
 
     public double locateY() {
-        Rectangle2D aBounds = node.getBoundsReference();
+        final Rectangle2D aBounds = node.getBoundsReference();
 
         switch (side) {
             case SwingConstants.EAST:
             case SwingConstants.WEST:
-                return aBounds.getY() + (aBounds.getHeight() / 2);
+                return aBounds.getY() + aBounds.getHeight() / 2;
 
             case SwingConstants.SOUTH:
             case SwingConstants.SOUTH_WEST:

@@ -37,16 +37,21 @@ import edu.umd.cs.piccolox.handles.PBoundsHandle;
 
 public class StickyExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public StickyExample() {
         this(null);
     }
 
-    public StickyExample(PCanvas aCanvas) {
+    public StickyExample(final PCanvas aCanvas) {
         super("StickyExample", false, aCanvas);
     }
 
     public void initialize() {
-        PPath sticky = PPath.createRectangle(0, 0, 50, 50);
+        final PPath sticky = PPath.createRectangle(0, 0, 50, 50);
         sticky.setPaint(Color.YELLOW);
         sticky.setStroke(null);
         PBoundsHandle.addBoundsHandlesTo(sticky);
@@ -54,7 +59,7 @@ public class StickyExample extends PFrame {
         getCanvas().getCamera().addChild(sticky);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new StickyExample();
     }
 }

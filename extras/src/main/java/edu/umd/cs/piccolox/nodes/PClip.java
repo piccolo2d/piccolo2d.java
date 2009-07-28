@@ -48,16 +48,22 @@ import edu.umd.cs.piccolo.util.PPickPath;
  */
 public class PClip extends PPath {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PBounds computeFullBounds(PBounds dstBounds) {
-        if (dstBounds == null)
+        if (dstBounds == null) {
             dstBounds = new PBounds();
+        }
         dstBounds.reset();
         dstBounds.add(getBoundsReference());
         localToParent(dstBounds);
         return dstBounds;
     }
 
-    public void repaintFrom(PBounds localBounds, PNode childOrThis) {
+    public void repaintFrom(final PBounds localBounds, final PNode childOrThis) {
         if (childOrThis != this) {
             Rectangle2D.intersect(getBoundsReference(), localBounds, localBounds);
             super.repaintFrom(localBounds, childOrThis);
@@ -67,27 +73,27 @@ public class PClip extends PPath {
         }
     }
 
-    protected void paint(PPaintContext paintContext) {
-        Paint p = getPaint();
+    protected void paint(final PPaintContext paintContext) {
+        final Paint p = getPaint();
         if (p != null) {
-            Graphics2D g2 = paintContext.getGraphics();
+            final Graphics2D g2 = paintContext.getGraphics();
             g2.setPaint(p);
             g2.fill(getPathReference());
         }
         paintContext.pushClip(getPathReference());
     }
 
-    protected void paintAfterChildren(PPaintContext paintContext) {
+    protected void paintAfterChildren(final PPaintContext paintContext) {
         paintContext.popClip(getPathReference());
         if (getStroke() != null && getStrokePaint() != null) {
-            Graphics2D g2 = paintContext.getGraphics();
+            final Graphics2D g2 = paintContext.getGraphics();
             g2.setPaint(getStrokePaint());
             g2.setStroke(getStroke());
             g2.draw(getPathReference());
         }
     }
 
-    public boolean fullPick(PPickPath pickPath) {
+    public boolean fullPick(final PPickPath pickPath) {
         if (getPickable() && fullIntersects(pickPath.getPickBounds())) {
             pickPath.pushNode(this);
             pickPath.pushTransform(getTransformReference(false));
@@ -97,11 +103,12 @@ public class PClip extends PPath {
             }
 
             if (getChildrenPickable() && getPathReference().intersects(pickPath.getPickBounds())) {
-                int count = getChildrenCount();
+                final int count = getChildrenCount();
                 for (int i = count - 1; i >= 0; i--) {
-                    PNode each = getChild(i);
-                    if (each.fullPick(pickPath))
+                    final PNode each = getChild(i);
+                    if (each.fullPick(pickPath)) {
                         return true;
+                    }
                 }
             }
 

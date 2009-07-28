@@ -44,16 +44,16 @@ public class PStack extends ArrayList {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     public PStack() {
     }
 
-    public void push(Object o) {
+    public void push(final Object o) {
         add(o);
     }
 
     public Object peek() {
-        int s = size();
+        final int s = size();
         if (s == 0) {
             return null;
         }

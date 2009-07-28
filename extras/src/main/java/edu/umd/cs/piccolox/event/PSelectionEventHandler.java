@@ -100,10 +100,10 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * @param selectableParent The node whose children will be selected by this
      *            event handler.
      */
-    public PSelectionEventHandler(PNode marqueeParent, PNode selectableParent) {
+    public PSelectionEventHandler(final PNode marqueeParent, final PNode selectableParent) {
         this.marqueeParent = marqueeParent;
-        this.selectableParents = new ArrayList();
-        this.selectableParents.add(selectableParent);
+        selectableParents = new ArrayList();
+        selectableParents.add(selectableParent);
         init();
     }
 
@@ -115,14 +115,14 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * @param selectableParents A list of nodes whose children will be selected
      *            by this event handler.
      */
-    public PSelectionEventHandler(PNode marqueeParent, List selectableParents) {
+    public PSelectionEventHandler(final PNode marqueeParent, final List selectableParents) {
         this.marqueeParent = marqueeParent;
         this.selectableParents = selectableParents;
         init();
     }
 
     protected void init() {
-        float[] dash = { DASH_WIDTH, DASH_WIDTH };
+        final float[] dash = { DASH_WIDTH, DASH_WIDTH };
         strokes = new Stroke[NUM_STROKES];
         for (int i = 0; i < NUM_STROKES; i++) {
             strokes[i] = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, dash, i);
@@ -138,11 +138,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // Public static methods for manipulating the selection
     // /////////////////////////////////////////////////////
 
-    public void select(Collection items) {
+    public void select(final Collection items) {
         boolean changes = false;
-        Iterator itemIt = items.iterator();
+        final Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
-            PNode node = (PNode) itemIt.next();
+            final PNode node = (PNode) itemIt.next();
             changes |= internalSelect(node);
         }
         if (changes) {
@@ -150,11 +150,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    public void select(Map items) {
+    public void select(final Map items) {
         select(items.keySet());
     }
 
-    private boolean internalSelect(PNode node) {
+    private boolean internalSelect(final PNode node) {
         if (isSelected(node)) {
             return false;
         }
@@ -168,21 +168,21 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         PNotificationCenter.defaultCenter().postNotification(SELECTION_CHANGED_NOTIFICATION, this);
     }
 
-    public void select(PNode node) {
+    public void select(final PNode node) {
         if (internalSelect(node)) {
             postSelectionChanged();
         }
     }
 
-    public void decorateSelectedNode(PNode node) {
+    public void decorateSelectedNode(final PNode node) {
         PBoundsHandle.addBoundsHandlesTo(node);
     }
 
-    public void unselect(Collection items) {
+    public void unselect(final Collection items) {
         boolean changes = false;
-        Iterator itemIt = items.iterator();
+        final Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
-            PNode node = (PNode) itemIt.next();
+            final PNode node = (PNode) itemIt.next();
             changes |= internalUnselect(node);
         }
         if (changes) {
@@ -190,7 +190,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    private boolean internalUnselect(PNode node) {
+    private boolean internalUnselect(final PNode node) {
         if (!isSelected(node)) {
             return false;
         }
@@ -200,25 +200,25 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         return true;
     }
 
-    public void unselect(PNode node) {
+    public void unselect(final PNode node) {
         if (internalUnselect(node)) {
             postSelectionChanged();
         }
     }
 
-    public void undecorateSelectedNode(PNode node) {
+    public void undecorateSelectedNode(final PNode node) {
         PBoundsHandle.removeBoundsHandlesFrom(node);
     }
 
     public void unselectAll() {
         // Because unselect() removes from selection, we need to
         // take a copy of it first so it isn't changed while we're iterating
-        ArrayList sel = new ArrayList(selection.keySet());
+        final ArrayList sel = new ArrayList(selection.keySet());
         unselect(sel);
     }
 
-    public boolean isSelected(PNode node) {
-        if ((node != null) && (selection.containsKey(node))) {
+    public boolean isSelected(final PNode node) {
+        if (node != null && selection.containsKey(node)) {
             return true;
         }
         else {
@@ -230,7 +230,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * Returns a copy of the currently selected nodes.
      */
     public Collection getSelection() {
-        ArrayList sel = new ArrayList(selection.keySet());
+        final ArrayList sel = new ArrayList(selection.keySet());
         return sel;
     }
 
@@ -246,19 +246,19 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * Determine if the specified node is selectable (i.e., if it is a child of
      * the one the list of selectable parents.
      */
-    protected boolean isSelectable(PNode node) {
+    protected boolean isSelectable(final PNode node) {
         boolean selectable = false;
 
-        Iterator parentsIt = selectableParents.iterator();
+        final Iterator parentsIt = selectableParents.iterator();
         while (parentsIt.hasNext()) {
-            PNode parent = (PNode) parentsIt.next();
+            final PNode parent = (PNode) parentsIt.next();
             if (parent.getChildrenReference().contains(node)) {
                 selectable = true;
                 break;
             }
             else if (parent instanceof PCamera) {
                 for (int i = 0; i < ((PCamera) parent).getLayerCount(); i++) {
-                    PLayer layer = ((PCamera) parent).getLayer(i);
+                    final PLayer layer = ((PCamera) parent).getLayer(i);
                     if (layer.getChildrenReference().contains(node)) {
                         selectable = true;
                         break;
@@ -274,20 +274,20 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // Methods for modifying the set of selectable parents
     // ////////////////////////////////////////////////////
 
-    public void addSelectableParent(PNode node) {
+    public void addSelectableParent(final PNode node) {
         selectableParents.add(node);
     }
 
-    public void removeSelectableParent(PNode node) {
+    public void removeSelectableParent(final PNode node) {
         selectableParents.remove(node);
     }
 
-    public void setSelectableParent(PNode node) {
+    public void setSelectableParent(final PNode node) {
         selectableParents.clear();
         selectableParents.add(node);
     }
 
-    public void setSelectableParents(Collection c) {
+    public void setSelectableParents(final Collection c) {
         selectableParents.clear();
         selectableParents.addAll(c);
     }
@@ -300,7 +300,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // The overridden methods from PDragSequenceEventHandler
     // //////////////////////////////////////////////////////
 
-    protected void startDrag(PInputEvent e) {
+    protected void startDrag(final PInputEvent e) {
         super.startDrag(e);
 
         initializeSelection(e);
@@ -325,7 +325,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void drag(PInputEvent e) {
+    protected void drag(final PInputEvent e) {
         super.drag(e);
 
         if (isMarqueeSelection(e)) {
@@ -343,7 +343,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void endDrag(PInputEvent e) {
+    protected void endDrag(final PInputEvent e) {
         super.endDrag(e);
 
         if (isMarqueeSelection(e)) {
@@ -358,15 +358,15 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // Additional methods
     // //////////////////////////
 
-    public boolean isOptionSelection(PInputEvent pie) {
+    public boolean isOptionSelection(final PInputEvent pie) {
         return pie.isShiftDown();
     }
 
-    protected boolean isMarqueeSelection(PInputEvent pie) {
-        return (pressNode == null);
+    protected boolean isMarqueeSelection(final PInputEvent pie) {
+        return pressNode == null;
     }
 
-    protected void initializeSelection(PInputEvent pie) {
+    protected void initializeSelection(final PInputEvent pie) {
         canvasPressPt = pie.getCanvasPosition();
         presspt = pie.getPosition();
         pressNode = pie.getPath().getPickedNode();
@@ -375,7 +375,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void initializeMarquee(PInputEvent e) {
+    protected void initializeMarquee(final PInputEvent e) {
         marquee = PPath.createRectangle((float) presspt.getX(), (float) presspt.getY(), 0, 0);
         marquee.setPaint(marqueePaint);
         marquee.setTransparency(marqueePaintTransparency);
@@ -386,14 +386,14 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         marqueeMap.clear();
     }
 
-    protected void startOptionMarqueeSelection(PInputEvent e) {
+    protected void startOptionMarqueeSelection(final PInputEvent e) {
     }
 
-    protected void startMarqueeSelection(PInputEvent e) {
+    protected void startMarqueeSelection(final PInputEvent e) {
         unselectAll();
     }
 
-    protected void startStandardSelection(PInputEvent pie) {
+    protected void startStandardSelection(final PInputEvent pie) {
         // Option indicator not down - clear selection, and start fresh
         if (!isSelected(pressNode)) {
             unselectAll();
@@ -404,7 +404,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void startStandardOptionSelection(PInputEvent pie) {
+    protected void startStandardOptionSelection(final PInputEvent pie) {
         // Option indicator is down, toggle selection
         if (isSelectable(pressNode)) {
             if (isSelected(pressNode)) {
@@ -416,8 +416,8 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void updateMarquee(PInputEvent pie) {
-        PBounds b = new PBounds();
+    protected void updateMarquee(final PInputEvent pie) {
+        final PBounds b = new PBounds();
 
         if (marqueeParent instanceof PCamera) {
             b.add(canvasPressPt);
@@ -435,10 +435,10 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         b.add(pie.getPosition());
 
         allItems.clear();
-        PNodeFilter filter = createNodeFilter(b);
-        Iterator parentsIt = selectableParents.iterator();
+        final PNodeFilter filter = createNodeFilter(b);
+        final Iterator parentsIt = selectableParents.iterator();
         while (parentsIt.hasNext()) {
-            PNode parent = (PNode) parentsIt.next();
+            final PNode parent = (PNode) parentsIt.next();
 
             Collection items;
             if (parent instanceof PCamera) {
@@ -451,20 +451,20 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
                 items = parent.getAllNodes(filter, null);
             }
 
-            Iterator itemsIt = items.iterator();
+            final Iterator itemsIt = items.iterator();
             while (itemsIt.hasNext()) {
                 allItems.put(itemsIt.next(), Boolean.TRUE);
             }
         }
     }
 
-    protected void computeMarqueeSelection(PInputEvent pie) {
+    protected void computeMarqueeSelection(final PInputEvent pie) {
         unselectList.clear();
         // Make just the items in the list selected
         // Do this efficiently by first unselecting things not in the list
         Iterator selectionEn = selection.keySet().iterator();
         while (selectionEn.hasNext()) {
-            PNode node = (PNode) selectionEn.next();
+            final PNode node = (PNode) selectionEn.next();
             if (!allItems.containsKey(node)) {
                 unselectList.add(node);
             }
@@ -474,7 +474,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         // Then select the rest
         selectionEn = allItems.keySet().iterator();
         while (selectionEn.hasNext()) {
-            PNode node = (PNode) selectionEn.next();
+            final PNode node = (PNode) selectionEn.next();
             if (!selection.containsKey(node) && !marqueeMap.containsKey(node) && isSelectable(node)) {
                 marqueeMap.put(node, Boolean.TRUE);
             }
@@ -486,11 +486,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         select(allItems);
     }
 
-    protected void computeOptionMarqueeSelection(PInputEvent pie) {
+    protected void computeOptionMarqueeSelection(final PInputEvent pie) {
         unselectList.clear();
         Iterator selectionEn = selection.keySet().iterator();
         while (selectionEn.hasNext()) {
-            PNode node = (PNode) selectionEn.next();
+            final PNode node = (PNode) selectionEn.next();
             if (!allItems.containsKey(node) && marqueeMap.containsKey(node)) {
                 marqueeMap.remove(node);
                 unselectList.add(node);
@@ -501,7 +501,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         // Then select the rest
         selectionEn = allItems.keySet().iterator();
         while (selectionEn.hasNext()) {
-            PNode node = (PNode) selectionEn.next();
+            final PNode node = (PNode) selectionEn.next();
             if (!selection.containsKey(node) && !marqueeMap.containsKey(node) && isSelectable(node)) {
                 marqueeMap.put(node, Boolean.TRUE);
             }
@@ -513,7 +513,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         select(allItems);
     }
 
-    protected PNodeFilter createNodeFilter(PBounds bounds) {
+    protected PNodeFilter createNodeFilter(final PBounds bounds) {
         return new BoundsFilter(bounds);
     }
 
@@ -524,15 +524,15 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         return new PBounds();
     }
 
-    protected void dragStandardSelection(PInputEvent e) {
+    protected void dragStandardSelection(final PInputEvent e) {
         // There was a press node, so drag selection
-        PDimension d = e.getCanvasDelta();
+        final PDimension d = e.getCanvasDelta();
         e.getTopCamera().localToView(d);
 
-        PDimension gDist = new PDimension();
-        Iterator selectionEn = getSelection().iterator();
+        final PDimension gDist = new PDimension();
+        final Iterator selectionEn = getSelection().iterator();
         while (selectionEn.hasNext()) {
-            PNode node = (PNode) selectionEn.next();
+            final PNode node = (PNode) selectionEn.next();
 
             gDist.setSize(d);
             node.getParent().globalToLocal(gDist);
@@ -540,7 +540,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void endMarqueeSelection(PInputEvent e) {
+    protected void endMarqueeSelection(final PInputEvent e) {
         // Remove marquee
         allItems.clear();
         marqueeMap.clear();
@@ -548,7 +548,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         marquee = null;
     }
 
-    protected void endStandardSelection(PInputEvent e) {
+    protected void endStandardSelection(final PInputEvent e) {
         pressNode = null;
     }
 
@@ -556,9 +556,9 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * This gets called continuously during the drag, and is used to animate the
      * marquee
      */
-    protected void dragActivityStep(PInputEvent aEvent) {
+    protected void dragActivityStep(final PInputEvent aEvent) {
         if (marquee != null) {
-            float origStrokeNum = strokeNum;
+            final float origStrokeNum = strokeNum;
             strokeNum = (strokeNum + 0.5f) % NUM_STROKES; // Increment by
             // partial steps to
             // slow down animation
@@ -571,13 +571,13 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     /**
      * Delete selection when delete key is pressed (if enabled)
      */
-    public void keyPressed(PInputEvent e) {
+    public void keyPressed(final PInputEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_DELETE:
                 if (deleteKeyActive) {
-                    Iterator selectionEn = selection.keySet().iterator();
+                    final Iterator selectionEn = selection.keySet().iterator();
                     while (selectionEn.hasNext()) {
-                        PNode node = (PNode) selectionEn.next();
+                        final PNode node = (PNode) selectionEn.next();
                         node.removeFromParent();
                     }
                     selection.clear();
@@ -596,7 +596,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     /**
      * Specifies if the DELETE key should delete the selection
      */
-    public void setDeleteKeyActive(boolean deleteKeyActive) {
+    public void setDeleteKeyActive(final boolean deleteKeyActive) {
         this.deleteKeyActive = deleteKeyActive;
     }
 
@@ -608,27 +608,28 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         PBounds localBounds = new PBounds();
         PBounds bounds;
 
-        protected BoundsFilter(PBounds bounds) {
+        protected BoundsFilter(final PBounds bounds) {
             this.bounds = bounds;
         }
 
-        public boolean accept(PNode node) {
+        public boolean accept(final PNode node) {
             localBounds.setRect(bounds);
             node.globalToLocal(localBounds);
 
-            boolean boundsIntersects = node.intersects(localBounds);
-            boolean isMarquee = (node == marquee);
-            return (node.getPickable() && boundsIntersects && !isMarquee && !selectableParents.contains(node) && !isCameraLayer(node));
+            final boolean boundsIntersects = node.intersects(localBounds);
+            final boolean isMarquee = node == marquee;
+            return node.getPickable() && boundsIntersects && !isMarquee && !selectableParents.contains(node)
+                    && !isCameraLayer(node);
         }
 
-        public boolean acceptChildrenOf(PNode node) {
+        public boolean acceptChildrenOf(final PNode node) {
             return selectableParents.contains(node) || isCameraLayer(node);
         }
 
-        public boolean isCameraLayer(PNode node) {
+        public boolean isCameraLayer(final PNode node) {
             if (node instanceof PLayer) {
-                for (Iterator i = selectableParents.iterator(); i.hasNext();) {
-                    PNode parent = (PNode) i.next();
+                for (final Iterator i = selectableParents.iterator(); i.hasNext();) {
+                    final PNode parent = (PNode) i.next();
                     if (parent instanceof PCamera && ((PCamera) parent).indexOfLayer((PLayer) node) != -1) {
                         return true;
                     }
@@ -652,8 +653,8 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * 
      * @param paint the paint color
      */
-    public void setMarqueePaint(Paint paint) {
-        this.marqueePaint = paint;
+    public void setMarqueePaint(final Paint paint) {
+        marqueePaint = paint;
     }
 
     /**
@@ -670,7 +671,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * 
      * @param marqueePaintTransparency The marquee paint transparency to set.
      */
-    public void setMarqueePaintTransparency(float marqueePaintTransparency) {
+    public void setMarqueePaintTransparency(final float marqueePaintTransparency) {
         this.marqueePaintTransparency = marqueePaintTransparency;
     }
 }

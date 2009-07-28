@@ -81,8 +81,8 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     // Focus Change Events.
     // ****************************************************************
 
-    public void keyPressed(PInputEvent e) {
-        PNode oldLocation = focusNode;
+    public void keyPressed(final PInputEvent e) {
+        final PNode oldLocation = focusNode;
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
@@ -119,7 +119,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         }
     }
 
-    public void mousePressed(PInputEvent aEvent) {
+    public void mousePressed(final PInputEvent aEvent) {
         moveFocusToMouseOver(aEvent);
 
         if (focusNode != null) {
@@ -136,60 +136,61 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     // move the focus to the parent of the current focus.
     // ****************************************************************
 
-    public void moveFocusDown(PInputEvent e) {
+    public void moveFocusDown(final PInputEvent e) {
         moveFocusInDirection(SOUTH);
     }
 
-    public void moveFocusIn(PInputEvent e) {
+    public void moveFocusIn(final PInputEvent e) {
         moveFocusInDirection(IN);
     }
 
-    public void moveFocusLeft(PInputEvent e) {
+    public void moveFocusLeft(final PInputEvent e) {
         moveFocusInDirection(WEST);
     }
 
-    public void moveFocusOut(PInputEvent e) {
+    public void moveFocusOut(final PInputEvent e) {
         moveFocusInDirection(OUT);
     }
 
-    public void moveFocusRight(PInputEvent e) {
+    public void moveFocusRight(final PInputEvent e) {
         moveFocusInDirection(EAST);
     }
 
-    public void moveFocusUp(PInputEvent e) {
+    public void moveFocusUp(final PInputEvent e) {
         moveFocusInDirection(NORTH);
     }
 
-    private void moveFocusInDirection(int direction) {
-        PNode n = getNeighborInDirection(direction);
+    private void moveFocusInDirection(final int direction) {
+        final PNode n = getNeighborInDirection(direction);
 
         if (n != null) {
             focusNode = n;
         }
     }
 
-    public void moveFocusToMouseOver(PInputEvent e) {
-        PNode focus = e.getPickedNode();
+    public void moveFocusToMouseOver(final PInputEvent e) {
+        final PNode focus = e.getPickedNode();
         if (!(focus instanceof PCamera)) {
             focusNode = focus;
         }
     }
 
-    public PNode getNeighborInDirection(int aDirection) {
-        if (focusNode == null)
+    public PNode getNeighborInDirection(final int aDirection) {
+        if (focusNode == null) {
             return null;
+        }
 
         NODE_TO_GLOBAL_NODE_CENTER_MAPPING.clear();
 
-        Point2D highlightCenter = focusNode.getGlobalFullBounds().getCenter2D();
+        final Point2D highlightCenter = focusNode.getGlobalFullBounds().getCenter2D();
         NODE_TO_GLOBAL_NODE_CENTER_MAPPING.put(focusNode, highlightCenter);
 
-        List l = getNeighbors();
+        final List l = getNeighbors();
         sortNodesByDistanceFromPoint(l, highlightCenter);
 
-        Iterator i = l.iterator();
+        final Iterator i = l.iterator();
         while (i.hasNext()) {
-            PNode each = (PNode) i.next();
+            final PNode each = (PNode) i.next();
             if (nodeIsNeighborInDirection(each, aDirection)) {
                 return each;
             }
@@ -199,16 +200,17 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     }
 
     public List getNeighbors() {
-        ArrayList result = new ArrayList();
-        if (focusNode == null || focusNode.getParent() == null)
+        final ArrayList result = new ArrayList();
+        if (focusNode == null || focusNode.getParent() == null) {
             return result;
+        }
 
-        PNode focusParent = focusNode.getParent();
+        final PNode focusParent = focusNode.getParent();
 
-        Iterator i = focusParent.getChildrenIterator();
+        final Iterator i = focusParent.getChildrenIterator();
 
         while (i.hasNext()) {
-            PNode each = (PNode) i.next();
+            final PNode each = (PNode) i.next();
             if (each != focusNode && each.getPickable()) {
                 result.add(each);
             }
@@ -219,7 +221,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         return result;
     }
 
-    public boolean nodeIsNeighborInDirection(PNode aNode, int aDirection) {
+    public boolean nodeIsNeighborInDirection(final PNode aNode, final int aDirection) {
         switch (aDirection) {
             case IN: {
                 return aNode.isDescendentOf(focusNode);
@@ -236,44 +238,44 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
             }
         }
 
-        Point2D highlightCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(focusNode);
-        Point2D nodeCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(aNode);
+        final Point2D highlightCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(focusNode);
+        final Point2D nodeCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(aNode);
 
-        double ytest1 = nodeCenter.getX() - highlightCenter.getX() + highlightCenter.getY();
-        double ytest2 = -nodeCenter.getX() + highlightCenter.getX() + highlightCenter.getY();
+        final double ytest1 = nodeCenter.getX() - highlightCenter.getX() + highlightCenter.getY();
+        final double ytest2 = -nodeCenter.getX() + highlightCenter.getX() + highlightCenter.getY();
 
         switch (aDirection) {
             case NORTH: {
-                return (nodeCenter.getY() < highlightCenter.getY())
-                        && (nodeCenter.getY() < ytest1 && nodeCenter.getY() < ytest2);
+                return nodeCenter.getY() < highlightCenter.getY() && nodeCenter.getY() < ytest1
+                        && nodeCenter.getY() < ytest2;
             }
 
             case EAST: {
-                return (nodeCenter.getX() > highlightCenter.getX())
-                        && (nodeCenter.getY() < ytest1 && nodeCenter.getY() > ytest2);
+                return nodeCenter.getX() > highlightCenter.getX() && nodeCenter.getY() < ytest1
+                        && nodeCenter.getY() > ytest2;
             }
 
             case SOUTH: {
-                return (nodeCenter.getY() > highlightCenter.getY())
-                        && (nodeCenter.getY() > ytest1 && nodeCenter.getY() > ytest2);
+                return nodeCenter.getY() > highlightCenter.getY() && nodeCenter.getY() > ytest1
+                        && nodeCenter.getY() > ytest2;
             }
             case WEST: {
-                return (nodeCenter.getX() < highlightCenter.getX())
-                        && (nodeCenter.getY() > ytest1 && nodeCenter.getY() < ytest2);
-            }            
+                return nodeCenter.getX() < highlightCenter.getX() && nodeCenter.getY() > ytest1
+                        && nodeCenter.getY() < ytest2;
+            }
         }
         return false;
     }
 
-    public void sortNodesByDistanceFromPoint(List aNodesList, final Point2D aPoint) {
+    public void sortNodesByDistanceFromPoint(final List aNodesList, final Point2D aPoint) {
         Collections.sort(aNodesList, new Comparator() {
-            public int compare(Object o1, Object o2) {
+            public int compare(final Object o1, final Object o2) {
                 return compare((PNode) o1, (PNode) o2);
             }
 
-            private int compare(PNode each1, PNode each2) {
-                Point2D center1 = each1.getGlobalFullBounds().getCenter2D();
-                Point2D center2 = each2.getGlobalFullBounds().getCenter2D();
+            private int compare(final PNode each1, final PNode each2) {
+                final Point2D center1 = each1.getGlobalFullBounds().getCenter2D();
+                final Point2D center2 = each2.getGlobalFullBounds().getCenter2D();
 
                 NODE_TO_GLOBAL_NODE_CENTER_MAPPING.put(each1, center1);
                 NODE_TO_GLOBAL_NODE_CENTER_MAPPING.put(each2, center2);
@@ -288,7 +290,8 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     // focus remains visible on the screen at 100 percent scale.
     // ****************************************************************
 
-    protected PActivity animateCameraViewTransformTo(final PCamera aCamera, AffineTransform aTransform, int duration) {
+    protected PActivity animateCameraViewTransformTo(final PCamera aCamera, final AffineTransform aTransform,
+            final int duration) {
         boolean wasOldAnimation = false;
 
         // first stop any old animations.
@@ -302,7 +305,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
             return null;
         }
 
-        AffineTransform source = aCamera.getViewTransformReference();
+        final AffineTransform source = aCamera.getViewTransformReference();
 
         if (source.equals(aTransform)) {
             return null;
@@ -313,16 +316,16 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         return navigationActivity;
     }
 
-    public PActivity directCameraViewToFocus(PCamera aCamera, PNode aFocusNode, int duration) {
+    public PActivity directCameraViewToFocus(final PCamera aCamera, final PNode aFocusNode, final int duration) {
         focusNode = aFocusNode;
-        AffineTransform originalViewTransform = aCamera.getViewTransform();
+        final AffineTransform originalViewTransform = aCamera.getViewTransform();
 
         // Scale the canvas to include
-        PDimension d = new PDimension(1, 0);
+        final PDimension d = new PDimension(1, 0);
         focusNode.globalToLocal(d);
 
-        double scaleFactor = d.getWidth() / aCamera.getViewScale();
-        Point2D scalePoint = focusNode.getGlobalFullBounds().getCenter2D();
+        final double scaleFactor = d.getWidth() / aCamera.getViewScale();
+        final Point2D scalePoint = focusNode.getGlobalFullBounds().getCenter2D();
         if (scaleFactor != 1) {
             aCamera.scaleViewAboutPoint(scaleFactor, scalePoint.getX(), scalePoint.getY());
         }
@@ -336,7 +339,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         // magnification.
         // fillViewWhiteSpace(aCamera);
 
-        AffineTransform resultingTransform = aCamera.getViewTransform();
+        final AffineTransform resultingTransform = aCamera.getViewTransform();
         aCamera.setViewTransform(originalViewTransform);
 
         // Animate the canvas so that it ends up with the given
@@ -344,8 +347,8 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         return animateCameraViewTransformTo(aCamera, resultingTransform, duration);
     }
 
-    protected void fillViewWhiteSpace(PCamera aCamera) {
-        PBounds rootBounds = aCamera.getRoot().getFullBoundsReference();
+    protected void fillViewWhiteSpace(final PCamera aCamera) {
+        final PBounds rootBounds = aCamera.getRoot().getFullBoundsReference();
         PBounds viewBounds = aCamera.getViewBounds();
 
         if (rootBounds.contains(aCamera.getViewBounds())) {

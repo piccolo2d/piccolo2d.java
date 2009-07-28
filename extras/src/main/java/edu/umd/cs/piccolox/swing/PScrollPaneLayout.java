@@ -49,6 +49,11 @@ import edu.umd.cs.piccolo.util.PBounds;
 public class PScrollPaneLayout extends ScrollPaneLayout {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * MODIFIED FROM javax.swing.ScrollPaneLayout.layoutContainer
      * 
      * This is largely the same as ScrollPaneLayout.layoutContainer but obtains
@@ -57,18 +62,18 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
      * 
      * @param parent the Container to lay out
      */
-    public void layoutContainer(Container parent) {
+    public void layoutContainer(final Container parent) {
         /*
          * Sync the (now obsolete) policy fields with the JScrollPane.
          */
-        JScrollPane scrollPane = (JScrollPane) parent;
+        final JScrollPane scrollPane = (JScrollPane) parent;
         vsbPolicy = scrollPane.getVerticalScrollBarPolicy();
         hsbPolicy = scrollPane.getHorizontalScrollBarPolicy();
 
-        Rectangle availR = scrollPane.getBounds();
+        final Rectangle availR = scrollPane.getBounds();
         availR.x = availR.y = 0;
 
-        Insets insets = parent.getInsets();
+        final Insets insets = parent.getInsets();
         availR.x = insets.left;
         availR.y = insets.top;
         availR.width -= insets.left + insets.right;
@@ -77,17 +82,17 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
         /*
          * Get the scrollPane's orientation.
          */
-        boolean leftToRight = scrollPane.getComponentOrientation().isLeftToRight();
+        final boolean leftToRight = scrollPane.getComponentOrientation().isLeftToRight();
 
         /*
          * If there's a visible column header remove the space it needs from the
          * top of availR. The column header is treated as if it were fixed
          * height, arbitrary width.
          */
-        Rectangle colHeadR = new Rectangle(0, availR.y, 0, 0);
+        final Rectangle colHeadR = new Rectangle(0, availR.y, 0, 0);
 
-        if ((colHead != null) && (colHead.isVisible())) {
-            int colHeadHeight = colHead.getPreferredSize().height;
+        if (colHead != null && colHead.isVisible()) {
+            final int colHeadHeight = colHead.getPreferredSize().height;
             colHeadR.height = colHeadHeight;
             availR.y += colHeadHeight;
             availR.height -= colHeadHeight;
@@ -98,10 +103,10 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
          * left or right of availR. The row header is treated as if it were
          * fixed width, arbitrary height.
          */
-        Rectangle rowHeadR = new Rectangle(0, 0, 0, 0);
+        final Rectangle rowHeadR = new Rectangle(0, 0, 0, 0);
 
-        if ((rowHead != null) && (rowHead.isVisible())) {
-            int rowHeadWidth = rowHead.getPreferredSize().width;
+        if (rowHead != null && rowHead.isVisible()) {
+            final int rowHeadWidth = rowHead.getPreferredSize().width;
             rowHeadR.width = rowHeadWidth;
             availR.width -= rowHeadWidth;
             if (leftToRight) {
@@ -117,7 +122,7 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
          * If there's a JScrollPane.viewportBorder, remove the space it occupies
          * for availR.
          */
-        Border viewportBorder = scrollPane.getViewportBorder();
+        final Border viewportBorder = scrollPane.getViewportBorder();
         Insets vpbInsets;
         if (viewportBorder != null) {
             vpbInsets = viewportBorder.getBorderInsets(parent);
@@ -145,21 +150,21 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
          * And we assume that the viewports layout manager will give the view
          * it's preferred size.
          */
-        Dimension extentSize = (viewport != null) ? viewport.toViewCoordinates(availR.getSize()) : new Dimension(0, 0);
+        Dimension extentSize = viewport != null ? viewport.toViewCoordinates(availR.getSize()) : new Dimension(0, 0);
 
-        PBounds cameraBounds = new PBounds(0, 0, extentSize.getWidth(), extentSize.getHeight());
+        final PBounds cameraBounds = new PBounds(0, 0, extentSize.getWidth(), extentSize.getHeight());
 
         // LEG: Modification to ask the viewport for the view size rather
         // than asking the view directly
-        Dimension viewPrefSize = (viewport != null) ? ((PViewport) viewport).getViewSize(cameraBounds) : new Dimension(
-                0, 0);
+        Dimension viewPrefSize = viewport != null ? ((PViewport) viewport).getViewSize(cameraBounds) : new Dimension(0,
+                0);
 
         /*
          * If there's a vertical scrollbar and we need one, allocate space for
          * it (we'll make it visible later). A vertical scrollbar is considered
          * to be fixed width, arbitrary height.
          */
-        Rectangle vsbR = new Rectangle(0, availR.y - vpbInsets.top, 0, 0);
+        final Rectangle vsbR = new Rectangle(0, availR.y - vpbInsets.top, 0, 0);
 
         boolean vsbNeeded;
         if (vsbPolicy == VERTICAL_SCROLLBAR_ALWAYS) {
@@ -170,10 +175,10 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
         }
         else { // vsbPolicy == VERTICAL_SCROLLBAR_AS_NEEDED
 
-            vsbNeeded = (viewPrefSize.height > extentSize.height);
+            vsbNeeded = viewPrefSize.height > extentSize.height;
         }
 
-        if ((vsb != null) && vsbNeeded) {
+        if (vsb != null && vsbNeeded) {
             adjustForVSB(true, availR, vsbR, vpbInsets, leftToRight);
             extentSize = viewport.toViewCoordinates(availR.getSize());
 
@@ -188,7 +193,7 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
          * it (we'll make it visible later). A horizontal scrollbar is
          * considered to be fixed height, arbitrary width.
          */
-        Rectangle hsbR = new Rectangle(availR.x - vpbInsets.left, 0, 0, 0);
+        final Rectangle hsbR = new Rectangle(availR.x - vpbInsets.left, 0, 0, 0);
         boolean hsbNeeded;
         if (hsbPolicy == HORIZONTAL_SCROLLBAR_ALWAYS) {
             hsbNeeded = true;
@@ -197,10 +202,10 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
             hsbNeeded = false;
         }
         else { // hsbPolicy == HORIZONTAL_SCROLLBAR_AS_NEEDED
-            hsbNeeded = (viewPrefSize.width > extentSize.width);
+            hsbNeeded = viewPrefSize.width > extentSize.width;
         }
 
-        if ((hsb != null) && hsbNeeded) {
+        if (hsb != null && hsbNeeded) {
             adjustForHSB(true, availR, hsbR, vpbInsets);
 
             /*
@@ -210,7 +215,7 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
              * hasn't been done so already. Ofcourse we don't bother with any of
              * this if the vsbPolicy is NEVER.
              */
-            if ((vsb != null) && !vsbNeeded && (vsbPolicy != VERTICAL_SCROLLBAR_NEVER)) {
+            if (vsb != null && !vsbNeeded && vsbPolicy != VERTICAL_SCROLLBAR_NEVER) {
 
                 extentSize = viewport.toViewCoordinates(availR.getSize());
 
@@ -307,9 +312,9 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
      * This method is called from ScrollPaneLayout.layoutContainer and is
      * private in ScrollPaneLayout so it was copied here
      */
-    protected void adjustForVSB(boolean wantsVSB, Rectangle available, Rectangle vsbR, Insets vpbInsets,
-            boolean leftToRight) {
-        int vsbWidth = vsb.getPreferredSize().width;
+    protected void adjustForVSB(final boolean wantsVSB, final Rectangle available, final Rectangle vsbR,
+            final Insets vpbInsets, final boolean leftToRight) {
+        final int vsbWidth = vsb.getPreferredSize().width;
         if (wantsVSB) {
             available.width -= vsbWidth;
             vsbR.width = vsbWidth;
@@ -333,8 +338,9 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
      * This method is called from ScrollPaneLayout.layoutContainer and is
      * private in ScrollPaneLayout so it was copied here
      */
-    protected void adjustForHSB(boolean wantsHSB, Rectangle available, Rectangle hsbR, Insets vpbInsets) {
-        int hsbHeight = hsb.getPreferredSize().height;
+    protected void adjustForHSB(final boolean wantsHSB, final Rectangle available, final Rectangle hsbR,
+            final Insets vpbInsets) {
+        final int hsbHeight = hsb.getPreferredSize().height;
         if (wantsHSB) {
             available.height -= hsbHeight;
             hsbR.y = available.y + available.height + vpbInsets.bottom;
@@ -350,5 +356,10 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
      * does this in ScrollPaneLayout but we'll do it here too just to be safe.
      */
     public static class UIResource extends PScrollPaneLayout implements javax.swing.plaf.UIResource {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
     }
 }

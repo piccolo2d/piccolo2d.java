@@ -52,6 +52,10 @@ import edu.umd.cs.piccolo.util.PUtil;
  */
 public class PCacheCamera extends PCamera {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private BufferedImage paintBuffer;
     private boolean imageAnimate;
     private PBounds imageAnimateBounds;
@@ -60,7 +64,7 @@ public class PCacheCamera extends PCamera {
      * Get the buffer used to provide fast image based animation
      */
     protected BufferedImage getPaintBuffer() {
-        PBounds fRef = getFullBoundsReference();
+        final PBounds fRef = getFullBoundsReference();
         // TODO eclipse formatting made this ugly
         if (paintBuffer == null || paintBuffer.getWidth() < fRef.getWidth()
                 || paintBuffer.getHeight() < fRef.getHeight()) {
@@ -75,12 +79,12 @@ public class PCacheCamera extends PCamera {
      * Caches the information necessary to animate from the current view bounds
      * to the specified centerBounds
      */
-    private AffineTransform cacheViewBounds(Rectangle2D centerBounds, boolean scaleToFit) {
-        PBounds viewBounds = getViewBounds();
+    private AffineTransform cacheViewBounds(final Rectangle2D centerBounds, final boolean scaleToFit) {
+        final PBounds viewBounds = getViewBounds();
 
         // Initialize the image to the union of the current and destination
         // bounds
-        PBounds imageBounds = new PBounds(viewBounds);
+        final PBounds imageBounds = new PBounds(viewBounds);
         imageBounds.add(centerBounds);
 
         animateViewToCenterBounds(imageBounds, scaleToFit, 0);
@@ -89,7 +93,7 @@ public class PCacheCamera extends PCamera {
 
         // Now create the actual cache image that we will use to animate fast
 
-        BufferedImage buffer = getPaintBuffer();
+        final BufferedImage buffer = getPaintBuffer();
         Paint fPaint = Color.white;
         if (getPaint() != null) {
             fPaint = getPaint();
@@ -105,12 +109,12 @@ public class PCacheCamera extends PCamera {
         // The code below is just copied from animateViewToCenterBounds to
         // create the correct transform to center the specified bounds
 
-        PDimension delta = viewBounds.deltaRequiredToCenter(centerBounds);
-        PAffineTransform newTransform = getViewTransform();
+        final PDimension delta = viewBounds.deltaRequiredToCenter(centerBounds);
+        final PAffineTransform newTransform = getViewTransform();
         newTransform.translate(delta.width, delta.height);
 
         if (scaleToFit) {
-            double s = Math.min(viewBounds.getWidth() / centerBounds.getWidth(), viewBounds.getHeight()
+            final double s = Math.min(viewBounds.getWidth() / centerBounds.getWidth(), viewBounds.getHeight()
                     / centerBounds.getHeight());
             newTransform.scaleAboutPoint(s, centerBounds.getCenterX(), centerBounds.getCenterY());
         }
@@ -130,13 +134,13 @@ public class PCacheCamera extends PCamera {
      * Mimics the standard animateViewToCenterBounds but uses a cached image for
      * performance rather than re-rendering the scene at each step
      */
-    public PTransformActivity animateStaticViewToCenterBoundsFast(Rectangle2D centerBounds, boolean shouldScaleToFit,
-            long duration) {
+    public PTransformActivity animateStaticViewToCenterBoundsFast(final Rectangle2D centerBounds,
+            final boolean shouldScaleToFit, final long duration) {
         if (duration == 0) {
             return animateViewToCenterBounds(centerBounds, shouldScaleToFit, duration);
         }
 
-        AffineTransform newViewTransform = cacheViewBounds(centerBounds, shouldScaleToFit);
+        final AffineTransform newViewTransform = cacheViewBounds(centerBounds, shouldScaleToFit);
 
         return animateStaticViewToTransformFast(newViewTransform, duration);
     }
@@ -145,23 +149,23 @@ public class PCacheCamera extends PCamera {
      * This copies the behavior of the standard animateViewToTransform but
      * clears the cache when it is done
      */
-    protected PTransformActivity animateStaticViewToTransformFast(AffineTransform destination, long duration) {
+    protected PTransformActivity animateStaticViewToTransformFast(final AffineTransform destination, final long duration) {
         if (duration == 0) {
             setViewTransform(destination);
             return null;
         }
 
-        PTransformActivity.Target t = new PTransformActivity.Target() {
-            public void setTransform(AffineTransform aTransform) {
+        final PTransformActivity.Target t = new PTransformActivity.Target() {
+            public void setTransform(final AffineTransform aTransform) {
                 PCacheCamera.this.setViewTransform(aTransform);
             }
 
-            public void getSourceMatrix(double[] aSource) {
+            public void getSourceMatrix(final double[] aSource) {
                 getViewTransformReference().getMatrix(aSource);
             }
         };
 
-        PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destination) {
+        final PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destination) {
             protected void activityFinished() {
                 clearViewCache();
                 repaint();
@@ -169,7 +173,7 @@ public class PCacheCamera extends PCamera {
             }
         };
 
-        PRoot r = getRoot();
+        final PRoot r = getRoot();
         if (r != null) {
             r.getActivityScheduler().addActivity(ta);
         }
@@ -181,15 +185,15 @@ public class PCacheCamera extends PCamera {
      * Overrides the camera's full paint method to do the fast rendering when
      * possible
      */
-    public void fullPaint(PPaintContext paintContext) {
+    public void fullPaint(final PPaintContext paintContext) {
         if (imageAnimate) {
-            PBounds fRef = getFullBoundsReference();
-            PBounds viewBounds = getViewBounds();
-            double scale = getFullBoundsReference().getWidth() / imageAnimateBounds.getWidth();
-            double xOffset = (viewBounds.getX() - imageAnimateBounds.getX()) * scale;
-            double yOffset = (viewBounds.getY() - imageAnimateBounds.getY()) * scale;
-            double scaleW = viewBounds.getWidth() * scale;
-            double scaleH = viewBounds.getHeight() * scale;
+            final PBounds fRef = getFullBoundsReference();
+            final PBounds viewBounds = getViewBounds();
+            final double scale = getFullBoundsReference().getWidth() / imageAnimateBounds.getWidth();
+            final double xOffset = (viewBounds.getX() - imageAnimateBounds.getX()) * scale;
+            final double yOffset = (viewBounds.getY() - imageAnimateBounds.getY()) * scale;
+            final double scaleW = viewBounds.getWidth() * scale;
+            final double scaleH = viewBounds.getHeight() * scale;
             paintContext.getGraphics().drawImage(paintBuffer, 0, 0, (int) Math.ceil(fRef.getWidth()),
                     (int) Math.ceil(fRef.getHeight()), (int) Math.floor(xOffset), (int) Math.floor(yOffset),
                     (int) Math.ceil(xOffset + scaleW), (int) Math.ceil(yOffset + scaleH), null);

@@ -46,6 +46,10 @@ import edu.umd.cs.piccolox.PFrame;
  * @author Tao
  */
 public class ChartLabelExample extends PFrame {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     final int nodeHeight = 15;
     final int nodeWidth = 30;
 
@@ -59,7 +63,7 @@ public class ChartLabelExample extends PFrame {
         this(null);
     }
 
-    public ChartLabelExample(PCanvas aCanvas) {
+    public ChartLabelExample(final PCanvas aCanvas) {
         super("ChartLabelExample", false, aCanvas);
     }
 
@@ -92,7 +96,7 @@ public class ChartLabelExample extends PFrame {
         // create matrix nodes
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                PPath path = PPath.createRectangle(nodeWidth * j + nodeWidth, nodeHeight * i + nodeHeight,
+                final PPath path = PPath.createRectangle(nodeWidth * j + nodeWidth, nodeHeight * i + nodeHeight,
                         nodeWidth - 1, nodeHeight - 1);
                 getCanvas().getLayer().addChild(path);
             }
@@ -102,11 +106,11 @@ public class ChartLabelExample extends PFrame {
         getCanvas().addInputEventListener(new PDragSequenceEventHandler() {
             Point2D oldP, newP;
 
-            public void mousePressed(PInputEvent aEvent) {
+            public void mousePressed(final PInputEvent aEvent) {
                 oldP = getCanvas().getCamera().getViewBounds().getCenter2D();
             }
 
-            public void mouseReleased(PInputEvent aEvent) {
+            public void mouseReleased(final PInputEvent aEvent) {
                 newP = getCanvas().getCamera().getViewBounds().getCenter2D();
                 colBarLayer.translate(0, (oldP.getY() - newP.getY()) / getCanvas().getLayer().getScale());
                 rowBarLayer.translate((oldP.getX() - newP.getX()) / getCanvas().getLayer().getScale(), 0);
@@ -114,7 +118,7 @@ public class ChartLabelExample extends PFrame {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new ChartLabelExample();
     }
 }

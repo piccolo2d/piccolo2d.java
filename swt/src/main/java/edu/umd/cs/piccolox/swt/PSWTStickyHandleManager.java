@@ -35,22 +35,26 @@ import edu.umd.cs.piccolo.util.PPickPath;
 
 public class PSWTStickyHandleManager extends PNode {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private PNode target;
     private PCamera camera;
 
-    public PSWTStickyHandleManager(PCamera newCamera, PNode newTarget) {
+    public PSWTStickyHandleManager(final PCamera newCamera, final PNode newTarget) {
         setCameraTarget(newCamera, newTarget);
         PSWTBoundsHandle.addBoundsHandlesTo(this);
     }
 
-    public void setCameraTarget(PCamera newCamera, PNode newTarget) {
+    public void setCameraTarget(final PCamera newCamera, final PNode newTarget) {
         camera = newCamera;
         camera.addChild(this);
         target = newTarget;
     }
 
-    public boolean setBounds(double x, double y, double width, double height) {
-        PBounds b = new PBounds(x, y, width, height);
+    public boolean setBounds(final double x, final double y, final double width, final double height) {
+        final PBounds b = new PBounds(x, y, width, height);
         camera.localToGlobal(b);
         camera.localToView(b);
         target.globalToLocal(b);
@@ -63,10 +67,10 @@ public class PSWTStickyHandleManager extends PNode {
     }
 
     public PBounds getBoundsReference() {
-        PBounds targetBounds = target.getFullBounds();
+        final PBounds targetBounds = target.getFullBounds();
         camera.viewToLocal(targetBounds);
         camera.globalToLocal(targetBounds);
-        PBounds bounds = super.getBoundsReference();
+        final PBounds bounds = super.getBoundsReference();
         bounds.setRect(targetBounds);
         return super.getBoundsReference();
     }
@@ -81,7 +85,7 @@ public class PSWTStickyHandleManager extends PNode {
         target.endResizeBounds();
     }
 
-    public boolean pickAfterChildren(PPickPath pickPath) {
+    public boolean pickAfterChildren(final PPickPath pickPath) {
         return false;
     }
 }

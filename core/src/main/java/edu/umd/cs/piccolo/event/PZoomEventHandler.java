@@ -92,7 +92,7 @@ public class PZoomEventHandler extends PDragSequenceEventHandler {
      * 
      * @param minScale the minimum scale, must not be negative.
      */
-    public void setMinScale(double minScale) {
+    public void setMinScale(final double minScale) {
         this.minScale = minScale;
     }
 
@@ -114,27 +114,27 @@ public class PZoomEventHandler extends PDragSequenceEventHandler {
      * 
      * @param maxScale the maximum scale, must not be negative.
      */
-    public void setMaxScale(double maxScale) {
+    public void setMaxScale(final double maxScale) {
         this.maxScale = maxScale;
     }
 
-    protected void dragActivityFirstStep(PInputEvent aEvent) {
+    protected void dragActivityFirstStep(final PInputEvent aEvent) {
         viewZoomPoint = aEvent.getPosition();
         super.dragActivityFirstStep(aEvent);
     }
 
-    protected void dragActivityStep(PInputEvent aEvent) {
-        PCamera camera = aEvent.getCamera();
-        double dx = aEvent.getCanvasPosition().getX() - getMousePressedCanvasPoint().getX();
-        double scaleDelta = (1.0 + (0.001 * dx));
+    protected void dragActivityStep(final PInputEvent aEvent) {
+        final PCamera camera = aEvent.getCamera();
+        final double dx = aEvent.getCanvasPosition().getX() - getMousePressedCanvasPoint().getX();
+        double scaleDelta = 1.0 + 0.001 * dx;
 
-        double currentScale = camera.getViewScale();
-        double newScale = currentScale * scaleDelta;
+        final double currentScale = camera.getViewScale();
+        final double newScale = currentScale * scaleDelta;
 
         if (newScale < minScale) {
             scaleDelta = minScale / currentScale;
         }
-        if ((maxScale > 0) && (newScale > maxScale)) {
+        if (maxScale > 0 && newScale > maxScale) {
             scaleDelta = maxScale / currentScale;
         }
 
@@ -154,7 +154,7 @@ public class PZoomEventHandler extends PDragSequenceEventHandler {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("minScale=" + minScale);
         result.append(",maxScale=" + maxScale);

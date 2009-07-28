@@ -8,14 +8,14 @@ public class PDragEventHandlerTest extends TestCase {
     public void setUp() {
         handler = new PDragEventHandler();
     }
-    
+
     public void testMoveToFrontOnPressDefaultToFalse() {
         assertFalse(handler.getMoveToFrontOnPress());
     }
-    
+
     public void testMoveToFrontOnPressPersists() {
         handler.setMoveToFrontOnPress(true);
         assertTrue(handler.getMoveToFrontOnPress());
     }
-        
+
 }

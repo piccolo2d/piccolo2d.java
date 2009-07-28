@@ -46,11 +46,16 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class PanToExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PanToExample() {
         this(null);
     }
 
-    public PanToExample(PCanvas aCanvas) {
+    public PanToExample(final PCanvas aCanvas) {
         super("PanToExample", false, aCanvas);
     }
 
@@ -69,7 +74,7 @@ public class PanToExample extends PFrame {
         getCanvas().getLayer().addChild(eacha);
 
         getCanvas().getCamera().addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent event) {
+            public void mousePressed(final PInputEvent event) {
                 if (!(event.getPickedNode() instanceof PCamera)) {
                     event.setHandled(true);
                     getCanvas().getCamera().animateViewToPanToBounds(event.getPickedNode().getGlobalFullBounds(), 500);
@@ -77,15 +82,15 @@ public class PanToExample extends PFrame {
             }
         });
 
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
 
-        Random random = new Random();
+        final Random random = new Random();
         for (int i = 0; i < 1000; i++) {
-            PPath each = PPath.createRectangle(0, 0, 100, 80);
+            final PPath each = PPath.createRectangle(0, 0, 100, 80);
             each.scale(random.nextFloat() * 2);
             each.offset(random.nextFloat() * 10000, random.nextFloat() * 10000);
             each.setPaint(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
-            each.setStroke(new BasicStroke(1 + (10 * random.nextFloat())));
+            each.setStroke(new BasicStroke(1 + 10 * random.nextFloat()));
             each.setStrokePaint(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
             layer.addChild(each);
         }
@@ -93,7 +98,7 @@ public class PanToExample extends PFrame {
         getCanvas().removeInputEventListener(getCanvas().getZoomEventHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PanToExample();
     }
 }

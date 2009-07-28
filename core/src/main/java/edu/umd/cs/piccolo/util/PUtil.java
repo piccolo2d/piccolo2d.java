@@ -76,20 +76,20 @@ public class PUtil {
         public void flush() {
         }
 
-        public void write(byte[] b) {
+        public void write(final byte[] b) {
         }
 
-        public void write(byte[] b, int off, int len) {
+        public void write(final byte[] b, final int off, final int len) {
         }
 
-        public void write(int b) {
+        public void write(final int b) {
         }
     };
 
     public static PCamera createBasicScenegraph() {
-        PRoot r = new PRoot();
-        PLayer l = new PLayer();
-        PCamera c = new PCamera();
+        final PRoot r = new PRoot();
+        final PLayer l = new PLayer();
+        final PCamera c = new PCamera();
 
         r.addChild(c);
         r.addChild(l);
@@ -98,7 +98,7 @@ public class PUtil {
         return c;
     }
 
-    public static void writeStroke(Stroke stroke, ObjectOutputStream out) throws IOException {
+    public static void writeStroke(final Stroke stroke, final ObjectOutputStream out) throws IOException {
         if (stroke instanceof Serializable) {
             out.writeBoolean(true);
             out.writeBoolean(true);
@@ -114,8 +114,9 @@ public class PUtil {
         }
     }
 
-    private static void writeBasicStroke(BasicStroke basicStroke, ObjectOutputStream out) throws IOException {
-        float[] dash = basicStroke.getDashArray();
+    private static void writeBasicStroke(final BasicStroke basicStroke, final ObjectOutputStream out)
+            throws IOException {
+        final float[] dash = basicStroke.getDashArray();
 
         if (dash == null) {
             out.write(0);
@@ -134,13 +135,13 @@ public class PUtil {
         out.writeFloat(basicStroke.getDashPhase());
     }
 
-    public static Stroke readStroke(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        boolean wroteStroke = in.readBoolean();
+    public static Stroke readStroke(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        final boolean wroteStroke = in.readBoolean();
         if (!wroteStroke) {
             return null;
         }
 
-        boolean serializedStroke = in.readBoolean();
+        final boolean serializedStroke = in.readBoolean();
         if (serializedStroke) {
             return (Stroke) in.readObject();
         }
@@ -148,9 +149,9 @@ public class PUtil {
         return readBasicStroke(in);
     }
 
-    private static Stroke readBasicStroke(ObjectInputStream in) throws IOException {
+    private static Stroke readBasicStroke(final ObjectInputStream in) throws IOException {
         float[] dash = null;
-        int dashLength = in.read();
+        final int dashLength = in.read();
 
         if (dashLength != 0) {
             dash = new float[dashLength];
@@ -159,20 +160,20 @@ public class PUtil {
             }
         }
 
-        float lineWidth = in.readFloat();
-        int endCap = in.readInt();
-        int lineJoin = in.readInt();
-        float miterLimit = in.readFloat();
-        float dashPhase = in.readFloat();
+        final float lineWidth = in.readFloat();
+        final int endCap = in.readInt();
+        final int lineJoin = in.readInt();
+        final float miterLimit = in.readFloat();
+        final float dashPhase = in.readFloat();
 
         return new BasicStroke(lineWidth, endCap, lineJoin, miterLimit, dash, dashPhase);
     }
 
-    public static GeneralPath readPath(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        GeneralPath path = new GeneralPath();
+    public static GeneralPath readPath(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        final GeneralPath path = new GeneralPath();
 
         while (true) {
-            int segType = in.readInt();
+            final int segType = in.readInt();
 
             switch (segType) {
                 case PathIterator.SEG_MOVETO:
@@ -205,9 +206,9 @@ public class PUtil {
         }
     }
 
-    public static void writePath(GeneralPath path, ObjectOutputStream out) throws IOException {
-        PathIterator i = path.getPathIterator(null);
-        float[] data = new float[6];
+    public static void writePath(final GeneralPath path, final ObjectOutputStream out) throws IOException {
+        final PathIterator i = path.getPathIterator(null);
+        final float[] data = new float[6];
 
         while (!i.isDone()) {
             switch (i.currentSegment(data)) {

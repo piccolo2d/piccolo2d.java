@@ -40,10 +40,15 @@ import edu.umd.cs.piccolox.nodes.PCacheCamera;
  * @author Lance Good
  */
 public class PCacheCanvas extends PCanvas {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     protected PCamera createDefaultCamera() {
-        PRoot r = new PRoot();
-        PLayer l = new PLayer();
-        PCamera c = new PCacheCamera();
+        final PRoot r = new PRoot();
+        final PLayer l = new PLayer();
+        final PCamera c = new PCacheCamera();
 
         r.addChild(c);
         r.addChild(l);

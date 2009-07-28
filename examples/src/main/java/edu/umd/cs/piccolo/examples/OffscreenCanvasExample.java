@@ -57,14 +57,13 @@ public final class OffscreenCanvasExample {
     /** Offscreen canvas. */
     private final POffscreenCanvas canvas;
 
-
     /**
      * Create a new offscreen canvas example with the specified graphics device.
-     *
+     * 
      * @param device graphics device
      */
     public OffscreenCanvasExample(final GraphicsDevice device) {
-        GraphicsConfiguration configuration = device.getDefaultConfiguration();
+        final GraphicsConfiguration configuration = device.getDefaultConfiguration();
         frame = new Frame(configuration);
         frame.setUndecorated(true);
         frame.setIgnoreRepaint(true);
@@ -74,12 +73,12 @@ public final class OffscreenCanvasExample {
 
         canvas = new POffscreenCanvas(400, 400);
 
-        PText text = new PText("Offscreen Canvas Example");
+        final PText text = new PText("Offscreen Canvas Example");
         text.setFont(text.getFont().deriveFont(32.0f));
         text.setTextPaint(new Color(200, 200, 200));
-        text.offset(200.0f - (text.getWidth() / 2.0f), 200.0f - (text.getHeight() / 2.0f));
+        text.offset(200.0f - text.getWidth() / 2.0f, 200.0f - text.getHeight() / 2.0f);
 
-        PPath rect = PPath.createRectangle(0.0f, 0.0f, 360.0f, 360.0f);
+        final PPath rect = PPath.createRectangle(0.0f, 0.0f, 360.0f, 360.0f);
         rect.setPaint(new Color(20, 20, 20, 80));
         rect.setStroke(new BasicStroke(2.0f));
         rect.setStrokePaint(new Color(20, 20, 20));
@@ -88,50 +87,46 @@ public final class OffscreenCanvasExample {
         canvas.getCamera().getLayer(0).addChild(text);
         canvas.getCamera().getLayer(0).addChild(rect);
 
-        Rectangle2D right = new Rectangle2D.Double(200.0f, 200.0f, 800.0f, 800.0f);
-        Rectangle2D left = new Rectangle2D.Double(-200.0f, 200.0f, 225.0f, 225.0f);
-        Rectangle2D start = new Rectangle2D.Double(0.0f, 0.0f, 400.0f, 400.0f);
-        PActivity toRight = canvas.getCamera().animateViewToCenterBounds(right, true, 5000);
-        PActivity toLeft = canvas.getCamera().animateViewToCenterBounds(left, true, 5000);
-        PActivity toStart = canvas.getCamera().animateViewToCenterBounds(start, true, 5000);
+        final Rectangle2D right = new Rectangle2D.Double(200.0f, 200.0f, 800.0f, 800.0f);
+        final Rectangle2D left = new Rectangle2D.Double(-200.0f, 200.0f, 225.0f, 225.0f);
+        final Rectangle2D start = new Rectangle2D.Double(0.0f, 0.0f, 400.0f, 400.0f);
+        final PActivity toRight = canvas.getCamera().animateViewToCenterBounds(right, true, 5000);
+        final PActivity toLeft = canvas.getCamera().animateViewToCenterBounds(left, true, 5000);
+        final PActivity toStart = canvas.getCamera().animateViewToCenterBounds(start, true, 5000);
         toLeft.setStartTime(toLeft.getStartTime() + 5000);
         toStart.setStartTime(toStart.getStartTime() + 10000);
     }
-
 
     /**
      * Render offscreen graphics into the frame.
      */
     private void render() {
-        BufferStrategy bufferStrategy = frame.getBufferStrategy();
+        final BufferStrategy bufferStrategy = frame.getBufferStrategy();
         do {
             do {
-                Graphics2D graphics = (Graphics2D) bufferStrategy.getDrawGraphics();
+                final Graphics2D graphics = (Graphics2D) bufferStrategy.getDrawGraphics();
                 // canvas is not opaque, so fill with background color
                 graphics.setPaint(background);
                 graphics.fillRect(0, 0, 400, 400);
                 // then let canvas render into graphics
                 canvas.render(graphics);
                 graphics.dispose();
-            }
-            while (bufferStrategy.contentsRestored());
+            } while (bufferStrategy.contentsRestored());
             bufferStrategy.show();
-        }
-        while (bufferStrategy.contentsLost());
+        } while (bufferStrategy.contentsLost());
     }
-
 
     /**
      * Main.
-     *
+     * 
      * @param args command line arguments
      */
     public static void main(final String[] args) {
-        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = environment.getDefaultScreenDevice();
-        OffscreenCanvasExample example = new OffscreenCanvasExample(device);
+        final GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice device = environment.getDefaultScreenDevice();
+        final OffscreenCanvasExample example = new OffscreenCanvasExample(device);
 
-        boolean done = false;
+        final boolean done = false;
         while (!done) {
             example.render();
         }

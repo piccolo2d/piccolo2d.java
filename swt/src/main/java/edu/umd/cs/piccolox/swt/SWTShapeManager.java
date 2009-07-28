@@ -54,7 +54,7 @@ public class SWTShapeManager {
      * @param rect The rectangle to be transformed
      * @param at The transform to use to transform the rectangle
      */
-    public static void transform(Rectangle2D rect, AffineTransform at) {
+    public static void transform(final Rectangle2D rect, final AffineTransform at) {
         // First, transform all 4 corners of the rectangle
         pts[0] = rect.getX(); // top left corner
         pts[1] = rect.getY();
@@ -89,20 +89,20 @@ public class SWTShapeManager {
         rect.setRect(minX, minY, maxX - minX, maxY - minY);
     }
 
-    public static void awtToSWT(Rectangle2D aRect, Rectangle sRect) {
+    public static void awtToSWT(final Rectangle2D aRect, final Rectangle sRect) {
         sRect.x = (int) (aRect.getX() + 0.5);
         sRect.y = (int) (aRect.getY() + 0.5);
         sRect.width = (int) (aRect.getWidth() + 0.5);
         sRect.height = (int) (aRect.getHeight() + 0.5);
     }
 
-    public static double[] shapeToPolyline(Shape s) {
+    public static double[] shapeToPolyline(final Shape s) {
         segList.clear();
         aPoint.setLocation(0, 0);
 
-        PathIterator pi = s.getPathIterator(IDENTITY_XFORM, 0.000000001);
+        final PathIterator pi = s.getPathIterator(IDENTITY_XFORM, 0.000000001);
         while (!pi.isDone()) {
-            int segType = pi.currentSegment(pts);
+            final int segType = pi.currentSegment(pts);
             switch (segType) {
                 case PathIterator.SEG_MOVETO:
                     aPoint.setLocation(pts[0], pts[1]);
@@ -118,9 +118,9 @@ public class SWTShapeManager {
             pi.next();
         }
 
-        double[] polyObj = new double[2 * segList.size()];
+        final double[] polyObj = new double[2 * segList.size()];
         for (int i = 0; i < segList.size(); i++) {
-            Point2D p2 = (Point2D) segList.get(i);
+            final Point2D p2 = (Point2D) segList.get(i);
             polyObj[2 * i] = (int) (p2.getX() + 0.5);
             polyObj[2 * i + 1] = (int) (p2.getY() + 0.5);
         }
@@ -128,8 +128,8 @@ public class SWTShapeManager {
         return polyObj;
     }
 
-    public static int[] transform(double[] pts, AffineTransform at) {
-        int[] intPts = new int[pts.length];
+    public static int[] transform(final double[] pts, final AffineTransform at) {
+        final int[] intPts = new int[pts.length];
         for (int i = 0; i < pts.length / 2; i++) {
             aPoint.setLocation(pts[2 * i], pts[2 * i + 1]);
             at.transform(aPoint, aPoint);

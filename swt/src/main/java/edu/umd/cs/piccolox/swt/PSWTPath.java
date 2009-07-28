@@ -70,6 +70,11 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 public class PSWTPath extends PNode {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The property name that identifies a change of this node's path. In any
      * property change event the new value will be a reference to this node's
      * path, but old value will always be null.
@@ -95,37 +100,37 @@ public class PSWTPath extends PNode {
 
     double[] shapePts;
 
-    public static PSWTPath createRectangle(float x, float y, float width, float height) {
+    public static PSWTPath createRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
-        PSWTPath result = new PSWTPath(TEMP_RECTANGLE);
+        final PSWTPath result = new PSWTPath(TEMP_RECTANGLE);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PSWTPath createRoundRectangle(float x, float y, float width, float height, float arcWidth,
-            float arcHeight) {
+    public static PSWTPath createRoundRectangle(final float x, final float y, final float width, final float height,
+            final float arcWidth, final float arcHeight) {
         TEMP_ROUNDRECTANGLE.setRoundRect(x, y, width, height, arcWidth, arcHeight);
-        PSWTPath result = new PSWTPath(TEMP_ROUNDRECTANGLE);
+        final PSWTPath result = new PSWTPath(TEMP_ROUNDRECTANGLE);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PSWTPath createEllipse(float x, float y, float width, float height) {
+    public static PSWTPath createEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
-        PSWTPath result = new PSWTPath(TEMP_ELLIPSE);
+        final PSWTPath result = new PSWTPath(TEMP_ELLIPSE);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PSWTPath createPolyline(Point2D[] points) {
-        PSWTPath result = new PSWTPath();
+    public static PSWTPath createPolyline(final Point2D[] points) {
+        final PSWTPath result = new PSWTPath();
         result.setPathToPolyline(points);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PSWTPath createPolyline(float[] xp, float[] yp) {
-        PSWTPath result = new PSWTPath();
+    public static PSWTPath createPolyline(final float[] xp, final float[] yp) {
+        final PSWTPath result = new PSWTPath();
         result.setPathToPolyline(xp, yp);
         result.setPaint(Color.white);
         return result;
@@ -135,7 +140,7 @@ public class PSWTPath extends PNode {
         strokePaint = DEFAULT_STROKE_PAINT;
     }
 
-    public PSWTPath(Shape aShape) {
+    public PSWTPath(final Shape aShape) {
         this();
         setShape(aShape);
     }
@@ -148,8 +153,8 @@ public class PSWTPath extends PNode {
         return strokePaint;
     }
 
-    public void setStrokeColor(Paint aPaint) {
-        Paint old = strokePaint;
+    public void setStrokeColor(final Paint aPaint) {
+        final Paint old = strokePaint;
         strokePaint = aPaint;
         invalidatePaint();
         firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, old, strokePaint);
@@ -162,13 +167,15 @@ public class PSWTPath extends PNode {
      * again since all its numbers have tended to zero, so application code may
      * need to take this into consideration.
      */
-    protected void internalUpdateBounds(double x, double y, double width, double height) {
-        if (updatingBoundsFromPath)
+    protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
+        if (updatingBoundsFromPath) {
             return;
-        if (origShape == null)
+        }
+        if (origShape == null) {
             return;
+        }
 
-        Rectangle2D pathBounds = origShape.getBounds2D();
+        final Rectangle2D pathBounds = origShape.getBounds2D();
 
         if (Math.abs(x - pathBounds.getX()) / x < BOUNDS_TOLERANCE
                 && Math.abs(y - pathBounds.getY()) / y < BOUNDS_TOLERANCE
@@ -188,7 +195,7 @@ public class PSWTPath extends PNode {
         try {
             inverseXForm = internalXForm.createInverse();
         }
-        catch (Exception e) {
+        catch (final Exception e) {
         }
     }
 
@@ -217,7 +224,7 @@ public class PSWTPath extends PNode {
             resetBounds();
         }
         else {
-            Rectangle2D b = origShape.getBounds2D();
+            final Rectangle2D b = origShape.getBounds2D();
 
             // Note that this pen width code does not really work for SWT since
             // it assumes
@@ -235,9 +242,9 @@ public class PSWTPath extends PNode {
     // Painting
     // ****************************************************************
 
-    protected void paint(PPaintContext paintContext) {
-        Paint p = getPaint();
-        SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
+    protected void paint(final PPaintContext paintContext) {
+        final Paint p = getPaint();
+        final SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
 
         if (internalXForm != null) {
             g2.transform(internalXForm);
@@ -246,7 +253,7 @@ public class PSWTPath extends PNode {
         if (p != null) {
             g2.setBackground((Color) p);
 
-            double lineWidth = g2.getTransformedLineWidth();
+            final double lineWidth = g2.getTransformedLineWidth();
             if (shape instanceof Rectangle2D) {
                 g2.fillRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
                         shapePts[3] - lineWidth);
@@ -271,7 +278,7 @@ public class PSWTPath extends PNode {
         if (strokePaint != null) {
             g2.setColor((Color) strokePaint);
 
-            double lineWidth = g2.getTransformedLineWidth();
+            final double lineWidth = g2.getTransformedLineWidth();
             if (shape instanceof Rectangle2D) {
                 g2.drawRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
                         shapePts[3] - lineWidth);
@@ -300,9 +307,9 @@ public class PSWTPath extends PNode {
         }
     }
 
-    public void setShape(Shape aShape) {
-        this.shape = cloneShape(aShape);
-        this.origShape = shape;
+    public void setShape(final Shape aShape) {
+        shape = cloneShape(aShape);
+        origShape = shape;
         updateShapePoints(aShape);
 
         firePropertyChange(PPath.PROPERTY_CODE_PATH, PPath.PROPERTY_PATH, null, shape);
@@ -310,7 +317,7 @@ public class PSWTPath extends PNode {
         invalidatePaint();
     }
 
-    public void updateShapePoints(Shape aShape) {
+    public void updateShapePoints(final Shape aShape) {
         if (aShape instanceof Rectangle2D) {
             if (shapePts == null || shapePts.length < 4) {
                 shapePts = new double[4];
@@ -360,53 +367,54 @@ public class PSWTPath extends PNode {
         }
     }
 
-    public Shape cloneShape(Shape aShape) {
+    public Shape cloneShape(final Shape aShape) {
         if (aShape instanceof Rectangle2D) {
             return new PBounds((Rectangle2D) aShape);
         }
         else if (aShape instanceof Ellipse2D) {
-            Ellipse2D e2 = (Ellipse2D) aShape;
+            final Ellipse2D e2 = (Ellipse2D) aShape;
             return new Ellipse2D.Double(e2.getX(), e2.getY(), e2.getWidth(), e2.getHeight());
         }
         else if (aShape instanceof Arc2D) {
-            Arc2D a2 = (Arc2D) aShape;
+            final Arc2D a2 = (Arc2D) aShape;
             return new Arc2D.Double(a2.getX(), a2.getY(), a2.getWidth(), a2.getHeight(), a2.getAngleStart(), a2
                     .getAngleExtent(), a2.getArcType());
         }
         else if (aShape instanceof RoundRectangle2D) {
-            RoundRectangle2D r2 = (RoundRectangle2D) aShape;
+            final RoundRectangle2D r2 = (RoundRectangle2D) aShape;
             return new RoundRectangle2D.Double(r2.getX(), r2.getY(), r2.getWidth(), r2.getHeight(), r2.getArcWidth(),
                     r2.getArcHeight());
         }
         else if (aShape instanceof Line2D) {
-            Line2D l2 = (Line2D) aShape;
+            final Line2D l2 = (Line2D) aShape;
             return new Line2D.Double(l2.getP1(), l2.getP2());
         }
         else {
             new Exception().printStackTrace();
-            GeneralPath aPath = new GeneralPath();
+            final GeneralPath aPath = new GeneralPath();
             aPath.append(aShape, false);
             return aPath;
         }
     }
 
-    public void setPathToRectangle(float x, float y, float width, float height) {
+    public void setPathToRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
         setShape(TEMP_RECTANGLE);
     }
 
-    public void setPathToRoundRectangle(float x, float y, float width, float height, float arcWidth, float arcHeight) {
+    public void setPathToRoundRectangle(final float x, final float y, final float width, final float height,
+            final float arcWidth, final float arcHeight) {
         TEMP_ROUNDRECTANGLE.setRoundRect(x, y, width, height, arcWidth, arcHeight);
         setShape(TEMP_ROUNDRECTANGLE);
     }
 
-    public void setPathToEllipse(float x, float y, float width, float height) {
+    public void setPathToEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
         setShape(TEMP_ELLIPSE);
     }
 
-    public void setPathToPolyline(Point2D[] points) {
-        GeneralPath path = new GeneralPath();
+    public void setPathToPolyline(final Point2D[] points) {
+        final GeneralPath path = new GeneralPath();
         path.reset();
         path.moveTo((float) points[0].getX(), (float) points[0].getY());
         for (int i = 1; i < points.length; i++) {
@@ -415,8 +423,8 @@ public class PSWTPath extends PNode {
         setShape(path);
     }
 
-    public void setPathToPolyline(float[] xp, float[] yp) {
-        GeneralPath path = new GeneralPath();
+    public void setPathToPolyline(final float[] xp, final float[] yp) {
+        final GeneralPath path = new GeneralPath();
         path.reset();
         path.moveTo(xp[0], yp[0]);
         for (int i = 1; i < xp.length; i++) {
@@ -438,7 +446,7 @@ public class PSWTPath extends PNode {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("path=" + (shape == null ? "null" : shape.toString()));
         result.append(",strokePaint=" + (strokePaint == null ? "null" : strokePaint.toString()));

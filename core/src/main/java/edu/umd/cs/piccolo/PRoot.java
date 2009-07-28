@@ -74,9 +74,9 @@ public class PRoot extends PNode {
 
     private transient int interacting;
     private PInputManager defaultInputManager;
-    private transient List inputSources;
+    private transient final List inputSources;
     private transient long globalTime;
-    private PActivityScheduler activityScheduler;
+    private final PActivityScheduler activityScheduler;
 
     /**
      * This interfaces is for advanced use only. If you want to implement a
@@ -108,7 +108,7 @@ public class PRoot extends PNode {
      * <code>processInputs</code> method. When the activity has finished running
      * it will automatically get removed.
      */
-    public boolean addActivity(PActivity activity) {
+    public boolean addActivity(final PActivity activity) {
         getActivityScheduler().addActivity(activity);
         return true;
     }
@@ -127,21 +127,21 @@ public class PRoot extends PNode {
      * activities instead of using this method.
      */
     public void waitForActivities() {
-        PNodeFilter cameraWithCanvas = new PNodeFilter() {
-            public boolean accept(PNode aNode) {
-                return (aNode instanceof PCamera) && (((PCamera) aNode).getComponent() != null);
+        final PNodeFilter cameraWithCanvas = new PNodeFilter() {
+            public boolean accept(final PNode aNode) {
+                return aNode instanceof PCamera && ((PCamera) aNode).getComponent() != null;
             }
 
-            public boolean acceptChildrenOf(PNode aNode) {
+            public boolean acceptChildrenOf(final PNode aNode) {
                 return true;
             }
         };
 
         while (activityScheduler.getActivitiesReference().size() > 0) {
             processInputs();
-            Iterator i = getAllNodes(cameraWithCanvas, null).iterator();
+            final Iterator i = getAllNodes(cameraWithCanvas, null).iterator();
             while (i.hasNext()) {
-                PCamera each = (PCamera) i.next();
+                final PCamera each = (PCamera) i.next();
                 each.getComponent().paintImmediately();
             }
         }
@@ -194,7 +194,7 @@ public class PRoot extends PNode {
      * @see PCanvas#setInteracting(boolean)
      */
     public void setInteracting(boolean isInteracting) {
-        boolean wasInteracting = getInteracting();
+        final boolean wasInteracting = getInteracting();
 
         if (isInteracting) {
             interacting++;
@@ -207,7 +207,7 @@ public class PRoot extends PNode {
         if (!isInteracting) {
             // force all the child cameras to repaint
             for (int i = 0; i < getChildrenCount(); i++) {
-                PNode child = getChild(i);
+                final PNode child = getChild(i);
                 if (child instanceof PCamera) {
                     child.repaint();
                 }
@@ -225,7 +225,7 @@ public class PRoot extends PNode {
      * process you can do that here. You will seldom do this unless you are
      * making additions to the piccolo framework.
      */
-    public void addInputSource(InputSource inputSource) {
+    public void addInputSource(final InputSource inputSource) {
         inputSources.add(inputSource);
         firePropertyChange(PROPERTY_CODE_INPUT_SOURCES, PROPERTY_INPUT_SOURCES, null, inputSources);
     }
@@ -235,7 +235,7 @@ public class PRoot extends PNode {
      * UI process you can do that here. You will seldom do this unless you are
      * making additions to the piccolo framework.
      */
-    public void removeInputSource(InputSource inputSource) {
+    public void removeInputSource(final InputSource inputSource) {
         inputSources.remove(inputSource);
         firePropertyChange(PROPERTY_CODE_INPUT_SOURCES, PROPERTY_INPUT_SOURCES, null, inputSources);
     }
@@ -245,7 +245,7 @@ public class PRoot extends PNode {
      * create custom timers that will be used transparently by the Piccolo
      * framework.
      */
-    public Timer createTimer(int delay, ActionListener listener) {
+    public Timer createTimer(final int delay, final ActionListener listener) {
         return new Timer(delay, listener);
     }
 
@@ -273,9 +273,9 @@ public class PRoot extends PNode {
         processingInputs = true;
 
         globalTime = System.currentTimeMillis();
-        int count = inputSources == null ? 0 : inputSources.size();
+        final int count = inputSources == null ? 0 : inputSources.size();
         for (int i = 0; i < count; i++) {
-            InputSource each = (InputSource) inputSources.get(i);
+            final InputSource each = (InputSource) inputSources.get(i);
             each.processInput();
         }
 
@@ -287,22 +287,22 @@ public class PRoot extends PNode {
         PDebug.endProcessingInput();
     }
 
-    public void setFullBoundsInvalid(boolean fullLayoutInvalid) {
+    public void setFullBoundsInvalid(final boolean fullLayoutInvalid) {
         super.setFullBoundsInvalid(fullLayoutInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
-    public void setChildBoundsInvalid(boolean childLayoutInvalid) {
+    public void setChildBoundsInvalid(final boolean childLayoutInvalid) {
         super.setChildBoundsInvalid(childLayoutInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
-    public void setPaintInvalid(boolean paintInvalid) {
+    public void setPaintInvalid(final boolean paintInvalid) {
         super.setPaintInvalid(paintInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
-    public void setChildPaintInvalid(boolean childPaintInvalid) {
+    public void setChildPaintInvalid(final boolean childPaintInvalid) {
         super.setChildPaintInvalid(childPaintInvalid);
         scheduleProcessInputsIfNeeded();
     }
@@ -332,7 +332,7 @@ public class PRoot extends PNode {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     processInputs();
-                    PRoot.this.processInputsScheduled = false;
+                    processInputsScheduled = false;
                 }
             });
         }

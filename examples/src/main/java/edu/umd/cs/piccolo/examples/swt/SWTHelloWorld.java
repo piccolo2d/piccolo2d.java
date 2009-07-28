@@ -47,22 +47,23 @@ public class SWTHelloWorld {
         super();
     }
 
-    public static void main(String[] args) {
-        Display display = new Display();
-        Shell shell = open(display);
+    public static void main(final String[] args) {
+        final Display display = new Display();
+        final Shell shell = open(display);
         while (!shell.isDisposed()) {
-            if (!display.readAndDispatch())
+            if (!display.readAndDispatch()) {
                 display.sleep();
+            }
         }
         display.dispose();
     }
 
-    public static Shell open(Display display) {
+    public static Shell open(final Display display) {
         final Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
-        PSWTCanvas canvas = new PSWTCanvas(shell, 0);
+        final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
 
-        PSWTText text = new PSWTText("Hello World");
+        final PSWTText text = new PSWTText("Hello World");
         canvas.getLayer().addChild(text);
 
         shell.open();

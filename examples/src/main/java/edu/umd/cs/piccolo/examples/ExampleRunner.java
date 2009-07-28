@@ -39,11 +39,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import edu.umd.cs.piccolo.util.PDebug;
 import edu.umd.cs.piccolox.PFrame;
 
 public class ExampleRunner extends JFrame {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     public ExampleRunner() {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -57,24 +63,39 @@ public class ExampleRunner extends JFrame {
     }
 
     public void createExampleButtons() {
-        Container c = getContentPane();
+        final Container c = getContentPane();
         JPanel panel = new JPanel(new GridLayout(0, 1));
         c.add(BorderLayout.NORTH, panel);
 
         panel.add(new JCheckBox(new AbstractAction("Print Frame Rates to Console") {
-            public void actionPerformed(ActionEvent e) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent e) {
                 PDebug.debugPrintFrameRate = !PDebug.debugPrintFrameRate;
             }
         }));
 
         panel.add(new JCheckBox(new AbstractAction("Show Region Managment") {
-            public void actionPerformed(ActionEvent e) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent e) {
                 PDebug.debugRegionManagement = !PDebug.debugRegionManagement;
             }
         }));
 
         panel.add(new JCheckBox(new AbstractAction("Show Full Bounds") {
-            public void actionPerformed(ActionEvent e) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent e) {
                 PDebug.debugFullBounds = !PDebug.debugFullBounds;
             }
         }));
@@ -95,22 +116,27 @@ public class ExampleRunner extends JFrame {
                 TwoCanvasExample.class, WaitForActivitiesExample.class });
     }
 
-    private void addExampleButtons(JPanel panel, Class[] exampleClasses) {
+    private void addExampleButtons(final JPanel panel, final Class[] exampleClasses) {
         for (int i = 0; i < exampleClasses.length; i++) {
             panel.add(buildExampleButton(exampleClasses[i]));
         }
     }
 
     private JButton buildExampleButton(final Class exampleClass) {
-        String fullClassName = exampleClass.getName();
-        String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
+        final String fullClassName = exampleClass.getName();
+        final String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
         return new JButton(new AbstractAction(simpleClassName) {
-            public void actionPerformed(ActionEvent event) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent event) {
                 try {
-                    PFrame example = (PFrame) exampleClass.newInstance();
-                    example.setDefaultCloseOperation(PFrame.DISPOSE_ON_CLOSE);
+                    final PFrame example = (PFrame) exampleClass.newInstance();
+                    example.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
-                catch (Exception e) {
+                catch (final Exception e) {
                     JOptionPane.showMessageDialog(ExampleRunner.this,
                             "A problem was encountered running the example.\n\n" + e.getMessage());
                 }
@@ -118,7 +144,7 @@ public class ExampleRunner extends JFrame {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new ExampleRunner();
     }
 }

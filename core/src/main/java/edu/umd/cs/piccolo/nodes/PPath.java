@@ -75,7 +75,7 @@ public class PPath extends PNode {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * The property name that identifies a change of this node's stroke paint
      * (see {@link #getStrokePaint getStrokePaint}). Both old and new value will
@@ -114,58 +114,57 @@ public class PPath extends PNode {
     private transient boolean updatingBoundsFromPath;
     private Paint strokePaint;
 
-    public static PPath createRectangle(float x, float y, float width, float height) {
+    public static PPath createRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
-        PPath result = new PPath(TEMP_RECTANGLE);
+        final PPath result = new PPath(TEMP_RECTANGLE);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PPath createRoundRectangle(float x, float y, float width, float height, float arcWidth,
-            float arcHeight) {
+    public static PPath createRoundRectangle(final float x, final float y, final float width, final float height,
+            final float arcWidth, final float arcHeight) {
         TEMP_ROUNDRECTANGLE.setRoundRect(x, y, width, height, arcWidth, arcHeight);
-        PPath result = new PPath(TEMP_ROUNDRECTANGLE);
+        final PPath result = new PPath(TEMP_ROUNDRECTANGLE);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PPath createEllipse(float x, float y, float width, float height) {
+    public static PPath createEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
-        PPath result = new PPath(TEMP_ELLIPSE);
+        final PPath result = new PPath(TEMP_ELLIPSE);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PPath createLine(float x1, float y1, float x2, float y2) {
-        PPath result = new PPath();
+    public static PPath createLine(final float x1, final float y1, final float x2, final float y2) {
+        final PPath result = new PPath();
         result.moveTo(x1, y1);
         result.lineTo(x2, y2);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PPath createPolyline(Point2D[] points) {
-        PPath result = new PPath();
+    public static PPath createPolyline(final Point2D[] points) {
+        final PPath result = new PPath();
         result.setPathToPolyline(points);
         result.setPaint(Color.white);
         return result;
     }
 
-    public static PPath createPolyline(float[] xp, float[] yp) {
-        PPath result = new PPath();
+    public static PPath createPolyline(final float[] xp, final float[] yp) {
+        final PPath result = new PPath();
         result.setPathToPolyline(xp, yp);
         result.setPaint(Color.white);
         return result;
     }
 
-    
     public PPath() {
         strokePaint = DEFAULT_STROKE_PAINT;
         stroke = DEFAULT_STROKE;
         path = new GeneralPath();
     }
 
-    public PPath(Shape aShape) {
+    public PPath(final Shape aShape) {
         this(aShape, DEFAULT_STROKE);
     }
 
@@ -178,11 +177,12 @@ public class PPath extends PNode {
      * calculated, so if you pass in a null stroke here you won't ever have to
      * pay that bounds calculation price if you don't need to.
      */
-    public PPath(Shape aShape, Stroke aStroke) {
+    public PPath(final Shape aShape, final Stroke aStroke) {
         this();
         stroke = aStroke;
-        if (aShape != null)
+        if (aShape != null) {
             append(aShape, false);
+        }
     }
 
     // ****************************************************************
@@ -193,8 +193,8 @@ public class PPath extends PNode {
         return strokePaint;
     }
 
-    public void setStrokePaint(Paint aPaint) {
-        Paint old = strokePaint;
+    public void setStrokePaint(final Paint aPaint) {
+        final Paint old = strokePaint;
         strokePaint = aPaint;
         invalidatePaint();
         firePropertyChange(PROPERTY_CODE_STROKE_PAINT, PROPERTY_STROKE_PAINT, old, strokePaint);
@@ -204,8 +204,8 @@ public class PPath extends PNode {
         return stroke;
     }
 
-    public void setStroke(Stroke aStroke) {
-        Stroke old = stroke;
+    public void setStroke(final Stroke aStroke) {
+        final Stroke old = stroke;
         stroke = aStroke;
         updateBoundsFromPath();
         invalidatePaint();
@@ -241,9 +241,9 @@ public class PPath extends PNode {
             path.append(resizePath, false);
         }
 
-        Rectangle2D pathBounds = path.getBounds2D();
-        Rectangle2D pathStrokeBounds = getPathBoundsWithStroke();
-        double strokeOutset = Math.max(pathStrokeBounds.getWidth() - pathBounds.getWidth(), pathStrokeBounds
+        final Rectangle2D pathBounds = path.getBounds2D();
+        final Rectangle2D pathStrokeBounds = getPathBoundsWithStroke();
+        final double strokeOutset = Math.max(pathStrokeBounds.getWidth() - pathBounds.getWidth(), pathStrokeBounds
                 .getHeight()
                 - pathBounds.getHeight());
 
@@ -252,8 +252,8 @@ public class PPath extends PNode {
         width -= strokeOutset;
         height -= strokeOutset;
 
-        double scaleX = (width == 0 || pathBounds.getWidth() == 0) ? 1 : width / pathBounds.getWidth();
-        double scaleY = (height == 0 || pathBounds.getHeight() == 0) ? 1 : height / pathBounds.getHeight();
+        final double scaleX = width == 0 || pathBounds.getWidth() == 0 ? 1 : width / pathBounds.getWidth();
+        final double scaleY = height == 0 || pathBounds.getHeight() == 0 ? 1 : height / pathBounds.getHeight();
 
         TEMP_TRANSFORM.setToIdentity();
         TEMP_TRANSFORM.translate(x, y);
@@ -263,7 +263,7 @@ public class PPath extends PNode {
         path.transform(TEMP_TRANSFORM);
     }
 
-    public boolean intersects(Rectangle2D aBounds) {
+    public boolean intersects(final Rectangle2D aBounds) {
         if (super.intersects(aBounds)) {
             if (getPaint() != null && path.intersects(aBounds)) {
                 return true;
@@ -290,7 +290,7 @@ public class PPath extends PNode {
             resetBounds();
         }
         else {
-            Rectangle2D b = getPathBoundsWithStroke();
+            final Rectangle2D b = getPathBoundsWithStroke();
             setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
         }
         updatingBoundsFromPath = false;
@@ -300,9 +300,9 @@ public class PPath extends PNode {
     // Painting
     // ****************************************************************
 
-    protected void paint(PPaintContext paintContext) {
-        Paint p = getPaint();
-        Graphics2D g2 = paintContext.getGraphics();
+    protected void paint(final PPaintContext paintContext) {
+        final Paint p = getPaint();
+        final Graphics2D g2 = paintContext.getGraphics();
 
         if (p != null) {
             g2.setPaint(p);
@@ -325,57 +325,57 @@ public class PPath extends PNode {
         return path;
     }
 
-    public void moveTo(float x, float y) {
+    public void moveTo(final float x, final float y) {
         path.moveTo(x, y);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
         updateBoundsFromPath();
         invalidatePaint();
     }
 
-    public void lineTo(float x, float y) {
+    public void lineTo(final float x, final float y) {
         path.lineTo(x, y);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
         updateBoundsFromPath();
         invalidatePaint();
     }
 
-    public void quadTo(float x1, float y1, float x2, float y2) {
+    public void quadTo(final float x1, final float y1, final float x2, final float y2) {
         path.quadTo(x1, y1, x2, y2);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
         updateBoundsFromPath();
         invalidatePaint();
     }
 
-    public void curveTo(float x1, float y1, float x2, float y2, float x3, float y3) {
+    public void curveTo(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         path.curveTo(x1, y1, x2, y2, x3, y3);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
         updateBoundsFromPath();
         invalidatePaint();
     }
 
-    public void append(Shape aShape, boolean connect) {
+    public void append(final Shape aShape, final boolean connect) {
         path.append(aShape, connect);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
         updateBoundsFromPath();
         invalidatePaint();
     }
 
-    public void setPathTo(Shape aShape) {
+    public void setPathTo(final Shape aShape) {
         path.reset();
         append(aShape, false);
     }
 
-    public void setPathToRectangle(float x, float y, float width, float height) {
+    public void setPathToRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
         setPathTo(TEMP_RECTANGLE);
     }
 
-    public void setPathToEllipse(float x, float y, float width, float height) {
+    public void setPathToEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
         setPathTo(TEMP_ELLIPSE);
     }
 
-    public void setPathToPolyline(Point2D[] points) {
+    public void setPathToPolyline(final Point2D[] points) {
         path.reset();
         path.moveTo((float) points[0].getX(), (float) points[0].getY());
         for (int i = 1; i < points.length; i++) {
@@ -386,7 +386,7 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
-    public void setPathToPolyline(float[] xp, float[] yp) {
+    public void setPathToPolyline(final float[] xp, final float[] yp) {
         path.reset();
         path.moveTo(xp[0], yp[0]);
         for (int i = 1; i < xp.length; i++) {
@@ -415,13 +415,13 @@ public class PPath extends PNode {
     // Serialization
     // ****************************************************************
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         PUtil.writeStroke(stroke, out);
         PUtil.writePath(path, out);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         stroke = PUtil.readStroke(in);
         path = PUtil.readPath(in);
@@ -440,7 +440,7 @@ public class PPath extends PNode {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("path=" + (path == null ? "null" : path.toString()));
         result.append(",stroke=" + (stroke == null ? "null" : stroke.toString()));

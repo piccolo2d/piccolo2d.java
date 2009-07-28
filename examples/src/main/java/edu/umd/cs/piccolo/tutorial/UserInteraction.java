@@ -34,13 +34,22 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 
-import edu.umd.cs.piccolo.*;
-import edu.umd.cs.piccolo.event.*;
-import edu.umd.cs.piccolo.nodes.*;
-import edu.umd.cs.piccolo.util.*;
-import edu.umd.cs.piccolox.*;
+import edu.umd.cs.piccolo.PCanvas;
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
+import edu.umd.cs.piccolo.event.PDragSequenceEventHandler;
+import edu.umd.cs.piccolo.event.PInputEvent;
+import edu.umd.cs.piccolo.event.PInputEventFilter;
+import edu.umd.cs.piccolo.nodes.PPath;
+import edu.umd.cs.piccolo.util.PDimension;
+import edu.umd.cs.piccolox.PFrame;
 
 public class UserInteraction extends PFrame {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     public UserInteraction() {
         super();
@@ -54,38 +63,38 @@ public class UserInteraction extends PFrame {
         getCanvas().setPanEventHandler(null);
 
         // Create a squiggle handler and register it with the Canvas.
-        PBasicInputEventHandler squiggleHandler = new SquiggleHandler(getCanvas());
+        final PBasicInputEventHandler squiggleHandler = new SquiggleHandler(getCanvas());
         getCanvas().addInputEventListener(squiggleHandler);
 
         // Create a Node Event Listener.
 
         // Create a green rectangle node.
-        PNode nodeGreen = PPath.createRectangle(0, 0, 100, 100);
+        final PNode nodeGreen = PPath.createRectangle(0, 0, 100, 100);
         nodeGreen.setPaint(Color.GREEN);
         getCanvas().getLayer().addChild(nodeGreen);
 
         // Attach event handler directly to the node.
         nodeGreen.addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent event) {
+            public void mousePressed(final PInputEvent event) {
                 event.getPickedNode().setPaint(Color.ORANGE);
                 event.getInputManager().setKeyboardFocus(event.getPath());
                 event.setHandled(true);
             }
 
-            public void mouseDragged(PInputEvent event) {
-                PNode aNode = event.getPickedNode();
-                PDimension delta = event.getDeltaRelativeTo(aNode);
+            public void mouseDragged(final PInputEvent event) {
+                final PNode aNode = event.getPickedNode();
+                final PDimension delta = event.getDeltaRelativeTo(aNode);
                 aNode.translate(delta.width, delta.height);
                 event.setHandled(true);
             }
 
-            public void mouseReleased(PInputEvent event) {
+            public void mouseReleased(final PInputEvent event) {
                 event.getPickedNode().setPaint(Color.GREEN);
                 event.setHandled(true);
             }
 
-            public void keyPressed(PInputEvent event) {
-                PNode node = event.getPickedNode();
+            public void keyPressed(final PInputEvent event) {
+                final PNode node = event.getPickedNode();
                 switch (event.getKeyCode()) {
                     case KeyEvent.VK_UP:
                         node.translate(0, -10f);
@@ -110,15 +119,15 @@ public class UserInteraction extends PFrame {
         // The squiggle that is currently getting created.
         protected PPath squiggle;
 
-        public SquiggleHandler(PCanvas aCanvas) {
+        public SquiggleHandler(final PCanvas aCanvas) {
             canvas = aCanvas;
             setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
         }
 
-        public void startDrag(PInputEvent e) {
+        public void startDrag(final PInputEvent e) {
             super.startDrag(e);
 
-            Point2D p = e.getPosition();
+            final Point2D p = e.getPosition();
 
             // Create a new squiggle and add it to the canvas.
             squiggle = new PPath();
@@ -130,28 +139,28 @@ public class UserInteraction extends PFrame {
             e.getInputManager().setKeyboardFocus(null);
         }
 
-        public void drag(PInputEvent e) {
+        public void drag(final PInputEvent e) {
             super.drag(e);
             // Update the squiggle while dragging.
             updateSquiggle(e);
         }
 
-        public void endDrag(PInputEvent e) {
+        public void endDrag(final PInputEvent e) {
             super.endDrag(e);
             // Update the squiggle one last time.
             updateSquiggle(e);
             squiggle = null;
         }
 
-        public void updateSquiggle(PInputEvent aEvent) {
+        public void updateSquiggle(final PInputEvent aEvent) {
             // Add a new segment to the squiggle from the last mouse position
             // to the current mouse position.
-            Point2D p = aEvent.getPosition();
+            final Point2D p = aEvent.getPosition();
             squiggle.lineTo((float) p.getX(), (float) p.getY());
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new UserInteraction();
     }
 }

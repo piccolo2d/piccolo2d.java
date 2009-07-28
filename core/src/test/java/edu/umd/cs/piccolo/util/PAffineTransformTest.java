@@ -40,7 +40,7 @@ public class PAffineTransformTest extends TestCase {
 
     private PAffineTransform at;
 
-    public PAffineTransformTest(String aName) {
+    public PAffineTransformTest(final String aName) {
         super(aName);
     }
 
@@ -63,7 +63,7 @@ public class PAffineTransformTest extends TestCase {
     }
 
     public void testTransformRectLeavesEmptyBoundsEmpty() {
-        PBounds b1 = new PBounds();
+        final PBounds b1 = new PBounds();
         at.scale(0.5, 0.5);
         at.translate(100, 50);
 
@@ -72,8 +72,8 @@ public class PAffineTransformTest extends TestCase {
     }
 
     public void testTransformRect() {
-        PBounds b1 = new PBounds(0, 0, 100, 80);
-        PBounds b2 = new PBounds(100, 100, 100, 80);
+        final PBounds b1 = new PBounds(0, 0, 100, 80);
+        final PBounds b2 = new PBounds(100, 100, 100, 80);
 
         at.scale(0.5, 0.5);
         at.translate(100, 50);
@@ -96,7 +96,7 @@ public class PAffineTransformTest extends TestCase {
             at.setScale(0);
             fail("Setting 0 scale should throw exception");
         }
-        catch (RuntimeException e) {
+        catch (final RuntimeException e) {
             // expected
         }
     }
@@ -108,46 +108,49 @@ public class PAffineTransformTest extends TestCase {
     }
 
     public void testTransformDimensionWorks() {
-        Dimension d1 = new Dimension(100, 50);
+        final Dimension d1 = new Dimension(100, 50);
         at.setScale(2);
-        Dimension d2 = new Dimension(0, 0);
+        final Dimension d2 = new Dimension(0, 0);
         at.transform(d1, d2);
         assertEquals(new Dimension(200, 100), d2);
     }
 
     public void testTransformDimensionWorksWithSecondParamNull() {
-        Dimension d1 = new Dimension(100, 50);
+        final Dimension d1 = new Dimension(100, 50);
         at.setScale(2);
-        Dimension2D d2 = at.transform(d1, null);
+        final Dimension2D d2 = at.transform(d1, null);
         assertEquals(new Dimension(200, 100), d2);
     }
-    
+
     public void testLocalToViewDimensionThrowsExceptionWhenTransformIsNonInvertible() {
-        at.setTransform(new PAffineTransform(new double[] {0,0,0,0,0,0}));
+        at.setTransform(new PAffineTransform(new double[] { 0, 0, 0, 0, 0, 0 }));
         try {
-            at.inverseTransform(new PDimension(1,2), null);
+            at.inverseTransform(new PDimension(1, 2), null);
             fail("Exception not thrown when inverting non-invertible transform");
-        } catch (PAffineTransformException e) {
+        }
+        catch (final PAffineTransformException e) {
             // expected
         }
     }
-    
+
     public void testLocalToViewPoint2DThrowsExceptionWhenTransformIsNonInvertible() {
-        at.setTransform(new PAffineTransform(new double[] {0,0,0,0,0,0}));
+        at.setTransform(new PAffineTransform(new double[] { 0, 0, 0, 0, 0, 0 }));
         try {
-            at.inverseTransform(new Point2D.Double(1,2), null);
+            at.inverseTransform(new Point2D.Double(1, 2), null);
             fail("Exception not thrown when inverting non-invertible transform");
-        } catch (PAffineTransformException e) {
+        }
+        catch (final PAffineTransformException e) {
             // expected
         }
     }
-       
+
     public void testLocalToViewRectangle2DThrowsExceptionWhenTransformIsNonInvertible() {
-        at.setTransform(new PAffineTransform(new double[] {0,0,0,0,0,0}));
+        at.setTransform(new PAffineTransform(new double[] { 0, 0, 0, 0, 0, 0 }));
         try {
-            at.inverseTransform(new Rectangle2D.Double(1,2,3,4), null);
+            at.inverseTransform(new Rectangle2D.Double(1, 2, 3, 4), null);
             fail("Exception not thrown when inverting non-invertible transform");
-        } catch (PAffineTransformException e) {
+        }
+        catch (final PAffineTransformException e) {
             // expected
         }
     }

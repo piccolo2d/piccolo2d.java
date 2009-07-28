@@ -43,29 +43,30 @@ import junit.framework.TestCase;
 public class PSwingRepaintManagerTest extends TestCase {
 
     public void testConstructor() {
-        PSwingRepaintManager repaintManager = new PSwingRepaintManager();
+        final PSwingRepaintManager repaintManager = new PSwingRepaintManager();
         assertNotNull(repaintManager);
     }
 
     public void testCurrentManager() {
         RepaintManager currentManager = RepaintManager.currentManager(null);
         assertNotNull(currentManager);
-        // TODO:  this assertion is true when running this test case in isolation
-        //    but since PSwingCanvas may have been instantiated elsewhere in the test suite
-        //    may not be true when running this test case as part of a test suite
-        //assertFalse(currentManager instanceof PSwingRepaintManager);
+        // TODO: this assertion is true when running this test case in isolation
+        // but since PSwingCanvas may have been instantiated elsewhere in the
+        // test suite
+        // may not be true when running this test case as part of a test suite
+        // assertFalse(currentManager instanceof PSwingRepaintManager);
 
-        Component awtComponent = new Canvas();
+        final Component awtComponent = new Canvas();
         currentManager = RepaintManager.currentManager(awtComponent);
         assertNotNull(currentManager);
-        //assertFalse(currentManager instanceof PSwingRepaintManager);
+        // assertFalse(currentManager instanceof PSwingRepaintManager);
 
-        JComponent swingComponent = new JPanel();
+        final JComponent swingComponent = new JPanel();
         currentManager = RepaintManager.currentManager(swingComponent);
         assertNotNull(currentManager);
-        //assertFalse(currentManager instanceof PSwingRepaintManager);
+        // assertFalse(currentManager instanceof PSwingRepaintManager);
 
-        PSwingCanvas pswingCanvas = new PSwingCanvas();
+        final PSwingCanvas pswingCanvas = new PSwingCanvas();
         currentManager = RepaintManager.currentManager(pswingCanvas);
         assertNotNull(currentManager);
         assertTrue(currentManager instanceof PSwingRepaintManager);
@@ -83,50 +84,50 @@ public class PSwingRepaintManagerTest extends TestCase {
     }
 
     public void testLockRepaint() {
-        PSwingCanvas canvas = new PSwingCanvas();
-        RepaintManager currentManager = RepaintManager.currentManager(canvas);
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final RepaintManager currentManager = RepaintManager.currentManager(canvas);
         assertNotNull(currentManager);
         assertTrue(currentManager instanceof PSwingRepaintManager);
 
-        PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
-        // TODO:  should lockRepaint allow null?
+        final PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
+        // TODO: should lockRepaint allow null?
         repaintManager.lockRepaint(null);
         repaintManager.lockRepaint(canvas);
     }
 
     public void testUnlockRepaint() {
-        PSwingCanvas canvas = new PSwingCanvas();
-        RepaintManager currentManager = RepaintManager.currentManager(canvas);
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final RepaintManager currentManager = RepaintManager.currentManager(canvas);
         assertNotNull(currentManager);
         assertTrue(currentManager instanceof PSwingRepaintManager);
 
-        PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
+        final PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
         repaintManager.lockRepaint(null);
         repaintManager.lockRepaint(canvas);
 
         repaintManager.unlockRepaint(null);
         repaintManager.unlockRepaint(canvas);
 
-        // TODO:  catch this array index out of bounds exception?
-        JComponent notLocked = new JPanel();
+        // TODO: catch this array index out of bounds exception?
+        final JComponent notLocked = new JPanel();
         try {
             repaintManager.unlockRepaint(notLocked);
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (final ArrayIndexOutOfBoundsException e) {
             // expected
         }
     }
 
     public void testIsPainting() {
-        PSwingCanvas canvas = new PSwingCanvas();
-        RepaintManager currentManager = RepaintManager.currentManager(canvas);
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final RepaintManager currentManager = RepaintManager.currentManager(canvas);
         assertNotNull(currentManager);
         assertTrue(currentManager instanceof PSwingRepaintManager);
 
-        PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
+        final PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
         repaintManager.lockRepaint(null);
         repaintManager.lockRepaint(canvas);
-        JComponent notLocked = new JPanel();
+        final JComponent notLocked = new JPanel();
 
         assertTrue(repaintManager.isPainting(null));
         assertTrue(repaintManager.isPainting(canvas));
@@ -134,44 +135,44 @@ public class PSwingRepaintManagerTest extends TestCase {
     }
 
     public void testAddDirtyRegion() {
-        PSwingCanvas canvas = new PSwingCanvas();
-        RepaintManager currentManager = RepaintManager.currentManager(canvas);
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final RepaintManager currentManager = RepaintManager.currentManager(canvas);
         assertNotNull(currentManager);
         assertTrue(currentManager instanceof PSwingRepaintManager);
 
-        PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
+        final PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
         repaintManager.addDirtyRegion(canvas, 0, 0, canvas.getWidth(), canvas.getHeight());
 
-        JComponent child = new JPanel();
+        final JComponent child = new JPanel();
         canvas.add(child);
         repaintManager.addDirtyRegion(child, 0, 0, child.getWidth(), child.getHeight());
 
-        // TODO:  will need some additional work here for full test coverage
+        // TODO: will need some additional work here for full test coverage
     }
 
     public void testAddInvalidComponent() {
-        PSwingCanvas canvas = new PSwingCanvas();
-        RepaintManager currentManager = RepaintManager.currentManager(canvas);
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final RepaintManager currentManager = RepaintManager.currentManager(canvas);
         assertNotNull(currentManager);
         assertTrue(currentManager instanceof PSwingRepaintManager);
 
-        PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
-        // TODO:  should check for null and throw IAE, or keep NPE?
+        final PSwingRepaintManager repaintManager = (PSwingRepaintManager) currentManager;
+        // TODO: should check for null and throw IAE, or keep NPE?
         try {
             repaintManager.addInvalidComponent(null);
         }
-        catch (NullPointerException e) {
+        catch (final NullPointerException e) {
             // expected
         }
 
-        JComponent component = new JPanel();
-        JComponent child = new JPanel();
+        final JComponent component = new JPanel();
+        final JComponent child = new JPanel();
         canvas.add(child);
 
         repaintManager.addInvalidComponent(canvas);
         repaintManager.addInvalidComponent(component);
         repaintManager.addInvalidComponent(child);
 
-        // TODO:  will need some additional work here for full test coverage
+        // TODO: will need some additional work here for full test coverage
     }
 }

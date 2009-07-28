@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolo.nodes;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -57,314 +58,307 @@ public class PText extends PNode {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
-	/**
-	 * The property name that identifies a change of this node's text (see
-	 * {@link #getText getText}). Both old and new value will be set in any
-	 * property change event.
-	 */
-	public static final String PROPERTY_TEXT = "text";
-	public static final int PROPERTY_CODE_TEXT = 1 << 19;
 
-	/**
-	 * The property name that identifies a change of this node's font (see
-	 * {@link #getFont getFont}). Both old and new value will be set in any
-	 * property change event.
-	 */
-	public static final String PROPERTY_FONT = "font";
-	public static final int PROPERTY_CODE_FONT = 1 << 20;
+    /**
+     * The property name that identifies a change of this node's text (see
+     * {@link #getText getText}). Both old and new value will be set in any
+     * property change event.
+     */
+    public static final String PROPERTY_TEXT = "text";
+    public static final int PROPERTY_CODE_TEXT = 1 << 19;
 
-	public static Font DEFAULT_FONT = new Font("Helvetica", Font.PLAIN, 12);
-	public static double DEFAULT_GREEK_THRESHOLD = 5.5;
+    /**
+     * The property name that identifies a change of this node's font (see
+     * {@link #getFont getFont}). Both old and new value will be set in any
+     * property change event.
+     */
+    public static final String PROPERTY_FONT = "font";
+    public static final int PROPERTY_CODE_FONT = 1 << 20;
 
-	private String text;
-	private Paint textPaint;
-	private Font font;
-	protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
-	private float justification = javax.swing.JLabel.LEFT_ALIGNMENT;
-	private boolean constrainHeightToTextHeight = true;
-	private boolean constrainWidthToTextWidth = true;
-	private transient TextLayout[] lines;
+    public static Font DEFAULT_FONT = new Font("Helvetica", Font.PLAIN, 12);
+    public static double DEFAULT_GREEK_THRESHOLD = 5.5;
 
-	public PText() {
-		super();
-		setTextPaint(Color.BLACK);
-		text = "";
-	}
+    private String text;
+    private Paint textPaint;
+    private Font font;
+    protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
+    private float justification = Component.LEFT_ALIGNMENT;
+    private boolean constrainHeightToTextHeight = true;
+    private boolean constrainWidthToTextWidth = true;
+    private transient TextLayout[] lines;
 
-	public PText(String aText) {
-		this();
-		setText(aText);
-	}
+    public PText() {
+        super();
+        setTextPaint(Color.BLACK);
+        text = "";
+    }
 
-	/**
-	 * Return the justificaiton of the text in the bounds.
-	 * 
-	 * @return float
-	 */
-	public float getJustification() {
-		return justification;
-	}
+    public PText(final String aText) {
+        this();
+        setText(aText);
+    }
 
-	/**
-	 * Sets the justificaiton of the text in the bounds.
-	 * 
-	 * @param just
-	 */
-	public void setJustification(float just) {
-		justification = just;
-		recomputeLayout();
-	}
+    /**
+     * Return the justificaiton of the text in the bounds.
+     * 
+     * @return float
+     */
+    public float getJustification() {
+        return justification;
+    }
 
-	/**
-	 * Get the paint used to paint this nodes text.
-	 * 
-	 * @return Paint
-	 */
-	public Paint getTextPaint() {
-		return textPaint;
-	}
+    /**
+     * Sets the justificaiton of the text in the bounds.
+     * 
+     * @param just
+     */
+    public void setJustification(final float just) {
+        justification = just;
+        recomputeLayout();
+    }
 
-	/**
-	 * Set the paint used to paint this node's text background.
-	 * 
-	 * @param textPaint
-	 */
-	public void setTextPaint(Paint textPaint) {
-		this.textPaint = textPaint;
-		invalidatePaint();
-	}
+    /**
+     * Get the paint used to paint this nodes text.
+     * 
+     * @return Paint
+     */
+    public Paint getTextPaint() {
+        return textPaint;
+    }
 
-	public boolean isConstrainWidthToTextWidth() {
-		return constrainWidthToTextWidth;
-	}
+    /**
+     * Set the paint used to paint this node's text background.
+     * 
+     * @param textPaint
+     */
+    public void setTextPaint(final Paint textPaint) {
+        this.textPaint = textPaint;
+        invalidatePaint();
+    }
 
-	/**
-	 * Controls whether this node changes its width to fit the width of its
-	 * text. If flag is true it does; if flag is false it doesn't
-	 */
-	public void setConstrainWidthToTextWidth(boolean constrainWidthToTextWidth) {
-		this.constrainWidthToTextWidth = constrainWidthToTextWidth;
-		recomputeLayout();
-	}
+    public boolean isConstrainWidthToTextWidth() {
+        return constrainWidthToTextWidth;
+    }
 
-	public boolean isConstrainHeightToTextHeight() {
-		return constrainHeightToTextHeight;
-	}
+    /**
+     * Controls whether this node changes its width to fit the width of its
+     * text. If flag is true it does; if flag is false it doesn't
+     */
+    public void setConstrainWidthToTextWidth(final boolean constrainWidthToTextWidth) {
+        this.constrainWidthToTextWidth = constrainWidthToTextWidth;
+        recomputeLayout();
+    }
 
-	/**
-	 * Controls whether this node changes its height to fit the height of its
-	 * text. If flag is true it does; if flag is false it doesn't
-	 */
-	public void setConstrainHeightToTextHeight(
-			boolean constrainHeightToTextHeight) {
-		this.constrainHeightToTextHeight = constrainHeightToTextHeight;
-		recomputeLayout();
-	}
+    public boolean isConstrainHeightToTextHeight() {
+        return constrainHeightToTextHeight;
+    }
 
-	/**
-	 * Returns the current greek threshold. When the screen font size will be
-	 * below this threshold the text is rendered as 'greek' instead of drawing
-	 * the text glyphs.
-	 */
-	public double getGreekThreshold() {
-		return greekThreshold;
-	}
+    /**
+     * Controls whether this node changes its height to fit the height of its
+     * text. If flag is true it does; if flag is false it doesn't
+     */
+    public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
+        this.constrainHeightToTextHeight = constrainHeightToTextHeight;
+        recomputeLayout();
+    }
 
-	/**
-	 * Sets the current greek threshold. When the screen font size will be below
-	 * this threshold the text is rendered as 'greek' instead of drawing the
-	 * text glyphs.
-	 * 
-	 * @param threshold
-	 *            minimum screen font size.
-	 */
-	public void setGreekThreshold(double threshold) {
-		greekThreshold = threshold;
-		invalidatePaint();
-	}
+    /**
+     * Returns the current greek threshold. When the screen font size will be
+     * below this threshold the text is rendered as 'greek' instead of drawing
+     * the text glyphs.
+     */
+    public double getGreekThreshold() {
+        return greekThreshold;
+    }
 
-	public String getText() {
-		return text;
-	}
+    /**
+     * Sets the current greek threshold. When the screen font size will be below
+     * this threshold the text is rendered as 'greek' instead of drawing the
+     * text glyphs.
+     * 
+     * @param threshold minimum screen font size.
+     */
+    public void setGreekThreshold(final double threshold) {
+        greekThreshold = threshold;
+        invalidatePaint();
+    }
 
-	/**
-	 * Set the text for this node. The text will be broken up into multiple
-	 * lines based on the size of the text and the bounds width of this node.
-	 */
-	public void setText(String aText) {
-		String old = text;
-		text = (aText == null) ? "" : aText;
-		lines = null;
-		recomputeLayout();
-		invalidatePaint();
-		firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, old, text);
-	}
+    public String getText() {
+        return text;
+    }
 
-	/**
-	 * Returns the font of this PText.
-	 * 
-	 * @return the font of this PText.
-	 */
-	public Font getFont() {
-		if (font == null) {
-			font = DEFAULT_FONT;
-		}
-		return font;
-	}
+    /**
+     * Set the text for this node. The text will be broken up into multiple
+     * lines based on the size of the text and the bounds width of this node.
+     */
+    public void setText(final String aText) {
+        final String old = text;
+        text = aText == null ? "" : aText;
+        lines = null;
+        recomputeLayout();
+        invalidatePaint();
+        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, old, text);
+    }
 
-	/**
-	 * Set the font of this PText. Note that in Piccolo if you want to change
-	 * the size of a text object it's often a better idea to scale the PText
-	 * node instead of changing the font size to get that same effect. Using
-	 * very large font sizes can slow performance.
-	 */
-	public void setFont(Font aFont) {
-		Font old = font;
-		font = aFont;
-		lines = null;
-		recomputeLayout();
-		invalidatePaint();
-		firePropertyChange(PROPERTY_CODE_FONT, PROPERTY_FONT, old, font);
-	}
+    /**
+     * Returns the font of this PText.
+     * 
+     * @return the font of this PText.
+     */
+    public Font getFont() {
+        if (font == null) {
+            font = DEFAULT_FONT;
+        }
+        return font;
+    }
 
-	private static final TextLayout[] EMPTY_TEXT_LAYOUT_ARRAY = new TextLayout[0];
+    /**
+     * Set the font of this PText. Note that in Piccolo if you want to change
+     * the size of a text object it's often a better idea to scale the PText
+     * node instead of changing the font size to get that same effect. Using
+     * very large font sizes can slow performance.
+     */
+    public void setFont(final Font aFont) {
+        final Font old = font;
+        font = aFont;
+        lines = null;
+        recomputeLayout();
+        invalidatePaint();
+        firePropertyChange(PROPERTY_CODE_FONT, PROPERTY_FONT, old, font);
+    }
 
-	/**
-	 * Compute the bounds of the text wrapped by this node. The text layout is
-	 * wrapped based on the bounds of this node.
-	 */
-	public void recomputeLayout() {
-		ArrayList linesList = new ArrayList();
-		double textWidth = 0;
-		double textHeight = 0;
+    private static final TextLayout[] EMPTY_TEXT_LAYOUT_ARRAY = new TextLayout[0];
 
-		if (text != null && text.length() > 0) {
-			AttributedString atString = new AttributedString(text);
-			atString.addAttribute(TextAttribute.FONT, getFont());
-			AttributedCharacterIterator itr = atString.getIterator();
-			LineBreakMeasurer measurer = new LineBreakMeasurer(itr,
-					PPaintContext.RENDER_QUALITY_HIGH_FRC);
-			float availableWidth = constrainWidthToTextWidth ? Float.MAX_VALUE
-					: (float) getWidth();
+    /**
+     * Compute the bounds of the text wrapped by this node. The text layout is
+     * wrapped based on the bounds of this node.
+     */
+    public void recomputeLayout() {
+        final ArrayList linesList = new ArrayList();
+        double textWidth = 0;
+        double textHeight = 0;
 
-			int nextLineBreakOffset = text.indexOf('\n');
-			if (nextLineBreakOffset == -1) {
-				nextLineBreakOffset = Integer.MAX_VALUE;
-			} else {
-				nextLineBreakOffset++;
-			}
+        if (text != null && text.length() > 0) {
+            final AttributedString atString = new AttributedString(text);
+            atString.addAttribute(TextAttribute.FONT, getFont());
+            final AttributedCharacterIterator itr = atString.getIterator();
+            final LineBreakMeasurer measurer = new LineBreakMeasurer(itr, PPaintContext.RENDER_QUALITY_HIGH_FRC);
+            final float availableWidth = constrainWidthToTextWidth ? Float.MAX_VALUE : (float) getWidth();
 
-			while (measurer.getPosition() < itr.getEndIndex()) {
-				TextLayout aTextLayout = computeNextLayout(measurer,
-						availableWidth, nextLineBreakOffset);
+            int nextLineBreakOffset = text.indexOf('\n');
+            if (nextLineBreakOffset == -1) {
+                nextLineBreakOffset = Integer.MAX_VALUE;
+            }
+            else {
+                nextLineBreakOffset++;
+            }
 
-				if (nextLineBreakOffset == measurer.getPosition()) {
-					nextLineBreakOffset = text.indexOf('\n', measurer
-							.getPosition());
-					if (nextLineBreakOffset == -1) {
-						nextLineBreakOffset = Integer.MAX_VALUE;
-					} else {
-						nextLineBreakOffset++;
-					}
-				}
+            while (measurer.getPosition() < itr.getEndIndex()) {
+                final TextLayout aTextLayout = computeNextLayout(measurer, availableWidth, nextLineBreakOffset);
 
-				linesList.add(aTextLayout);
-				textHeight += aTextLayout.getAscent();
-				textHeight += aTextLayout.getDescent()
-						+ aTextLayout.getLeading();
-				textWidth = Math.max(textWidth, aTextLayout.getAdvance());
-			}
-		}
+                if (nextLineBreakOffset == measurer.getPosition()) {
+                    nextLineBreakOffset = text.indexOf('\n', measurer.getPosition());
+                    if (nextLineBreakOffset == -1) {
+                        nextLineBreakOffset = Integer.MAX_VALUE;
+                    }
+                    else {
+                        nextLineBreakOffset++;
+                    }
+                }
 
-		lines = (TextLayout[]) linesList.toArray(EMPTY_TEXT_LAYOUT_ARRAY);
+                linesList.add(aTextLayout);
+                textHeight += aTextLayout.getAscent();
+                textHeight += aTextLayout.getDescent() + aTextLayout.getLeading();
+                textWidth = Math.max(textWidth, aTextLayout.getAdvance());
+            }
+        }
 
-		if (constrainWidthToTextWidth || constrainHeightToTextHeight) {
-			double newWidth = getWidth();
-			double newHeight = getHeight();
+        lines = (TextLayout[]) linesList.toArray(EMPTY_TEXT_LAYOUT_ARRAY);
 
-			if (constrainWidthToTextWidth) {
-				newWidth = textWidth;
-			}
+        if (constrainWidthToTextWidth || constrainHeightToTextHeight) {
+            double newWidth = getWidth();
+            double newHeight = getHeight();
 
-			if (constrainHeightToTextHeight) {
-				newHeight = textHeight;
-			}
+            if (constrainWidthToTextWidth) {
+                newWidth = textWidth;
+            }
 
-			super.setBounds(getX(), getY(), newWidth, newHeight);
-		}
-	}
+            if (constrainHeightToTextHeight) {
+                newHeight = textHeight;
+            }
 
-	// provided in case someone needs to override the way that lines are
-	// wrapped.
-	protected TextLayout computeNextLayout(LineBreakMeasurer measurer,
-			float availibleWidth, int nextLineBreakOffset) {
-		return measurer.nextLayout(availibleWidth, nextLineBreakOffset, false);
-	}
+            super.setBounds(getX(), getY(), newWidth, newHeight);
+        }
+    }
 
-	protected void paint(PPaintContext paintContext) {
-		super.paint(paintContext);
+    // provided in case someone needs to override the way that lines are
+    // wrapped.
+    protected TextLayout computeNextLayout(final LineBreakMeasurer measurer, final float availibleWidth,
+            final int nextLineBreakOffset) {
+        return measurer.nextLayout(availibleWidth, nextLineBreakOffset, false);
+    }
 
-		float screenFontSize = getFont().getSize()
-				* (float) paintContext.getScale();
-		if (textPaint == null || screenFontSize <= greekThreshold)
-			return;
+    protected void paint(final PPaintContext paintContext) {
+        super.paint(paintContext);
 
-		float x = (float) getX();
-		float y = (float) getY();
-		float bottomY = (float) getHeight() + y;
+        final float screenFontSize = getFont().getSize() * (float) paintContext.getScale();
+        if (textPaint == null || screenFontSize <= greekThreshold) {
+            return;
+        }
 
-		Graphics2D g2 = paintContext.getGraphics();
+        final float x = (float) getX();
+        float y = (float) getY();
+        final float bottomY = (float) getHeight() + y;
 
-		if (lines == null) {
-			recomputeLayout();
-			repaint();
-			return;
-		}
+        final Graphics2D g2 = paintContext.getGraphics();
 
-		g2.setPaint(textPaint);
+        if (lines == null) {
+            recomputeLayout();
+            repaint();
+            return;
+        }
 
-		for (int i = 0; i < lines.length; i++) {
-			TextLayout tl = lines[i];
-			y += tl.getAscent();
+        g2.setPaint(textPaint);
 
-			if (bottomY < y) {
-				return;
-			}
+        for (int i = 0; i < lines.length; i++) {
+            final TextLayout tl = lines[i];
+            y += tl.getAscent();
 
-			float offset = (float) (getWidth() - tl.getAdvance())
-					* justification;
-			tl.draw(g2, x + offset, y);
+            if (bottomY < y) {
+                return;
+            }
 
-			y += tl.getDescent() + tl.getLeading();
-		}
-	}
+            final float offset = (float) (getWidth() - tl.getAdvance()) * justification;
+            tl.draw(g2, x + offset, y);
 
-	protected void internalUpdateBounds(double x, double y, double width,
-			double height) {
-		recomputeLayout();
-	}
+            y += tl.getDescent() + tl.getLeading();
+        }
+    }
 
-	// ****************************************************************
-	// Debugging - methods for debugging
-	// ****************************************************************
+    protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
+        recomputeLayout();
+    }
 
-	/**
-	 * Returns a string representing the state of this node. This method is
-	 * intended to be used only for debugging purposes, and the content and
-	 * format of the returned string may vary between implementations. The
-	 * returned string may be empty but may not be <code>null</code>.
-	 * 
-	 * @return a string representation of this node's state
-	 */
-	protected String paramString() {
-		StringBuffer result = new StringBuffer();
+    // ****************************************************************
+    // Debugging - methods for debugging
+    // ****************************************************************
 
-		result.append("text=" + (text == null ? "null" : text));
-		result.append(",font=" + (font == null ? "null" : font.toString()));
-		result.append(',');
-		result.append(super.paramString());
+    /**
+     * Returns a string representing the state of this node. This method is
+     * intended to be used only for debugging purposes, and the content and
+     * format of the returned string may vary between implementations. The
+     * returned string may be empty but may not be <code>null</code>.
+     * 
+     * @return a string representation of this node's state
+     */
+    protected String paramString() {
+        final StringBuffer result = new StringBuffer();
 
-		return result.toString();
-	}
+        result.append("text=" + (text == null ? "null" : text));
+        result.append(",font=" + (font == null ? "null" : font.toString()));
+        result.append(',');
+        result.append(super.paramString());
+
+        return result.toString();
+    }
 }

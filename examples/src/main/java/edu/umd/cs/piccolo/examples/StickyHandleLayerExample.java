@@ -57,29 +57,34 @@ import edu.umd.cs.piccolox.util.PBoundsLocator;
  */
 public class StickyHandleLayerExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public StickyHandleLayerExample() {
         this(null);
     }
 
-    public StickyHandleLayerExample(PCanvas aCanvas) {
+    public StickyHandleLayerExample(final PCanvas aCanvas) {
         super("StickyHandleLayerExample", false, aCanvas);
     }
 
     public void initialize() {
-        PCanvas c = getCanvas();
+        final PCanvas c = getCanvas();
 
-        PActivity updateHandles = new PActivity(-1, 0) {
-            protected void activityStep(long elapsedTime) {
+        final PActivity updateHandles = new PActivity(-1, 0) {
+            protected void activityStep(final long elapsedTime) {
                 super.activityStep(elapsedTime);
 
-                PRoot root = getActivityScheduler().getRoot();
+                final PRoot root = getActivityScheduler().getRoot();
 
                 if (root.getPaintInvalid() || root.getChildPaintInvalid()) {
-                    Iterator i = getCanvas().getCamera().getChildrenIterator();
+                    final Iterator i = getCanvas().getCamera().getChildrenIterator();
                     while (i.hasNext()) {
-                        PNode each = (PNode) i.next();
+                        final PNode each = (PNode) i.next();
                         if (each instanceof PHandle) {
-                            PHandle handle = (PHandle) each;
+                            final PHandle handle = (PHandle) each;
                             handle.relocateHandle();
                         }
                     }
@@ -87,7 +92,7 @@ public class StickyHandleLayerExample extends PFrame {
             }
         };
 
-        PPath rect = PPath.createRectangle(0, 0, 100, 100);
+        final PPath rect = PPath.createRectangle(0, 0, 100, 100);
         rect.setPaint(Color.RED);
         c.getLayer().addChild(rect);
 
@@ -99,7 +104,7 @@ public class StickyHandleLayerExample extends PFrame {
         c.getRoot().getActivityScheduler().addActivity(updateHandles, true);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new StickyHandleLayerExample();
     }
 }

@@ -52,11 +52,15 @@ import edu.umd.cs.piccolox.util.LineShape;
  */
 public class PLine extends PNode {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private static final PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
     private static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
     private static final Color DEFAULT_STROKE_PAINT = Color.black;
 
-    private transient LineShape line;
+    private transient final LineShape line;
     private transient Stroke stroke;
     private Paint strokePaint;
 
@@ -73,7 +77,7 @@ public class PLine extends PNode {
         this(null);
     }
 
-    public PLine(LineShape line, Stroke aStroke) {
+    public PLine(final LineShape line, final Stroke aStroke) {
         this(line);
         stroke = aStroke;
     }
@@ -86,8 +90,8 @@ public class PLine extends PNode {
         return strokePaint;
     }
 
-    public void setStrokePaint(Paint aPaint) {
-        Paint old = strokePaint;
+    public void setStrokePaint(final Paint aPaint) {
+        final Paint old = strokePaint;
         strokePaint = aPaint;
         invalidatePaint();
         firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, old, strokePaint);
@@ -97,8 +101,8 @@ public class PLine extends PNode {
         return stroke;
     }
 
-    public void setStroke(Stroke aStroke) {
-        Stroke old = stroke;
+    public void setStroke(final Stroke aStroke) {
+        final Stroke old = stroke;
         stroke = aStroke;
         updateBoundsFromLine();
         invalidatePaint();
@@ -114,9 +118,9 @@ public class PLine extends PNode {
             return false;
         }
 
-        Rectangle2D lineBounds = line.getBounds2D();
-        Rectangle2D lineStrokeBounds = getLineBoundsWithStroke();
-        double strokeOutset = Math.max(lineStrokeBounds.getWidth() - lineBounds.getWidth(), lineStrokeBounds
+        final Rectangle2D lineBounds = line.getBounds2D();
+        final Rectangle2D lineStrokeBounds = getLineBoundsWithStroke();
+        final double strokeOutset = Math.max(lineStrokeBounds.getWidth() - lineBounds.getWidth(), lineStrokeBounds
                 .getHeight()
                 - lineBounds.getHeight());
 
@@ -134,7 +138,7 @@ public class PLine extends PNode {
         return true;
     }
 
-    public boolean intersects(Rectangle2D aBounds) {
+    public boolean intersects(final Rectangle2D aBounds) {
         if (super.intersects(aBounds)) {
             if (line.intersects(aBounds)) {
                 return true;
@@ -160,7 +164,7 @@ public class PLine extends PNode {
             resetBounds();
         }
         else {
-            Rectangle2D b = getLineBoundsWithStroke();
+            final Rectangle2D b = getLineBoundsWithStroke();
             super.setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
         }
     }
@@ -169,8 +173,8 @@ public class PLine extends PNode {
     // Painting
     // ****************************************************************
 
-    protected void paint(PPaintContext paintContext) {
-        Graphics2D g2 = paintContext.getGraphics();
+    protected void paint(final PPaintContext paintContext) {
+        final Graphics2D g2 = paintContext.getGraphics();
 
         if (stroke != null && strokePaint != null) {
             g2.setPaint(strokePaint);
@@ -187,7 +191,7 @@ public class PLine extends PNode {
         return line.getPointCount();
     }
 
-    public Point2D getPoint(int i, Point2D dst) {
+    public Point2D getPoint(final int i, Point2D dst) {
         if (dst == null) {
             dst = new Point2D.Double();
         }
@@ -200,17 +204,17 @@ public class PLine extends PNode {
         invalidatePaint();
     }
 
-    public void setPoint(int i, double x, double y) {
+    public void setPoint(final int i, final double x, final double y) {
         line.setPoint(i, x, y);
         lineChanged();
     }
 
-    public void addPoint(int i, double x, double y) {
+    public void addPoint(final int i, final double x, final double y) {
         line.addPoint(i, x, y);
         lineChanged();
     }
 
-    public void removePoints(int i, int n) {
+    public void removePoints(final int i, final int n) {
         line.removePoints(i, n);
         lineChanged();
     }
@@ -224,12 +228,12 @@ public class PLine extends PNode {
     // Serialization
     // ****************************************************************
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         PUtil.writeStroke(stroke, out);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         stroke = PUtil.readStroke(in);
     }

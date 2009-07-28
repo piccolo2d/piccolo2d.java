@@ -52,13 +52,17 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class NodeExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     boolean fIsPressed = false;
 
     public NodeExample() {
         this(null);
     }
 
-    public NodeExample(PCanvas aCanvas) {
+    public NodeExample(final PCanvas aCanvas) {
         super("NodeExample", false, aCanvas);
     }
 
@@ -79,8 +83,8 @@ public class NodeExample extends PFrame {
     // This method demonstrates the kinds of things that can be done with any
     // node.
     public void nodeDemo() {
-        PLayer layer = getCanvas().getLayer();
-        PNode aNode = PPath.createRectangle(0, 0, 100, 80);
+        final PLayer layer = getCanvas().getLayer();
+        final PNode aNode = PPath.createRectangle(0, 0, 100, 80);
 
         // A node needs to be a descendent of the root to be displayed on the
         // screen.
@@ -109,7 +113,7 @@ public class NodeExample extends PFrame {
         aNode.setTransparency(0.75f);
 
         // Its easy to copy nodes.
-        PNode aCopy = (PNode) aNode.clone();
+        final PNode aCopy = (PNode) aNode.clone();
 
         // Make is so that the copies children are not pickable. For this
         // example
@@ -131,7 +135,7 @@ public class NodeExample extends PFrame {
     // So far we have just been using PNode, but of course PNode has many
     // subclasses that you can try out to.
     public void createNodeUsingExistingClasses() {
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
         layer.addChild(PPath.createEllipse(0, 0, 100, 100));
         layer.addChild(PPath.createRectangle(0, 100, 100, 100));
         layer.addChild(new PText("Hello World"));
@@ -139,7 +143,7 @@ public class NodeExample extends PFrame {
         // Here we create an image node that displays a thumbnail
         // image of the root node. Note that you can easily get a thumbnail
         // of any node by using PNode.toImage().
-        PImage image = new PImage(layer.toImage(300, 300, null));
+        final PImage image = new PImage(layer.toImage(300, 300, null));
         layer.addChild(image);
     }
 
@@ -150,10 +154,15 @@ public class NodeExample extends PFrame {
     public void subclassExistingClasses() {
         final PNode n = new PPath(new Ellipse2D.Float(0, 0, 100, 80)) {
 
-            public void paint(PPaintContext aPaintContext) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void paint(final PPaintContext aPaintContext) {
                 if (fIsPressed) {
                     // if mouse is pressed draw self as a square.
-                    Graphics2D g2 = aPaintContext.getGraphics();
+                    final Graphics2D g2 = aPaintContext.getGraphics();
                     g2.setPaint(getPaint());
                     g2.fill(getBoundsReference());
                 }
@@ -165,18 +174,18 @@ public class NodeExample extends PFrame {
         };
 
         n.addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent aEvent) {
+            public void mousePressed(final PInputEvent aEvent) {
                 super.mousePressed(aEvent);
                 fIsPressed = true;
                 n.invalidatePaint(); // this tells the framework that the node
-                                     // needs to be redisplayed.
+                // needs to be redisplayed.
             }
 
-            public void mouseReleased(PInputEvent aEvent) {
+            public void mouseReleased(final PInputEvent aEvent) {
                 super.mousePressed(aEvent);
                 fIsPressed = false;
                 n.invalidatePaint(); // this tells the framework that the node
-                                     // needs to be redisplayed.
+                // needs to be redisplayed.
             }
         });
 
@@ -188,13 +197,13 @@ public class NodeExample extends PFrame {
     // directly
     // using Graphics2D we compose the face from other nodes.
     public void composeOtherNodes() {
-        PNode myCompositeFace = PPath.createRectangle(0, 0, 100, 80);
+        final PNode myCompositeFace = PPath.createRectangle(0, 0, 100, 80);
 
         // create parts for the face.
-        PNode eye1 = PPath.createEllipse(0, 0, 20, 20);
+        final PNode eye1 = PPath.createEllipse(0, 0, 20, 20);
         eye1.setPaint(Color.YELLOW);
-        PNode eye2 = (PNode) eye1.clone();
-        PNode mouth = PPath.createRectangle(0, 0, 40, 20);
+        final PNode eye2 = (PNode) eye1.clone();
+        final PNode mouth = PPath.createRectangle(0, 0, 40, 20);
         mouth.setPaint(Color.BLACK);
 
         // add the face parts
@@ -210,7 +219,7 @@ public class NodeExample extends PFrame {
         mouth.translate(0, 30);
 
         // set the face bounds so that it neatly contains the face parts.
-        PBounds b = myCompositeFace.getUnionOfChildrenBounds(null);
+        final PBounds b = myCompositeFace.getUnionOfChildrenBounds(null);
         myCompositeFace.setBounds(b.inset(-5, -5));
 
         // opps it to small, so scale it up.
@@ -223,15 +232,20 @@ public class NodeExample extends PFrame {
     // all the drawing ourselves here instead of passing the work off to
     // other parts of the framework.
     public void createCustomNode() {
-        PNode n = new PNode() {
-            public void paint(PPaintContext aPaintContext) {
-                double bx = getX();
-                double by = getY();
-                double rightBorder = bx + getWidth();
-                double bottomBorder = by + getHeight();
+        final PNode n = new PNode() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
 
-                Line2D line = new Line2D.Double();
-                Graphics2D g2 = aPaintContext.getGraphics();
+            public void paint(final PPaintContext aPaintContext) {
+                final double bx = getX();
+                final double by = getY();
+                final double rightBorder = bx + getWidth();
+                final double bottomBorder = by + getHeight();
+
+                final Line2D line = new Line2D.Double();
+                final Graphics2D g2 = aPaintContext.getGraphics();
 
                 g2.setStroke(new BasicStroke(0));
                 g2.setPaint(getPaint());
@@ -253,7 +267,7 @@ public class NodeExample extends PFrame {
         getCanvas().getLayer().addChild(n);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new NodeExample();
     }
 }

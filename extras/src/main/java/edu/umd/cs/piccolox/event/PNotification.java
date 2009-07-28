@@ -59,7 +59,7 @@ public class PNotification {
     protected Object source;
     protected Map properties;
 
-    public PNotification(String name, Object source, Map properties) {
+    public PNotification(final String name, final Object source, final Map properties) {
         this.name = name;
         this.source = source;
         this.properties = properties;
@@ -84,7 +84,7 @@ public class PNotification {
     /**
      * Return a property associated with the notfication.
      */
-    public Object getProperty(Object key) {
+    public Object getProperty(final Object key) {
         if (properties != null) {
             return properties.get(key);
         }

@@ -80,6 +80,11 @@ import edu.umd.cs.piccolox.pswing.PSwingCanvas;
  */
 
 public class PSwingExample2 extends JFrame {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PSwingExample2() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ClassLoader loader;
@@ -102,7 +107,7 @@ public class PSwingExample2 extends JFrame {
         PSwing swing2;
 
         // JButton
-        JButton button = new JButton("Button");
+        final JButton button = new JButton("Button");
         button.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         swing = new PSwing(button);
         leaf = new ZVisualLeaf(swing);
@@ -112,7 +117,7 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(transform);
 
         // JButton
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+        final JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
         spinner.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         swing = new PSwing(spinner);
         leaf = new ZVisualLeaf(swing);
@@ -131,7 +136,7 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(transform);
 
         // Growable JTextArea
-        JTextArea textArea = new JTextArea("This is a growable TextArea.\nTry it out!");
+        final JTextArea textArea = new JTextArea("This is a growable TextArea.\nTry it out!");
         textArea.setBorder(new LineBorder(Color.blue, 3));
         swing = new PSwing(textArea);
         leaf = new ZVisualLeaf(swing);
@@ -150,7 +155,7 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(transform);
 
         // A Slider
-        JSlider slider = new JSlider();
+        final JSlider slider = new JSlider();
         swing = new PSwing(slider);
         leaf = new ZVisualLeaf(swing);
         transform = new PNode();
@@ -159,9 +164,9 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(transform);
 
         // A Scrollable JTree
-        JTree tree = new JTree();
+        final JTree tree = new JTree();
         tree.setEditable(true);
-        JScrollPane p = new JScrollPane(tree);
+        final JScrollPane p = new JScrollPane(tree);
         p.setPreferredSize(new Dimension(150, 150));
         swing = new PSwing(p);
         leaf = new ZVisualLeaf(swing);
@@ -212,13 +217,13 @@ public class PSwingExample2 extends JFrame {
         panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "A JList", TitledBorder.LEFT,
                 TitledBorder.TOP));
         panel.setPreferredSize(new Dimension(200, 200));
-        Vector data = new Vector();
+        final Vector data = new Vector();
         data.addElement("Choice 1");
         data.addElement("Choice 2");
         data.addElement("Choice 3");
         data.addElement("Choice 4");
         data.addElement("Choice 5");
-        JList list = new JList(data);
+        final JList list = new JList(data);
         list.setBackground(Color.lightGray);
         panel.add(list);
         swing = new PSwing(panel);
@@ -236,7 +241,7 @@ public class PSwingExample2 extends JFrame {
         transform.translate(-500, 0);
         transform.addChild(leaf);
         canvas.getLayer().addChild(transform);
-        
+
         label = new JLabel("A JLabel", SwingConstants.CENTER);
         label.setIcon(new Icon() {
 
@@ -248,10 +253,11 @@ public class PSwingExample2 extends JFrame {
                 return 20;
             }
 
-            public void paintIcon(Component c, Graphics g, int x, int y) {
+            public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
                 g.setColor(Color.BLUE);
                 g.drawRect(0, 0, 20, 20);
-            }});
+            }
+        });
         swing = new PSwing(label);
         leaf = new ZVisualLeaf(swing);
         transform = new PNode();
@@ -271,8 +277,8 @@ public class PSwingExample2 extends JFrame {
         // A panel MUST be created with double buffering off
         panel = new JPanel(false);
         panel.setLayout(new BorderLayout());
-        JButton button1 = new JButton("Button 1");
-        JButton button2 = new JButton("Button 2");
+        final JButton button1 = new JButton("Button 1");
+        final JButton button2 = new JButton("Button 2");
         label = new JLabel("A Panel with Layout");
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setForeground(Color.white);
@@ -291,11 +297,11 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(transform);
 
         // JTable Example
-        Vector columns = new Vector();
+        final Vector columns = new Vector();
         columns.addElement("Check Number");
         columns.addElement("Description");
         columns.addElement("Amount");
-        Vector rows = new Vector();
+        final Vector rows = new Vector();
         Vector row = new Vector();
         row.addElement("101");
         row.addElement("Sandwich");
@@ -341,7 +347,7 @@ public class PSwingExample2 extends JFrame {
         row.addElement("Swing Set");
         row.addElement("$146.59");
         rows.addElement(row);
-        JTable table = new JTable(rows, columns);
+        final JTable table = new JTable(rows, columns);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(30);
         TableColumn c = table.getColumn(table.getColumnName(0));
@@ -370,12 +376,12 @@ public class PSwingExample2 extends JFrame {
             pane.setDoubleBuffered(false);
             pane.setPreferredSize(new Dimension(400, 400));
             editorPane.addHyperlinkListener(new HyperlinkListener() {
-                public void hyperlinkUpdate(HyperlinkEvent e) {
+                public void hyperlinkUpdate(final HyperlinkEvent e) {
                     if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                         try {
                             editorPane.setPage(e.getURL());
                         }
-                        catch (IOException ioe) {
+                        catch (final IOException ioe) {
                             System.out.println("Couldn't Load Web Page");
                         }
                     }
@@ -389,40 +395,55 @@ public class PSwingExample2 extends JFrame {
             canvas.getLayer().addChild(transform);
 
         }
-        catch (IOException ioe) {
+        catch (final IOException ioe) {
             System.out.println("Couldn't Load Web Page");
         }
 
         // A JInternalFrame with a JSplitPane - a JOptionPane - and a
         // JToolBar
-        JInternalFrame iframe = new JInternalFrame("JInternalFrame");
+        final JInternalFrame iframe = new JInternalFrame("JInternalFrame");
         iframe.getRootPane().setDoubleBuffered(false);
         ((JComponent) iframe.getContentPane()).setDoubleBuffered(false);
         iframe.setPreferredSize(new Dimension(500, 500));
-        JTabbedPane tabby = new JTabbedPane();
+        final JTabbedPane tabby = new JTabbedPane();
         tabby.setDoubleBuffered(false);
         iframe.getContentPane().setLayout(new BorderLayout());
-        JOptionPane options = new JOptionPane("This is a JOptionPane!", JOptionPane.INFORMATION_MESSAGE,
+        final JOptionPane options = new JOptionPane("This is a JOptionPane!", JOptionPane.INFORMATION_MESSAGE,
                 JOptionPane.DEFAULT_OPTION);
         options.setDoubleBuffered(false);
         options.setMinimumSize(new Dimension(50, 50));
         options.setPreferredSize(new Dimension(225, 225));
-        JPanel tools = new JPanel(false);
+        final JPanel tools = new JPanel(false);
         tools.setMinimumSize(new Dimension(150, 150));
         tools.setPreferredSize(new Dimension(225, 225));
-        JToolBar bar = new JToolBar();
-        Action letter = new AbstractAction("Big A!") {
+        final JToolBar bar = new JToolBar();
+        final Action letter = new AbstractAction("Big A!") {
 
-            public void actionPerformed(ActionEvent e) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent e) {
             }
         };
 
-        Action hand = new AbstractAction("Hi!") {
-            public void actionPerformed(ActionEvent e) {
+        final Action hand = new AbstractAction("Hi!") {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent e) {
             }
         };
-        Action select = new AbstractAction("There!") {
-            public void actionPerformed(ActionEvent e) {
+        final Action select = new AbstractAction("There!") {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void actionPerformed(final ActionEvent e) {
             }
         };
 
@@ -437,7 +458,7 @@ public class PSwingExample2 extends JFrame {
         tools.add(bar, "North");
         tools.add(label, "Center");
 
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, options, tools);
+        final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, options, tools);
         split.setDoubleBuffered(false);
         iframe.getContentPane().add(split);
         swing = new PSwing(iframe);
@@ -460,7 +481,7 @@ public class PSwingExample2 extends JFrame {
 
         // A JColorChooser - also demonstrates JTabbedPane
         // JColorChooser chooser = new JColorChooser();
-        JCheckBox chooser = new JCheckBox("Check Box");
+        final JCheckBox chooser = new JCheckBox("Check Box");
         swing = new PSwing(chooser);
         leaf = new ZVisualLeaf(swing);
         transform = new PNode();
@@ -472,19 +493,24 @@ public class PSwingExample2 extends JFrame {
         canvas.revalidate();
         canvas.repaint();
 
-        PSwing message = new PSwing(new JTextArea("Click-drag to zoom in and out."));
+        final PSwing message = new PSwing(new JTextArea("Click-drag to zoom in and out."));
         message.translate(0, -50);
         canvas.getLayer().addChild(message);
 
         canvas.getCamera().animateViewToCenterBounds(message.getFullBounds(), false, 1200);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PSwingExample2().setVisible(true);
     }
 
     public static class ZVisualLeaf extends PNode {
-        public ZVisualLeaf(PNode node) {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public ZVisualLeaf(final PNode node) {
             addChild(node);
         }
     }

@@ -75,14 +75,14 @@ public class PSwingRepaintManager extends RepaintManager {
 
     // The components that are currently painting
     // This needs to be a vector for thread safety
-    private Vector paintingComponents = new Vector();
+    private final Vector paintingComponents = new Vector();
 
     /**
      * Locks repaint for a particular (Swing) component displayed by PCanvas
      * 
      * @param c The component for which the repaint is to be locked
      */
-    public void lockRepaint(JComponent c) {
+    public void lockRepaint(final JComponent c) {
         paintingComponents.addElement(c);
     }
 
@@ -91,7 +91,7 @@ public class PSwingRepaintManager extends RepaintManager {
      * 
      * @param c The component for which the repaint is to be unlocked
      */
-    public void unlockRepaint(JComponent c) {
+    public void unlockRepaint(final JComponent c) {
         paintingComponents.remove(c);
     }
 
@@ -102,7 +102,7 @@ public class PSwingRepaintManager extends RepaintManager {
      * @param c The component for which the repaint status is desired
      * @return Whether the component is currently painting
      */
-    public boolean isPainting(JComponent c) {
+    public boolean isPainting(final JComponent c) {
         return paintingComponents.contains(c);
     }
 
@@ -119,10 +119,11 @@ public class PSwingRepaintManager extends RepaintManager {
      * @param width Width of the dirty region in the component
      * @param height Height of the dirty region in the component
      */
-    public synchronized void addDirtyRegion(JComponent component, int x, int y, final int width, final int height) {
+    public synchronized void addDirtyRegion(final JComponent component, final int x, final int y, final int width,
+            final int height) {
         boolean captureRepaint = false;
         JComponent childComponent = null;
-        
+
         int captureX = x;
         int captureY = y;
 
@@ -140,16 +141,16 @@ public class PSwingRepaintManager extends RepaintManager {
             else {
                 // Adds to the offset since the component is nested
                 captureX += comp.getLocation().getX();
-                captureY += comp.getLocation().getY();                
+                captureY += comp.getLocation().getY();
             }
         }
 
         // Now we check to see if we should capture the repaint and act
         // accordingly
         if (captureRepaint) {
-            if (!isPainting(childComponent)) { 
-                double repaintW = Math.min(childComponent.getWidth() - captureX, width);
-                double repaintH = Math.min(childComponent.getHeight() - captureY, height);
+            if (!isPainting(childComponent)) {
+                final double repaintW = Math.min(childComponent.getWidth() - captureX, width);
+                final double repaintH = Math.min(childComponent.getHeight() - captureY, height);
 
                 dispatchRepaint(childComponent, new PBounds(captureX, captureY, repaintW, repaintH));
             }
@@ -159,7 +160,7 @@ public class PSwingRepaintManager extends RepaintManager {
         }
     }
 
-    private void dispatchRepaint(JComponent childComponent, final PBounds repaintBounds) {
+    private void dispatchRepaint(final JComponent childComponent, final PBounds repaintBounds) {
         final PSwing pSwing = (PSwing) childComponent.getClientProperty(PSwing.PSWING_PROPERTY);
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -178,7 +179,7 @@ public class PSwingRepaintManager extends RepaintManager {
      * 
      * @param invalidComponent The Swing component that needs validation
      */
-    public synchronized void addInvalidComponent(JComponent invalidComponent) {
+    public synchronized void addInvalidComponent(final JComponent invalidComponent) {
         final JComponent capturedComponent = invalidComponent;
 
         if (capturedComponent.getParent() == null
@@ -189,7 +190,7 @@ public class PSwingRepaintManager extends RepaintManager {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     capturedComponent.validate();
-                    PSwing pSwing = (PSwing) capturedComponent.getClientProperty(PSwing.PSWING_PROPERTY);
+                    final PSwing pSwing = (PSwing) capturedComponent.getClientProperty(PSwing.PSWING_PROPERTY);
                     pSwing.reshape();
                 }
             });

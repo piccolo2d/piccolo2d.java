@@ -53,9 +53,9 @@ import java.awt.event.MouseWheelEvent;
  */
 public class PInputEventFilter {
 
-    public static final int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK
-            | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK
-            | InputEvent.META_MASK;
+    public static final int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK
+            | InputEvent.BUTTON3_MASK | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK
+            | InputEvent.ALT_GRAPH_MASK | InputEvent.META_MASK;
 
     private int andMask;
     private int orMask;
@@ -83,17 +83,17 @@ public class PInputEventFilter {
         acceptEverything();
     }
 
-    public PInputEventFilter(int aAndMask) {
+    public PInputEventFilter(final int aAndMask) {
         this();
         andMask = aAndMask;
     }
 
-    public PInputEventFilter(int aAndMask, int aNotMask) {
+    public PInputEventFilter(final int aAndMask, final int aNotMask) {
         this(aAndMask);
         notMask = aNotMask;
     }
 
-    public boolean acceptsEvent(PInputEvent aEvent, int type) {
+    public boolean acceptsEvent(final PInputEvent aEvent, final int type) {
         boolean aResult = false;
         int modifiers = 0;
 
@@ -101,20 +101,24 @@ public class PInputEventFilter {
             modifiers = aEvent.getModifiers();
         }
 
-        if (aEvent.isHandled() && !acceptsAlreadyHandledEvents) 
+        if (aEvent.isHandled() && !acceptsAlreadyHandledEvents) {
             return false;
-        
-        if (modifiers != 0) {
-            if ((modifiers & andMask) != andMask || (modifiers & notMask) != 0)
-                return false;
-                                                        
-            if (orMask != ALL_MODIFIERS_MASK && (modifiers & orMask) == 0)
-                return false;
         }
-        
-        if (aEvent.isMouseEvent() && clickCount != -1 && clickCount != aEvent.getClickCount()) 
+
+        if (modifiers != 0) {
+            if ((modifiers & andMask) != andMask || (modifiers & notMask) != 0) {
+                return false;
+            }
+
+            if (orMask != ALL_MODIFIERS_MASK && (modifiers & orMask) == 0) {
+                return false;
+            }
+        }
+
+        if (aEvent.isMouseEvent() && clickCount != -1 && clickCount != aEvent.getClickCount()) {
             return false;
-        
+        }
+
         switch (type) {
             case KeyEvent.KEY_PRESSED:
                 aResult = getAcceptsKeyPressed();
@@ -168,7 +172,7 @@ public class PInputEventFilter {
 
             default:
                 throw new RuntimeException("PInputEvent with bad ID");
-        }        
+        }
 
         if (aResult && getMarksAcceptedEventsAsHandled()) {
             aEvent.setHandled(true);
@@ -279,75 +283,75 @@ public class PInputEventFilter {
         acceptsFocusEvents = false;
     }
 
-    public void setAcceptClickCount(short aClickCount) {
+    public void setAcceptClickCount(final short aClickCount) {
         clickCount = aClickCount;
     }
 
-    public void setAcceptsKeyPressed(boolean aBoolean) {
+    public void setAcceptsKeyPressed(final boolean aBoolean) {
         acceptsKeyPressed = aBoolean;
     }
 
-    public void setAcceptsKeyReleased(boolean aBoolean) {
+    public void setAcceptsKeyReleased(final boolean aBoolean) {
         acceptsKeyReleased = aBoolean;
     }
 
-    public void setAcceptsKeyTyped(boolean aBoolean) {
+    public void setAcceptsKeyTyped(final boolean aBoolean) {
         acceptsKeyTyped = aBoolean;
     }
 
-    public void setAcceptsMouseClicked(boolean aBoolean) {
+    public void setAcceptsMouseClicked(final boolean aBoolean) {
         acceptsMouseClicked = aBoolean;
     }
 
-    public void setAcceptsMouseDragged(boolean aBoolean) {
+    public void setAcceptsMouseDragged(final boolean aBoolean) {
         acceptsMouseDragged = aBoolean;
     }
 
-    public void setAcceptsMouseEntered(boolean aBoolean) {
+    public void setAcceptsMouseEntered(final boolean aBoolean) {
         acceptsMouseEntered = aBoolean;
     }
 
-    public void setAcceptsMouseExited(boolean aBoolean) {
+    public void setAcceptsMouseExited(final boolean aBoolean) {
         acceptsMouseExited = aBoolean;
     }
 
-    public void setAcceptsMouseMoved(boolean aBoolean) {
+    public void setAcceptsMouseMoved(final boolean aBoolean) {
         acceptsMouseMoved = aBoolean;
     }
 
-    public void setAcceptsMousePressed(boolean aBoolean) {
+    public void setAcceptsMousePressed(final boolean aBoolean) {
         acceptsMousePressed = aBoolean;
     }
 
-    public void setAcceptsMouseReleased(boolean aBoolean) {
+    public void setAcceptsMouseReleased(final boolean aBoolean) {
         acceptsMouseReleased = aBoolean;
     }
 
-    public void setAcceptsMouseWheelRotated(boolean aBoolean) {
+    public void setAcceptsMouseWheelRotated(final boolean aBoolean) {
         acceptsMouseWheelRotated = aBoolean;
     }
 
-    public void setAcceptsFocusEvents(boolean aBoolean) {
+    public void setAcceptsFocusEvents(final boolean aBoolean) {
         acceptsFocusEvents = aBoolean;
     }
 
-    public void setAndMask(int aAndMask) {
+    public void setAndMask(final int aAndMask) {
         andMask = aAndMask;
     }
 
-    public void setAcceptsAlreadyHandledEvents(boolean aBoolean) {
+    public void setAcceptsAlreadyHandledEvents(final boolean aBoolean) {
         acceptsAlreadyHandledEvents = aBoolean;
     }
 
-    public void setMarksAcceptedEventsAsHandled(boolean aBoolean) {
+    public void setMarksAcceptedEventsAsHandled(final boolean aBoolean) {
         marksAcceptedEventsAsHandled = aBoolean;
     }
 
-    public void setNotMask(int aNotMask) {
+    public void setNotMask(final int aNotMask) {
         notMask = aNotMask;
     }
 
-    public void setOrMask(int aOrMask) {
+    public void setOrMask(final int aOrMask) {
         orMask = aOrMask;
     }
 }

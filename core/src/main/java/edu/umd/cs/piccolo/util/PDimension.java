@@ -46,7 +46,7 @@ public class PDimension extends Dimension2D implements Serializable {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     public double width;
     public double height;
 
@@ -54,17 +54,17 @@ public class PDimension extends Dimension2D implements Serializable {
         super();
     }
 
-    public PDimension(Dimension2D aDimension) {
+    public PDimension(final Dimension2D aDimension) {
         this(aDimension.getWidth(), aDimension.getHeight());
     }
 
-    public PDimension(double aWidth, double aHeight) {
+    public PDimension(final double aWidth, final double aHeight) {
         super();
         width = aWidth;
         height = aHeight;
     }
 
-    public PDimension(Point2D p1, Point2D p2) {
+    public PDimension(final Point2D p1, final Point2D p2) {
         width = p2.getX() - p1.getX();
         height = p2.getY() - p1.getY();
     }
@@ -73,17 +73,17 @@ public class PDimension extends Dimension2D implements Serializable {
         return height;
     }
 
-    public double getWidth() {        
+    public double getWidth() {
         return width;
     }
 
-    public void setSize(double aWidth, double aHeight) {
+    public void setSize(final double aWidth, final double aHeight) {
         width = aWidth;
         height = aHeight;
     }
 
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append(super.toString().replaceAll(".*\\.", ""));
         result.append('[');

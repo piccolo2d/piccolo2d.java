@@ -36,21 +36,26 @@ import edu.umd.cs.piccolox.PFrame;
 
 public class CenterExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public CenterExample() {
         this(null);
     }
 
-    public CenterExample(PCanvas aCanvas) {
+    public CenterExample(final PCanvas aCanvas) {
         super("CenterExample", false, aCanvas);
     }
 
     public void initialize() {
-        PCanvas c = getCanvas();
-        PLayer l = c.getLayer();
-        PCamera cam = c.getCamera();
+        final PCanvas c = getCanvas();
+        final PLayer l = c.getLayer();
+        final PCamera cam = c.getCamera();
 
         cam.scaleView(2.0);
-        PPath path = PPath.createRectangle(0, 0, 100, 100);
+        final PPath path = PPath.createRectangle(0, 0, 100, 100);
 
         l.addChild(path);
         path.translate(100, 10);
@@ -58,7 +63,7 @@ public class CenterExample extends PFrame {
         cam.animateViewToCenterBounds(path.getGlobalFullBounds(), true, 1000);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new CenterExample();
     }
 }

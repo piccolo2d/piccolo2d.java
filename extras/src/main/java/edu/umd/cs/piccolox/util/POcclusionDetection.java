@@ -45,17 +45,17 @@ public class POcclusionDetection {
      * nodes. Note that this is only detecting a subset of occlusions (parent,
      * child), others such as overlapping siblings or cousins are not detected.
      */
-    public void detectOccusions(PNode n, PBounds parentBounds) {
+    public void detectOccusions(final PNode n, final PBounds parentBounds) {
         detectOcclusions(n, new PPickPath(null, parentBounds));
     }
 
-    public void detectOcclusions(PNode n, PPickPath pickPath) {
+    public void detectOcclusions(final PNode n, final PPickPath pickPath) {
         if (n.fullIntersects(pickPath.getPickBounds())) {
             pickPath.pushTransform(n.getTransformReference(false));
 
-            int count = n.getChildrenCount();
+            final int count = n.getChildrenCount();
             for (int i = count - 1; i >= 0; i--) {
-                PNode each = (PNode) n.getChild(i);
+                final PNode each = n.getChild(i);
                 if (n.getOccluded()) {
                     // if n has been occuded by a previous decendent then
                     // this child must also be occuded
@@ -71,7 +71,7 @@ public class POcclusionDetection {
             if (!n.getOccluded()) {
                 if (n.intersects(pickPath.getPickBounds())) {
                     if (n.isOpaque(pickPath.getPickBounds())) {
-                        PNode p = n.getParent();
+                        final PNode p = n.getParent();
                         while (p != null && !p.getOccluded()) {
                             p.setOccluded(true);
                         }

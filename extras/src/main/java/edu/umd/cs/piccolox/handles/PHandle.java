@@ -60,6 +60,10 @@ import edu.umd.cs.piccolox.util.PNodeLocator;
  */
 public class PHandle extends PPath {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static float DEFAULT_HANDLE_SIZE = 8;
     public static Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
     public static Color DEFAULT_COLOR = Color.white;
@@ -71,7 +75,7 @@ public class PHandle extends PPath {
      * Construct a new handle that will use the given locator to locate itself
      * on its parent node.
      */
-    public PHandle(PLocator aLocator) {
+    public PHandle(final PLocator aLocator) {
         super(DEFAULT_HANDLE_SHAPE);
         locator = aLocator;
         setPaint(DEFAULT_COLOR);
@@ -80,27 +84,27 @@ public class PHandle extends PPath {
 
     protected void installHandleEventHandlers() {
         handleDragger = new PDragSequenceEventHandler() {
-            protected void startDrag(PInputEvent event) {
+            protected void startDrag(final PInputEvent event) {
                 super.startDrag(event);
                 startHandleDrag(event.getPositionRelativeTo(PHandle.this), event);
             }
 
-            protected void drag(PInputEvent event) {
+            protected void drag(final PInputEvent event) {
                 super.drag(event);
-                PDimension aDelta = event.getDeltaRelativeTo(PHandle.this);
+                final PDimension aDelta = event.getDeltaRelativeTo(PHandle.this);
                 if (aDelta.getWidth() != 0 || aDelta.getHeight() != 0) {
                     dragHandle(aDelta, event);
                 }
             }
 
-            protected void endDrag(PInputEvent event) {
+            protected void endDrag(final PInputEvent event) {
                 super.endDrag(event);
                 endHandleDrag(event.getPositionRelativeTo(PHandle.this), event);
             }
         };
 
         addPropertyChangeListener(PNode.PROPERTY_TRANSFORM, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 relocateHandle();
             }
         });
@@ -135,7 +139,7 @@ public class PHandle extends PPath {
      * Set the locator that this handle uses to position itself on its parent
      * node.
      */
-    public void setLocator(PLocator aLocator) {
+    public void setLocator(final PLocator aLocator) {
         locator = aLocator;
         invalidatePaint();
         relocateHandle();
@@ -150,20 +154,20 @@ public class PHandle extends PPath {
      * Override this method to get notified when the handle starts to get
      * dragged.
      */
-    public void startHandleDrag(Point2D aLocalPoint, PInputEvent aEvent) {
+    public void startHandleDrag(final Point2D aLocalPoint, final PInputEvent aEvent) {
     }
 
     /**
      * Override this method to get notified as the handle is dragged.
      */
-    public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
+    public void dragHandle(final PDimension aLocalDimension, final PInputEvent aEvent) {
     }
 
     /**
      * Override this method to get notified when the handle stops getting
      * dragged.
      */
-    public void endHandleDrag(Point2D aLocalPoint, PInputEvent aEvent) {
+    public void endHandleDrag(final Point2D aLocalPoint, final PInputEvent aEvent) {
     }
 
     // ****************************************************************
@@ -173,7 +177,7 @@ public class PHandle extends PPath {
     // position.
     // ****************************************************************
 
-    public void setParent(PNode newParent) {
+    public void setParent(final PNode newParent) {
         super.setParent(newParent);
         relocateHandle();
     }
@@ -187,12 +191,12 @@ public class PHandle extends PPath {
      */
     public void relocateHandle() {
         if (locator != null) {
-            PBounds b = getBoundsReference();
-            Point2D aPoint = locator.locatePoint(null);
+            final PBounds b = getBoundsReference();
+            final Point2D aPoint = locator.locatePoint(null);
 
             if (locator instanceof PNodeLocator) {
-                PNode located = ((PNodeLocator) locator).getNode();
-                PNode parent = getParent();
+                final PNode located = ((PNodeLocator) locator).getNode();
+                final PNode parent = getParent();
 
                 located.localToGlobal(aPoint);
                 globalToLocal(aPoint);
@@ -202,8 +206,8 @@ public class PHandle extends PPath {
                 }
             }
 
-            double newCenterX = aPoint.getX();
-            double newCenterY = aPoint.getY();
+            final double newCenterX = aPoint.getX();
+            final double newCenterY = aPoint.getY();
 
             if (newCenterX != b.getCenterX() || newCenterY != b.getCenterY()) {
 
@@ -216,7 +220,7 @@ public class PHandle extends PPath {
     // Serialization
     // ****************************************************************
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         installHandleEventHandlers();
     }

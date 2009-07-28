@@ -42,24 +42,29 @@ import edu.umd.cs.piccolox.handles.PBoundsHandle;
  */
 public class CameraExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public CameraExample() {
         this(null);
     }
 
-    public CameraExample(PCanvas aCanvas) {
+    public CameraExample(final PCanvas aCanvas) {
         super("CameraExample", false, aCanvas);
     }
 
     public void initialize() {
-        PLayer l = new PLayer();
-        PPath n = PPath.createEllipse(0, 0, 100, 80);
+        final PLayer l = new PLayer();
+        final PPath n = PPath.createEllipse(0, 0, 100, 80);
         n.setPaint(Color.red);
         n.setStroke(null);
         PBoundsHandle.addBoundsHandlesTo(n);
         l.addChild(n);
         n.translate(200, 200);
 
-        PCamera c = new PCamera();
+        final PCamera c = new PCamera();
         c.setBounds(0, 0, 100, 80);
         c.scaleView(0.1);
         c.addLayer(l);
@@ -70,7 +75,7 @@ public class CameraExample extends PFrame {
         getCanvas().getLayer().addChild(c);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new CameraExample();
     }
 }

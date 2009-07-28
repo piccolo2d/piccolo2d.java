@@ -54,14 +54,14 @@ import edu.umd.cs.piccolo.util.PUtil;
  */
 public class PActivityScheduler {
 
-    private PRoot root;
-    private List activities;
+    private final PRoot root;
+    private final List activities;
     private Timer activityTimer;
     private boolean activitiesChanged;
     private boolean animating;
-    private ArrayList processingActivities;
+    private final ArrayList processingActivities;
 
-    public PActivityScheduler(PRoot rootNode) {
+    public PActivityScheduler(final PRoot rootNode) {
         root = rootNode;
         activities = new ArrayList();
         processingActivities = new ArrayList();
@@ -71,7 +71,7 @@ public class PActivityScheduler {
         return root;
     }
 
-    public void addActivity(PActivity activity) {
+    public void addActivity(final PActivity activity) {
         addActivity(activity, false);
     }
 
@@ -80,9 +80,10 @@ public class PActivityScheduler {
      * that an activity is run after all other activities have been run. To do
      * this set processLast to true when adding the activity.
      */
-    public void addActivity(PActivity activity, boolean processLast) {
-        if (activities.contains(activity))
+    public void addActivity(final PActivity activity, final boolean processLast) {
+        if (activities.contains(activity)) {
             return;
+        }
 
         activitiesChanged = true;
 
@@ -100,9 +101,10 @@ public class PActivityScheduler {
         }
     }
 
-    public void removeActivity(PActivity activity) {
-        if (!activities.contains(activity))
+    public void removeActivity(final PActivity activity) {
+        if (!activities.contains(activity)) {
             return;
+        }
 
         activitiesChanged = true;
         activities.remove(activity);
@@ -126,13 +128,13 @@ public class PActivityScheduler {
      * Process all scheduled activities for the given time. Each activity is
      * given one "step", equivalent to one frame of animation.
      */
-    public void processActivities(long currentTime) {
-        int size = activities.size();
+    public void processActivities(final long currentTime) {
+        final int size = activities.size();
         if (size > 0) {
             processingActivities.clear();
             processingActivities.addAll(activities);
             for (int i = size - 1; i >= 0; i--) {
-                PActivity each = (PActivity) processingActivities.get(i);
+                final PActivity each = (PActivity) processingActivities.get(i);
                 each.processStep(currentTime);
             }
         }
@@ -146,7 +148,7 @@ public class PActivityScheduler {
         if (activitiesChanged) {
             animating = false;
             for (int i = 0; i < activities.size(); i++) {
-                PActivity each = (PActivity) activities.get(i);
+                final PActivity each = (PActivity) activities.get(i);
                 animating |= each.isAnimation();
             }
             activitiesChanged = false;
@@ -165,7 +167,7 @@ public class PActivityScheduler {
     protected Timer getActivityTimer() {
         if (activityTimer == null) {
             activityTimer = root.createTimer(PUtil.ACTIVITY_SCHEDULER_FRAME_DELAY, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(final ActionEvent e) {
                     root.processInputs();
                 }
             });

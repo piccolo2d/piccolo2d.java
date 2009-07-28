@@ -50,6 +50,11 @@ import javax.swing.plaf.ScrollPaneUI;
  */
 public class PScrollPane extends JScrollPane {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     // A reusable null action
     protected PNullAction nullAction = null;
 
@@ -59,11 +64,11 @@ public class PScrollPane extends JScrollPane {
     /**
      * Pass on the constructor info to the super
      */
-    public PScrollPane(Component view, int vsbPolicy, int hsbPolicy) {
+    public PScrollPane(final Component view, final int vsbPolicy, final int hsbPolicy) {
         super(view, vsbPolicy, hsbPolicy);
 
         // Set the layout and sync it with the scroll pane
-        PScrollPaneLayout layout = new PScrollPaneLayout.UIResource();
+        final PScrollPaneLayout layout = new PScrollPaneLayout.UIResource();
         setLayout(layout);
         layout.syncWithScrollPane(this);
     }
@@ -71,14 +76,14 @@ public class PScrollPane extends JScrollPane {
     /**
      * Pass on the constructor info to the super
      */
-    public PScrollPane(Component view) {
+    public PScrollPane(final Component view) {
         this(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 
     /**
      * Pass on the constructor info to the super
      */
-    public PScrollPane(int vsbPolicy, int hsbPolicy) {
+    public PScrollPane(final int vsbPolicy, final int hsbPolicy) {
         this(null, vsbPolicy, hsbPolicy);
     }
 
@@ -94,13 +99,13 @@ public class PScrollPane extends JScrollPane {
      * 
      * @param disable true disables key actions, false enables key actions
      */
-    public void setKeyActionsDisabled(boolean disable) {
-        if (disable && this.disableKeyActions != disable) {
-            this.disableKeyActions = disable;
+    public void setKeyActionsDisabled(final boolean disable) {
+        if (disable && disableKeyActions != disable) {
+            disableKeyActions = disable;
             disableKeyActions();
         }
-        else if (!disable && this.disableKeyActions != disable) {
-            this.disableKeyActions = disable;
+        else if (!disable && disableKeyActions != disable) {
+            disableKeyActions = disable;
             installCustomKeyActions();
         }
     }
@@ -108,7 +113,7 @@ public class PScrollPane extends JScrollPane {
     /**
      * Sets the UI
      */
-    public void setUI(ScrollPaneUI ui) {
+    public void setUI(final ScrollPaneUI ui) {
         super.setUI(ui);
 
         if (!disableKeyActions) {
@@ -124,7 +129,7 @@ public class PScrollPane extends JScrollPane {
      * scroll the view
      */
     protected void installCustomKeyActions() {
-        ActionMap map = getActionMap();
+        final ActionMap map = getActionMap();
 
         map.put("scrollUp", new PScrollAction("scrollUp", SwingConstants.VERTICAL, -1, true));
         map.put("scrollDown", new PScrollAction("scrollDown", SwingConstants.VERTICAL, 1, true));
@@ -144,7 +149,7 @@ public class PScrollPane extends JScrollPane {
      * Disables key actions on this PScrollPane
      */
     protected void disableKeyActions() {
-        ActionMap map = getActionMap();
+        final ActionMap map = getActionMap();
 
         if (nullAction == null) {
             nullAction = new PNullAction();
@@ -180,34 +185,38 @@ public class PScrollPane extends JScrollPane {
      * relevant scrollbar is visible
      */
     protected static class PScrollAction extends AbstractAction {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
         /** Direction to scroll. */
         protected int orientation;
         /** 1 indicates scroll down, -1 up. */
         protected int direction;
         /** True indicates a block scroll, otherwise a unit scroll. */
-        private boolean block;
+        private final boolean block;
 
-        protected PScrollAction(String name, int orientation, int direction, boolean block) {
+        protected PScrollAction(final String name, final int orientation, final int direction, final boolean block) {
             super(name);
             this.orientation = orientation;
             this.direction = direction;
             this.block = block;
         }
 
-        public void actionPerformed(ActionEvent e) {
-            JScrollPane scrollpane = (JScrollPane) e.getSource();
+        public void actionPerformed(final ActionEvent e) {
+            final JScrollPane scrollpane = (JScrollPane) e.getSource();
             // LEG: Modification to only perform these actions if the relevant
             // scrollbar is actually showing
-            if ((orientation == SwingConstants.VERTICAL && scrollpane.getVerticalScrollBar().isShowing())
-                    || (orientation == SwingConstants.HORIZONTAL && scrollpane.getHorizontalScrollBar().isShowing())) {
+            if (orientation == SwingConstants.VERTICAL && scrollpane.getVerticalScrollBar().isShowing()
+                    || orientation == SwingConstants.HORIZONTAL && scrollpane.getHorizontalScrollBar().isShowing()) {
 
-                JViewport vp = scrollpane.getViewport();
+                final JViewport vp = scrollpane.getViewport();
                 Component view;
                 if (vp != null && (view = vp.getView()) != null) {
-                    Rectangle visRect = vp.getViewRect();
+                    final Rectangle visRect = vp.getViewRect();
                     // LEG: Modification to query the viewport for the
                     // view size rather than going directly to the view
-                    Dimension vSize = vp.getViewSize();
+                    final Dimension vSize = vp.getViewSize();
                     int amount;
 
                     if (view instanceof Scrollable) {
@@ -232,8 +241,8 @@ public class PScrollPane extends JScrollPane {
                         }
                     }
                     if (orientation == SwingConstants.VERTICAL) {
-                        visRect.y += (amount * direction);
-                        if ((visRect.y + visRect.height) > vSize.height) {
+                        visRect.y += amount * direction;
+                        if (visRect.y + visRect.height > vSize.height) {
                             visRect.y = Math.max(0, vSize.height - visRect.height);
                         }
                         else if (visRect.y < 0) {
@@ -241,8 +250,8 @@ public class PScrollPane extends JScrollPane {
                         }
                     }
                     else {
-                        visRect.x += (amount * direction);
-                        if ((visRect.x + visRect.width) > vSize.width) {
+                        visRect.x += amount * direction;
+                        if (visRect.x + visRect.width > vSize.width) {
                             visRect.x = Math.max(0, vSize.width - visRect.width);
                         }
                         else if (visRect.x < 0) {
@@ -262,16 +271,21 @@ public class PScrollPane extends JScrollPane {
      * Only performs the event if a scrollbar is visible
      */
     private static class PScrollHomeAction extends AbstractAction {
-        protected PScrollHomeAction(String name) {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        protected PScrollHomeAction(final String name) {
             super(name);
         }
 
-        public void actionPerformed(ActionEvent e) {
-            JScrollPane scrollpane = (JScrollPane) e.getSource();
+        public void actionPerformed(final ActionEvent e) {
+            final JScrollPane scrollpane = (JScrollPane) e.getSource();
             // LEG: Modification to only perform these actions if one of the
             // scrollbars is actually showing
             if (scrollpane.getVerticalScrollBar().isShowing() || scrollpane.getHorizontalScrollBar().isShowing()) {
-                JViewport vp = scrollpane.getViewport();
+                final JViewport vp = scrollpane.getViewport();
                 if (vp != null && vp.getView() != null) {
                     vp.setViewPosition(new Point(0, 0));
                 }
@@ -287,23 +301,28 @@ public class PScrollPane extends JScrollPane {
      * also only performs the event if a scrollbar is visible
      */
     protected static class PScrollEndAction extends AbstractAction {
-        protected PScrollEndAction(String name) {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        protected PScrollEndAction(final String name) {
             super(name);
         }
 
-        public void actionPerformed(ActionEvent e) {
-            JScrollPane scrollpane = (JScrollPane) e.getSource();
+        public void actionPerformed(final ActionEvent e) {
+            final JScrollPane scrollpane = (JScrollPane) e.getSource();
             // LEG: Modification to only perform these actions if one of the
             // scrollbars is actually showing
             if (scrollpane.getVerticalScrollBar().isShowing() || scrollpane.getHorizontalScrollBar().isShowing()) {
 
-                JViewport vp = scrollpane.getViewport();
+                final JViewport vp = scrollpane.getViewport();
                 if (vp != null && vp.getView() != null) {
 
-                    Rectangle visRect = vp.getViewRect();
+                    final Rectangle visRect = vp.getViewRect();
                     // LEG: Modification to query the viewport for the
                     // view size rather than going directly to the view
-                    Dimension size = vp.getViewSize();
+                    final Dimension size = vp.getViewSize();
                     vp.setViewPosition(new Point(size.width - visRect.width, size.height - visRect.height));
                 }
             }
@@ -315,7 +334,12 @@ public class PScrollPane extends JScrollPane {
      * to its parent
      */
     protected static class PNullAction extends AbstractAction {
-        public void actionPerformed(ActionEvent e) {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public void actionPerformed(final ActionEvent e) {
         }
     }
 }

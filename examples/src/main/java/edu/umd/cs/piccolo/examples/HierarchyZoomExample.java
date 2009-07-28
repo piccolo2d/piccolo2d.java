@@ -40,30 +40,35 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class HierarchyZoomExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public HierarchyZoomExample() {
         this(null);
     }
 
-    public HierarchyZoomExample(PCanvas aCanvas) {
+    public HierarchyZoomExample(final PCanvas aCanvas) {
         super("HierarchyZoomExample", false, aCanvas);
     }
 
     public void initialize() {
-        PNode root = createHierarchy(10);
+        final PNode root = createHierarchy(10);
         getCanvas().getLayer().addChild(root);
         getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
         getCanvas().addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent event) {
+            public void mousePressed(final PInputEvent event) {
                 getCanvas().getCamera().animateViewToCenterBounds(event.getPickedNode().getGlobalBounds(), true, 500);
             }
         });
     }
 
-    public PNode createHierarchy(int level) {
-        PPath result = PPath.createRectangle(0, 0, 100, 100);
+    public PNode createHierarchy(final int level) {
+        final PPath result = PPath.createRectangle(0, 0, 100, 100);
 
         if (level > 0) {
-            PNode child = createHierarchy(level - 1);
+            final PNode child = createHierarchy(level - 1);
             child.scale(0.5);
             result.addChild(child);
             child.offset(25, 25);
@@ -72,7 +77,7 @@ public class HierarchyZoomExample extends PFrame {
         return result;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new HierarchyZoomExample();
     }
 }

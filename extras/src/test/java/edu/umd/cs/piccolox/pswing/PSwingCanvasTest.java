@@ -39,13 +39,18 @@ public class PSwingCanvasTest extends TestCase {
     protected int finalizerCallCount;
 
     public void setUp() {
-    	finalizerCallCount = 0;
+        finalizerCallCount = 0;
     }
-    
+
     public void testMemoryLeak() throws InterruptedException {
         JPanel panel = new JPanel();
         for (int i = 0; i < 10; i++) {
             PSwingCanvas canvas = new PSwingCanvas() {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+
                 public void finalize() {
                     finalizerCallCount++;
                 }
@@ -56,11 +61,12 @@ public class PSwingCanvasTest extends TestCase {
         }
         panel = null;
         System.gc();
-        System.runFinalization();        
+        System.runFinalization();
 
         // Not sure why I need -1 here, but I do. If I create 10000 it'll always
         // be 1 less
-        //TODO: make this work in all environments.  Will not work at the command line for some.
-        //assertEquals(10 - 1, finalizerCallCount);
+        // TODO: make this work in all environments. Will not work at the
+        // command line for some.
+        // assertEquals(10 - 1, finalizerCallCount);
     }
 }

@@ -76,12 +76,12 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
     /**
      * Basic constructor for PStyledTextEventHandler
      */
-    public PStyledTextEventHandler(PCanvas canvas) {
+    public PStyledTextEventHandler(final PCanvas canvas) {
         super();
 
-        PInputEventFilter filter = new PInputEventFilter();
+        final PInputEventFilter filter = new PInputEventFilter();
         filter.setOrMask(InputEvent.BUTTON1_MASK | InputEvent.BUTTON3_MASK);
-        this.setEventFilter(filter);
+        setEventFilter(filter);
         this.canvas = canvas;
         initEditor(createDefaultEditor());
     }
@@ -90,14 +90,14 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
      * Constructor for PStyledTextEventHandler that allows an editor to be
      * specified
      */
-    public PStyledTextEventHandler(PCanvas canvas, JTextComponent editor) {
+    public PStyledTextEventHandler(final PCanvas canvas, final JTextComponent editor) {
         super();
 
         this.canvas = canvas;
         initEditor(editor);
     }
 
-    protected void initEditor(JTextComponent newEditor) {
+    protected void initEditor(final JTextComponent newEditor) {
         editor = newEditor;
 
         canvas.setLayout(null);
@@ -108,15 +108,20 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
     }
 
     protected JTextComponent createDefaultEditor() {
-        JTextPane tComp = new JTextPane() {
+        final JTextPane tComp = new JTextPane() {
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
 
             /**
              * Set some rendering hints - if we don't then the rendering can be
              * inconsistent. Also, Swing doesn't work correctly with fractional
              * metrics.
              */
-            public void paint(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
+            public void paint(final Graphics g) {
+                final Graphics2D g2 = (Graphics2D) g;
 
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -132,44 +137,44 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
 
     protected DocumentListener createDocumentListener() {
         return new DocumentListener() {
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(final DocumentEvent e) {
                 reshapeEditorLater();
             }
 
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(final DocumentEvent e) {
                 reshapeEditorLater();
             }
 
-            public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(final DocumentEvent e) {
                 reshapeEditorLater();
             }
         };
     }
 
     public PStyledText createText() {
-        PStyledText newText = new PStyledText();
+        final PStyledText newText = new PStyledText();
 
-        Document doc = editor.getUI().getEditorKit(editor).createDefaultDocument();
+        final Document doc = editor.getUI().getEditorKit(editor).createDefaultDocument();
         if (doc instanceof StyledDocument && missingFontFamilyOrSize(doc)) {
-            Font eFont = editor.getFont();
-            SimpleAttributeSet sas = new SimpleAttributeSet();
+            final Font eFont = editor.getFont();
+            final SimpleAttributeSet sas = new SimpleAttributeSet();
             sas.addAttribute(StyleConstants.FontFamily, eFont.getFamily());
             sas.addAttribute(StyleConstants.FontSize, new Integer(eFont.getSize()));
 
-            ((StyledDocument) doc).setParagraphAttributes(0, doc.getLength(), sas, false);       
+            ((StyledDocument) doc).setParagraphAttributes(0, doc.getLength(), sas, false);
         }
         newText.setDocument(doc);
 
         return newText;
     }
 
-    private boolean missingFontFamilyOrSize(Document doc) {
+    private boolean missingFontFamilyOrSize(final Document doc) {
         return !doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontFamily)
                 || !doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontSize);
     }
 
-    public void mousePressed(PInputEvent inputEvent) {
-        PNode pickedNode = inputEvent.getPickedNode();
+    public void mousePressed(final PInputEvent inputEvent) {
+        final PNode pickedNode = inputEvent.getPickedNode();
 
         stopEditing(inputEvent);
 
@@ -181,8 +186,8 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             startEditing(inputEvent, (PStyledText) pickedNode);
         }
         else if (pickedNode instanceof PCamera) {
-            PStyledText newText = createText();
-            Insets pInsets = newText.getInsets();
+            final PStyledText newText = createText();
+            final Insets pInsets = newText.getInsets();
             canvas.getLayer().addChild(newText);
             newText.translate(inputEvent.getPosition().getX() - pInsets.left, inputEvent.getPosition().getY()
                     - pInsets.top);
@@ -190,10 +195,10 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         }
     }
 
-    public void startEditing(PInputEvent event, PStyledText text) {
+    public void startEditing(final PInputEvent event, final PStyledText text) {
         // Get the node's top right hand corner
-        Insets pInsets = text.getInsets();
-        Point2D nodePt = new Point2D.Double(text.getX() + pInsets.left, text.getY() + pInsets.top);
+        final Insets pInsets = text.getInsets();
+        final Point2D nodePt = new Point2D.Double(text.getX() + pInsets.left, text.getY() + pInsets.top);
         text.localToGlobal(nodePt);
         event.getTopCamera().viewToLocal(nodePt);
 
@@ -201,7 +206,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         editor.setDocument(text.getDocument());
         editor.setVisible(true);
 
-        Insets bInsets = editor.getBorder().getBorderInsets(editor);
+        final Insets bInsets = editor.getBorder().getBorderInsets(editor);
         editor.setLocation((int) nodePt.getX() - bInsets.left, (int) nodePt.getY() - bInsets.top);
         reshapeEditorLater();
 
@@ -213,7 +218,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         editedText = text;
     }
 
-    public void stopEditing(PInputEvent event) {
+    public void stopEditing(final PInputEvent event) {
         if (editedText == null) {
             return;
         }
@@ -243,7 +248,8 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             public void run() {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        MouseEvent me = new MouseEvent(editor, MouseEvent.MOUSE_PRESSED, e.getWhen(), e.getModifiers()
+                        final MouseEvent me = new MouseEvent(editor, MouseEvent.MOUSE_PRESSED, e.getWhen(), e
+                                .getModifiers()
                                 | InputEvent.BUTTON1_MASK, (int) (e.getCanvasPosition().getX() - editor.getX()),
                                 (int) (e.getCanvasPosition().getY() - editor.getY()), 1, false);
                         editor.dispatchEvent(me);
@@ -259,19 +265,18 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             // stage process
             Dimension prefSize = editor.getPreferredSize();
 
-            Insets pInsets = editedText.getInsets();
-            Insets jInsets = editor.getInsets();
+            final Insets pInsets = editedText.getInsets();
+            final Insets jInsets = editor.getInsets();
 
-            int width = (editedText.getConstrainWidthToTextWidth()) ? (int) prefSize.getWidth() : (int) (editedText
+            final int width = editedText.getConstrainWidthToTextWidth() ? (int) prefSize.getWidth() : (int) (editedText
                     .getWidth()
                     - pInsets.left - pInsets.right + jInsets.left + jInsets.right + 3.0);
             prefSize.setSize(width, prefSize.getHeight());
             editor.setSize(prefSize);
 
             prefSize = editor.getPreferredSize();
-            int height = (editedText.getConstrainHeightToTextHeight()) ? (int) prefSize.getHeight() : (int) (editedText
-                    .getHeight()
-                    - pInsets.top - pInsets.bottom + jInsets.top + jInsets.bottom + 3.0);
+            final int height = editedText.getConstrainHeightToTextHeight() ? (int) prefSize.getHeight()
+                    : (int) (editedText.getHeight() - pInsets.top - pInsets.bottom + jInsets.top + jInsets.bottom + 3.0);
             prefSize.setSize(width, height);
             editor.setSize(prefSize);
         }

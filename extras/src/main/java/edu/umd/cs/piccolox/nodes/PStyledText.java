@@ -62,6 +62,10 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PStyledText extends PNode {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     protected static FontRenderContext SWING_FRC = new FontRenderContext(null, true, false);
     protected static Line2D paintLine = new Line2D.Double();
 
@@ -85,7 +89,7 @@ public class PStyledText extends PNode {
      * Controls whether this node changes its width to fit the width of its
      * text. If flag is true it does; if flag is false it doesn't
      */
-    public void setConstrainWidthToTextWidth(boolean constrainWidthToTextWidth) {
+    public void setConstrainWidthToTextWidth(final boolean constrainWidthToTextWidth) {
         this.constrainWidthToTextWidth = constrainWidthToTextWidth;
         recomputeLayout();
     }
@@ -94,7 +98,7 @@ public class PStyledText extends PNode {
      * Controls whether this node changes its height to fit the height of its
      * text. If flag is true it does; if flag is false it doesn't
      */
-    public void setConstrainHeightToTextHeight(boolean constrainHeightToTextHeight) {
+    public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
         this.constrainHeightToTextHeight = constrainHeightToTextHeight;
         recomputeLayout();
     }
@@ -125,7 +129,7 @@ public class PStyledText extends PNode {
     /**
      * Set the document on this PStyledText
      */
-    public void setDocument(Document document) {
+    public void setDocument(final Document document) {
         // Save the document
         this.document = document;
 
@@ -140,7 +144,7 @@ public class PStyledText extends PNode {
         try {
             documentString = document.getText(0, document.getLength());
         }
-        catch (BadLocationException e) {
+        catch (final BadLocationException e) {
             // Since this the location we're providing comes from directly
             // querying the document, this is impossible in a single threaded
             // model
@@ -148,18 +152,18 @@ public class PStyledText extends PNode {
         }
 
         // The paragraph start and end indices
-        ArrayList pEnds = extractParagraphRanges(documentString);
+        final ArrayList pEnds = extractParagraphRanges(documentString);
 
         // The default style context - which will be reused
-        StyleContext styleContext = StyleContext.getDefaultStyleContext();
+        final StyleContext styleContext = StyleContext.getDefaultStyleContext();
 
         int pos;
         RunInfo paragraphRange = null;
 
         AttributedString attributedString;
 
-        Iterator contentIterator = stringContents.iterator();
-        Iterator paragraphIterator = pEnds.iterator();
+        final Iterator contentIterator = stringContents.iterator();
+        final Iterator paragraphIterator = pEnds.iterator();
         while (contentIterator.hasNext() && paragraphIterator.hasNext()) {
             paragraphRange = (RunInfo) paragraphIterator.next();
             attributedString = (AttributedString) contentIterator.next();
@@ -171,7 +175,7 @@ public class PStyledText extends PNode {
 
             // Small assumption here that there is one root element - can fix
             // for more general support later
-            Element rootElement = document.getDefaultRootElement();
+            final Element rootElement = document.getDefaultRootElement();
 
             // If the string is length 0 then we just need to add the attributes
             // once
@@ -179,16 +183,16 @@ public class PStyledText extends PNode {
                 curElement = drillDownFromRoot(pos, rootElement);
 
                 // These are the mandatory attributes
-                AttributeSet attributes = curElement.getAttributes();
-                Color foreground = styleContext.getForeground(attributes);
+                final AttributeSet attributes = curElement.getAttributes();
+                final Color foreground = styleContext.getForeground(attributes);
 
-                attributedString.addAttribute(TextAttribute.FOREGROUND, foreground, (int) Math.max(0, curElement
+                attributedString.addAttribute(TextAttribute.FOREGROUND, foreground, Math.max(0, curElement
                         .getStartOffset()
-                        - paragraphRange.startIndex), (int) Math.min(paragraphRange.length(), curElement.getEndOffset()
+                        - paragraphRange.startIndex), Math.min(paragraphRange.length(), curElement.getEndOffset()
                         - paragraphRange.startIndex));
 
                 // These are the optional attributes
-                Font font = extractFont(styleContext, pos, rootElement, attributes);
+                final Font font = extractFont(styleContext, pos, rootElement, attributes);
                 applyFontAttribute(paragraphRange, attributedString, curElement, font);
                 applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
                 applyUnderlineAttribute(paragraphRange, attributedString, curElement, attributes);
@@ -201,16 +205,15 @@ public class PStyledText extends PNode {
                     curElement = drillDownFromRoot(pos, rootElement);
 
                     // These are the mandatory attributes
-                    AttributeSet attributes = curElement.getAttributes();
-                    Color foreground = styleContext.getForeground(attributes);
+                    final AttributeSet attributes = curElement.getAttributes();
+                    final Color foreground = styleContext.getForeground(attributes);
 
-                    attributedString.addAttribute(TextAttribute.FOREGROUND, foreground, (int) Math.max(0, curElement
+                    attributedString.addAttribute(TextAttribute.FOREGROUND, foreground, Math.max(0, curElement
                             .getStartOffset()
-                            - paragraphRange.startIndex), (int) Math.min(paragraphRange.length(), curElement
-                            .getEndOffset()
+                            - paragraphRange.startIndex), Math.min(paragraphRange.length(), curElement.getEndOffset()
                             - paragraphRange.startIndex));
 
-                    Font font = extractFont(styleContext, pos, rootElement, attributes);
+                    final Font font = extractFont(styleContext, pos, rootElement, attributes);
                     applyFontAttribute(paragraphRange, attributedString, curElement, font);
 
                     // These are the optional attributes
@@ -230,7 +233,7 @@ public class PStyledText extends PNode {
         recomputeLayout();
     }
 
-    private Element drillDownFromRoot(int pos, Element rootElement) {
+    private Element drillDownFromRoot(final int pos, final Element rootElement) {
         Element curElement;
         // Before each pass, start at the root
         curElement = rootElement;
@@ -242,50 +245,51 @@ public class PStyledText extends PNode {
         return curElement;
     }
 
-    private void applyFontAttribute(RunInfo paragraphRange, AttributedString attributedString, Element curElement,
-            Font font) {
+    private void applyFontAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
+            final Element curElement, final Font font) {
         if (font != null) {
-            attributedString.addAttribute(TextAttribute.FONT, font, (int) Math.max(0, curElement.getStartOffset()
-                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+            attributedString.addAttribute(TextAttribute.FONT, font, Math.max(0, curElement.getStartOffset()
+                    - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
                     curElement.getEndOffset() - paragraphRange.startIndex));
         }
     }
 
-    private void applyStrikeThroughAttribute(RunInfo paragraphRange, AttributedString attributedString,
-            Element curElement, AttributeSet attributes) {
-        boolean strikethrough = StyleConstants.isStrikeThrough(attributes);
+    private void applyStrikeThroughAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
+            final Element curElement, final AttributeSet attributes) {
+        final boolean strikethrough = StyleConstants.isStrikeThrough(attributes);
         if (strikethrough) {
-            attributedString.addAttribute(TextAttribute.STRIKETHROUGH, Boolean.TRUE, (int) Math.max(0, curElement
+            attributedString.addAttribute(TextAttribute.STRIKETHROUGH, Boolean.TRUE, Math.max(0, curElement
                     .getStartOffset()
-                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
                     curElement.getEndOffset() - paragraphRange.startIndex));
         }
     }
 
-    private void applyUnderlineAttribute(RunInfo paragraphRange, AttributedString attributedString, Element curElement,
-            AttributeSet attributes) {
-        boolean underline = StyleConstants.isUnderline(attributes);
+    private void applyUnderlineAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
+            final Element curElement, final AttributeSet attributes) {
+        final boolean underline = StyleConstants.isUnderline(attributes);
         if (underline) {
-            attributedString.addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE, (int) Math.max(0, curElement
+            attributedString.addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE, Math.max(0, curElement
                     .getStartOffset()
-                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
                     curElement.getEndOffset() - paragraphRange.startIndex));
         }
     }
 
-    private void applyBackgroundAttribute(StyleContext style, RunInfo paragraphRange,
-            AttributedString attributedString, Element curElement, AttributeSet attributes) {
-        Color background = (attributes.isDefined(StyleConstants.Background)) ? style.getBackground(attributes) : null;
+    private void applyBackgroundAttribute(final StyleContext style, final RunInfo paragraphRange,
+            final AttributedString attributedString, final Element curElement, final AttributeSet attributes) {
+        final Color background = attributes.isDefined(StyleConstants.Background) ? style.getBackground(attributes)
+                : null;
         if (background != null) {
-            attributedString.addAttribute(TextAttribute.BACKGROUND, background, (int) Math.max(0, curElement
-                    .getStartOffset()
-                    - paragraphRange.startIndex), (int) Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+            attributedString.addAttribute(TextAttribute.BACKGROUND, background, Math.max(0, curElement.getStartOffset()
+                    - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
                     curElement.getEndOffset() - paragraphRange.startIndex));
         }
     }
 
-    private Font extractFont(StyleContext style, int pos, Element rootElement, AttributeSet attributes) {
-        Font font = (attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily)) ? style
+    private Font extractFont(final StyleContext style, final int pos, final Element rootElement,
+            final AttributeSet attributes) {
+        Font font = attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily) ? style
                 .getFont(attributes)
                 : null;
         if (font == null) {
@@ -305,14 +309,14 @@ public class PStyledText extends PNode {
         return font;
     }
 
-    private ArrayList extractParagraphRanges(String documentString) {
+    private ArrayList extractParagraphRanges(final String documentString) {
         // The paragraph start and end indices
-        ArrayList paragraphRanges = new ArrayList();
+        final ArrayList paragraphRanges = new ArrayList();
 
         // The current position in the specified range
         int pos = 0;
 
-        StringTokenizer tokenizer = new StringTokenizer(documentString, "\n", true);
+        final StringTokenizer tokenizer = new StringTokenizer(documentString, "\n", true);
 
         // lastNewLine is used to detect the case when two newlines follow
         // in direct succession
@@ -321,7 +325,7 @@ public class PStyledText extends PNode {
         boolean lastNewLine = true;
 
         for (int i = 0; tokenizer.hasMoreTokens(); i++) {
-            String token = tokenizer.nextToken();
+            final String token = tokenizer.nextToken();
 
             // If the token
             if (token.equals("\n")) {
@@ -372,19 +376,20 @@ public class PStyledText extends PNode {
      * this node are shrunk to fit around those text bounds.
      */
     public void recomputeLayout() {
-        if (stringContents == null)
+        if (stringContents == null) {
             return;
+        }
 
-        ArrayList linesList = new ArrayList();
+        final ArrayList linesList = new ArrayList();
 
         double textWidth = 0;
         double textHeight = 0;
 
-        Iterator contentIterator = stringContents.iterator();
+        final Iterator contentIterator = stringContents.iterator();
 
         while (contentIterator.hasNext()) {
-            AttributedString ats = (AttributedString) contentIterator.next();
-            AttributedCharacterIterator itr = ats.getIterator();
+            final AttributedString ats = (AttributedString) contentIterator.next();
+            final AttributedCharacterIterator itr = ats.getIterator();
 
             LineBreakMeasurer measurer;
             ArrayList breakList = null;
@@ -407,7 +412,7 @@ public class PStyledText extends PNode {
                     newLine = false;
 
                     // Add in the old line dimensions
-                    double lineHeight = (lineInfo == null) ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
+                    final double lineHeight = lineInfo == null ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
                             + lineInfo.leading;
                     textHeight = textHeight + lineHeight;
                     textWidth = Math.max(textWidth, lineWidth);
@@ -417,7 +422,7 @@ public class PStyledText extends PNode {
                     linesList.add(lineInfo);
                 }
 
-                int lineEnd = ((Integer) breakList.get(0)).intValue();
+                final int lineEnd = ((Integer) breakList.get(0)).intValue();
                 if (lineEnd <= itr.getRunLimit()) {
                     breakList.remove(0);
                     newLine = true;
@@ -425,14 +430,14 @@ public class PStyledText extends PNode {
 
                 aTextLayout = measurer.nextLayout(Float.MAX_VALUE, Math.min(lineEnd, itr.getRunLimit()), false);
 
-                SegmentInfo sInfo = new SegmentInfo();
+                final SegmentInfo sInfo = new SegmentInfo();
                 sInfo.font = (Font) itr.getAttribute(TextAttribute.FONT);
                 sInfo.foreground = (Color) itr.getAttribute(TextAttribute.FOREGROUND);
                 sInfo.background = (Color) itr.getAttribute(TextAttribute.BACKGROUND);
                 sInfo.underline = (Boolean) itr.getAttribute(TextAttribute.UNDERLINE);
                 sInfo.layout = aTextLayout;
 
-                FontMetrics metrics = StyleContext.getDefaultStyleContext().getFontMetrics(
+                final FontMetrics metrics = StyleContext.getDefaultStyleContext().getFontMetrics(
                         (Font) itr.getAttribute(TextAttribute.FONT));
                 lineInfo.maxAscent = Math.max(lineInfo.maxAscent, metrics.getMaxAscent());
                 lineInfo.maxDescent = Math.max(lineInfo.maxDescent, metrics.getMaxDescent());
@@ -444,7 +449,8 @@ public class PStyledText extends PNode {
                 lineWidth = lineWidth + aTextLayout.getAdvance();
             }
 
-            double lineHeight = (lineInfo == null) ? 0 : lineInfo.maxAscent + lineInfo.maxDescent + lineInfo.leading;
+            final double lineHeight = lineInfo == null ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
+                    + lineInfo.leading;
             textHeight = textHeight + lineHeight;
             textWidth = Math.max(textWidth, lineWidth);
         }
@@ -454,9 +460,10 @@ public class PStyledText extends PNode {
         constrainDimensionsIfNeeded(textWidth, textHeight);
     }
 
-    private void constrainDimensionsIfNeeded(double textWidth, double textHeight) {
-        if (!constrainWidthToTextWidth && !constrainHeightToTextHeight)
+    private void constrainDimensionsIfNeeded(final double textWidth, final double textHeight) {
+        if (!constrainWidthToTextWidth && !constrainHeightToTextHeight) {
             return;
+        }
 
         double newWidth = getWidth();
         double newHeight = getHeight();
@@ -474,7 +481,7 @@ public class PStyledText extends PNode {
 
     // Because swing doesn't use fractional font metrics by default, we use
     // LineBreakMeasurer to find out where Swing is going to break them
-    private ArrayList extractLineBreaks(AttributedCharacterIterator itr, LineBreakMeasurer measurer) {
+    private ArrayList extractLineBreaks(final AttributedCharacterIterator itr, final LineBreakMeasurer measurer) {
         ArrayList breakList;
         breakList = new ArrayList();
         while (measurer.getPosition() < itr.getEndIndex()) {
@@ -497,7 +504,7 @@ public class PStyledText extends PNode {
 
         // Small assumption here that there is one root element - can fix
         // for more general support later
-        Element rootElement = document.getDefaultRootElement();
+        final Element rootElement = document.getDefaultRootElement();
 
         // The current element will be used as a temp variable while searching
         // for the leaf element at the current position
@@ -508,25 +515,24 @@ public class PStyledText extends PNode {
             curElement = curElement.getElement(curElement.getElementIndex(0));
         }
 
-        StyleContext context = StyleContext.getDefaultStyleContext();
-        Font font = context.getFont(curElement.getAttributes());
+        final StyleContext context = StyleContext.getDefaultStyleContext();
+        final Font font = context.getFont(curElement.getAttributes());
 
-        FontMetrics curFM = context.getFontMetrics(font);
+        final FontMetrics curFM = context.getFontMetrics(font);
 
         return curFM.getMaxAscent() + curFM.getMaxDescent() + curFM.getLeading();
     }
 
-    protected void paint(PPaintContext paintContext) {
-        if (lines == null || lines.length == 0)
-            return;       
-        
-        float x = (float) (getX() + insets.left);
+    protected void paint(final PPaintContext paintContext) {
+        if (lines == null || lines.length == 0) {
+            return;
+        }
+
+        final float x = (float) (getX() + insets.left);
         float y = (float) (getY() + insets.top);
-        float bottomY = (float) (getY() + getHeight() - insets.bottom);
+        final float bottomY = (float) (getY() + getHeight() - insets.bottom);
 
-        
-
-        Graphics2D g2 = paintContext.getGraphics();
+        final Graphics2D g2 = paintContext.getGraphics();
 
         if (getPaint() != null) {
             g2.setPaint(getPaint());
@@ -545,9 +551,9 @@ public class PStyledText extends PNode {
             }
 
             for (int j = 0; j < lineInfo.segments.size(); j++) {
-                SegmentInfo sInfo = (SegmentInfo) lineInfo.segments.get(j);
-                float width = sInfo.layout.getAdvance();
-                
+                final SegmentInfo sInfo = (SegmentInfo) lineInfo.segments.get(j);
+                final float width = sInfo.layout.getAdvance();
+
                 if (sInfo.background != null) {
                     g2.setPaint(sInfo.background);
                     g2.fill(new Rectangle2D.Double(curX, y - lineInfo.maxAscent, width, lineInfo.maxAscent
@@ -575,9 +581,9 @@ public class PStyledText extends PNode {
 
             y += lineInfo.maxDescent + lineInfo.leading;
         }
-    }    
+    }
 
-    public void fullPaint(PPaintContext paintContext) {
+    public void fullPaint(final PPaintContext paintContext) {
         if (!editing) {
             super.fullPaint(paintContext);
         }
@@ -586,7 +592,7 @@ public class PStyledText extends PNode {
     /**
      * Set whether this text is editing
      */
-    public void setEditing(boolean editing) {
+    public void setEditing(final boolean editing) {
         this.editing = editing;
     }
 
@@ -600,7 +606,7 @@ public class PStyledText extends PNode {
     /**
      * Set the insets of the text
      */
-    public void setInsets(Insets insets) {
+    public void setInsets(final Insets insets) {
         if (insets != null) {
             this.insets.left = insets.left;
             this.insets.right = insets.right;
@@ -621,7 +627,7 @@ public class PStyledText extends PNode {
     /**
      * Add a call to recompute the layout after each bounds change
      */
-    public boolean setBounds(double x, double y, double w, double h) {
+    public boolean setBounds(final double x, final double y, final double w, final double h) {
         if (document == null || !super.setBounds(x, y, w, h)) {
             return false;
         }
@@ -640,9 +646,9 @@ public class PStyledText extends PNode {
         public RunInfo() {
         }
 
-        public RunInfo(int runStart, int runLimit) {
-            this.startIndex = runStart;
-            this.endIndex = runLimit;
+        public RunInfo(final int runStart, final int runLimit) {
+            startIndex = runStart;
+            endIndex = runLimit;
         }
 
         public boolean isEmpty() {
@@ -688,8 +694,8 @@ public class PStyledText extends PNode {
 
         public SegmentInfo() {
         }
-        
-        public void applyFont(Graphics2D g2) {
+
+        public void applyFont(final Graphics2D g2) {
             if (font != null) {
                 g2.setFont(font);
             }

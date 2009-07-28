@@ -45,9 +45,13 @@ import edu.umd.cs.piccolo.PNode;
  */
 public class PNodeLocator extends PLocator {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     protected PNode node;
 
-    public PNodeLocator(PNode node) {
+    public PNodeLocator(final PNode node) {
         setNode(node);
     }
 
@@ -55,7 +59,7 @@ public class PNodeLocator extends PLocator {
         return node;
     }
 
-    public void setNode(PNode node) {
+    public void setNode(final PNode node) {
         this.node = node;
     }
 

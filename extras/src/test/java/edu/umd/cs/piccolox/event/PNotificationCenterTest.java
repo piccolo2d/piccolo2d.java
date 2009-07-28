@@ -37,12 +37,12 @@ public class PNotificationCenterTest extends TestCase {
     boolean changed3;
     boolean changed4;
 
-    public PNotificationCenterTest(String name) {
+    public PNotificationCenterTest(final String name) {
         super(name);
     }
 
     public void testToString() throws SecurityException, NoSuchMethodException {
-        PNotificationCenter center = PNotificationCenter.defaultCenter();
+        final PNotificationCenter center = PNotificationCenter.defaultCenter();
 
         center.addListener(this, "changed1", "propertyChanged", this);
         center.addListener(this, "changed2", null, this);
@@ -66,19 +66,19 @@ public class PNotificationCenterTest extends TestCase {
         changed1 = changed2 = changed3 = changed4 = false;
     }
 
-    public void changed1(PNotification notification) {
+    public void changed1(final PNotification notification) {
         changed1 = true;
     }
 
-    public void changed2(PNotification notification) {
+    public void changed2(final PNotification notification) {
         changed2 = true;
     }
 
-    public void changed3(PNotification notification) {
+    public void changed3(final PNotification notification) {
         changed3 = true;
     }
 
-    public void changed4(PNotification notification) {
+    public void changed4(final PNotification notification) {
         changed4 = true;
     }
 }

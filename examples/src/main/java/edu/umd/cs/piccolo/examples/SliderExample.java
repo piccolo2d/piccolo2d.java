@@ -28,15 +28,27 @@
  */
 package edu.umd.cs.piccolo.examples;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
 import edu.umd.cs.piccolox.pswing.PSwing;
 import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Tests a set of Sliders and Checkboxes in panels.
@@ -44,14 +56,18 @@ import java.awt.event.ActionListener;
  * @author Martin Clifford
  */
 public class SliderExample extends JFrame {
-    private PSwingCanvas canvas;
-    private PScrollPane scrollPane;
-    private JTabbedPane tabbedPane;
-    private PSwing swing;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private final PSwingCanvas canvas;
+    private final PScrollPane scrollPane;
+    private final JTabbedPane tabbedPane;
+    private final PSwing swing;
 
     public SliderExample() {
         // Create main panel
-        JPanel mainPanel = new JPanel(false);
+        final JPanel mainPanel = new JPanel(false);
         // Create a tabbed pane
         tabbedPane = new JTabbedPane();
         tabbedPane.setPreferredSize(new Dimension(700, 700));
@@ -69,7 +85,7 @@ public class SliderExample extends JFrame {
         tabbedPane.add("Tab 1", scrollPane);
 
         // Create the contents for "Tab 1"
-        JPanel tabPanel = new JPanel(false);
+        final JPanel tabPanel = new JPanel(false);
         tabPanel.setLayout(null);
         tabPanel.setPreferredSize(new Dimension(700, 700));
         // Populate the tab panel with four instances of nested panel.
@@ -91,9 +107,9 @@ public class SliderExample extends JFrame {
         panel.setLocation(350, 350);
         tabPanel.add(panel);
         // Add the default zoom button
-        JButton buttonPreset = new JButton("Zoom = 100%");
+        final JButton buttonPreset = new JButton("Zoom = 100%");
         buttonPreset.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 canvas.getCamera().setViewScale(1.0);
                 canvas.getCamera().setViewOffset(0, 0);
             }
@@ -127,19 +143,19 @@ public class SliderExample extends JFrame {
         label = new JLabel("A Panel within a panel");
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setForeground(Color.white);
-        JLabel label2 = new JLabel("A Panel within a panel");
+        final JLabel label2 = new JLabel("A Panel within a panel");
         label2.setHorizontalAlignment(SwingConstants.CENTER);
-        JSlider slider = new JSlider();
-        JCheckBox cbox1 = new JCheckBox("Checkbox 1");
-        JCheckBox cbox2 = new JCheckBox("Checkbox 2");
-        JPanel panel3 = new JPanel(false);
+        final JSlider slider = new JSlider();
+        final JCheckBox cbox1 = new JCheckBox("Checkbox 1");
+        final JCheckBox cbox2 = new JCheckBox("Checkbox 2");
+        final JPanel panel3 = new JPanel(false);
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.PAGE_AXIS));
         panel3.setBorder(new EmptyBorder(3, 3, 3, 3));
         panel3.add(label2);
         panel3.add(slider);
         panel3.add(cbox1);
         panel3.add(cbox2);
-        JPanel panel2 = new JPanel(false);
+        final JPanel panel2 = new JPanel(false);
         panel2.setBackground(Color.blue);
         panel.setBorder(new EmptyBorder(1, 1, 1, 1));
         panel2.add(label);
@@ -152,7 +168,7 @@ public class SliderExample extends JFrame {
         return panel;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new SliderExample();

@@ -78,7 +78,7 @@ public class PActivity {
      * @param aDuration the amount of time that this activity should take to
      *            complete, -1 for infinite.
      */
-    public PActivity(long aDuration) {
+    public PActivity(final long aDuration) {
         this(aDuration, PUtil.DEFAULT_ACTIVITY_STEP_RATE);
     }
 
@@ -90,7 +90,7 @@ public class PActivity {
      * @param aStepRate the maximum rate that this activity should receive step
      *            events.
      */
-    public PActivity(long aDuration, long aStepRate) {
+    public PActivity(final long aDuration, final long aStepRate) {
         this(aDuration, aStepRate, System.currentTimeMillis());
     }
 
@@ -104,7 +104,7 @@ public class PActivity {
      * @param aStartTime the time (relative to System.currentTimeMillis()) that
      *            this activity should start.
      */
-    public PActivity(long aDuration, long aStepRate, long aStartTime) {
+    public PActivity(final long aDuration, final long aStepRate, final long aStartTime) {
         duration = aDuration;
         stepRate = aStepRate;
         startTime = aStartTime;
@@ -130,7 +130,7 @@ public class PActivity {
      * time. When this time is reached (or soon after) this activity will have
      * its startStepping() method called.
      */
-    public void setStartTime(long aTriggerTime) {
+    public void setStartTime(final long aTriggerTime) {
         startTime = aTriggerTime;
     }
 
@@ -144,7 +144,7 @@ public class PActivity {
     /**
      * Set the amount of time that this activity should delay between steps.
      */
-    public void setStepRate(long aStepRate) {
+    public void setStepRate(final long aStepRate) {
         stepRate = aStepRate;
     }
 
@@ -164,7 +164,7 @@ public class PActivity {
      * Set the amount of time that this activity should take to complete, after
      * the startStepping method is called.
      */
-    public void setDuration(long aDuration) {
+    public void setDuration(final long aDuration) {
         duration = aDuration;
     }
 
@@ -172,7 +172,7 @@ public class PActivity {
         return scheduler;
     }
 
-    public void setActivityScheduler(PActivityScheduler aScheduler) {
+    public void setActivityScheduler(final PActivityScheduler aScheduler) {
         scheduler = aScheduler;
     }
 
@@ -202,8 +202,9 @@ public class PActivity {
      * activity finishes.
      */
     protected void activityStarted() {
-        if (delegate != null)
+        if (delegate != null) {
             delegate.activityStarted(this);
+        }
     }
 
     /**
@@ -213,9 +214,10 @@ public class PActivity {
      * @param elapsedTime the amount of time that has passed relative to the
      *            activities startTime.
      */
-    protected void activityStep(long elapsedTime) {
-        if (delegate != null)
+    protected void activityStep(final long elapsedTime) {
+        if (delegate != null) {
             delegate.activityStepped(this);
+        }
     }
 
     /**
@@ -223,8 +225,9 @@ public class PActivity {
      * activity has been removed from the PActivityScheduler queue.
      */
     protected void activityFinished() {
-        if (delegate != null)
+        if (delegate != null) {
             delegate.activityFinished(this);
+        }
     }
 
     /**
@@ -239,7 +242,7 @@ public class PActivity {
      * Set the delegate for this activity. The delegate is notified when the
      * activity starts and stops stepping.
      */
-    public void setDelegate(PActivityDelegate delegate) {
+    public void setDelegate(final PActivityDelegate delegate) {
         this.delegate = delegate;
     }
 
@@ -253,7 +256,7 @@ public class PActivity {
      * or duration of the first activity is later changed this activities start
      * time will not be updated to reflect that change.
      */
-    public void startAfter(PActivity first) {
+    public void startAfter(final PActivity first) {
         setStartTime(first.getStartTime() + first.getDuration());
     }
 
@@ -281,7 +284,7 @@ public class PActivity {
      * called. TERMINATE_AND_FINISH_IF_STEPPING - The method activityFinished
      * will only be called if the activity has previously started.
      */
-    public void terminate(int terminationBehavior) {
+    public void terminate(final int terminationBehavior) {
         if (scheduler != null) {
             scheduler.removeActivity(this);
         }
@@ -316,7 +319,7 @@ public class PActivity {
      * The activity scheduler calls this method and it is here that the activity
      * decides if it should do a step or not for the given time.
      */
-    public long processStep(long currentTime) {
+    public long processStep(final long currentTime) {
         // if before start time
         if (currentTime < startTime) {
             return startTime - currentTime;
@@ -370,7 +373,7 @@ public class PActivity {
      * Returns a string representation of this object for debugging purposes.
      */
     public String toString() {
-        String result = super.toString().replaceAll(".*\\.", "");
+        final String result = super.toString().replaceAll(".*\\.", "");
         return result + "[" + paramString() + "]";
     }
 
@@ -383,13 +386,14 @@ public class PActivity {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("startTime=" + startTime);
         result.append(",duration=" + duration);
         result.append(",stepRate=" + stepRate);
-        if (stepping)
+        if (stepping) {
             result.append(",stepping");
+        }
         result.append(",nextStepTime=" + nextStepTime);
 
         return result.toString();

@@ -63,13 +63,17 @@ import edu.umd.cs.piccolo.nodes.PPath;
  */
 public class PLens extends PNode {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static double LENS_DRAGBAR_HEIGHT = 20;
     public static Paint DEFAULT_DRAGBAR_PAINT = Color.DARK_GRAY;
     public static Paint DEFAULT_LENS_PAINT = Color.LIGHT_GRAY;
 
-    private PPath dragBar;
-    private PCamera camera;
-    private PDragEventHandler lensDragger;
+    private final PPath dragBar;
+    private final PCamera camera;
+    private final PDragEventHandler lensDragger;
 
     public PLens() {
         // Drag bar gets resized to fit the available space, so any rectangle
@@ -93,13 +97,13 @@ public class PLens extends PNode {
 
         // When this PLens is dragged around adjust the cameras view transform.
         addPropertyChangeListener(PNode.PROPERTY_TRANSFORM, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 camera.setViewTransform(getInverseTransform());
             }
         });
     }
 
-    public PLens(PLayer layer) {
+    public PLens(final PLayer layer) {
         this();
         addLayer(0, layer);
     }
@@ -116,11 +120,11 @@ public class PLens extends PNode {
         return lensDragger;
     }
 
-    public void addLayer(int index, PLayer layer) {
+    public void addLayer(final int index, final PLayer layer) {
         camera.addLayer(index, layer);
     }
 
-    public void removeLayer(PLayer layer) {
+    public void removeLayer(final PLayer layer) {
         camera.removeLayer(layer);
     }
 

@@ -40,18 +40,23 @@ import edu.umd.cs.piccolox.util.PFixedWidthStroke;
 
 public class PathExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PathExample() {
         this(null);
     }
 
-    public PathExample(PCanvas aCanvas) {
+    public PathExample(final PCanvas aCanvas) {
         super("PathExample", false, aCanvas);
     }
 
     public void initialize() {
-        PPath n1 = PPath.createRectangle(0, 0, 100, 80);
-        PPath n2 = PPath.createEllipse(100, 100, 200, 34);
-        PPath n3 = new PPath();
+        final PPath n1 = PPath.createRectangle(0, 0, 100, 80);
+        final PPath n2 = PPath.createEllipse(100, 100, 200, 34);
+        final PPath n3 = new PPath();
         n3.moveTo(0, 0);
         n3.lineTo(20, 40);
         n3.lineTo(10, 200);
@@ -77,7 +82,7 @@ public class PathExample extends PFrame {
         getCanvas().addInputEventListener(new PDragEventHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PathExample();
     }
 }

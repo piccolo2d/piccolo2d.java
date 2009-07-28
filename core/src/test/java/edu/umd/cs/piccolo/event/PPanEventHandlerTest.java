@@ -26,7 +26,7 @@ public class PPanEventHandlerTest extends TestCase {
         handler.setMinAutopanSpeed(10);
         assertEquals(10, handler.getMinAutoPanSpeed(), 0.000001);
     }
-    
+
     public void testMaxDefaultAutoPanSpeed() {
         assertEquals(250, handler.getMinAutoPanSpeed(), 0.0000001);
     }

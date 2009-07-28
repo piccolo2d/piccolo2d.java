@@ -66,7 +66,7 @@ public class PDebug {
     }
 
     public static Color getDebugPaintColor() {
-        int color = 100 + (debugPaintColor++ % 10) * 10;
+        final int color = 100 + debugPaintColor++ % 10 * 10;
         return new Color(color, color, color, 150);
     }
 
@@ -97,26 +97,26 @@ public class PDebug {
         startProcessingOutputTime = System.currentTimeMillis();
     }
 
-    public static void endProcessingOutput(Graphics g) {
-        processOutputTime += (System.currentTimeMillis() - startProcessingOutputTime);
+    public static void endProcessingOutput(final Graphics g) {
+        processOutputTime += System.currentTimeMillis() - startProcessingOutputTime;
         framesProcessed++;
 
         if (framesProcessed % printResultsFrameRate == 0) {
-            if (PDebug.debugPrintFrameRate ) {
+            if (PDebug.debugPrintFrameRate) {
                 System.out.println("Process output frame rate: " + getOutputFPS() + " fps");
                 System.out.println("Process input frame rate: " + getInputFPS() + " fps");
                 System.out.println("Total frame rate: " + getTotalFPS() + " fps");
                 System.out.println();
                 resetFPSTiming();
             }
-    
-            if (PDebug.debugPrintUsedMemory) {         
-                    System.out.println("Approximate used memory: " + getApproximateUsedMemory() / 1024 + " k");            
+
+            if (PDebug.debugPrintUsedMemory) {
+                System.out.println("Approximate used memory: " + getApproximateUsedMemory() / 1024 + " k");
             }
         }
 
         if (PDebug.debugRegionManagement) {
-            Graphics2D g2 = (Graphics2D) g;
+            final Graphics2D g2 = (Graphics2D) g;
             g.setColor(PDebug.getDebugPaintColor());
             g2.fill(g.getClipBounds().getBounds2D());
         }
@@ -129,7 +129,7 @@ public class PDebug {
     }
 
     public static void endProcessingInput() {
-        processInputTime += (System.currentTimeMillis() - startProcessingInputTime);
+        processInputTime += System.currentTimeMillis() - startProcessingInputTime;
     }
 
     /**
@@ -138,7 +138,7 @@ public class PDebug {
      * you are interacting with the system or have activities scheduled.
      */
     public static double getTotalFPS() {
-        if ((framesProcessed > 0)) {
+        if (framesProcessed > 0) {
             return 1000.0 / ((processInputTime + processOutputTime) / (double) framesProcessed);
         }
         else {
@@ -150,7 +150,7 @@ public class PDebug {
      * Return the frames per second used to process input events and activities.
      */
     public static double getInputFPS() {
-        if ((processInputTime > 0) && (framesProcessed > 0)) {
+        if (processInputTime > 0 && framesProcessed > 0) {
             return 1000.0 / (processInputTime / (double) framesProcessed);
         }
         else {
@@ -162,7 +162,7 @@ public class PDebug {
      * Return the frames per seconds used to paint graphics to the screen.
      */
     public static double getOutputFPS() {
-        if ((processOutputTime > 0) && (framesProcessed > 0)) {
+        if (processOutputTime > 0 && framesProcessed > 0) {
             return 1000.0 / (processOutputTime / (double) framesProcessed);
         }
         else {
@@ -192,8 +192,8 @@ public class PDebug {
     public static long getApproximateUsedMemory() {
         System.gc();
         System.runFinalization();
-        long totalMemory = Runtime.getRuntime().totalMemory();
-        long free = Runtime.getRuntime().freeMemory();
+        final long totalMemory = Runtime.getRuntime().totalMemory();
+        final long free = Runtime.getRuntime().freeMemory();
         return totalMemory - free;
     }
 }

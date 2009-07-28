@@ -37,17 +37,22 @@ import edu.umd.cs.piccolox.PFrame;
 
 public class PositionExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PositionExample() {
         this(null);
     }
 
-    public PositionExample(PCanvas aCanvas) {
+    public PositionExample(final PCanvas aCanvas) {
         super("PositionExample", false, aCanvas);
     }
 
     public void initialize() {
-        PNode n1 = PPath.createRectangle(0, 0, 100, 80);
-        PNode n2 = PPath.createRectangle(0, 0, 100, 80);
+        final PNode n1 = PPath.createRectangle(0, 0, 100, 80);
+        final PNode n2 = PPath.createRectangle(0, 0, 100, 80);
 
         getCanvas().getLayer().addChild(n1);
         getCanvas().getLayer().addChild(n2);
@@ -63,7 +68,7 @@ public class PositionExample extends PFrame {
         n2.offset(100, 0);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PositionExample();
     }
 }

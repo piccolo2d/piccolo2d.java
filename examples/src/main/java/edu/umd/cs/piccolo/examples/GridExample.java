@@ -53,6 +53,10 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class GridExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     protected Line2D gridLine = new Line2D.Double();
     protected Stroke gridStroke = new BasicStroke(1);
     protected Color gridPaint = Color.BLACK;
@@ -62,24 +66,29 @@ public class GridExample extends PFrame {
         this(null);
     }
 
-    public GridExample(PCanvas aCanvas) {
+    public GridExample(final PCanvas aCanvas) {
         super("GridExample", false, aCanvas);
     }
 
     public void initialize() {
-        PRoot root = getCanvas().getRoot();
+        final PRoot root = getCanvas().getRoot();
         final PCamera camera = getCanvas().getCamera();
         final PLayer gridLayer = new PLayer() {
-            protected void paint(PPaintContext paintContext) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            protected void paint(final PPaintContext paintContext) {
                 // make sure grid gets drawn on snap to grid boundaries. And
                 // expand a little to make sure that entire view is filled.
-                double bx = (getX() - (getX() % gridSpacing)) - gridSpacing;
-                double by = (getY() - (getY() % gridSpacing)) - gridSpacing;
-                double rightBorder = getX() + getWidth() + gridSpacing;
-                double bottomBorder = getY() + getHeight() + gridSpacing;
+                final double bx = getX() - getX() % gridSpacing - gridSpacing;
+                final double by = getY() - getY() % gridSpacing - gridSpacing;
+                final double rightBorder = getX() + getWidth() + gridSpacing;
+                final double bottomBorder = getY() + getHeight() + gridSpacing;
 
-                Graphics2D g2 = paintContext.getGraphics();
-                Rectangle2D clip = paintContext.getLocalClip();
+                final Graphics2D g2 = paintContext.getGraphics();
+                final Rectangle2D clip = paintContext.getLocalClip();
 
                 g2.setStroke(gridStroke);
                 g2.setPaint(gridPaint);
@@ -109,20 +118,20 @@ public class GridExample extends PFrame {
         // add constrains so that grid layers bounds always match cameras view
         // bounds. This makes it look like an infinite grid.
         camera.addPropertyChangeListener(PNode.PROPERTY_BOUNDS, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 gridLayer.setBounds(camera.getViewBounds());
             }
         });
 
         camera.addPropertyChangeListener(PCamera.PROPERTY_VIEW_TRANSFORM, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 gridLayer.setBounds(camera.getViewBounds());
             }
         });
 
         gridLayer.setBounds(camera.getViewBounds());
 
-        PNode n = new PNode();
+        final PNode n = new PNode();
         n.setPaint(Color.BLUE);
         n.setBounds(0, 0, 100, 80);
 
@@ -135,38 +144,39 @@ public class GridExample extends PFrame {
             protected PNode draggedNode;
             protected Point2D nodeStartPosition;
 
-            protected boolean shouldStartDragInteraction(PInputEvent event) {
+            protected boolean shouldStartDragInteraction(final PInputEvent event) {
                 if (super.shouldStartDragInteraction(event)) {
                     return event.getPickedNode() != event.getTopCamera() && !(event.getPickedNode() instanceof PLayer);
                 }
                 return false;
             }
 
-            protected void startDrag(PInputEvent event) {
+            protected void startDrag(final PInputEvent event) {
                 super.startDrag(event);
                 draggedNode = event.getPickedNode();
                 draggedNode.moveToFront();
                 nodeStartPosition = draggedNode.getOffset();
             }
 
-            protected void drag(PInputEvent event) {
+            protected void drag(final PInputEvent event) {
                 super.drag(event);
 
-                Point2D start = getCanvas().getCamera().localToView((Point2D) getMousePressedCanvasPoint().clone());
-                Point2D current = event.getPositionRelativeTo(getCanvas().getLayer());
-                Point2D dest = new Point2D.Double();
+                final Point2D start = getCanvas().getCamera().localToView(
+                        (Point2D) getMousePressedCanvasPoint().clone());
+                final Point2D current = event.getPositionRelativeTo(getCanvas().getLayer());
+                final Point2D dest = new Point2D.Double();
 
-                dest.setLocation(nodeStartPosition.getX() + (current.getX() - start.getX()), nodeStartPosition.getY()
-                        + (current.getY() - start.getY()));
+                dest.setLocation(nodeStartPosition.getX() + current.getX() - start.getX(), nodeStartPosition.getY()
+                        + current.getY() - start.getY());
 
-                dest.setLocation(dest.getX() - (dest.getX() % gridSpacing), dest.getY() - (dest.getY() % gridSpacing));
+                dest.setLocation(dest.getX() - dest.getX() % gridSpacing, dest.getY() - dest.getY() % gridSpacing);
 
                 draggedNode.setOffset(dest.getX(), dest.getY());
             }
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new GridExample();
     }
 }

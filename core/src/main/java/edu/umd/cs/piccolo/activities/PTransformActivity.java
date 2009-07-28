@@ -46,9 +46,9 @@ public class PTransformActivity extends PInterpolatingActivity {
 
     private static PAffineTransform STATIC_TRANSFORM = new PAffineTransform();
 
-    private double[] source;
+    private final double[] source;
     private double[] destination;
-    private Target target;
+    private final Target target;
 
     /**
      * <b>Target</b> Objects that want to get transformed by the transform
@@ -70,11 +70,12 @@ public class PTransformActivity extends PInterpolatingActivity {
         public void getSourceMatrix(double[] aSource);
     }
 
-    public PTransformActivity(long duration, long stepRate, Target aTarget) {
+    public PTransformActivity(final long duration, final long stepRate, final Target aTarget) {
         this(duration, stepRate, aTarget, null);
     }
 
-    public PTransformActivity(long duration, long stepRate, Target aTarget, AffineTransform aDestination) {
+    public PTransformActivity(final long duration, final long stepRate, final Target aTarget,
+            final AffineTransform aDestination) {
         this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, aTarget, aDestination);
     }
 
@@ -90,14 +91,15 @@ public class PTransformActivity extends PInterpolatingActivity {
      *            the source state will be taken from.
      * @param aDestination the destination color state
      */
-    public PTransformActivity(long duration, long stepRate, int loopCount, int mode, Target aTarget,
-            AffineTransform aDestination) {
+    public PTransformActivity(final long duration, final long stepRate, final int loopCount, final int mode,
+            final Target aTarget, final AffineTransform aDestination) {
         super(duration, stepRate, loopCount, mode);
         source = new double[6];
         destination = new double[6];
         target = aTarget;
-        if (aDestination != null)
+        if (aDestination != null) {
             aDestination.getMatrix(destination);
+        }
     }
 
     protected boolean isAnimation() {
@@ -116,24 +118,24 @@ public class PTransformActivity extends PInterpolatingActivity {
      * Set the final transform that will be set on the transform activities
      * target when the transform activity stops stepping.
      */
-    public void setDestinationTransform(double[] newDestination) {
+    public void setDestinationTransform(final double[] newDestination) {
         destination = newDestination;
     }
 
     protected void activityStarted() {
-        if (getFirstLoop())
+        if (getFirstLoop()) {
             target.getSourceMatrix(source);
+        }
         super.activityStarted();
     }
 
-    public void setRelativeTargetValue(float zeroToOne) {
+    public void setRelativeTargetValue(final float zeroToOne) {
         super.setRelativeTargetValue(zeroToOne);
 
-        STATIC_TRANSFORM.setTransform(source[0] + (zeroToOne * (destination[0] - source[0])), source[1]
-                + (zeroToOne * (destination[1] - source[1])), source[2] + (zeroToOne * (destination[2] - source[2])),
-                source[3] + (zeroToOne * (destination[3] - source[3])), source[4]
-                        + (zeroToOne * (destination[4] - source[4])), source[5]
-                        + (zeroToOne * (destination[5] - source[5])));
+        STATIC_TRANSFORM.setTransform(source[0] + zeroToOne * (destination[0] - source[0]), source[1] + zeroToOne
+                * (destination[1] - source[1]), source[2] + zeroToOne * (destination[2] - source[2]), source[3]
+                + zeroToOne * (destination[3] - source[3]), source[4] + zeroToOne * (destination[4] - source[4]),
+                source[5] + zeroToOne * (destination[5] - source[5]));
 
         target.setTransform(STATIC_TRANSFORM);
     }
@@ -151,7 +153,7 @@ public class PTransformActivity extends PInterpolatingActivity {
      * @return a string representation of this activity's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("source=" + (source == null ? "null" : toString(source)));
         result.append(",destination=" + (destination == null ? "null" : toString(destination)));
@@ -160,18 +162,18 @@ public class PTransformActivity extends PInterpolatingActivity {
 
         return result.toString();
     }
-    
+
     // here since 1.4 doesn't support Arrays.toString(double[] ...)
     // should be removed when we migrate to 1.5
-    private String toString(double[] array) {
-        StringBuffer result = new StringBuffer('[');
-        for (int i=0; i<array.length; i++) {
+    private String toString(final double[] array) {
+        final StringBuffer result = new StringBuffer('[');
+        for (int i = 0; i < array.length; i++) {
             result.append(array[i]);
-            result.append(',');            
+            result.append(',');
         }
-        result.deleteCharAt(result.length()-1);
+        result.deleteCharAt(result.length() - 1);
         result.append(']');
-        
+
         return result.toString();
     }
 }

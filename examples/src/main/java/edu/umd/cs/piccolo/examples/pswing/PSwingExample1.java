@@ -61,18 +61,18 @@ import edu.umd.cs.piccolox.pswing.PSwingCanvas;
  */
 
 public class PSwingExample1 {
-    public static void main(String[] args) {
-        PSwingCanvas pCanvas = new PSwingCanvas();
+    public static void main(final String[] args) {
+        final PSwingCanvas pCanvas = new PSwingCanvas();
         final PText pText = new PText("PText");
         pCanvas.getLayer().addChild(pText);
-        JFrame frame = new JFrame("Test Piccolo");
+        final JFrame frame = new JFrame("Test Piccolo");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(pCanvas);
         frame.setSize(600, 800);
         frame.setVisible(true);
 
-        PText text2 = new PText("Text2");
+        final PText text2 = new PText("Text2");
         text2.setFont(new Font("Lucida Sans", Font.BOLD, 18));
         pCanvas.getLayer().addChild(text2);
         text2.translate(100, 100);
@@ -80,9 +80,9 @@ public class PSwingExample1 {
 
         pCanvas.removeInputEventListener(pCanvas.getPanEventHandler());
 
-        JButton jButton = new JButton("MyButton!");
+        final JButton jButton = new JButton("MyButton!");
         jButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 System.out.println("TestZSwing.actionPerformed!!!!!!!!!!!!!!*********************");
             }
         });
@@ -90,67 +90,67 @@ public class PSwingExample1 {
         pCanvas.getLayer().addChild(pSwing);
         pSwing.repaint();
 
-        JSpinner jSpinner = new JSpinner();
+        final JSpinner jSpinner = new JSpinner();
         jSpinner.setPreferredSize(new Dimension(100, jSpinner.getPreferredSize().height));
-        PSwing pSpinner = new PSwing(jSpinner);
+        final PSwing pSpinner = new PSwing(jSpinner);
         pCanvas.getLayer().addChild(pSpinner);
         pSpinner.translate(0, 150);
 
-        JCheckBox jcb = new JCheckBox("CheckBox", true);
+        final JCheckBox jcb = new JCheckBox("CheckBox", true);
         jcb.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 System.out.println("TestZSwing.JCheckBox.actionPerformed");
             }
         });
         jcb.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(final ChangeEvent e) {
                 System.out.println("TestPSwing.JChekbox.stateChanged@" + System.currentTimeMillis());
             }
         });
-        PSwing pCheckBox = new PSwing(jcb);
+        final PSwing pCheckBox = new PSwing(jcb);
         pCanvas.getLayer().addChild(pCheckBox);
         pCheckBox.translate(100, 0);
 
         // Growable JTextArea
-        JTextArea textArea = new JTextArea("This is a growable TextArea.\nTry it out!");
+        final JTextArea textArea = new JTextArea("This is a growable TextArea.\nTry it out!");
         textArea.setBorder(new LineBorder(Color.blue, 3));
         PSwing swing = new PSwing(textArea);
         swing.translate(150, 150);
         pCanvas.getLayer().addChild(swing);
 
         // A Slider
-        JSlider slider = new JSlider();
-        PSwing pSlider = new PSwing(slider);
+        final JSlider slider = new JSlider();
+        final PSwing pSlider = new PSwing(slider);
         pSlider.translate(200, 200);
         pCanvas.getLayer().addChild(pSlider);
 
         // A Scrollable JTree
-        JTree tree = new JTree();
+        final JTree tree = new JTree();
         tree.setEditable(true);
-        JScrollPane p = new JScrollPane(tree);
+        final JScrollPane p = new JScrollPane(tree);
         p.setPreferredSize(new Dimension(150, 150));
-        PSwing pTree = new PSwing(p);
+        final PSwing pTree = new PSwing(p);
         pCanvas.getLayer().addChild(pTree);
         pTree.translate(0, 250);
 
         // A JColorChooser - also demonstrates JTabbedPane
-        JColorChooser chooser = new JColorChooser();
-        PSwing pChooser = new PSwing(chooser);
+        final JColorChooser chooser = new JColorChooser();
+        final PSwing pChooser = new PSwing(chooser);
         pCanvas.getLayer().addChild(pChooser);
         pChooser.translate(100, 300);
 
-        JPanel myPanel = new JPanel();
+        final JPanel myPanel = new JPanel();
         myPanel.setBorder(BorderFactory.createTitledBorder("Titled Border"));
         myPanel.add(new JCheckBox("CheckBox"));
-        PSwing panelSwing = new PSwing(myPanel);
+        final PSwing panelSwing = new PSwing(myPanel);
         pCanvas.getLayer().addChild(panelSwing);
         panelSwing.translate(400, 50);
 
         // A Slider
-        JSlider slider2 = new JSlider();
-        PSwing pSlider2 = new PSwing(slider2);
+        final JSlider slider2 = new JSlider();
+        final PSwing pSlider2 = new PSwing(slider2);
         pSlider2.translate(200, 200);
-        PNode root = new PNode();
+        final PNode root = new PNode();
         root.addChild(pSlider2);
         root.scale(1.5);
         root.rotate(Math.PI / 4);
@@ -158,13 +158,13 @@ public class PSwingExample1 {
         pCanvas.getLayer().addChild(root);
 
         // A Combo Box
-        JPanel comboPanel = new JPanel();
-        comboPanel.setBorder( BorderFactory.createTitledBorder( "Combo Box" ) );
-        String[] listItems = { "Summer Teeth", "Mermaid Avenue", "Being There", "A.M." };
-        PComboBox box = new PComboBox(listItems);
+        final JPanel comboPanel = new JPanel();
+        comboPanel.setBorder(BorderFactory.createTitledBorder("Combo Box"));
+        final String[] listItems = { "Summer Teeth", "Mermaid Avenue", "Being There", "A.M." };
+        final PComboBox box = new PComboBox(listItems);
         comboPanel.add(box);
         swing = new PSwing(comboPanel);
-        swing.translate( 200, 230 );
+        swing.translate(200, 230);
         pCanvas.getLayer().addChild(swing);
         box.setEnvironment(swing, pCanvas);// has to be done manually at present
 

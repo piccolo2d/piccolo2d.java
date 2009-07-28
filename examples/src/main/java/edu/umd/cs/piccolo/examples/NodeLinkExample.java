@@ -46,6 +46,10 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class NodeLinkExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     PNode node1;
     PNode node2;
     PPath link;
@@ -54,17 +58,17 @@ public class NodeLinkExample extends PFrame {
         this(null);
     }
 
-    public NodeLinkExample(PCanvas aCanvas) {
+    public NodeLinkExample(final PCanvas aCanvas) {
         super("NodeLinkExample", false, aCanvas);
     }
 
     public void initialize() {
-        PCanvas canvas = getCanvas();
+        final PCanvas canvas = getCanvas();
 
         canvas.removeInputEventListener(canvas.getPanEventHandler());
         canvas.addInputEventListener(new PDragEventHandler());
 
-        PNode layer = canvas.getLayer();
+        final PNode layer = canvas.getLayer();
 
         node1 = PPath.createEllipse(0, 0, 100, 100);
         node2 = PPath.createEllipse(0, 0, 100, 100);
@@ -77,26 +81,26 @@ public class NodeLinkExample extends PFrame {
         node2.translate(200, 200);
 
         node1.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent arg0) {
+            public void propertyChange(final PropertyChangeEvent arg0) {
                 updateLink();
             }
         });
 
         node2.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent arg0) {
+            public void propertyChange(final PropertyChangeEvent arg0) {
                 updateLink();
             }
         });
     }
 
     public void updateLink() {
-        Point2D p1 = node1.getFullBoundsReference().getCenter2D();
-        Point2D p2 = node2.getFullBoundsReference().getCenter2D();
-        Line2D line = new Line2D.Double(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+        final Point2D p1 = node1.getFullBoundsReference().getCenter2D();
+        final Point2D p2 = node2.getFullBoundsReference().getCenter2D();
+        final Line2D line = new Line2D.Double(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         link.setPathTo(line);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new NodeLinkExample();
     }
 }

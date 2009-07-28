@@ -71,11 +71,11 @@ public class PPickPath implements PInputEventListener {
     private PStack nodeStack;
     private PStack transformStack;
     private PStack pickBoundsStack;
-    private PCamera topCamera;
+    private final PCamera topCamera;
     private PCamera bottomCamera;
     private HashMap excludedNodes;
 
-    public PPickPath(PCamera aCamera, PBounds aScreenPickBounds) {
+    public PPickPath(final PCamera aCamera, final PBounds aScreenPickBounds) {
         super();
         pickBoundsStack = new PStack();
         topCamera = aCamera;
@@ -90,7 +90,7 @@ public class PPickPath implements PInputEventListener {
         return (PBounds) pickBoundsStack.peek();
     }
 
-    public boolean acceptsNode(PNode node) {
+    public boolean acceptsNode(final PNode node) {
         if (excludedNodes != null) {
             return !excludedNodes.containsKey(node);
         }
@@ -101,11 +101,11 @@ public class PPickPath implements PInputEventListener {
     // Picked Nodes
     // ****************************************************************
 
-    public void pushNode(PNode aNode) {
+    public void pushNode(final PNode aNode) {
         nodeStack.push(aNode);
     }
 
-    public void popNode(PNode aNode) {
+    public void popNode(final PNode aNode) {
         nodeStack.pop();
     }
 
@@ -128,17 +128,19 @@ public class PPickPath implements PInputEventListener {
      * child. Return the camera when no more visual will be picked.
      */
     public PNode nextPickedNode() {
-        PNode picked = getPickedNode();
+        final PNode picked = getPickedNode();
 
-        if (picked == topCamera)
+        if (picked == topCamera) {
             return null;
-        if (excludedNodes == null)
+        }
+        if (excludedNodes == null) {
             excludedNodes = new HashMap();
+        }
 
         // exclude current picked node
         excludedNodes.put(picked, picked);
 
-        Object screenPickBounds = pickBoundsStack.get(0);
+        final Object screenPickBounds = pickBoundsStack.get(0);
 
         // reset path state
         pickBoundsStack = new PStack();
@@ -175,7 +177,7 @@ public class PPickPath implements PInputEventListener {
     public PCamera getBottomCamera() {
         if (bottomCamera == null) {
             for (int i = nodeStack.size() - 1; i >= 0; i--) {
-                PNode each = (PNode) nodeStack.get(i);
+                final PNode each = (PNode) nodeStack.get(i);
                 if (each instanceof PCamera) {
                     bottomCamera = (PCamera) each;
                     return bottomCamera;
@@ -199,40 +201,42 @@ public class PPickPath implements PInputEventListener {
         PTS[2] = 1;// x2
         PTS[3] = 0;// y2
 
-        int count = transformStack.size();
+        final int count = transformStack.size();
         for (int i = 0; i < count; i++) {
-            PAffineTransform each = ((PTuple) transformStack.get(i)).transform;
-            if (each != null)
+            final PAffineTransform each = ((PTuple) transformStack.get(i)).transform;
+            if (each != null) {
                 each.transform(PTS, 0, PTS, 0, 2);
+            }
         }
 
         return Point2D.distance(PTS[0], PTS[1], PTS[2], PTS[3]);
     }
 
-    public void pushTransform(PAffineTransform aTransform) {
+    public void pushTransform(final PAffineTransform aTransform) {
         transformStack.push(new PTuple(getPickedNode(), aTransform));
         if (aTransform != null) {
-            Rectangle2D newPickBounds = (Rectangle2D) getPickBounds().clone();
+            final Rectangle2D newPickBounds = (Rectangle2D) getPickBounds().clone();
             aTransform.inverseTransform(newPickBounds, newPickBounds);
             pickBoundsStack.push(newPickBounds);
         }
     }
 
-    public void popTransform(PAffineTransform aTransform) {
+    public void popTransform(final PAffineTransform aTransform) {
         transformStack.pop();
         if (aTransform != null) {
             pickBoundsStack.pop();
         }
     }
 
-    public PAffineTransform getPathTransformTo(PNode nodeOnPath) {
-        PAffineTransform aTransform = new PAffineTransform();
+    public PAffineTransform getPathTransformTo(final PNode nodeOnPath) {
+        final PAffineTransform aTransform = new PAffineTransform();
 
-        int count = transformStack.size();
+        final int count = transformStack.size();
         for (int i = 0; i < count; i++) {
-            PTuple each = (PTuple) transformStack.get(i);
-            if (each.transform != null)
+            final PTuple each = (PTuple) transformStack.get(i);
+            if (each.transform != null) {
                 aTransform.concatenate(each.transform);
+            }
             if (nodeOnPath == each.node) {
                 return aTransform;
             }
@@ -246,19 +250,19 @@ public class PPickPath implements PInputEventListener {
     // the bottom most one, a chance to handle the event.
     // ****************************************************************
 
-    public void processEvent(PInputEvent aEvent, int type) {
+    public void processEvent(final PInputEvent aEvent, final int type) {
         aEvent.setPath(this);
 
         for (int i = nodeStack.size() - 1; i >= 0; i--) {
-            PNode each = (PNode) nodeStack.get(i);
+            final PNode each = (PNode) nodeStack.get(i);
 
-            EventListenerList list = each.getListenerList();
+            final EventListenerList list = each.getListenerList();
 
             if (list != null) {
-                Object[] listeners = list.getListeners(PInputEventListener.class);
+                final Object[] listeners = list.getListeners(PInputEventListener.class);
 
                 for (int j = 0; j < listeners.length; j++) {
-                    PInputEventListener listener = (PInputEventListener) listeners[j];
+                    final PInputEventListener listener = (PInputEventListener) listeners[j];
                     listener.processEvent(aEvent, type);
                     if (aEvent.isHandled()) {
                         return;
@@ -286,7 +290,7 @@ public class PPickPath implements PInputEventListener {
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
      */
-    public Point2D canvasToLocal(Point2D canvasPoint, PNode nodeOnPath) {        
+    public Point2D canvasToLocal(final Point2D canvasPoint, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasPoint, canvasPoint);
     }
 
@@ -295,7 +299,7 @@ public class PPickPath implements PInputEventListener {
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
      */
-    public Dimension2D canvasToLocal(Dimension2D canvasDimension, PNode nodeOnPath) {
+    public Dimension2D canvasToLocal(final Dimension2D canvasDimension, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasDimension, canvasDimension);
     }
 
@@ -304,7 +308,7 @@ public class PPickPath implements PInputEventListener {
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
      */
-    public Rectangle2D canvasToLocal(Rectangle2D canvasRectangle, PNode nodeOnPath) {
+    public Rectangle2D canvasToLocal(final Rectangle2D canvasRectangle, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasRectangle, canvasRectangle);
     }
 
@@ -315,7 +319,7 @@ public class PPickPath implements PInputEventListener {
         public PNode node;
         public PAffineTransform transform;
 
-        public PTuple(PNode n, PAffineTransform t) {
+        public PTuple(final PNode n, final PAffineTransform t) {
             node = n;
             transform = t;
         }

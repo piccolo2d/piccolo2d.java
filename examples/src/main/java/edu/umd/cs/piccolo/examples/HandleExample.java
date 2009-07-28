@@ -47,16 +47,21 @@ import edu.umd.cs.piccolox.util.PNodeLocator;
  */
 public class HandleExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public HandleExample() {
         this(null);
     }
 
-    public HandleExample(PCanvas aCanvas) {
+    public HandleExample(final PCanvas aCanvas) {
         super("HandleExample", false, aCanvas);
     }
 
     public void initialize() {
-        PPath n = PPath.createRectangle(0, 0, 100, 80);
+        final PPath n = PPath.createRectangle(0, 0, 100, 80);
 
         // add another node the the root as a reference point so that we can
         // tell that our node is getting dragged, as opposed the the canvas
@@ -85,19 +90,24 @@ public class HandleExample extends PFrame {
         // around. This handle also updates its color when the is
         // pressed/released in it.
         final PHandle h = new PHandle(new PNodeLocator(n)) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             // the default locator locates the center of a node.
-            public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
+            public void dragHandle(final PDimension aLocalDimension, final PInputEvent aEvent) {
                 localToParent(aLocalDimension);
                 getParent().translate(aLocalDimension.getWidth(), aLocalDimension.getHeight());
             }
         };
 
         h.addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent aEvent) {
+            public void mousePressed(final PInputEvent aEvent) {
                 h.setPaint(Color.YELLOW);
             }
 
-            public void mouseReleased(PInputEvent aEvent) {
+            public void mouseReleased(final PInputEvent aEvent) {
                 h.setPaint(Color.RED);
             }
         });
@@ -111,7 +121,7 @@ public class HandleExample extends PFrame {
         n.addChild(h);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new HandleExample();
     }
 }

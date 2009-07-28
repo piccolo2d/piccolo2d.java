@@ -58,11 +58,16 @@ import edu.umd.cs.piccolox.event.PSelectionEventHandler;
  */
 public class GroupExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public GroupExample() {
         this(null);
     }
 
-    public GroupExample(PCanvas aCanvas) {
+    public GroupExample(final PCanvas aCanvas) {
         super("GroupExample", false, aCanvas);
     }
 
@@ -72,13 +77,13 @@ public class GroupExample extends PFrame {
         getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
 
         // Create a decorator group that is NOT volatile
-        DecoratorGroup dg = new DecoratorGroup();
+        final DecoratorGroup dg = new DecoratorGroup();
         dg.setPaint(Color.magenta);
 
         // Put some nodes under the group for it to decorate
-        PPath p1 = PPath.createEllipse(25, 25, 75, 75);
+        final PPath p1 = PPath.createEllipse(25, 25, 75, 75);
         p1.setPaint(Color.red);
-        PPath p2 = PPath.createRectangle(125, 75, 50, 50);
+        final PPath p2 = PPath.createRectangle(125, 75, 50, 50);
         p2.setPaint(Color.blue);
 
         // Add everything to the Piccolo hierarchy
@@ -87,13 +92,13 @@ public class GroupExample extends PFrame {
         getCanvas().getLayer().addChild(dg);
 
         // Create a decorator group that IS volatile
-        VolatileDecoratorGroup vdg = new VolatileDecoratorGroup(getCanvas().getCamera());
+        final VolatileDecoratorGroup vdg = new VolatileDecoratorGroup(getCanvas().getCamera());
         vdg.setPaint(Color.cyan);
 
         // Put some nodes under the group for it to decorate
-        PPath p3 = PPath.createEllipse(275, 175, 50, 50);
+        final PPath p3 = PPath.createEllipse(275, 175, 50, 50);
         p3.setPaint(Color.blue);
-        PPath p4 = PPath.createRectangle(175, 175, 75, 75);
+        final PPath p4 = PPath.createRectangle(175, 175, 75, 75);
         p4.setPaint(Color.green);
 
         // Add everything to the Piccolo hierarchy
@@ -103,15 +108,15 @@ public class GroupExample extends PFrame {
 
         // Create a selection handler so we can see that the decorator actually
         // works
-        ArrayList selectableParents = new ArrayList();
+        final ArrayList selectableParents = new ArrayList();
         selectableParents.add(dg);
         selectableParents.add(vdg);
 
-        PSelectionEventHandler ps = new PSelectionEventHandler(getCanvas().getLayer(), selectableParents);
+        final PSelectionEventHandler ps = new PSelectionEventHandler(getCanvas().getLayer(), selectableParents);
         getCanvas().addInputEventListener(ps);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new GroupExample();
     }
 }
@@ -121,6 +126,11 @@ public class GroupExample extends PFrame {
  * background rectangle based on the bounds of its children.
  */
 class DecoratorGroup extends PNode {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     int INDENT = 10;
 
     PBounds cachedChildBounds = new PBounds();
@@ -134,13 +144,13 @@ class DecoratorGroup extends PNode {
      * Change the default paint to fill an expanded bounding box based on its
      * children's bounds
      */
-    public void paint(PPaintContext ppc) {
-        Paint paint = getPaint();
+    public void paint(final PPaintContext ppc) {
+        final Paint paint = getPaint();
         if (paint != null) {
-            Graphics2D g2 = ppc.getGraphics();
+            final Graphics2D g2 = ppc.getGraphics();
             g2.setPaint(paint);
 
-            PBounds bounds = getUnionOfChildrenBounds(null);
+            final PBounds bounds = getUnionOfChildrenBounds(null);
             bounds.setRect(bounds.getX() - INDENT, bounds.getY() - INDENT, bounds.getWidth() + 2 * INDENT, bounds
                     .getHeight()
                     + 2 * INDENT);
@@ -153,8 +163,8 @@ class DecoratorGroup extends PNode {
      * expanding the children's bounds Do this instead of overriding
      * getBoundsReference() since the node is not volatile
      */
-    public PBounds computeFullBounds(PBounds dstBounds) {
-        PBounds result = getUnionOfChildrenBounds(dstBounds);
+    public PBounds computeFullBounds(final PBounds dstBounds) {
+        final PBounds result = getUnionOfChildrenBounds(dstBounds);
 
         cachedChildBounds.setRect(result);
         result.setRect(result.getX() - INDENT, result.getY() - INDENT, result.getWidth() + 2 * INDENT, result
@@ -183,13 +193,18 @@ class DecoratorGroup extends PNode {
  * background rectangle based on the bounds of its children.
  */
 class VolatileDecoratorGroup extends PNode {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     int INDENT = 10;
 
     PBounds cachedChildBounds = new PBounds();
     PBounds comparisonBounds = new PBounds();
     PCamera renderCamera;
 
-    public VolatileDecoratorGroup(PCamera camera) {
+    public VolatileDecoratorGroup(final PCamera camera) {
         super();
         renderCamera = camera;
     }
@@ -206,11 +221,11 @@ class VolatileDecoratorGroup extends PNode {
      * that we are expanding our bounds beyond our children
      */
     public PBounds getBoundsReference() {
-        PBounds bds = super.getBoundsReference();
+        final PBounds bds = super.getBoundsReference();
         getUnionOfChildrenBounds(bds);
 
         cachedChildBounds.setRect(bds);
-        double scaledIndent = INDENT / renderCamera.getViewScale();
+        final double scaledIndent = INDENT / renderCamera.getViewScale();
         bds.setRect(bds.getX() - scaledIndent, bds.getY() - scaledIndent, bds.getWidth() + 2 * scaledIndent, bds
                 .getHeight()
                 + 2 * scaledIndent);

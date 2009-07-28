@@ -28,8 +28,8 @@ public class PCanvasTest extends TestCase {
         assertFalse(canvas.getInteracting());
     }
 
-    public void testDefaultNumberOfEventListenersIs2() {        
-        PInputEventListener[] listeners = canvas.getInputEventListeners();
+    public void testDefaultNumberOfEventListenersIs2() {
+        final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
         assertEquals(2, listeners.length);
     }
@@ -44,7 +44,7 @@ public class PCanvasTest extends TestCase {
     }
 
     public void testSetInteractingFiresChangeEvent() {
-        MockPropertyChangeListener mockListener = new MockPropertyChangeListener();
+        final MockPropertyChangeListener mockListener = new MockPropertyChangeListener();
         canvas.addPropertyChangeListener(PCanvas.INTERACTING_CHANGED_NOTIFICATION, mockListener);
         canvas.setInteracting(true);
         assertEquals(1, mockListener.getPropertyChangeCount());
@@ -71,9 +71,9 @@ public class PCanvasTest extends TestCase {
     }
 
     public void testCursorStackWorksAsExpected() {
-        Cursor moveCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
-        Cursor handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-        Cursor crosshairCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+        final Cursor moveCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+        final Cursor handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        final Cursor crosshairCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 
         canvas.pushCursor(moveCursor);
         canvas.pushCursor(handCursor);
@@ -90,7 +90,7 @@ public class PCanvasTest extends TestCase {
         try {
             canvas.popCursor();
         }
-        catch (IndexOutOfBoundsException e) {
+        catch (final IndexOutOfBoundsException e) {
             fail("Pop cursor shouldn't fail on an empty stack");
         }
         assertEquals(Cursor.getDefaultCursor(), canvas.getCursor());
@@ -103,24 +103,30 @@ public class PCanvasTest extends TestCase {
 
     public void testAddInputEventListenersIsHonoured() {
         canvas.addInputEventListener(mockListener);
-        PInputEventListener[] listeners = canvas.getInputEventListeners();
+        final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
-        assertEquals(3, listeners.length); // 3 since pan and zoom are attached by default
+        assertEquals(3, listeners.length); // 3 since pan and zoom are attached
+                                           // by default
     }
 
     public void testRemoveInputEventListenersIsHonoured() {
         canvas.addInputEventListener(mockListener);
         canvas.removeInputEventListener(mockListener);
-        PInputEventListener[] listeners = canvas.getInputEventListeners();
+        final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
-        assertEquals(2, listeners.length); // 3 since pan and zoom are attached by default
+        assertEquals(2, listeners.length); // 3 since pan and zoom are attached
+                                           // by default
     }
 
-    
     public void testMemoryLeak() throws InterruptedException {
-        JPanel panel = new JPanel();
+        final JPanel panel = new JPanel();
         for (int i = 0; i < 10; i++) {
             PCanvas canvas = new PCanvas() {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+
                 public void finalize() {
                     pCanvasFinalizerCount++;
                 }
@@ -135,7 +141,7 @@ public class PCanvasTest extends TestCase {
 
         // Not sure why I need -1 here, but I do. If I create 10000 it'll always
         // be 1 less
-        //assertEquals(10-1, pCanvasFinalizerCount);
+        // assertEquals(10-1, pCanvasFinalizerCount);
     }
 
 }

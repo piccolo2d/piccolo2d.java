@@ -62,7 +62,7 @@ public class PImage extends PNode {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * The property name that identifies a change of this node's image (see
      * {@link #getImage getImage}). Both old and new value will be set correctly
@@ -80,7 +80,7 @@ public class PImage extends PNode {
     /**
      * Construct a new PImage wrapping the given java.awt.Image.
      */
-    public PImage(Image newImage) {
+    public PImage(final Image newImage) {
         this();
         setImage(newImage);
     }
@@ -89,7 +89,7 @@ public class PImage extends PNode {
      * Construct a new PImage by loading the given fileName and wrapping the
      * resulting java.awt.Image.
      */
-    public PImage(String fileName) {
+    public PImage(final String fileName) {
         this(Toolkit.getDefaultToolkit().getImage(fileName));
     }
 
@@ -99,10 +99,11 @@ public class PImage extends PNode {
      * empty PImage; this behaviour is useful when fetching resources that may
      * be missing.
      */
-    public PImage(java.net.URL url) {
+    public PImage(final java.net.URL url) {
         this();
-        if (url != null)
+        if (url != null) {
             setImage(Toolkit.getDefaultToolkit().getImage(url));
+        }
     }
 
     /**
@@ -118,7 +119,7 @@ public class PImage extends PNode {
      * Set the image that is wrapped by this PImage node. This method will also
      * load the image using a MediaTracker before returning.
      */
-    public void setImage(String fileName) {
+    public void setImage(final String fileName) {
         setImage(Toolkit.getDefaultToolkit().getImage(fileName));
     }
 
@@ -126,14 +127,14 @@ public class PImage extends PNode {
      * Set the image that is wrapped by this PImage node. This method will also
      * load the image using a MediaTracker before returning.
      */
-    public void setImage(Image newImage) {
-        Image old = image;
+    public void setImage(final Image newImage) {
+        final Image old = image;
 
         if (newImage == null || newImage instanceof BufferedImage) {
             image = newImage;
         }
         else { // else make sure the image is loaded
-            ImageIcon imageLoader = new ImageIcon(newImage);
+            final ImageIcon imageLoader = new ImageIcon(newImage);
             switch (imageLoader.getImageLoadStatus()) {
                 case MediaTracker.LOADING:
                     System.err.println("media tracker still loading image after requested to wait until finished");
@@ -157,21 +158,21 @@ public class PImage extends PNode {
         if (image != null) {
             setBounds(0, 0, getImage().getWidth(null), getImage().getHeight(null));
             invalidatePaint();
-        }       
+        }
 
         firePropertyChange(PROPERTY_CODE_IMAGE, PROPERTY_IMAGE, old, image);
     }
 
-    protected void paint(PPaintContext paintContext) {
+    protected void paint(final PPaintContext paintContext) {
         if (getImage() == null) {
             return;
         }
-        
-        double iw = image.getWidth(null);
-        double ih = image.getHeight(null);
-        
-        PBounds b = getBoundsReference();
-        Graphics2D g2 = paintContext.getGraphics();
+
+        final double iw = image.getWidth(null);
+        final double ih = image.getHeight(null);
+
+        final PBounds b = getBoundsReference();
+        final Graphics2D g2 = paintContext.getGraphics();
 
         if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
             g2.translate(b.x, b.y);
@@ -194,14 +195,15 @@ public class PImage extends PNode {
      * The java.awt.Image wrapped by this PImage is converted into a
      * BufferedImage when serialized.
      */
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        BufferedImage bufferedImage = toBufferedImage(image, false);
-        if (bufferedImage != null)
+        final BufferedImage bufferedImage = toBufferedImage(image, false);
+        if (bufferedImage != null) {
             ImageIO.write(bufferedImage, "png", out);
+        }
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         image = ImageIO.read(in);
     }
@@ -215,7 +217,7 @@ public class PImage extends PNode {
      * image it will not be copied and instead the original image will just be
      * returned.
      */
-    public static BufferedImage toBufferedImage(Image image, boolean alwaysCreateCopy) {
+    public static BufferedImage toBufferedImage(final Image image, final boolean alwaysCreateCopy) {
         if (image == null) {
             return null;
         }
@@ -225,17 +227,17 @@ public class PImage extends PNode {
         }
 
         BufferedImage result;
-        
+
         if (GraphicsEnvironment.isHeadless()) {
             result = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        } 
-        else {
-            GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            .getDefaultScreenDevice().getDefaultConfiguration();
-            result =  graphicsConfiguration.createCompatibleImage(image.getWidth(null), image.getHeight(null));
         }
-        
-        Graphics2D g2 = result.createGraphics();
+        else {
+            final GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .getDefaultScreenDevice().getDefaultConfiguration();
+            result = graphicsConfiguration.createCompatibleImage(image.getWidth(null), image.getHeight(null));
+        }
+
+        final Graphics2D g2 = result.createGraphics();
         g2.drawImage(image, 0, 0, null);
         g2.dispose();
         return result;
@@ -250,7 +252,7 @@ public class PImage extends PNode {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("image=" + (image == null ? "null" : image.toString()));
         result.append(',');

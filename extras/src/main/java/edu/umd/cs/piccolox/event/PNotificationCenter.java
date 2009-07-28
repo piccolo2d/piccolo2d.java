@@ -98,8 +98,8 @@ public class PNotificationCenter {
      * @return whether or not the listener has been added
      * @throws SecurityException
      */
-    public boolean addListener(Object listener, String callbackMethodName, String notificationName, Object object)
-            throws SecurityException {
+    public boolean addListener(final Object listener, final String callbackMethodName, final String notificationName,
+            Object object) throws SecurityException {
         processKeyQueue();
 
         Object name = notificationName;
@@ -108,11 +108,11 @@ public class PNotificationCenter {
         try {
             method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });
         }
-        catch (NoSuchMethodException e) {
+        catch (final NoSuchMethodException e) {
             return false;
         }
 
-        int modifiers = method.getModifiers();
+        final int modifiers = method.getModifiers();
 
         if (!Modifier.isPublic(modifiers)) {
             return false;
@@ -126,8 +126,8 @@ public class PNotificationCenter {
             object = NULL_MARKER;
         }
 
-        Object key = new NotificationKey(name, object);
-        Object notificationTarget = new NotificationTarget(listener, method);
+        final Object key = new NotificationKey(name, object);
+        final Object notificationTarget = new NotificationTarget(listener, method);
 
         List list = (List) listenersMap.get(key);
         if (list == null) {
@@ -150,10 +150,10 @@ public class PNotificationCenter {
      * Removes the listener so that it no longer recives notfications from this
      * notfication center.
      */
-    public void removeListener(Object listener) {
+    public void removeListener(final Object listener) {
         processKeyQueue();
 
-        Iterator i = new LinkedList(listenersMap.keySet()).iterator();
+        final Iterator i = new LinkedList(listenersMap.keySet()).iterator();
         while (i.hasNext()) {
             removeListener(listener, i.next());
         }
@@ -167,11 +167,11 @@ public class PNotificationCenter {
      * the object is null then the listener will be removed from all
      * notifications matching notficationName.
      */
-    public void removeListener(Object listener, String notificationName, Object object) {
+    public void removeListener(final Object listener, final String notificationName, final Object object) {
         processKeyQueue();
 
-        List keys = matchingKeys(notificationName, object);
-        Iterator it = keys.iterator();
+        final List keys = matchingKeys(notificationName, object);
+        final Iterator it = keys.iterator();
         while (it.hasNext()) {
             removeListener(listener, it.next());
         }
@@ -185,7 +185,7 @@ public class PNotificationCenter {
      * Post a new notfication with notificationName and object. The object is
      * typically the object posting the notification. The object may be null.
      */
-    public void postNotification(String notificationName, Object object) {
+    public void postNotification(final String notificationName, final Object object) {
         postNotification(notificationName, object, null);
     }
 
@@ -194,7 +194,7 @@ public class PNotificationCenter {
      * the object, and posts it to this notification center. The object is
      * typically the object posting the notification. It may be nil.
      */
-    public void postNotification(String notificationName, Object object, Map userInfo) {
+    public void postNotification(final String notificationName, final Object object, final Map userInfo) {
         postNotification(new PNotification(notificationName, object, userInfo));
     }
 
@@ -203,12 +203,12 @@ public class PNotificationCenter {
      * will instead use one of this classes convenience postNotifcations
      * methods.
      */
-    public void postNotification(PNotification aNotification) {
-        List mergedListeners = new LinkedList();
+    public void postNotification(final PNotification aNotification) {
+        final List mergedListeners = new LinkedList();
         List listenersList;
 
-        Object name = aNotification.getName();
-        Object object = aNotification.getObject();
+        final Object name = aNotification.getName();
+        final Object object = aNotification.getObject();
 
         if (name != null) {
             if (object == null) {// object is null
@@ -239,7 +239,7 @@ public class PNotificationCenter {
             }
         }
 
-        Object key = new NotificationKey(NULL_MARKER, NULL_MARKER);
+        final Object key = new NotificationKey(NULL_MARKER, NULL_MARKER);
         listenersList = (List) listenersMap.get(key);
         if (listenersList != null) {
             mergedListeners.addAll(listenersList);
@@ -248,9 +248,9 @@ public class PNotificationCenter {
         dispatchNotifications(aNotification, mergedListeners);
     }
 
-    private void dispatchNotifications(PNotification aNotification, List listeners) {
+    private void dispatchNotifications(final PNotification aNotification, final List listeners) {
         NotificationTarget listener;
-        Iterator it = listeners.iterator();
+        final Iterator it = listeners.iterator();
 
         while (it.hasNext()) {
             listener = (NotificationTarget) it.next();
@@ -261,10 +261,10 @@ public class PNotificationCenter {
                 try {
                     listener.getMethod().invoke(listener.get(), new Object[] { aNotification });
                 }
-                catch (IllegalAccessException e) {
+                catch (final IllegalAccessException e) {
                     // it's impossible add listeners that are not public
                 }
-                catch (InvocationTargetException e) {
+                catch (final InvocationTargetException e) {
                     // Since this is how Swing handles Exceptions that get
                     // thrown on listeners, it's probably ok to do it here.
                     e.printStackTrace();
@@ -277,13 +277,13 @@ public class PNotificationCenter {
     // Implementation classes and methods
     // ****************************************************************
 
-    protected List matchingKeys(String name, Object object) {
-        List result = new LinkedList();
+    protected List matchingKeys(final String name, final Object object) {
+        final List result = new LinkedList();
 
-        NotificationKey searchKey = new NotificationKey(name, object);
-        Iterator it = listenersMap.keySet().iterator();
+        final NotificationKey searchKey = new NotificationKey(name, object);
+        final Iterator it = listenersMap.keySet().iterator();
         while (it.hasNext()) {
-            NotificationKey key = (NotificationKey) it.next();
+            final NotificationKey key = (NotificationKey) it.next();
             if (searchKey.equals(key)) {
                 result.add(key);
             }
@@ -292,20 +292,21 @@ public class PNotificationCenter {
         return result;
     }
 
-    protected void removeListener(Object listener, Object key) {
+    protected void removeListener(final Object listener, final Object key) {
         if (listener == null) {
             listenersMap.remove(key);
             return;
         }
 
-        List list = (List) listenersMap.get(key);
-        if (list == null)
+        final List list = (List) listenersMap.get(key);
+        if (list == null) {
             return;
+        }
 
-        Iterator it = list.iterator();
+        final Iterator it = list.iterator();
         while (it.hasNext()) {
-            Object observer = ((NotificationTarget) it.next()).get();
-            if ((observer == null) || (listener == observer)) {
+            final Object observer = ((NotificationTarget) it.next()).get();
+            if (observer == null || listener == observer) {
                 it.remove();
             }
         }
@@ -324,16 +325,16 @@ public class PNotificationCenter {
 
     protected static class NotificationKey extends WeakReference {
 
-        private Object name;
-        private int hashCode;
+        private final Object name;
+        private final int hashCode;
 
-        public NotificationKey(Object aName, Object anObject) {
+        public NotificationKey(final Object aName, final Object anObject) {
             super(anObject);
             name = aName;
             hashCode = aName.hashCode() + anObject.hashCode();
         }
 
-        public NotificationKey(Object aName, Object anObject, ReferenceQueue aQueue) {
+        public NotificationKey(final Object aName, final Object anObject, final ReferenceQueue aQueue) {
             super(anObject, aQueue);
             name = aName;
             hashCode = aName.hashCode() + anObject.hashCode();
@@ -347,19 +348,22 @@ public class PNotificationCenter {
             return hashCode;
         }
 
-        public boolean equals(Object anObject) {
-            if (this == anObject)
+        public boolean equals(final Object anObject) {
+            if (this == anObject) {
                 return true;
+            }
 
-            if (!(anObject instanceof NotificationKey))
+            if (!(anObject instanceof NotificationKey)) {
                 return false;
+            }
 
-            NotificationKey key = (NotificationKey) anObject;
+            final NotificationKey key = (NotificationKey) anObject;
 
-            if (name != key.name && (name == null || !name.equals(key.name)))
+            if (name != key.name && (name == null || !name.equals(key.name))) {
                 return false;
+            }
 
-            Object object = get();
+            final Object object = get();
 
             return object != null && object == key.get();
         }
@@ -374,7 +378,7 @@ public class PNotificationCenter {
         protected int hashCode;
         protected Method method;
 
-        public NotificationTarget(Object object, Method method) {
+        public NotificationTarget(final Object object, final Method method) {
             super(object);
             hashCode = object.hashCode();
             this.method = method;
@@ -388,20 +392,23 @@ public class PNotificationCenter {
             return hashCode;
         }
 
-        public boolean equals(Object object) {
-            if (this == object)
+        public boolean equals(final Object object) {
+            if (this == object) {
                 return true;
+            }
 
-            if (!(object instanceof NotificationTarget))
+            if (!(object instanceof NotificationTarget)) {
                 return false;
+            }
 
-            NotificationTarget target = (NotificationTarget) object;
-            if (method != target.method && (method == null || !method.equals(target.method)))
+            final NotificationTarget target = (NotificationTarget) object;
+            if (method != target.method && (method == null || !method.equals(target.method))) {
                 return false;
+            }
 
-            Object o = get();
+            final Object o = get();
 
-            return (o != null) && (o == target.get());
+            return o != null && o == target.get();
         }
 
         public String toString() {

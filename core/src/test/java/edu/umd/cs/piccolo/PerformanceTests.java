@@ -50,13 +50,14 @@ public class PerformanceTests extends TestCase {
     private static PerformanceLog log = new PerformanceLog();
     private static int NUMBER_NODES = 20000;
 
-    public PerformanceTests(String name) {
+    public PerformanceTests(final String name) {
         super(name);
     }
 
     public void testRunPerformanceTests() {
-        if (1 == 1)
+        if (1 == 1) {
             return;
+        }
 
         // three times to warm up JVM
         for (int i = 0; i < 3; i++) {
@@ -78,7 +79,7 @@ public class PerformanceTests extends TestCase {
     }
 
     public void createNodes() {
-        PNode[] nodes = new PNode[NUMBER_NODES];
+        final PNode[] nodes = new PNode[NUMBER_NODES];
 
         log.startTest();
         for (int i = 0; i < NUMBER_NODES; i++) {
@@ -88,7 +89,7 @@ public class PerformanceTests extends TestCase {
     }
 
     public void createPaths() {
-        PNode[] nodes = new PNode[NUMBER_NODES];
+        final PNode[] nodes = new PNode[NUMBER_NODES];
 
         log.startTest();
         for (int i = 0; i < NUMBER_NODES; i++) {
@@ -96,15 +97,15 @@ public class PerformanceTests extends TestCase {
         }
         log.endTest("Create " + NUMBER_NODES + " new rect paths");
 
-        Random r = new Random();
+        final Random r = new Random();
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i].translate(r.nextFloat() * 300, r.nextFloat() * 300);
         }
     }
 
     public void addNodes() {
-        PNode parent = new PNode();
-        PNode[] nodes = new PNode[NUMBER_NODES];
+        final PNode parent = new PNode();
+        final PNode[] nodes = new PNode[NUMBER_NODES];
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();
@@ -118,9 +119,9 @@ public class PerformanceTests extends TestCase {
     }
 
     public void removeNodes() {
-        PNode parent = new PNode();
-        PNode[] nodes = new PNode[NUMBER_NODES];
-        ArrayList list = new ArrayList();
+        final PNode parent = new PNode();
+        final PNode[] nodes = new PNode[NUMBER_NODES];
+        final ArrayList list = new ArrayList();
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();
@@ -165,10 +166,10 @@ public class PerformanceTests extends TestCase {
     }
 
     public void translateNodes() {
-        PNode parent = new PNode();
-        PNode[] nodes = new PNode[NUMBER_NODES];
-        PBounds b = new PBounds();
-        Random r = new Random();
+        final PNode parent = new PNode();
+        final PNode[] nodes = new PNode[NUMBER_NODES];
+        final PBounds b = new PBounds();
+        final Random r = new Random();
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();
@@ -202,9 +203,9 @@ public class PerformanceTests extends TestCase {
     }
 
     public void fullIntersectsNodes() {
-        PNode parent = new PNode();
-        PNode[] nodes = new PNode[NUMBER_NODES];
-        PBounds b = new PBounds(0, 50, 100, 20);
+        final PNode parent = new PNode();
+        final PNode[] nodes = new PNode[NUMBER_NODES];
+        final PBounds b = new PBounds(0, 50, 100, 20);
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();
@@ -223,10 +224,10 @@ public class PerformanceTests extends TestCase {
     }
 
     public void memorySizeOfNodes() {
-        PNode[] nodes = new PNode[NUMBER_NODES];
+        final PNode[] nodes = new PNode[NUMBER_NODES];
         Runtime.getRuntime().gc();
-        long startTotalMemory = Runtime.getRuntime().totalMemory();
-        long startFree = Runtime.getRuntime().freeMemory();
+        final long startTotalMemory = Runtime.getRuntime().totalMemory();
+        final long startFree = Runtime.getRuntime().freeMemory();
         long endFree;
         long endTotal;
 
@@ -239,13 +240,13 @@ public class PerformanceTests extends TestCase {
         endTotal = Runtime.getRuntime().totalMemory();
 
         log.addEntry("Approximate k used by " + NUMBER_NODES + " nodes",
-                ((endTotal - startTotalMemory) + (startFree - endFree)) / 1024);
+                (endTotal - startTotalMemory + startFree - endFree) / 1024);
         nodes[0].getPaint();
     }
 
     public void copyNodes() {
-        PNode parent = new PNode();
-        PNode[] nodes = new PNode[NUMBER_NODES];
+        final PNode parent = new PNode();
+        final PNode[] nodes = new PNode[NUMBER_NODES];
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();
@@ -258,10 +259,10 @@ public class PerformanceTests extends TestCase {
     }
 
     public void costOfNoBoundsCache() {
-        PNode[] nodes = new PNode[NUMBER_NODES];
-        PBounds[] bounds = new PBounds[NUMBER_NODES];
-        PBounds pickRect = new PBounds(0, 0, 1, 1);
-        Random r = new Random();
+        final PNode[] nodes = new PNode[NUMBER_NODES];
+        final PBounds[] bounds = new PBounds[NUMBER_NODES];
+        final PBounds pickRect = new PBounds(0, 0, 1, 1);
+        final Random r = new Random();
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();
@@ -288,7 +289,7 @@ public class PerformanceTests extends TestCase {
         }
         log.endTest("Sum " + NUMBER_NODES + " bounds");
 
-        PBounds b = new PBounds(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
+        final PBounds b = new PBounds(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
         log.startTest();
         for (int i = 0; i < NUMBER_NODES * 10; i++) {
             b.clone();
@@ -298,8 +299,8 @@ public class PerformanceTests extends TestCase {
     }
 
     public void renderSpeed() throws NoninvertibleTransformException {
-        Random r = new Random();
-        PAffineTransform at = new PAffineTransform();
+        final Random r = new Random();
+        final PAffineTransform at = new PAffineTransform();
         at.setScale(r.nextFloat());
         at.translate(r.nextFloat(), r.nextFloat());
 
@@ -309,25 +310,25 @@ public class PerformanceTests extends TestCase {
         }
         log.endTest("Create inverse transform " + NUMBER_NODES + " times");
 
-        int height = 400;
-        int width = 400;
+        final int height = 400;
+        final int width = 400;
 
-        double scale1 = 0.5;
-        double scale2 = 2;
+        final double scale1 = 0.5;
+        final double scale2 = 2;
         boolean scaleFlip = true;
 
-        PAffineTransform transorm1 = new PAffineTransform();
+        final PAffineTransform transorm1 = new PAffineTransform();
         // transorm1.scale(0.5, 0.5);
         transorm1.translate(0.5, 10.1);
         PAffineTransform transorm2 = null;
 
         transorm2 = new PAffineTransform(transorm1.createInverse());
 
-        GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
+        final GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice().getDefaultConfiguration();
-        BufferedImage result = (BufferedImage) graphicsConfiguration.createCompatibleImage(width, height,
+        final BufferedImage result = graphicsConfiguration.createCompatibleImage(width, height,
                 Transparency.TRANSLUCENT);
-        Graphics2D g2 = result.createGraphics();
+        final Graphics2D g2 = result.createGraphics();
 
         log.startTest();
         for (int i = 0; i < NUMBER_NODES; i++) {
@@ -365,8 +366,8 @@ public class PerformanceTests extends TestCase {
         }
         log.endTest("Transform graphics context " + NUMBER_NODES + " times");
 
-        Rectangle2D rect = new Rectangle2D.Double(0, 0, 100, 80);
-        GeneralPath path = new GeneralPath(rect);
+        final Rectangle2D rect = new Rectangle2D.Double(0, 0, 100, 80);
+        final GeneralPath path = new GeneralPath(rect);
 
         log.startTest();
         for (int i = 0; i < NUMBER_NODES; i++) {

@@ -38,9 +38,9 @@ import java.awt.geom.Rectangle2D;
 
 public class LineShape implements Shape, MutablePoints {
     private MutablePoints points;
-    private Rectangle2D bounds = new Rectangle2D.Double();
+    private final Rectangle2D bounds = new Rectangle2D.Double();
 
-    public LineShape(MutablePoints points) {
+    public LineShape(final MutablePoints points) {
         setPoints(points);
     }
 
@@ -57,19 +57,19 @@ public class LineShape implements Shape, MutablePoints {
         return points.getPointCount();
     }
 
-    public double getX(int i) {
+    public double getX(final int i) {
         return points.getX(i);
     }
 
-    public double getY(int i) {
+    public double getY(final int i) {
         return points.getY(i);
     }
 
-    public Point2D getPoint(int i, Point2D dst) {
+    public Point2D getPoint(final int i, final Point2D dst) {
         return points.getPoint(i, dst);
     }
 
-    public Rectangle2D getBounds(Rectangle2D dst) {
+    public Rectangle2D getBounds(final Rectangle2D dst) {
         points.getBounds(dst);
         return dst;
     }
@@ -81,23 +81,23 @@ public class LineShape implements Shape, MutablePoints {
         points.getBounds(bounds);
     }
 
-    public void setPoint(int i, double x, double y) {
+    public void setPoint(final int i, final double x, final double y) {
         points.setPoint(i, x, y);
         updateBounds();
     }
 
-    public void addPoint(int pos, double x, double y) {
+    public void addPoint(final int pos, final double x, final double y) {
         points.addPoint(pos, x, y);
         updateBounds();
     }
 
-    public void removePoints(int pos, int num) {
+    public void removePoints(final int pos, final int num) {
         points.removePoints(pos, num);
         updateBounds();
     }
 
-    public void transformPoints(AffineTransform trans) {
-        XYArray newPoints = new XYArray(points.getPointCount());
+    public void transformPoints(final AffineTransform trans) {
+        final XYArray newPoints = new XYArray(points.getPointCount());
         newPoints.appendPoints(points);
         newPoints.transformPoints(trans);
         points = newPoints;
@@ -114,16 +114,16 @@ public class LineShape implements Shape, MutablePoints {
         return bounds;
     }
 
-    public static boolean contains(double x, double y, double x1, double y1, double x2, double y2, boolean min,
-            boolean max, double d) {
+    public static boolean contains(final double x, final double y, final double x1, final double y1, final double x2,
+            final double y2, final boolean min, final boolean max, final double d) {
         double dx = x2 - x1, dy = y2 - y1;
-        double dx2 = dx * dx, dy2 = dy * dy;
+        final double dx2 = dx * dx, dy2 = dy * dy;
         double p;
         if (dx != 0) {
-            p = (((x - x1) / dx) + ((dy * (y - y1)) / dx2)) / (1 + (dy2 / dx2));
+            p = ((x - x1) / dx + dy * (y - y1) / dx2) / (1 + dy2 / dx2);
         }
         else if (dy != 0) {
-            p = (((y - y1) / dy) + ((dx * (x - x1)) / dy2)) / (1 + (dx2 / dy2));
+            p = ((y - y1) / dy + dx * (x - x1) / dy2) / (1 + dx2 / dy2);
         }
         else {
             return false;
@@ -134,13 +134,13 @@ public class LineShape implements Shape, MutablePoints {
         else if (min && p < 0.0) {
             return false;
         }
-        dx = (p * dx) + x1 - x;
-        dy = (p * dy) + y1 - y;
-        double len = dx * dx + dy * dy;
-        return (len < d);
+        dx = p * dx + x1 - x;
+        dy = p * dy + y1 - y;
+        final double len = dx * dx + dy * dy;
+        return len < d;
     }
 
-    public boolean contains(double x, double y, double d) {
+    public boolean contains(final double x, final double y, final double d) {
         double x1, y1, x2, y2;
         if (points.getPointCount() == 0) {
             return false;
@@ -159,46 +159,47 @@ public class LineShape implements Shape, MutablePoints {
         return false;
     }
 
-    public boolean contains(double x, double y) {
+    public boolean contains(final double x, final double y) {
         return contains(x, y, 2.0d);
     }
 
-    public boolean contains(Point2D p) {
+    public boolean contains(final Point2D p) {
         return contains(p.getX(), p.getY());
     }
 
-    public static boolean intersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
-            double y4, boolean min1, boolean max1, boolean min2, boolean max2) {
-        double dx1 = x2 - x1, dy1 = y2 - y1, dx2 = x4 - x3, dy2 = y4 - y3;
+    public static boolean intersects(final double x1, final double y1, final double x2, final double y2,
+            final double x3, final double y3, final double x4, final double y4, final boolean min1, final boolean max1,
+            final boolean min2, final boolean max2) {
+        final double dx1 = x2 - x1, dy1 = y2 - y1, dx2 = x4 - x3, dy2 = y4 - y3;
         double d, p2, p1;
 
         if (dy1 != 0.0) {
             d = dx1 / dy1;
-            p2 = (x3 - x1 + (d * (y1 - y3))) / ((d * dy2) - dx2);
+            p2 = (x3 - x1 + d * (y1 - y3)) / (d * dy2 - dx2);
             p1 = (dy2 * p2 + y3 - y1) / dy1;
         }
         else if (dy2 != 0.0) {
             d = dx2 / dy2;
-            p1 = (x1 - x3 + (d * (y3 - y1))) / ((d * dy1) - dx1);
+            p1 = (x1 - x3 + d * (y3 - y1)) / (d * dy1 - dx1);
             p2 = (dy1 * p1 + y1 - y3) / dy2;
         }
         else if (dx1 != 0.0) {
             d = dy1 / dx1;
-            p2 = (y3 - y1 + (d * (x1 - x3))) / ((d * dx2) - dy2);
+            p2 = (y3 - y1 + d * (x1 - x3)) / (d * dx2 - dy2);
             p1 = (dx2 * p2 + x3 - x1) / dx1;
         }
         else if (dx2 != 0.0) {
             d = dy2 / dx2;
-            p1 = (y1 - y3 + (d * (x3 - x1))) / ((d * dx1) - dy1);
+            p1 = (y1 - y3 + d * (x3 - x1)) / (d * dx1 - dy1);
             p2 = (dx1 * p1 + x1 - x3) / dx2;
         }
         else {
             return false;
         }
-        return (((!min1) || (p1 >= 0.0)) && ((!max1) || (p1 <= 1.0)) && ((!min2) || (p2 >= 0.0)) && ((!max2) || (p2 <= 1.0)));
+        return (!min1 || p1 >= 0.0) && (!max1 || p1 <= 1.0) && (!min2 || p2 >= 0.0) && (!max2 || p2 <= 1.0);
     }
 
-    public boolean intersects(double x, double y, double w, double h) {
+    public boolean intersects(final double x, final double y, final double w, final double h) {
         double x1, y1, x2, y2;
         if (points.getPointCount() == 0) {
             return false;
@@ -220,15 +221,15 @@ public class LineShape implements Shape, MutablePoints {
         return false;
     }
 
-    public boolean intersects(Rectangle2D r) {
+    public boolean intersects(final Rectangle2D r) {
         return intersects(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
 
-    public boolean contains(double x, double y, double w, double h) {
+    public boolean contains(final double x, final double y, final double w, final double h) {
         return contains(x, y) && contains(x + w, y) && contains(x, y + h) && contains(x + w, y + h);
     }
 
-    public boolean contains(Rectangle2D r) {
+    public boolean contains(final Rectangle2D r) {
         return contains(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
 
@@ -236,21 +237,21 @@ public class LineShape implements Shape, MutablePoints {
 
     //
 
-    public PathIterator getPathIterator(AffineTransform at) {
+    public PathIterator getPathIterator(final AffineTransform at) {
         return new LinePathIterator(points, at);
     }
 
-    public PathIterator getPathIterator(AffineTransform at, double flatness) {
+    public PathIterator getPathIterator(final AffineTransform at, final double flatness) {
         return new LinePathIterator(points, at);
     }
 
     private static class LinePathIterator implements PathIterator {
 
-        private Points points;
-        private AffineTransform trans;
+        private final Points points;
+        private final AffineTransform trans;
         private int i = 0;
 
-        public LinePathIterator(Points points, AffineTransform trans) {
+        public LinePathIterator(final Points points, final AffineTransform trans) {
             this.points = points;
             this.trans = trans;
         }
@@ -267,7 +268,7 @@ public class LineShape implements Shape, MutablePoints {
             i++;
         }
 
-        private Point2D tempPoint = new Point2D.Double();
+        private final Point2D tempPoint = new Point2D.Double();
 
         private void currentSegment() {
             tempPoint.setLocation(points.getX(i), points.getY(i));
@@ -276,18 +277,18 @@ public class LineShape implements Shape, MutablePoints {
             }
         }
 
-        public int currentSegment(float[] coords) {
+        public int currentSegment(final float[] coords) {
             currentSegment();
             coords[0] = (float) tempPoint.getX();
             coords[1] = (float) tempPoint.getY();
-            return (i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO);
+            return i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO;
         }
 
-        public int currentSegment(double[] coords) {
+        public int currentSegment(final double[] coords) {
             currentSegment();
             coords[0] = tempPoint.getX();
             coords[1] = tempPoint.getY();
-            return (i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO);
+            return i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO;
         }
     }
 }

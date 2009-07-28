@@ -43,11 +43,16 @@ import edu.umd.cs.piccolox.handles.PBoundsHandle;
  */
 public class LayoutExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public LayoutExample() {
         this(null);
     }
 
-    public LayoutExample(PCanvas aCanvas) {
+    public LayoutExample(final PCanvas aCanvas) {
         super("LayoutExample", false, aCanvas);
     }
 
@@ -56,13 +61,18 @@ public class LayoutExample extends PFrame {
         // so that it lays out its children in a row from left to right.
 
         final PNode layoutNode = new PNode() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             public void layoutChildren() {
                 double xOffset = 0;
-                double yOffset = 0;
+                final double yOffset = 0;
 
-                Iterator i = getChildrenIterator();
+                final Iterator i = getChildrenIterator();
                 while (i.hasNext()) {
-                    PNode each = (PNode) i.next();
+                    final PNode each = (PNode) i.next();
                     each.setOffset(xOffset - each.getX(), yOffset);
                     xOffset += each.getWidth();
                 }
@@ -74,7 +84,7 @@ public class LayoutExample extends PFrame {
         // add some children to the layout node.
         for (int i = 0; i < 1000; i++) {
             // create child to add to the layout node.
-            PNode each = PPath.createRectangle(0, 0, 100, 80);
+            final PNode each = PPath.createRectangle(0, 0, 100, 80);
 
             // add the child to the layout node.
             layoutNode.addChild(each);
@@ -86,7 +96,7 @@ public class LayoutExample extends PFrame {
         getCanvas().getLayer().addChild(layoutNode);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new LayoutExample();
     }
 }

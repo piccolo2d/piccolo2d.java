@@ -43,17 +43,22 @@ import edu.umd.cs.piccolox.activities.PPositionPathActivity;
  */
 public class PositionPathActivityExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PositionPathActivityExample() {
         super();
     }
 
     public void initialize() {
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
         final PNode animatedNode = PPath.createRectangle(0, 0, 100, 80);
         layer.addChild(animatedNode);
 
         // create animation path
-        GeneralPath path = new GeneralPath();
+        final GeneralPath path = new GeneralPath();
         path.moveTo(0, 0);
         path.lineTo(300, 300);
         path.lineTo(300, 0);
@@ -61,13 +66,13 @@ public class PositionPathActivityExample extends PFrame {
         path.closePath();
 
         // create node to display animation path
-        PPath ppath = new PPath(path);
+        final PPath ppath = new PPath(path);
         layer.addChild(ppath);
 
         // create activity to run animation.
-        PPositionPathActivity positionPathActivity = new PPositionPathActivity(5000, 0,
+        final PPositionPathActivity positionPathActivity = new PPositionPathActivity(5000, 0,
                 new PPositionPathActivity.Target() {
-                    public void setPosition(double x, double y) {
+                    public void setPosition(final double x, final double y) {
                         animatedNode.setOffset(x, y);
                     }
                 });
@@ -79,7 +84,7 @@ public class PositionPathActivityExample extends PFrame {
         animatedNode.addActivity(positionPathActivity);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PositionPathActivityExample();
     }
 }

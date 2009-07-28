@@ -49,29 +49,34 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class GraphEditorExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public GraphEditorExample() {
         this(null);
     }
 
-    public GraphEditorExample(PCanvas aCanvas) {
+    public GraphEditorExample(final PCanvas aCanvas) {
         super("GraphEditorExample", false, aCanvas);
     }
 
     public void initialize() {
-        int numNodes = 50;
-        int numEdges = 50;
+        final int numNodes = 50;
+        final int numEdges = 50;
 
         // Initialize, and create a layer for the edges (always underneath the
         // nodes)
-        PLayer nodeLayer = getCanvas().getLayer();
-        PLayer edgeLayer = new PLayer();
+        final PLayer nodeLayer = getCanvas().getLayer();
+        final PLayer edgeLayer = new PLayer();
         getCanvas().getCamera().addLayer(0, edgeLayer);
-        Random rnd = new Random();
+        final Random rnd = new Random();
         ArrayList tmp;
         for (int i = 0; i < numNodes; i++) {
-            float x = (float) (300. * rnd.nextDouble());
-            float y = (float) (400. * rnd.nextDouble());
-            PPath path = PPath.createEllipse(x, y, 20, 20);
+            final float x = (float) (300. * rnd.nextDouble());
+            final float y = (float) (400. * rnd.nextDouble());
+            final PPath path = PPath.createEllipse(x, y, 20, 20);
             tmp = new ArrayList();
             path.addAttribute("edges", tmp);
             nodeLayer.addChild(path);
@@ -80,15 +85,15 @@ public class GraphEditorExample extends PFrame {
         // Create some random edges
         // Each edge's Tag has an ArrayList used to store associated nodes
         for (int i = 0; i < numEdges; i++) {
-            int n1 = rnd.nextInt(numNodes);
-            int n2 = rnd.nextInt(numNodes);
-            PNode node1 = nodeLayer.getChild(n1);
-            PNode node2 = nodeLayer.getChild(n2);
+            final int n1 = rnd.nextInt(numNodes);
+            final int n2 = rnd.nextInt(numNodes);
+            final PNode node1 = nodeLayer.getChild(n1);
+            final PNode node2 = nodeLayer.getChild(n2);
 
-            Point2D.Double bound1 = (Point2D.Double) node1.getBounds().getCenter2D();
-            Point2D.Double bound2 = (Point2D.Double) node2.getBounds().getCenter2D();
+            final Point2D.Double bound1 = (Point2D.Double) node1.getBounds().getCenter2D();
+            final Point2D.Double bound2 = (Point2D.Double) node2.getBounds().getCenter2D();
 
-            PPath edge = new PPath();
+            final PPath edge = new PPath();
             edge.moveTo((float) bound1.getX(), (float) bound1.getY());
             edge.lineTo((float) bound2.getX(), (float) bound2.getY());
 
@@ -109,7 +114,7 @@ public class GraphEditorExample extends PFrame {
         nodeLayer.addInputEventListener(new NodeDragHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new GraphEditorExample();
     }
 
@@ -131,38 +136,38 @@ public class GraphEditorExample extends PFrame {
             getEventFilter().setMarksAcceptedEventsAsHandled(true);
         }
 
-        public void mouseEntered(PInputEvent e) {
+        public void mouseEntered(final PInputEvent e) {
             if (e.getButton() == 0) {
                 e.getPickedNode().setPaint(Color.red);
             }
         }
 
-        public void mouseExited(PInputEvent e) {
+        public void mouseExited(final PInputEvent e) {
             if (e.getButton() == 0) {
                 e.getPickedNode().setPaint(Color.white);
             }
         }
 
-        public void drag(PInputEvent e) {
-            PNode node = e.getPickedNode();
+        public void drag(final PInputEvent e) {
+            final PNode node = e.getPickedNode();
             node.translate(e.getDelta().width, e.getDelta().height);
 
-            ArrayList edges = (ArrayList) e.getPickedNode().getAttribute("edges");
+            final ArrayList edges = (ArrayList) e.getPickedNode().getAttribute("edges");
 
             int i;
             for (i = 0; i < edges.size(); i++) {
-                PPath edge = (PPath) edges.get(i);
-                ArrayList nodes = (ArrayList) edge.getAttribute("nodes");
-                PNode node1 = (PNode) nodes.get(0);
-                PNode node2 = (PNode) nodes.get(1);
+                final PPath edge = (PPath) edges.get(i);
+                final ArrayList nodes = (ArrayList) edge.getAttribute("nodes");
+                final PNode node1 = (PNode) nodes.get(0);
+                final PNode node2 = (PNode) nodes.get(1);
 
                 edge.reset();
                 // Note that the node's "FullBounds" must be used (instead of
                 // just the "Bound") because the nodes have non-identity
                 // transforms which must be included when determining their
                 // position.
-                Point2D.Double bound1 = (Point2D.Double) node1.getFullBounds().getCenter2D();
-                Point2D.Double bound2 = (Point2D.Double) node2.getFullBounds().getCenter2D();
+                final Point2D.Double bound1 = (Point2D.Double) node1.getFullBounds().getCenter2D();
+                final Point2D.Double bound2 = (Point2D.Double) node2.getFullBounds().getCenter2D();
 
                 edge.moveTo((float) bound1.getX(), (float) bound1.getY());
                 edge.lineTo((float) bound2.getX(), (float) bound2.getY());

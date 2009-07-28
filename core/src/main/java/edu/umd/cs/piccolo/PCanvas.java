@@ -34,6 +34,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyEventPostProcessor;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -75,7 +76,7 @@ public class PCanvas extends JComponent implements PComponent {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * @deprecated this is a typo and clients should change their code to
      *             reflect the correct spelling
@@ -86,7 +87,7 @@ public class PCanvas extends JComponent implements PComponent {
     public static PCanvas CURRENT_ZCANVAS = null;
 
     private PCamera camera;
-    private PStack cursorStack;
+    private final PStack cursorStack;
     private int interacting;
     private int defaultRenderQuality;
     private int animatingRenderQuality;
@@ -117,7 +118,7 @@ public class PCanvas extends JComponent implements PComponent {
         setOpaque(true);
 
         addHierarchyListener(new HierarchyListener() {
-            public void hierarchyChanged(HierarchyEvent e) {
+            public void hierarchyChanged(final HierarchyEvent e) {
                 if (e.getComponent() == PCanvas.this) {
                     if (getParent() == null) {
                         removeInputSources();
@@ -152,7 +153,7 @@ public class PCanvas extends JComponent implements PComponent {
      * 
      * @param handler the new zoom event handler
      */
-    public void setPanEventHandler(PPanEventHandler handler) {
+    public void setPanEventHandler(final PPanEventHandler handler) {
         if (panEventHandler != null) {
             removeInputEventListener(panEventHandler);
         }
@@ -178,7 +179,7 @@ public class PCanvas extends JComponent implements PComponent {
      * 
      * @param handler the new zoom event handler
      */
-    public void setZoomEventHandler(PZoomEventHandler handler) {
+    public void setZoomEventHandler(final PZoomEventHandler handler) {
         if (zoomEventHandler != null) {
             removeInputEventListener(zoomEventHandler);
         }
@@ -204,7 +205,7 @@ public class PCanvas extends JComponent implements PComponent {
      * canvas go through this camera. And this is the camera that paints this
      * canvas.
      */
-    public void setCamera(PCamera newCamera) {
+    public void setCamera(final PCamera newCamera) {
         if (camera != null) {
             camera.setComponent(null);
         }
@@ -234,14 +235,14 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Add an input listener to the camera associated with this canvas.
      */
-    public void addInputEventListener(PInputEventListener listener) {
+    public void addInputEventListener(final PInputEventListener listener) {
         getCamera().addInputEventListener(listener);
     }
 
     /**
      * Remove an input listener to the camera associated with this canvas.
      */
-    public void removeInputEventListener(PInputEventListener listener) {
+    public void removeInputEventListener(final PInputEventListener listener) {
         getCamera().removeInputEventListener(listener);
     }
 
@@ -273,7 +274,7 @@ public class PCanvas extends JComponent implements PComponent {
      * quality should change.
      */
     public void setInteracting(boolean isInteracting) {
-        boolean wasInteracting = getInteracting();
+        final boolean wasInteracting = getInteracting();
 
         if (isInteracting) {
             interacting++;
@@ -286,8 +287,9 @@ public class PCanvas extends JComponent implements PComponent {
             // it's greater then the old
             // interacting render quality.
             int nextRenderQuality = defaultRenderQuality;
-            if (getAnimating())
+            if (getAnimating()) {
                 nextRenderQuality = animatingRenderQuality;
+            }
             if (nextRenderQuality > interactingRenderQuality) {
                 repaint();
             }
@@ -308,7 +310,7 @@ public class PCanvas extends JComponent implements PComponent {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setDefaultRenderQuality(int requestedQuality) {
+    public void setDefaultRenderQuality(final int requestedQuality) {
         defaultRenderQuality = requestedQuality;
         repaint();
     }
@@ -321,10 +323,11 @@ public class PCanvas extends JComponent implements PComponent {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setAnimatingRenderQuality(int requestedQuality) {
+    public void setAnimatingRenderQuality(final int requestedQuality) {
         animatingRenderQuality = requestedQuality;
-        if (getAnimating())
+        if (getAnimating()) {
             repaint();
+        }
     }
 
     /**
@@ -335,17 +338,18 @@ public class PCanvas extends JComponent implements PComponent {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setInteractingRenderQuality(int requestedQuality) {
+    public void setInteractingRenderQuality(final int requestedQuality) {
         interactingRenderQuality = requestedQuality;
-        if (getInteracting())
+        if (getInteracting()) {
             repaint();
+        }
     }
 
     /**
      * Set the canvas cursor, and remember the previous cursor on the cursor
      * stack.
      */
-    public void pushCursor(Cursor cursor) {
+    public void pushCursor(final Cursor cursor) {
         cursorStack.push(getCursor());
         setCursor(cursor);
     }
@@ -373,7 +377,7 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Override setEnabled to install/remove canvas input sources as needed.
      */
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
 
         if (isEnabled() && getParent() != null) {
@@ -392,12 +396,12 @@ public class PCanvas extends JComponent implements PComponent {
         if (mouseListener == null) {
             mouseListener = new MouseListener() {
                 /** {@inheritDoc} */
-                public void mouseClicked(MouseEvent e) {
+                public void mouseClicked(final MouseEvent e) {
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_CLICKED);
                 }
 
                 /** {@inheritDoc} */
-                public void mouseEntered(MouseEvent e) {
+                public void mouseEntered(final MouseEvent e) {
                     MouseEvent simulated = null;
 
                     if (isAnyButtonDown(e)) {
@@ -412,7 +416,7 @@ public class PCanvas extends JComponent implements PComponent {
                 }
 
                 /** {@inheritDoc} */
-                public void mouseExited(MouseEvent e) {
+                public void mouseExited(final MouseEvent e) {
                     MouseEvent simulated = null;
 
                     if (isAnyButtonDown(e)) {
@@ -462,7 +466,7 @@ public class PCanvas extends JComponent implements PComponent {
                     }
 
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
-                }               
+                }
 
                 /** {@inheritDoc} */
                 public void mouseReleased(MouseEvent e) {
@@ -500,45 +504,45 @@ public class PCanvas extends JComponent implements PComponent {
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_RELEASED);
                 }
 
-                private boolean isAnyButtonDown(MouseEvent e) {
+                private boolean isAnyButtonDown(final MouseEvent e) {
                     return (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) != 0;
                 }
 
-                private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, int eventType) {
+                private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, final int eventType) {
                     if (rawEvent.getButton() != MouseEvent.NOBUTTON) {
                         return rawEvent;
                     }
 
                     int newButton = 0;
 
-                    if (hasButtonModifier(rawEvent, MouseEvent.BUTTON1_MASK)) {
+                    if (hasButtonModifier(rawEvent, InputEvent.BUTTON1_MASK)) {
                         newButton = MouseEvent.BUTTON1;
                     }
-                    else if (hasButtonModifier(rawEvent, MouseEvent.BUTTON2_MASK)) {
+                    else if (hasButtonModifier(rawEvent, InputEvent.BUTTON2_MASK)) {
                         newButton = MouseEvent.BUTTON2;
                     }
-                    else if (hasButtonModifier(rawEvent, MouseEvent.BUTTON3_MASK)) {
+                    else if (hasButtonModifier(rawEvent, InputEvent.BUTTON3_MASK)) {
                         newButton = MouseEvent.BUTTON3;
                     }
 
-                    return buildModifiedMouseEvent(rawEvent, eventType, newButton);                    
+                    return buildModifiedMouseEvent(rawEvent, eventType, newButton);
                 }
 
-                private boolean hasButtonModifier(final MouseEvent event, int buttonMask) {
+                private boolean hasButtonModifier(final MouseEvent event, final int buttonMask) {
                     return (event.getModifiers() & buttonMask) == buttonMask;
                 }
 
-                public MouseEvent buildRetypedMouseEvent(MouseEvent e, int newType) {
+                public MouseEvent buildRetypedMouseEvent(final MouseEvent e, final int newType) {
                     return buildModifiedMouseEvent(e, newType, e.getButton());
                 }
 
-                public MouseEvent buildModifiedMouseEvent(MouseEvent e, int newType, int newButton) {
+                public MouseEvent buildModifiedMouseEvent(final MouseEvent e, final int newType, final int newButton) {
                     return new MouseEvent((Component) e.getSource(), newType, e.getWhen(), e.getModifiers(), e.getX(),
                             e.getY(), e.getClickCount(), e.isPopupTrigger(), newButton);
                 }
-                
-                private void sendRetypedMouseEventToInputManager(MouseEvent e, int newType) {
-                    MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
+
+                private void sendRetypedMouseEventToInputManager(final MouseEvent e, final int newType) {
+                    final MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
                     sendInputEventToInputManager(retypedEvent, newType);
                 }
             };
@@ -548,12 +552,12 @@ public class PCanvas extends JComponent implements PComponent {
         if (mouseMotionListener == null) {
             mouseMotionListener = new MouseMotionListener() {
                 /** {@inheritDoc} */
-                public void mouseDragged(MouseEvent e) {
+                public void mouseDragged(final MouseEvent e) {
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_DRAGGED);
                 }
 
                 /** {@inheritDoc} */
-                public void mouseMoved(MouseEvent e) {
+                public void mouseMoved(final MouseEvent e) {
                     sendInputEventToInputManager(e, MouseEvent.MOUSE_MOVED);
                 }
             };
@@ -563,7 +567,7 @@ public class PCanvas extends JComponent implements PComponent {
         if (mouseWheelListener == null) {
             mouseWheelListener = new MouseWheelListener() {
                 /** {@inheritDoc} */
-                public void mouseWheelMoved(MouseWheelEvent e) {
+                public void mouseWheelMoved(final MouseWheelEvent e) {
                     sendInputEventToInputManager(e, e.getScrollType());
                     if (!e.isConsumed() && getParent() != null) {
                         getParent().dispatchEvent(e);
@@ -588,7 +592,7 @@ public class PCanvas extends JComponent implements PComponent {
                     return false;
                 }
             };
-            FocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(keyEventPostProcessor);
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(keyEventPostProcessor);
         }
     }
 
@@ -600,24 +604,24 @@ public class PCanvas extends JComponent implements PComponent {
         removeMouseListener(mouseListener);
         removeMouseMotionListener(mouseMotionListener);
         removeMouseWheelListener(mouseWheelListener);
-        FocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(keyEventPostProcessor);
-    
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(keyEventPostProcessor);
+
         mouseListener = null;
         mouseMotionListener = null;
         mouseWheelListener = null;
         keyEventPostProcessor = null;
     }
 
-    protected void sendInputEventToInputManager(InputEvent e, int type) {
+    protected void sendInputEventToInputManager(final InputEvent e, final int type) {
         getRoot().getDefaultInputManager().processEventFromCamera(e, type, getCamera());
     }
 
-    public void setBounds(int x, int y, final int w, final int h) {
+    public void setBounds(final int x, final int y, final int w, final int h) {
         camera.setBounds(camera.getX(), camera.getY(), w, h);
         super.setBounds(x, y, w, h);
     }
 
-    public void repaint(PBounds bounds) {
+    public void repaint(final PBounds bounds) {
         PDebug.processRepaint();
 
         bounds.expandNearestIntegerDimensions();
@@ -626,10 +630,10 @@ public class PCanvas extends JComponent implements PComponent {
         repaint((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
     }
 
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         PDebug.startProcessingOutput();
 
-        Graphics2D g2 = (Graphics2D) g.create();
+        final Graphics2D g2 = (Graphics2D) g.create();
 
         // support for non-opaque canvases
         // see
@@ -641,7 +645,7 @@ public class PCanvas extends JComponent implements PComponent {
 
         // create new paint context and set render quality to lowest common
         // denominator render quality.
-        PPaintContext paintContext = new PPaintContext(g2);
+        final PPaintContext paintContext = new PPaintContext(g2);
         if (getInteracting() || getAnimating()) {
             if (interactingRenderQuality < animatingRenderQuality) {
                 paintContext.setRenderQuality(interactingRenderQuality);
@@ -679,7 +683,7 @@ public class PCanvas extends JComponent implements PComponent {
         paintingImmediately = false;
     }
 
-    public Timer createTimer(int delay, ActionListener listener) {
+    public Timer createTimer(final int delay, final ActionListener listener) {
         return new Timer(delay, listener);
     }
 

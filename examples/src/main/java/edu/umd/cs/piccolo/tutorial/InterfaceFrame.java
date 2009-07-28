@@ -31,13 +31,24 @@ package edu.umd.cs.piccolo.tutorial;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import edu.umd.cs.piccolo.*;
-import edu.umd.cs.piccolo.event.*;
-import edu.umd.cs.piccolo.nodes.*;
-import edu.umd.cs.piccolo.util.*;
-import edu.umd.cs.piccolox.*;
+import edu.umd.cs.piccolo.PLayer;
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
+import edu.umd.cs.piccolo.event.PDragEventHandler;
+import edu.umd.cs.piccolo.event.PInputEvent;
+import edu.umd.cs.piccolo.nodes.PImage;
+import edu.umd.cs.piccolo.nodes.PPath;
+import edu.umd.cs.piccolo.nodes.PText;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
+import edu.umd.cs.piccolox.PFrame;
 
 public class InterfaceFrame extends PFrame {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     public void initialize() {
         // Remove the Default pan event handler and add a drag event handler
@@ -48,18 +59,18 @@ public class InterfaceFrame extends PFrame {
         // Add Some Default Nodes
 
         // Create a node.
-        PNode aNode = new PNode();
+        final PNode aNode = new PNode();
 
         // A node will not be visible until its bounds and brush are set.
         aNode.setBounds(0, 0, 100, 80);
         aNode.setPaint(Color.RED);
 
         // A node needs to be a descendent of the root to be displayed.
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
         layer.addChild(aNode);
 
         // A node can have child nodes added to it.
-        PNode anotherNode = new PNode();
+        final PNode anotherNode = new PNode();
         anotherNode.setBounds(0, 0, 100, 80);
         anotherNode.setPaint(Color.YELLOW);
         aNode.addChild(anotherNode);
@@ -82,18 +93,18 @@ public class InterfaceFrame extends PFrame {
 
         // Here we create a PImage node that displays a thumbnail image
         // of the root node. Then we add the new PImage to the main layer.
-        PImage image = new PImage(layer.toImage(300, 300, null));
+        final PImage image = new PImage(layer.toImage(300, 300, null));
         layer.addChild(image);
 
         // Create a New Node using Composition
 
-        PNode myCompositeFace = PPath.createRectangle(0, 0, 100, 80);
+        final PNode myCompositeFace = PPath.createRectangle(0, 0, 100, 80);
 
         // Create parts for the face.
-        PNode eye1 = PPath.createEllipse(0, 0, 20, 20);
+        final PNode eye1 = PPath.createEllipse(0, 0, 20, 20);
         eye1.setPaint(Color.YELLOW);
-        PNode eye2 = (PNode) eye1.clone();
-        PNode mouth = PPath.createRectangle(0, 0, 40, 20);
+        final PNode eye2 = (PNode) eye1.clone();
+        final PNode mouth = PPath.createRectangle(0, 0, 40, 20);
         mouth.setPaint(Color.BLACK);
 
         // Add the face parts.
@@ -109,7 +120,7 @@ public class InterfaceFrame extends PFrame {
         mouth.translate(0, 30);
 
         // Set the face bounds so that it neatly contains the face parts.
-        PBounds b = myCompositeFace.getUnionOfChildrenBounds(null);
+        final PBounds b = myCompositeFace.getUnionOfChildrenBounds(null);
         b.inset(-5, -5);
         myCompositeFace.setBounds(b);
 
@@ -119,26 +130,30 @@ public class InterfaceFrame extends PFrame {
         layer.addChild(myCompositeFace);
 
         // Create a New Node using Inheritance.
-        ToggleShape ts = new ToggleShape();
+        final ToggleShape ts = new ToggleShape();
         ts.setPaint(Color.ORANGE);
         layer.addChild(ts);
     }
 
     class ToggleShape extends PPath {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
         private boolean fIsPressed = false;
 
         public ToggleShape() {
             setPathToEllipse(0, 0, 100, 80);
 
             addInputEventListener(new PBasicInputEventHandler() {
-                public void mousePressed(PInputEvent event) {
+                public void mousePressed(final PInputEvent event) {
                     super.mousePressed(event);
                     fIsPressed = true;
                     repaint();
                 }
 
-                public void mouseReleased(PInputEvent event) {
+                public void mouseReleased(final PInputEvent event) {
                     super.mouseReleased(event);
                     fIsPressed = false;
                     repaint();
@@ -146,9 +161,9 @@ public class InterfaceFrame extends PFrame {
             });
         }
 
-        protected void paint(PPaintContext paintContext) {
+        protected void paint(final PPaintContext paintContext) {
             if (fIsPressed) {
-                Graphics2D g2 = paintContext.getGraphics();
+                final Graphics2D g2 = paintContext.getGraphics();
                 g2.setPaint(getPaint());
                 g2.fill(getBoundsReference());
             }
@@ -158,7 +173,7 @@ public class InterfaceFrame extends PFrame {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new InterfaceFrame();
     }
 }

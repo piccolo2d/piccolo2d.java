@@ -69,11 +69,16 @@ import edu.umd.cs.piccolox.swing.PViewport;
  */
 public class PrintExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public PrintExample() {
         this(null);
     }
 
-    public PrintExample(PCanvas aCanvas) {
+    public PrintExample(final PCanvas aCanvas) {
         super("ScrollingExample", false, aCanvas);
     }
 
@@ -87,14 +92,14 @@ public class PrintExample extends PFrame {
         // Make some rectangles on the surface so we can see where we are
         for (int x = 0; x < 20; x++) {
             for (int y = 0; y < 20; y++) {
-                if (((x + y) % 2) == 0) {
-                    PPath path = PPath.createRectangle(50 * x, 50 * y, 40, 40);
+                if ((x + y) % 2 == 0) {
+                    final PPath path = PPath.createRectangle(50 * x, 50 * y, 40, 40);
                     path.setPaint(Color.blue);
                     path.setStrokePaint(Color.black);
                     canvas.getLayer().addChild(path);
                 }
-                else if (((x + y) % 2) == 1) {
-                    PPath path = PPath.createEllipse(50 * x, 50 * y, 40, 40);
+                else if ((x + y) % 2 == 1) {
+                    final PPath path = PPath.createEllipse(50 * x, 50 * y, 40, 40);
                     path.setPaint(Color.blue);
                     path.setStrokePaint(Color.black);
                     canvas.getLayer().addChild(path);
@@ -103,11 +108,11 @@ public class PrintExample extends PFrame {
         }
 
         // Now, create the toolbar
-        JToolBar toolBar = new JToolBar();
-        JToggleButton window = new JToggleButton("Window Scrolling");
-        JToggleButton document = new JToggleButton("Document Scrolling");
-        JButton print = new JButton("Print");
-        ButtonGroup bg = new ButtonGroup();
+        final JToolBar toolBar = new JToolBar();
+        final JToggleButton window = new JToggleButton("Window Scrolling");
+        final JToggleButton document = new JToggleButton("Document Scrolling");
+        final JButton print = new JButton("Print");
+        final ButtonGroup bg = new ButtonGroup();
         bg.add(window);
         bg.add(document);
         toolBar.add(window);
@@ -117,7 +122,7 @@ public class PrintExample extends PFrame {
         toolBar.setFloatable(false);
         window.setSelected(true);
         window.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(final ActionEvent ae) {
                 viewport.setScrollDirector(windowSD);
                 viewport.fireStateChanged();
                 scrollPane.revalidate();
@@ -125,7 +130,7 @@ public class PrintExample extends PFrame {
             }
         });
         document.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(final ActionEvent ae) {
                 viewport.setScrollDirector(documentSD);
                 viewport.fireStateChanged();
                 scrollPane.revalidate();
@@ -133,16 +138,16 @@ public class PrintExample extends PFrame {
             }
         });
         print.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(final ActionEvent ae) {
                 try {
                     print();
                 }
-                catch (PrinterException e) {
+                catch (final PrinterException e) {
                     JOptionPane.showMessageDialog(PrintExample.this, "An error occured while printing");
                 }
             }
         });
-        JPanel contentPane = new JPanel();
+        final JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
         contentPane.add("Center", scrollPane);
         contentPane.add("North", toolBar);
@@ -171,14 +176,14 @@ public class PrintExample extends PFrame {
          *            computed
          * @return The view position
          */
-        public Point getViewPosition(Rectangle2D viewBounds) {
-            Point pos = new Point();
+        public Point getViewPosition(final Rectangle2D viewBounds) {
+            final Point pos = new Point();
             if (camera != null) {
                 // First we compute the union of all the layers
-                PBounds layerBounds = new PBounds();
-                java.util.List layers = camera.getLayersReference();
-                for (Iterator i = layers.iterator(); i.hasNext();) {
-                    PLayer layer = (PLayer) i.next();
+                final PBounds layerBounds = new PBounds();
+                final java.util.List layers = camera.getLayersReference();
+                for (final Iterator i = layers.iterator(); i.hasNext();) {
+                    final PLayer layer = (PLayer) i.next();
                     layerBounds.add(layer.getFullBoundsReference());
                 }
 
@@ -210,7 +215,7 @@ public class PrintExample extends PFrame {
          * @param x The new x position
          * @param y The new y position
          */
-        public void setViewPosition(double x, double y) {
+        public void setViewPosition(final double x, final double y) {
             if (camera != null) {
                 // If a scroll is in progress - we ignore new scrolls -
                 // if we didn't, since the scrollbars depend on the camera
@@ -220,18 +225,18 @@ public class PrintExample extends PFrame {
                     scrollInProgress = true;
 
                     // Get the union of all the layers' bounds
-                    PBounds layerBounds = new PBounds();
-                    java.util.List layers = camera.getLayersReference();
-                    for (Iterator i = layers.iterator(); i.hasNext();) {
-                        PLayer layer = (PLayer) i.next();
+                    final PBounds layerBounds = new PBounds();
+                    final java.util.List layers = camera.getLayersReference();
+                    for (final Iterator i = layers.iterator(); i.hasNext();) {
+                        final PLayer layer = (PLayer) i.next();
                         layerBounds.add(layer.getFullBoundsReference());
                     }
 
-                    PAffineTransform at = camera.getViewTransform();
+                    final PAffineTransform at = camera.getViewTransform();
                     at.transform(layerBounds, layerBounds);
 
                     // Union the camera view bounds
-                    PBounds viewBounds = camera.getBoundsReference();
+                    final PBounds viewBounds = camera.getBoundsReference();
                     layerBounds.add(viewBounds);
 
                     // Now find the new view position in view coordinates -
@@ -240,7 +245,7 @@ public class PrintExample extends PFrame {
                     // document
                     // We then measure the offset from the lower right corner
                     // of the document
-                    Point2D newPoint = new Point2D.Double(layerBounds.getX() + layerBounds.getWidth()
+                    final Point2D newPoint = new Point2D.Double(layerBounds.getX() + layerBounds.getWidth()
                             - (x + viewBounds.getWidth()), layerBounds.getY() + layerBounds.getHeight()
                             - (y + viewBounds.getHeight()));
 
@@ -249,8 +254,8 @@ public class PrintExample extends PFrame {
 
                     // Compute the new matrix values to put the camera at the
                     // correct location
-                    double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
-                    double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
+                    final double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
+                    final double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
 
                     at.setTransform(at.getScaleX(), at.getShearY(), at.getShearX(), at.getScaleY(), newX, newY);
 
@@ -268,17 +273,18 @@ public class PrintExample extends PFrame {
      * @throws PrinterException
      */
     private void print() throws PrinterException {
-        PrinterJob printJob = PrinterJob.getPrinterJob();
+        final PrinterJob printJob = PrinterJob.getPrinterJob();
         printJob.setPrintable(new Printable() {
-            public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+            public int print(final Graphics graphics, final PageFormat pageFormat, final int pageIndex)
+                    throws PrinterException {
                 if (pageIndex > 0) {
-                    return (NO_SUCH_PAGE);
+                    return NO_SUCH_PAGE;
                 }
                 else {
-                    Graphics2D g2 = (Graphics2D) graphics;
+                    final Graphics2D g2 = (Graphics2D) graphics;
                     g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
                     getCanvas().printAll(g2);
-                    return (PAGE_EXISTS);
+                    return PAGE_EXISTS;
                 }
             }
         });
@@ -287,7 +293,7 @@ public class PrintExample extends PFrame {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PrintExample();
     }
 }

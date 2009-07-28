@@ -68,28 +68,28 @@ import java.util.HashMap;
 public class PObjectOutputStream extends ObjectOutputStream {
 
     private boolean writingRoot;
-    private HashMap unconditionallyWritten;
+    private final HashMap unconditionallyWritten;
 
-    public static byte[] toByteArray(Object aRoot) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PObjectOutputStream zout = new PObjectOutputStream(out);
+    public static byte[] toByteArray(final Object aRoot) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final PObjectOutputStream zout = new PObjectOutputStream(out);
         zout.writeObjectTree(aRoot);
         return out.toByteArray();
     }
 
-    public PObjectOutputStream(OutputStream out) throws IOException {
+    public PObjectOutputStream(final OutputStream out) throws IOException {
         super(out);
         unconditionallyWritten = new HashMap();
     }
 
-    public void writeObjectTree(Object aRoot) throws IOException {
+    public void writeObjectTree(final Object aRoot) throws IOException {
         writingRoot = true;
         recordUnconditionallyWritten(aRoot); // record pass
         writeObject(aRoot); // write pass
         writingRoot = false;
     }
 
-    public void writeConditionalObject(Object object) throws IOException {
+    public void writeConditionalObject(final Object object) throws IOException {
         if (!writingRoot) {
             throw new RuntimeException(
                     "writeConditionalObject() may only be called when a root object has been written.");
@@ -108,19 +108,19 @@ public class PObjectOutputStream extends ObjectOutputStream {
         unconditionallyWritten.clear();
     }
 
-    protected void recordUnconditionallyWritten(Object aRoot) throws IOException {
+    protected void recordUnconditionallyWritten(final Object aRoot) throws IOException {
         class ZMarkObjectOutputStream extends PObjectOutputStream {
             public ZMarkObjectOutputStream() throws IOException {
                 super(PUtil.NULL_OUTPUT_STREAM);
                 enableReplaceObject(true);
             }
 
-            public Object replaceObject(Object object) {
-                PObjectOutputStream.this.unconditionallyWritten.put(object, Boolean.TRUE);
+            public Object replaceObject(final Object object) {
+                unconditionallyWritten.put(object, Boolean.TRUE);
                 return object;
             }
 
-            public void writeConditionalObject(Object object) throws IOException {
+            public void writeConditionalObject(final Object object) throws IOException {
             }
         }
         new ZMarkObjectOutputStream().writeObject(aRoot);

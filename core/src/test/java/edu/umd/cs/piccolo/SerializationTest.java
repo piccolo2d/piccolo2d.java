@@ -8,7 +8,7 @@ import edu.umd.cs.piccolo.nodes.PText;
 
 public class SerializationTest extends TestCase {
 
-    public SerializationTest(String name) {
+    public SerializationTest(final String name) {
         super(name);
     }
 
@@ -24,9 +24,9 @@ public class SerializationTest extends TestCase {
         l = (PNode) l.clone(); // copy uses serialization internally
         assertTrue(l.getChildrenCount() == 300);
 
-        Iterator i = l.getChildrenIterator();
+        final Iterator i = l.getChildrenIterator();
         while (i.hasNext()) {
-            PNode each = (PNode) i.next();
+            final PNode each = (PNode) i.next();
             assertEquals(l, each.getParent());
         }
     }

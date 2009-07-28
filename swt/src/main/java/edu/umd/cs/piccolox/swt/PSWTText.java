@@ -8,8 +8,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -33,6 +36,11 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * term persistence.
  */
 public class PSWTText extends PNode {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Below this magnification render text as 'greek'.
@@ -131,7 +139,7 @@ public class PSWTText extends PNode {
      * 
      * @param str The initial text.
      */
-    public PSWTText(String str) {
+    public PSWTText(final String str) {
         this(str, DEFAULT_FONT);
     }
 
@@ -141,19 +149,19 @@ public class PSWTText extends PNode {
      * @param str The initial text.
      * @param font The font for this PSWTText component.
      */
-    public PSWTText(String str, Font font) {
+    public PSWTText(final String str, final Font font) {
         setText(str);
         this.font = font;
 
         recomputeBounds();
     }
 
-    //**************************************************************************
+    // **************************************************************************
     // **
     //
     // Get/Set and pairs
     //
-    //**************************************************************************
+    // **************************************************************************
     // *
 
     /**
@@ -168,7 +176,7 @@ public class PSWTText extends PNode {
      * 
      * @param color use this color.
      */
-    public void setPenColor(Color color) {
+    public void setPenColor(final Color color) {
         penColor = color;
         repaint();
     }
@@ -185,7 +193,7 @@ public class PSWTText extends PNode {
      * 
      * @param aPaint use this paint.
      */
-    public void setPenPaint(Paint aPaint) {
+    public void setPenPaint(final Paint aPaint) {
         penColor = (Color) aPaint;
     }
 
@@ -201,7 +209,7 @@ public class PSWTText extends PNode {
      * 
      * @param color use this color.
      */
-    public void setBackgroundColor(Color color) {
+    public void setBackgroundColor(final Color color) {
         super.setPaint(color);
     }
 
@@ -219,7 +227,7 @@ public class PSWTText extends PNode {
      * 
      * @param threshold compared to renderContext magnification.
      */
-    public void setGreekThreshold(double threshold) {
+    public void setGreekThreshold(final double threshold) {
         greekThreshold = threshold;
         repaint();
     }
@@ -241,7 +249,7 @@ public class PSWTText extends PNode {
         String result = new String();
         int lineNum = 0;
 
-        for (Iterator i = lines.iterator(); i.hasNext();) {
+        for (final Iterator i = lines.iterator(); i.hasNext();) {
             if (lineNum > 0) {
                 result += '\n';
             }
@@ -266,7 +274,7 @@ public class PSWTText extends PNode {
      * 
      * @param aFont use this font.
      */
-    public void setFont(Font aFont) {
+    public void setFont(final Font aFont) {
         font = aFont;
 
         recomputeBounds();
@@ -279,7 +287,7 @@ public class PSWTText extends PNode {
      * @param str use this string.
      */
     public void setText(String str) {
-        int pos = 0;
+        final int pos = 0;
         int index;
         boolean done = false;
         lines = new ArrayList();
@@ -303,7 +311,7 @@ public class PSWTText extends PNode {
      * 
      * @param x the X translation.
      */
-    public void setTranslateX(double x) {
+    public void setTranslateX(final double x) {
         setTranslation(x, translateY);
     }
 
@@ -321,7 +329,7 @@ public class PSWTText extends PNode {
      * 
      * @param y the Y translation.
      */
-    public void setTranslateY(double y) {
+    public void setTranslateY(final double y) {
         setTranslation(translateX, y);
     }
 
@@ -340,7 +348,7 @@ public class PSWTText extends PNode {
      * @param x the X-coord of translation
      * @param y the Y-coord of translation
      */
-    public void setTranslation(double x, double y) {
+    public void setTranslation(final double x, final double y) {
         translateX = x;
         translateY = y;
 
@@ -352,7 +360,7 @@ public class PSWTText extends PNode {
      * 
      * @param p The translation offset.
      */
-    public void setTranslation(Point2D p) {
+    public void setTranslation(final Point2D p) {
         setTranslation(p.getX(), p.getY());
     }
 
@@ -362,7 +370,7 @@ public class PSWTText extends PNode {
      * @return The translation offset.
      */
     public Point2D getTranslation() {
-        Point2D p = new Point2D.Double(translateX, translateY);
+        final Point2D p = new Point2D.Double(translateX, translateY);
         return p;
     }
 
@@ -378,26 +386,26 @@ public class PSWTText extends PNode {
      * 
      * @param ppc Contains information about current render.
      */
-    public void paint(PPaintContext ppc) {
-        Graphics2D g2 = ppc.getGraphics();
+    public void paint(final PPaintContext ppc) {
+        final Graphics2D g2 = ppc.getGraphics();
         AffineTransform at = null;
         boolean translated = false;
         if (!lines.isEmpty()) {
 
-            if ((translateX != 0.0) || (translateY != 0.0)) {
+            if (translateX != 0.0 || translateY != 0.0) {
                 at = g2.getTransform(); // save transform
                 g2.translate(translateX, translateY);
                 translated = true;
             }
 
             // If font too small and not antialiased, then greek
-            double renderedFontSize = font.getSize() * ppc.getScale();
+            final double renderedFontSize = font.getSize() * ppc.getScale();
             // BBB: HACK ALERT - July 30, 1999
             // This is a workaround for a bug in Sun JDK 1.2.2 where
             // fonts that are rendered at very small magnifications show up big!
             // So, we render as greek if requested (that's normal)
             // OR if the font is very small (that's the workaround)
-            if ((renderedFontSize < 0.5) || (renderedFontSize < greekThreshold)) {
+            if (renderedFontSize < 0.5 || renderedFontSize < greekThreshold) {
                 paintAsGreek(ppc);
             }
             else {
@@ -414,8 +422,8 @@ public class PSWTText extends PNode {
      * 
      * @param ppc The graphics context to paint into.
      */
-    public void paintAsGreek(PPaintContext ppc) {
-        Graphics2D g2 = ppc.getGraphics();
+    public void paintAsGreek(final PPaintContext ppc) {
+        final Graphics2D g2 = ppc.getGraphics();
 
         if (greekColor != null) {
             g2.setBackground(greekColor);
@@ -430,20 +438,20 @@ public class PSWTText extends PNode {
      * 
      * @param ppc The graphics context to paint into.
      */
-    public void paintAsText(PPaintContext ppc) {
-        SWTGraphics2D sg2 = (SWTGraphics2D) ppc.getGraphics();
+    public void paintAsText(final PPaintContext ppc) {
+        final SWTGraphics2D sg2 = (SWTGraphics2D) ppc.getGraphics();
 
         if (getPaint() != null) {
             sg2.setBackground((Color) getPaint());
-            Rectangle2D rect = new Rectangle2D.Double(0.0, 0.0, getWidth(), getHeight());
+            final Rectangle2D rect = new Rectangle2D.Double(0.0, 0.0, getWidth(), getHeight());
             sg2.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
         }
 
         sg2.translate(padding, padding);
 
-        double scale = Math.min(sg2.getTransform().getScaleX(), sg2.getTransform().getScaleY());
-        double dSize = scale * font.getSize();
-        double fixupScale = Math.floor(dSize) / dSize;
+        final double scale = Math.min(sg2.getTransform().getScaleX(), sg2.getTransform().getScaleY());
+        final double dSize = scale * font.getSize();
+        final double fixupScale = Math.floor(dSize) / dSize;
 
         // This moves the text size down to the next closest integer size - to
         // help it stay in
@@ -462,18 +470,18 @@ public class PSWTText extends PNode {
         String line;
         double y;
 
-        FontMetrics metrics = sg2.getSWTFontMetrics();
+        final FontMetrics metrics = sg2.getSWTFontMetrics();
 
-        for (Iterator i = lines.iterator(); i.hasNext();) {
+        for (final Iterator i = lines.iterator(); i.hasNext();) {
             line = (String) i.next();
 
             // ADDED BY LEG ON 2/25/03 - BUG CAUSING PROBLEMS AT CERTAIN
             // SCALES WHEN LINE WAS EMPTY
-            line = (line.equals("")) ? " " : line;
+            line = line.equals("") ? " " : line;
 
-            y = (lineNum * metrics.getHeight());
+            y = lineNum * metrics.getHeight();
 
-            sg2.drawString(line, (double) 0, (double) y);
+            sg2.drawString(line, 0, y);
 
             lineNum++;
         }
@@ -496,19 +504,19 @@ public class PSWTText extends PNode {
         height = 0.0;
 
         boolean hasText = true;
-        if ((lines.size() == 1) && (((String) lines.get(0)).equals(""))) {
+        if (lines.size() == 1 && ((String) lines.get(0)).equals("")) {
             hasText = false;
         }
 
-        GC gc = new GC(Display.getDefault());
-        SWTGraphics2D g2 = new SWTGraphics2D(gc, Display.getDefault());
+        final GC gc = new GC(Display.getDefault());
+        final SWTGraphics2D g2 = new SWTGraphics2D(gc, Display.getDefault());
         g2.setFont(font);
-        FontMetrics fm = g2.getSWTFontMetrics();
+        final FontMetrics fm = g2.getSWTFontMetrics();
 
         if (!lines.isEmpty() && hasText) {
             String line;
             int lineNum = 0;
-            for (Iterator i = lines.iterator(); i.hasNext();) {
+            for (final Iterator i = lines.iterator(); i.hasNext();) {
                 line = (String) i.next();
 
                 // Find the longest line in the text
@@ -543,7 +551,7 @@ public class PSWTText extends PNode {
         setBounds(translateX, translateY, maxWidth + 2 * DEFAULT_PADDING, height + 2 * DEFAULT_PADDING);
     }
 
-    protected void internalUpdateBounds(double x, double y, double width, double height) {
+    protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
         recomputeBounds();
     }
 

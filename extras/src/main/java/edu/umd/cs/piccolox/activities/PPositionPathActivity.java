@@ -50,16 +50,17 @@ public class PPositionPathActivity extends PPathActivity {
         public void setPosition(double x, double y);
     }
 
-    public PPositionPathActivity(long duration, long stepRate, Target aTarget) {
+    public PPositionPathActivity(final long duration, final long stepRate, final Target aTarget) {
         this(duration, stepRate, aTarget, null, null);
     }
 
-    public PPositionPathActivity(long duration, long stepRate, Target aTarget, float[] knots, Point2D[] positions) {
+    public PPositionPathActivity(final long duration, final long stepRate, final Target aTarget, final float[] knots,
+            final Point2D[] positions) {
         this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, aTarget, knots, positions);
     }
 
-    public PPositionPathActivity(long duration, long stepRate, int loopCount, int mode, Target aTarget, float[] knots,
-            Point2D[] positions) {
+    public PPositionPathActivity(final long duration, final long stepRate, final int loopCount, final int mode,
+            final Target aTarget, final float[] knots, final Point2D[] positions) {
         super(duration, stepRate, loopCount, mode, knots);
         target = aTarget;
         this.positions = positions;
@@ -73,28 +74,28 @@ public class PPositionPathActivity extends PPathActivity {
         return positions;
     }
 
-    public Point2D getPosition(int index) {
+    public Point2D getPosition(final int index) {
         return positions[index];
     }
 
-    public void setPositions(Point2D[] positions) {
+    public void setPositions(final Point2D[] positions) {
         this.positions = positions;
     }
 
-    public void setPosition(int index, Point2D position) {
+    public void setPosition(final int index, final Point2D position) {
         positions[index] = position;
     }
 
-    public void setPositions(GeneralPath path) {
-        PathIterator pi = path.getPathIterator(null, 1);
-        ArrayList points = new ArrayList();
-        float point[] = new float[6];
+    public void setPositions(final GeneralPath path) {
+        final PathIterator pi = path.getPathIterator(null, 1);
+        final ArrayList points = new ArrayList();
+        final float point[] = new float[6];
         float distanceSum = 0;
         float lastMoveToX = 0;
         float lastMoveToY = 0;
 
         while (!pi.isDone()) {
-            int type = pi.currentSegment(point);
+            final int type = pi.currentSegment(point);
 
             switch (type) {
                 case PathIterator.SEG_MOVETO:
@@ -117,23 +118,23 @@ public class PPositionPathActivity extends PPathActivity {
             }
 
             if (points.size() > 1) {
-                Point2D last = (Point2D) points.get(points.size() - 2);
-                Point2D current = (Point2D) points.get(points.size() - 1);
+                final Point2D last = (Point2D) points.get(points.size() - 2);
+                final Point2D current = (Point2D) points.get(points.size() - 1);
                 distanceSum += last.distance(current);
             }
 
             pi.next();
         }
 
-        int size = points.size();
-        Point2D newPositions[] = new Point2D[size];
-        float newKnots[] = new float[size];
+        final int size = points.size();
+        final Point2D newPositions[] = new Point2D[size];
+        final float newKnots[] = new float[size];
 
         for (int i = 0; i < size; i++) {
             newPositions[i] = (Point2D) points.get(i);
             if (i > 0) {
-                float dist = (float) newPositions[i - 1].distance(newPositions[i]);
-                newKnots[i] = newKnots[i - 1] + (dist / distanceSum);
+                final float dist = (float) newPositions[i - 1].distance(newPositions[i]);
+                newKnots[i] = newKnots[i - 1] + dist / distanceSum;
             }
         }
 
@@ -141,10 +142,10 @@ public class PPositionPathActivity extends PPathActivity {
         setKnots(newKnots);
     }
 
-    public void setRelativeTargetValue(float zeroToOne, int startKnot, int endKnot) {
-        Point2D start = getPosition(startKnot);
-        Point2D end = getPosition(endKnot);
-        target.setPosition(start.getX() + (zeroToOne * (end.getX() - start.getX())), start.getY()
-                + (zeroToOne * (end.getY() - start.getY())));
+    public void setRelativeTargetValue(final float zeroToOne, final int startKnot, final int endKnot) {
+        final Point2D start = getPosition(startKnot);
+        final Point2D end = getPosition(endKnot);
+        target.setPosition(start.getX() + zeroToOne * (end.getX() - start.getX()), start.getY() + zeroToOne
+                * (end.getY() - start.getY()));
     }
 }

@@ -37,7 +37,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;
@@ -99,14 +99,14 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      * @param viewPort The viewport on which this director directs
      * @param view The ZCanvas that the viewport looks at
      */
-    public void install(PViewport viewPort, final PCanvas view) {
-        this.scrollPane = (PScrollPane) viewPort.getParent();
+    public void install(final PViewport viewPort, final PCanvas view) {
+        scrollPane = (PScrollPane) viewPort.getParent();
         this.viewPort = viewPort;
         this.view = view;
 
         if (view != null) {
-            this.camera = view.getCamera();
-            this.root = view.getRoot();
+            camera = view.getCamera();
+            root = view.getRoot();
         }
 
         if (camera != null) {
@@ -145,14 +145,14 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      * @param viewBounds The bounds for which the view position will be computed
      * @return The view position
      */
-    public Point getViewPosition(Rectangle2D viewBounds) {
-        Point pos = new Point();
+    public Point getViewPosition(final Rectangle2D viewBounds) {
+        final Point pos = new Point();
         if (camera != null) {
             // First we compute the union of all the layers
-            PBounds layerBounds = new PBounds();
-            List layers = camera.getLayersReference();
-            for (Iterator i = layers.iterator(); i.hasNext();) {
-                PLayer layer = (PLayer) i.next();
+            final PBounds layerBounds = new PBounds();
+            final List layers = camera.getLayersReference();
+            for (final Iterator i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = (PLayer) i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
@@ -175,14 +175,14 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      *            computed
      * @return The view size
      */
-    public Dimension getViewSize(Rectangle2D viewBounds) {
-        Dimension size = new Dimension();
+    public Dimension getViewSize(final Rectangle2D viewBounds) {
+        final Dimension size = new Dimension();
         if (camera != null) {
             // First we compute the union of all the layers
-            PBounds bounds = new PBounds();
-            List layers = camera.getLayersReference();
-            for (Iterator i = layers.iterator(); i.hasNext();) {
-                PLayer layer = (PLayer) i.next();
+            final PBounds bounds = new PBounds();
+            final List layers = camera.getLayersReference();
+            for (final Iterator i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = (PLayer) i.next();
                 bounds.add(layer.getFullBoundsReference());
             }
 
@@ -205,39 +205,40 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      * @param x The new x position
      * @param y The new y position
      */
-    public void setViewPosition(double x, double y) {
+    public void setViewPosition(final double x, final double y) {
         // Bail out if scrollInProgress because we can end up with an infinite
         // loop since the scrollbars depend on the camera location
-        if (camera == null || scrollInProgress)
+        if (camera == null || scrollInProgress) {
             return;
+        }
 
         scrollInProgress = true;
 
         // Get the union of all the layers' bounds
-        PBounds layerBounds = new PBounds();
-        List layers = camera.getLayersReference();
-        for (Iterator i = layers.iterator(); i.hasNext();) {
-            PLayer layer = (PLayer) i.next();
+        final PBounds layerBounds = new PBounds();
+        final List layers = camera.getLayersReference();
+        for (final Iterator i = layers.iterator(); i.hasNext();) {
+            final PLayer layer = (PLayer) i.next();
             layerBounds.add(layer.getFullBoundsReference());
         }
 
-        PAffineTransform at = camera.getViewTransform();
+        final PAffineTransform at = camera.getViewTransform();
         at.transform(layerBounds, layerBounds);
 
         // Union the camera bounds
-        PBounds viewBounds = camera.getBoundsReference();
+        final PBounds viewBounds = camera.getBoundsReference();
         layerBounds.add(viewBounds);
 
         // Now find the new view position in view coordinates
-        Point2D newPoint = new Point2D.Double(layerBounds.getX() + x, layerBounds.getY() + y);
+        final Point2D newPoint = new Point2D.Double(layerBounds.getX() + x, layerBounds.getY() + y);
 
         // Now transform the new view position into global coords
         camera.localToView(newPoint);
 
         // Compute the new matrix values to put the camera at the
         // correct location
-        double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
-        double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
+        final double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
+        final double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
 
         at.setTransform(at.getScaleX(), at.getShearY(), at.getShearX(), at.getScaleY(), newX, newY);
 
@@ -250,9 +251,9 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      * Invoked when the camera's view changes, or the bounds of the root or
      * camera changes
      */
-    public void propertyChange(PropertyChangeEvent pce) {
-        boolean isRelevantViewEvent = (PCamera.PROPERTY_VIEW_TRANSFORM == pce.getPropertyName());
-        boolean isRelevantBoundsEvent = isBoundsChangedEvent(pce)
+    public void propertyChange(final PropertyChangeEvent pce) {
+        final boolean isRelevantViewEvent = PCamera.PROPERTY_VIEW_TRANSFORM == pce.getPropertyName();
+        final boolean isRelevantBoundsEvent = isBoundsChangedEvent(pce)
                 && (pce.getSource() == camera || pce.getSource() == view.getRoot());
 
         if (isRelevantViewEvent || isRelevantBoundsEvent) {
@@ -265,8 +266,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
         }
     }
 
-    private boolean isBoundsChangedEvent(PropertyChangeEvent pce) {
-        return (PNode.PROPERTY_BOUNDS == pce.getPropertyName() || PNode.PROPERTY_FULL_BOUNDS == pce.getPropertyName());
+    private boolean isBoundsChangedEvent(final PropertyChangeEvent pce) {
+        return PNode.PROPERTY_BOUNDS == pce.getPropertyName() || PNode.PROPERTY_FULL_BOUNDS == pce.getPropertyName();
     }
 
     /**
@@ -278,16 +279,16 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      */
     public boolean shouldRevalidateScrollPane() {
         if (camera != null) {
-            if (scrollPane.getHorizontalScrollBarPolicy() != JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-                    && scrollPane.getVerticalScrollBarPolicy() != JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED) {
+            if (scrollPane.getHorizontalScrollBarPolicy() != ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+                    && scrollPane.getVerticalScrollBarPolicy() != ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED) {
                 return false;
             }
 
             // Get the union of all the layers' bounds
-            PBounds layerBounds = new PBounds();
-            List layers = camera.getLayersReference();
-            for (Iterator i = layers.iterator(); i.hasNext();) {
-                PLayer layer = (PLayer) i.next();
+            final PBounds layerBounds = new PBounds();
+            final List layers = camera.getLayersReference();
+            for (final Iterator i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = (PLayer) i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
@@ -295,20 +296,20 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
             camera.viewToLocal(layerBounds);
 
             // And union with the camera bounds
-            PBounds cameraBounds = camera.getBoundsReference();
+            final PBounds cameraBounds = camera.getBoundsReference();
             layerBounds.add(cameraBounds);
 
             // Truncate these to ints before comparing since
             // that's what the ScrollPane uses
-            int layerWidth = (int) (layerBounds.getWidth() + 0.5);
-            int layerHeight = (int) (layerBounds.getHeight() + 0.5);
-            int cameraWidth = (int) (cameraBounds.getWidth() + 0.5);
-            int cameraHeight = (int) (cameraBounds.getHeight() + 0.5);
+            final int layerWidth = (int) (layerBounds.getWidth() + 0.5);
+            final int layerHeight = (int) (layerBounds.getHeight() + 0.5);
+            final int cameraWidth = (int) (cameraBounds.getWidth() + 0.5);
+            final int cameraHeight = (int) (cameraBounds.getHeight() + 0.5);
 
-            if ((scrollPane.getHorizontalScrollBar().isShowing() && layerWidth <= cameraWidth)
-                    || (!scrollPane.getHorizontalScrollBar().isShowing() && layerWidth > cameraWidth)
-                    || (scrollPane.getVerticalScrollBar().isShowing() && layerHeight <= cameraHeight)
-                    || (!scrollPane.getVerticalScrollBar().isShowing() && layerHeight > cameraHeight)) {
+            if (scrollPane.getHorizontalScrollBar().isShowing() && layerWidth <= cameraWidth
+                    || !scrollPane.getHorizontalScrollBar().isShowing() && layerWidth > cameraWidth
+                    || scrollPane.getVerticalScrollBar().isShowing() && layerHeight <= cameraHeight
+                    || !scrollPane.getVerticalScrollBar().isShowing() && layerHeight > cameraHeight) {
                 return true;
             }
         }

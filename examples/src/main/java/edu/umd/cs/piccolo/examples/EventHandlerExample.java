@@ -34,12 +34,12 @@ import java.awt.geom.Point2D;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolox.PFrame;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventFilter;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This example shows how to create and install a custom event listener that
@@ -47,11 +47,16 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public class EventHandlerExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public EventHandlerExample() {
         this(null);
     }
 
-    public EventHandlerExample(PCanvas aCanvas) {
+    public EventHandlerExample(final PCanvas aCanvas) {
         super("EventHandlerExample", false, aCanvas);
     }
 
@@ -60,7 +65,7 @@ public class EventHandlerExample extends PFrame {
 
         // Create a new event handler the creates new rectangles on
         // mouse pressed, dragged, release.
-        PBasicInputEventHandler rectEventHandler = createRectangleEventHandler();
+        final PBasicInputEventHandler rectEventHandler = createRectangleEventHandler();
 
         // Make the event handler only work with BUTTON1 events, so that it does
         // not conflict with the zoom event handler that is installed by
@@ -93,10 +98,10 @@ public class EventHandlerExample extends PFrame {
             // The current drag location.
             protected Point2D dragPoint;
 
-            public void mousePressed(PInputEvent e) {
+            public void mousePressed(final PInputEvent e) {
                 super.mousePressed(e);
 
-                PLayer layer = getCanvas().getLayer();
+                final PLayer layer = getCanvas().getLayer();
 
                 // Initialize the locations.
                 pressPoint = e.getPosition();
@@ -112,7 +117,7 @@ public class EventHandlerExample extends PFrame {
                 updateRectangle();
             }
 
-            public void mouseDragged(PInputEvent e) {
+            public void mouseDragged(final PInputEvent e) {
                 super.mouseDragged(e);
                 // update the drag point location.
                 dragPoint = e.getPosition();
@@ -121,7 +126,7 @@ public class EventHandlerExample extends PFrame {
                 updateRectangle();
             }
 
-            public void mouseReleased(PInputEvent e) {
+            public void mouseReleased(final PInputEvent e) {
                 super.mouseReleased(e);
                 // update the rectangle shape.
                 updateRectangle();
@@ -131,7 +136,7 @@ public class EventHandlerExample extends PFrame {
             public void updateRectangle() {
                 // create a new bounds that contains both the press and current
                 // drag point.
-                PBounds b = new PBounds();
+                final PBounds b = new PBounds();
                 b.add(pressPoint);
                 b.add(dragPoint);
 
@@ -141,7 +146,7 @@ public class EventHandlerExample extends PFrame {
         };
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new EventHandlerExample();
     }
 }

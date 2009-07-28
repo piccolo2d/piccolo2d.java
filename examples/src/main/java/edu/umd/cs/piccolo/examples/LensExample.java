@@ -51,21 +51,26 @@ import edu.umd.cs.piccolox.nodes.PLens;
  */
 public class LensExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public LensExample() {
         this(null);
     }
 
-    public LensExample(PCanvas aCanvas) {
+    public LensExample(final PCanvas aCanvas) {
         super("LensExample", false, aCanvas);
     }
 
     public void initialize() {
-        PRoot root = getCanvas().getRoot();
-        PCamera camera = getCanvas().getCamera();
+        final PRoot root = getCanvas().getRoot();
+        final PCamera camera = getCanvas().getCamera();
         // viewed by the PCanvas camera, the lens is added to this layer.
-        PLayer mainLayer = getCanvas().getLayer();
+        final PLayer mainLayer = getCanvas().getLayer();
         // viewed by both the lens camera and the PCanvas camera
-        PLayer sharedLayer = new PLayer();
+        final PLayer sharedLayer = new PLayer();
         // viewed by only the lens camera
         final PLayer lensOnlyLayer = new PLayer();
 
@@ -82,12 +87,12 @@ public class LensExample extends PFrame {
 
         // Create an event handler that draws squiggles on the first layer of
         // the bottom most camera.
-        PDragSequenceEventHandler squiggleEventHandler = new PDragSequenceEventHandler() {
+        final PDragSequenceEventHandler squiggleEventHandler = new PDragSequenceEventHandler() {
             protected PPath squiggle;
 
-            public void startDrag(PInputEvent e) {
+            public void startDrag(final PInputEvent e) {
                 super.startDrag(e);
-                Point2D p = e.getPosition();
+                final Point2D p = e.getPosition();
                 squiggle = new PPath();
                 squiggle.moveTo((float) p.getX(), (float) p.getY());
 
@@ -100,19 +105,19 @@ public class LensExample extends PFrame {
                 e.getCamera().getLayer(0).addChild(squiggle);
             }
 
-            public void drag(PInputEvent e) {
+            public void drag(final PInputEvent e) {
                 super.drag(e);
                 updateSquiggle(e);
             }
 
-            public void endDrag(PInputEvent e) {
+            public void endDrag(final PInputEvent e) {
                 super.endDrag(e);
                 updateSquiggle(e);
                 squiggle = null;
             }
 
-            public void updateSquiggle(PInputEvent aEvent) {
-                Point2D p = aEvent.getPosition();
+            public void updateSquiggle(final PInputEvent aEvent) {
+                final Point2D p = aEvent.getPosition();
                 squiggle.lineTo((float) p.getX(), (float) p.getY());
             }
         };
@@ -136,10 +141,15 @@ public class LensExample extends PFrame {
         // create a node that is viewed both by the main camera and by the
         // lens. Note that in its paint method it checks to see which camera
         // is painting it, and if its the lens uses a different color.
-        PNode sharedNode = new PNode() {
-            protected void paint(PPaintContext paintContext) {
+        final PNode sharedNode = new PNode() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            protected void paint(final PPaintContext paintContext) {
                 if (paintContext.getCamera() == lens.getCamera()) {
-                    Graphics2D g2 = paintContext.getGraphics();
+                    final Graphics2D g2 = paintContext.getGraphics();
                     g2.setPaint(Color.RED);
                     g2.fill(getBoundsReference());
                 }
@@ -153,7 +163,7 @@ public class LensExample extends PFrame {
         sharedNode.translate(200, 200);
         sharedLayer.addChild(sharedNode);
 
-        PText label = new PText(
+        final PText label = new PText(
                 "Move the lens \n (by dragging title bar) over the green rectangle, and it will appear red. press and drag the mouse on the canvas and it will draw squiggles. press and drag the mouse over the lens and drag squiggles that are only visible through the lens.");
         label.setConstrainWidthToTextWidth(false);
         label.setConstrainHeightToTextHeight(false);
@@ -162,7 +172,7 @@ public class LensExample extends PFrame {
         sharedLayer.addChild(label);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new LensExample();
     }
 }

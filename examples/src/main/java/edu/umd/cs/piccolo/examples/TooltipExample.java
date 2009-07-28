@@ -46,17 +46,22 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class TooltipExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public TooltipExample() {
         this(null);
     }
 
-    public TooltipExample(PCanvas aCanvas) {
+    public TooltipExample(final PCanvas aCanvas) {
         super("TooltipExample", false, aCanvas);
     }
 
     public void initialize() {
-        PNode n1 = PPath.createEllipse(0, 0, 100, 100);
-        PNode n2 = PPath.createRectangle(300, 200, 100, 100);
+        final PNode n1 = PPath.createEllipse(0, 0, 100, 100);
+        final PNode n2 = PPath.createRectangle(300, 200, 100, 100);
 
         n1.addAttribute("tooltip", "node 1");
         n2.addAttribute("tooltip", "node 2");
@@ -70,18 +75,18 @@ public class TooltipExample extends PFrame {
         camera.addChild(tooltipNode);
 
         camera.addInputEventListener(new PBasicInputEventHandler() {
-            public void mouseMoved(PInputEvent event) {
+            public void mouseMoved(final PInputEvent event) {
                 updateToolTip(event);
             }
 
-            public void mouseDragged(PInputEvent event) {
+            public void mouseDragged(final PInputEvent event) {
                 updateToolTip(event);
             }
 
-            public void updateToolTip(PInputEvent event) {
-                PNode n = event.getInputManager().getMouseOver().getPickedNode();
-                String tooltipString = (String) n.getAttribute("tooltip");
-                Point2D p = event.getCanvasPosition();
+            public void updateToolTip(final PInputEvent event) {
+                final PNode n = event.getInputManager().getMouseOver().getPickedNode();
+                final String tooltipString = (String) n.getAttribute("tooltip");
+                final Point2D p = event.getCanvasPosition();
 
                 event.getPath().canvasToLocal(p, camera);
 
@@ -91,7 +96,7 @@ public class TooltipExample extends PFrame {
         });
     }
 
-    public static void main(String[] argv) {
+    public static void main(final String[] argv) {
         new TooltipExample();
     }
 }

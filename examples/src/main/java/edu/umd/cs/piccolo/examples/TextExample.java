@@ -37,21 +37,26 @@ import edu.umd.cs.piccolox.event.PStyledTextEventHandler;
  */
 public class TextExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public TextExample() {
         this(null);
     }
 
-    public TextExample(PCanvas aCanvas) {
+    public TextExample(final PCanvas aCanvas) {
         super("TextExample", false, aCanvas);
     }
 
     public void initialize() {
         getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
-        PStyledTextEventHandler textHandler = new PStyledTextEventHandler(getCanvas());
+        final PStyledTextEventHandler textHandler = new PStyledTextEventHandler(getCanvas());
         getCanvas().addInputEventListener(textHandler);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new TextExample();
     }
 }

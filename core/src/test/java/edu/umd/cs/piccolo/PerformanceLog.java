@@ -33,14 +33,14 @@ import java.util.Iterator;
 
 public class PerformanceLog {
 
-    private ArrayList log = new ArrayList();
+    private final ArrayList log = new ArrayList();
     private long testTime;
 
     public static class ZLogEntry {
         public String name;
         public long time;
 
-        public ZLogEntry(String aName, long aTime) {
+        public ZLogEntry(final String aName, final long aTime) {
             name = aName;
             time = aTime;
         }
@@ -51,13 +51,13 @@ public class PerformanceLog {
         testTime = System.currentTimeMillis();
     }
 
-    public void endTest(String name) {
+    public void endTest(final String name) {
         testTime = System.currentTimeMillis() - testTime;
         addEntry(name, testTime);
         System.gc();
     }
 
-    public void addEntry(String aName, long aTime) {
+    public void addEntry(final String aName, final long aTime) {
         log.add(new ZLogEntry(aName, aTime));
     }
 
@@ -73,7 +73,7 @@ public class PerformanceLog {
 
         Iterator i = log.iterator();
         while (i.hasNext()) {
-            ZLogEntry each = (ZLogEntry) i.next();
+            final ZLogEntry each = (ZLogEntry) i.next();
             System.out.println(each.time);
         }
 
@@ -83,7 +83,7 @@ public class PerformanceLog {
 
         i = log.iterator();
         while (i.hasNext()) {
-            ZLogEntry each = (ZLogEntry) i.next();
+            final ZLogEntry each = (ZLogEntry) i.next();
             System.out.println(each.name + ", " + each.time);
         }
     }

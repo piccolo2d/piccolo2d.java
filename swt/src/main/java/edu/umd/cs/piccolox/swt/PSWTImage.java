@@ -49,16 +49,21 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PSWTImage extends PNode {
 
-    private transient PSWTCanvas canvas;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    private transient final PSWTCanvas canvas;
 
     private transient Image image;
 
-    public PSWTImage(PSWTCanvas canvas) {
+    public PSWTImage(final PSWTCanvas canvas) {
         super();
 
         this.canvas = canvas;
         canvas.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed(DisposeEvent de) {
+            public void widgetDisposed(final DisposeEvent de) {
                 if (image != null) {
                     image.dispose();
                 }
@@ -66,12 +71,12 @@ public class PSWTImage extends PNode {
         });
     }
 
-    public PSWTImage(PSWTCanvas canvas, Image newImage) {
+    public PSWTImage(final PSWTCanvas canvas, final Image newImage) {
         this(canvas);
         setImage(newImage);
     }
 
-    public PSWTImage(PSWTCanvas canvas, String fileName) {
+    public PSWTImage(final PSWTCanvas canvas, final String fileName) {
         this(canvas);
         setImage(fileName);
     }
@@ -93,7 +98,7 @@ public class PSWTImage extends PNode {
      * have transparent regions, for those cases you may want to set the PImage
      * to be not accelerated.
      */
-    public void setImage(String fileName) {
+    public void setImage(final String fileName) {
         setImage(new Image(canvas.getDisplay(), fileName));
     }
 
@@ -105,12 +110,12 @@ public class PSWTImage extends PNode {
      * have transparent regions, for those cases you may want to set the PImage
      * to be not accelerated.
      */
-    public void setImage(Image newImage) {
-        Image old = image;
+    public void setImage(final Image newImage) {
+        final Image old = image;
         image = newImage;
 
         if (image != null) {
-            Rectangle bounds = getImage().getBounds();
+            final Rectangle bounds = getImage().getBounds();
             setBounds(0, 0, bounds.width, bounds.height);
             invalidatePaint();
         }
@@ -121,13 +126,13 @@ public class PSWTImage extends PNode {
         firePropertyChange(PImage.PROPERTY_CODE_IMAGE, PImage.PROPERTY_IMAGE, old, image);
     }
 
-    protected void paint(PPaintContext paintContext) {
+    protected void paint(final PPaintContext paintContext) {
         if (getImage() != null) {
-            Rectangle r = image.getBounds();
-            double iw = r.width;
-            double ih = r.height;
-            PBounds b = getBoundsReference();
-            SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
+            final Rectangle r = image.getBounds();
+            final double iw = r.width;
+            final double ih = r.height;
+            final PBounds b = getBoundsReference();
+            final SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
 
             if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
                 g2.translate(b.x, b.y);
@@ -155,7 +160,7 @@ public class PSWTImage extends PNode {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("image=" + (image == null ? "null" : image.toString()));
 

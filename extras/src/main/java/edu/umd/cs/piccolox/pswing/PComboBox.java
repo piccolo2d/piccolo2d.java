@@ -72,6 +72,10 @@ import javax.swing.plaf.basic.ComboPopup;
  */
 public class PComboBox extends JComboBox implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private PSwing pSwing;
     private PSwingCanvas canvas;
 
@@ -80,7 +84,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * 
      * @param model The ComboBoxModel from which the list will be created
      */
-    public PComboBox(ComboBoxModel model) {
+    public PComboBox(final ComboBoxModel model) {
         super(model);
         init();
     }
@@ -100,7 +104,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * 
      * @param items The items to populate the PComboBox list
      */
-    public PComboBox(Vector items) {
+    public PComboBox(final Vector items) {
         super(items);
         init();
     }
@@ -127,7 +131,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * @param pSwing
      * @param canvas
      */
-    public void setEnvironment(PSwing pSwing, PSwingCanvas canvas) {
+    public void setEnvironment(final PSwing pSwing, final PSwingCanvas canvas) {
         this.pSwing = pSwing;
         this.canvas = canvas;
     }
@@ -143,7 +147,7 @@ public class PComboBox extends JComboBox implements Serializable {
          * Create our Popup instead of theirs
          */
         protected ComboPopup createPopup() {
-            PBasicComboPopup popup = new PBasicComboPopup(comboBox);
+            final PBasicComboPopup popup = new PBasicComboPopup(comboBox);
             popup.getAccessibleContext().setAccessibleParent(comboBox);
             return popup;
         }
@@ -155,9 +159,14 @@ public class PComboBox extends JComboBox implements Serializable {
     protected class PBasicComboPopup extends BasicComboPopup {
 
         /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * @param combo The parent ComboBox
          */
-        public PBasicComboPopup(JComboBox combo) {
+        public PBasicComboPopup(final JComboBox combo) {
             super(combo);
         }
 
@@ -172,9 +181,9 @@ public class PComboBox extends JComboBox implements Serializable {
          * @param ph corresponds to the height of the popup
          * @return The bounds for the PopupMenu
          */
-        protected Rectangle computePopupBounds(int px, int py, int pw, int ph) {
-            Rectangle2D r = getNodeBoundsInCanvas();
-            Rectangle sup = super.computePopupBounds(px, py, pw, ph);
+        protected Rectangle computePopupBounds(final int px, final int py, final int pw, final int ph) {
+            final Rectangle2D r = getNodeBoundsInCanvas();
+            final Rectangle sup = super.computePopupBounds(px, py, pw, ph);
             return new Rectangle((int) r.getX(), (int) r.getMaxY(), (int) sup.getWidth(), (int) sup.getHeight());
         }
     }

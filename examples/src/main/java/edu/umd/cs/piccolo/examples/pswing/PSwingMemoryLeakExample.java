@@ -31,7 +31,6 @@ package edu.umd.cs.piccolo.examples.pswing;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -42,15 +41,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import edu.umd.cs.piccolo.PCanvas;
-
 import edu.umd.cs.piccolo.nodes.PText;
-
 import edu.umd.cs.piccolox.pswing.PSwing;
 import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
- * Attempt to replicate the PSwingRepaintManager-related memory leak
- * reported in Issue 74.
+ * Attempt to replicate the PSwingRepaintManager-related memory leak reported in
+ * Issue 74.
  */
 public final class PSwingMemoryLeakExample extends JFrame {
 
@@ -78,22 +75,21 @@ public final class PSwingMemoryLeakExample extends JFrame {
     /** Main panel, container for PSwingCanvases. */
     private final JPanel mainPanel;
 
-
     /**
      * Create a new PSwing memory leak example.
      */
     public PSwingMemoryLeakExample() {
         super("PSwing memory leak example");
 
-        PText label0 = new PText("Number of active PSwingCanvases:");
+        final PText label0 = new PText("Number of active PSwingCanvases:");
         active = new PText("0");
-        PText label4 = new PText("Number of finalized PSwingCanvases:");
+        final PText label4 = new PText("Number of finalized PSwingCanvases:");
         finalized = new PText("0");
-        PText label1 = new PText("Total memory:");
+        final PText label1 = new PText("Total memory:");
         totalMemory = new PText("0");
-        PText label2 = new PText("Free memory:");
+        final PText label2 = new PText("Free memory:");
         freeMemory = new PText("0");
-        PText label3 = new PText("Used memory:");
+        final PText label3 = new PText("Used memory:");
         usedMemory = new PText("0");
 
         label0.offset(20.0d, 20.0d);
@@ -128,15 +124,19 @@ public final class PSwingMemoryLeakExample extends JFrame {
         getContentPane().add("North", canvas);
         getContentPane().add("Center", mainPanel);
 
-        final Timer add = new Timer(10, new ActionListener()
-        {
+        final Timer add = new Timer(10, new ActionListener() {
             int id = 0;
 
             /** {@inheritDoc} */
             public void actionPerformed(final ActionEvent e) {
-                JLabel label = new JLabel("Label" + id);
-                PSwing pswing = new PSwing(label);
-                PSwingCanvas pswingCanvas = new PSwingCanvas() {
+                final JLabel label = new JLabel("Label" + id);
+                final PSwing pswing = new PSwing(label);
+                final PSwingCanvas pswingCanvas = new PSwingCanvas() {
+                    /**
+                     * 
+                     */
+                    private static final long serialVersionUID = 1L;
+
                     /** {@inheritDoc} */
                     public void finalize() {
                         incrementFinalized();
@@ -156,14 +156,13 @@ public final class PSwingMemoryLeakExample extends JFrame {
         add.setDelay(5);
         add.setRepeats(true);
 
-        final Timer remove = new Timer(20000, new ActionListener()
-        {
+        final Timer remove = new Timer(20000, new ActionListener() {
             /** {@inheritDoc} */
             public void actionPerformed(final ActionEvent e) {
                 if (add.isRunning()) {
                     add.stop();
                 }
-                int i = mainPanel.getComponentCount() - 1;
+                final int i = mainPanel.getComponentCount() - 1;
                 if (i > 0) {
                     mainPanel.remove(mainPanel.getComponentCount() - 1);
                     mainPanel.invalidate();
@@ -176,8 +175,7 @@ public final class PSwingMemoryLeakExample extends JFrame {
         remove.setDelay(5);
         remove.setRepeats(true);
 
-        final Timer updateMemory = new Timer(500, new ActionListener()
-        {
+        final Timer updateMemory = new Timer(500, new ActionListener() {
             /** {@inheritDoc} */
             public void actionPerformed(final ActionEvent e) {
                 updateMemory();
@@ -228,28 +226,27 @@ public final class PSwingMemoryLeakExample extends JFrame {
     /**
      * Update memory.
      */
-    private void updateMemory() {        
+    private void updateMemory() {
         new Thread(new Runnable() {
-                /** {@inheritDoc} */
-                public void run() {
-                    System.gc();
-                    System.runFinalization();
-                }
-            }).run();
+            /** {@inheritDoc} */
+            public void run() {
+                System.gc();
+                System.runFinalization();
+            }
+        }).run();
 
-        long total = Runtime.getRuntime().totalMemory();
+        final long total = Runtime.getRuntime().totalMemory();
         totalMemory.setText(String.valueOf(total));
-        long free = Runtime.getRuntime().freeMemory();
+        final long free = Runtime.getRuntime().freeMemory();
         freeMemory.setText(String.valueOf(free));
-        long used = (total - free);
+        final long used = total - free;
         usedMemory.setText(String.valueOf(used));
         canvas.repaint();
     }
 
-
     /**
      * Main.
-     *
+     * 
      * @param args command line arguments, ignored
      */
     public static void main(final String[] args) {

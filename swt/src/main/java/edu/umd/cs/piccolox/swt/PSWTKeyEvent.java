@@ -43,12 +43,22 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class PSWTKeyEvent extends KeyEvent {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     static Component fakeSrc = new Component() {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
     };
 
     org.eclipse.swt.events.KeyEvent swtEvent;
 
-    public PSWTKeyEvent(org.eclipse.swt.events.KeyEvent ke, int eventType) {
+    public PSWTKeyEvent(final org.eclipse.swt.events.KeyEvent ke, final int eventType) {
         super(fakeSrc, eventType, ke.time, 0, ke.keyCode, ke.character, KeyEvent.KEY_LOCATION_STANDARD);
 
         swtEvent = ke;

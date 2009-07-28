@@ -63,7 +63,7 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
      * @param selectableParent The node whose children will be selected by this
      *            event handler.
      */
-    public PSWTSelectionEventHandler(PNode marqueeParent, PNode selectableParent) {
+    public PSWTSelectionEventHandler(final PNode marqueeParent, final PNode selectableParent) {
         super(new PNode(), selectableParent);
         this.marqueeParent = marqueeParent;
     }
@@ -76,31 +76,36 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
      * @param selectableParents A list of nodes whose children will be selected
      *            by this event handler.
      */
-    public PSWTSelectionEventHandler(PNode marqueeParent, List selectableParents) {
+    public PSWTSelectionEventHandler(final PNode marqueeParent, final List selectableParents) {
         super(new PNode(), selectableParents);
         this.marqueeParent = marqueeParent;
     }
 
-    public void decorateSelectedNode(PNode node) {
+    public void decorateSelectedNode(final PNode node) {
         PSWTBoundsHandle.addBoundsHandlesTo(node);
     }
 
-    public void undecorateSelectedNode(PNode node) {
+    public void undecorateSelectedNode(final PNode node) {
         PSWTBoundsHandle.removeBoundsHandlesFrom(node);
     }
 
-    protected void initializeSelection(PInputEvent pie) {
+    protected void initializeSelection(final PInputEvent pie) {
         super.initializeSelection(pie);
         pressPt = pie.getPosition();
         canvasPressPt = pie.getCanvasPosition();
     }
 
-    protected void initializeMarquee(PInputEvent e) {
+    protected void initializeMarquee(final PInputEvent e) {
         super.initializeMarquee(e);
 
         marquee = new PSWTPath(new Rectangle2D.Float((float) pressPt.getX(), (float) pressPt.getY(), 0, 0)) {
-            protected void paint(PPaintContext paintContext) {
-                SWTGraphics2D s2g = (SWTGraphics2D) paintContext.getGraphics();
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            protected void paint(final PPaintContext paintContext) {
+                final SWTGraphics2D s2g = (SWTGraphics2D) paintContext.getGraphics();
                 s2g.gc.setLineStyle(SWT.LINE_DASH);
                 super.paint(paintContext);
                 s2g.gc.setLineStyle(SWT.LINE_SOLID);
@@ -111,10 +116,10 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
         marqueeParent.addChild(marquee);
     }
 
-    protected void updateMarquee(PInputEvent pie) {
+    protected void updateMarquee(final PInputEvent pie) {
         super.updateMarquee(pie);
 
-        PBounds b = new PBounds();
+        final PBounds b = new PBounds();
 
         if (marqueeParent instanceof PCamera) {
             b.add(canvasPressPt);
@@ -138,7 +143,7 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
         return new PBounds();
     }
 
-    protected void endMarqueeSelection(PInputEvent e) {
+    protected void endMarqueeSelection(final PInputEvent e) {
         super.endMarqueeSelection(e);
 
         // Remove marquee
@@ -150,6 +155,6 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
      * This gets called continuously during the drag, and is used to animate the
      * marquee
      */
-    protected void dragActivityStep(PInputEvent aEvent) {
+    protected void dragActivityStep(final PInputEvent aEvent) {
     }
 }

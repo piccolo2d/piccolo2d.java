@@ -50,16 +50,16 @@ public class PZoomToEventHandler extends PBasicInputEventHandler {
         setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
     }
 
-    public void mousePressed(PInputEvent aEvent) {
+    public void mousePressed(final PInputEvent aEvent) {
         zoomTo(aEvent);
     }
 
     protected void zoomTo(final PInputEvent aEvent) {
         PBounds zoomToBounds;
-        PNode picked = aEvent.getPickedNode();
+        final PNode picked = aEvent.getPickedNode();
 
         if (picked instanceof PCamera) {
-            PCamera c = (PCamera) picked;
+            final PCamera c = (PCamera) picked;
             zoomToBounds = c.getUnionOfLayerFullBounds();
         }
         else {

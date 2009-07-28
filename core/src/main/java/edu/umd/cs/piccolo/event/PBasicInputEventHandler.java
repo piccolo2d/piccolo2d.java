@@ -53,9 +53,10 @@ public class PBasicInputEventHandler implements PInputEventListener {
         eventFilter = new PInputEventFilter();
     }
 
-    public void processEvent(PInputEvent event, int type) {
-        if (!acceptsEvent(event, type))
+    public void processEvent(final PInputEvent event, final int type) {
+        if (!acceptsEvent(event, type)) {
             return;
+        }
 
         switch (type) {
             case KeyEvent.KEY_PRESSED:
@@ -126,7 +127,7 @@ public class PBasicInputEventHandler implements PInputEventListener {
     // default case) then it accepts all events.
     // ****************************************************************
 
-    public boolean acceptsEvent(PInputEvent event, int type) {
+    public boolean acceptsEvent(final PInputEvent event, final int type) {
         return eventFilter.acceptsEvent(event, type);
     }
 
@@ -134,7 +135,7 @@ public class PBasicInputEventHandler implements PInputEventListener {
         return eventFilter;
     }
 
-    public void setEventFilter(PInputEventFilter newEventFilter) {
+    public void setEventFilter(final PInputEventFilter newEventFilter) {
         eventFilter = newEventFilter;
     }
 
@@ -142,46 +143,46 @@ public class PBasicInputEventHandler implements PInputEventListener {
     // Events - Methods for handling events sent to the event listener.
     // ****************************************************************
 
-    public void keyPressed(PInputEvent event) {
+    public void keyPressed(final PInputEvent event) {
     }
 
-    public void keyReleased(PInputEvent event) {
+    public void keyReleased(final PInputEvent event) {
     }
 
-    public void keyTyped(PInputEvent event) {
+    public void keyTyped(final PInputEvent event) {
     }
 
-    public void mouseClicked(PInputEvent event) {
+    public void mouseClicked(final PInputEvent event) {
     }
 
-    public void mousePressed(PInputEvent event) {
+    public void mousePressed(final PInputEvent event) {
     }
 
-    public void mouseDragged(PInputEvent event) {
+    public void mouseDragged(final PInputEvent event) {
     }
 
-    public void mouseEntered(PInputEvent event) {
+    public void mouseEntered(final PInputEvent event) {
     }
 
-    public void mouseExited(PInputEvent event) {
+    public void mouseExited(final PInputEvent event) {
     }
 
-    public void mouseMoved(PInputEvent event) {
+    public void mouseMoved(final PInputEvent event) {
     }
 
-    public void mouseReleased(PInputEvent event) {
+    public void mouseReleased(final PInputEvent event) {
     }
 
-    public void mouseWheelRotated(PInputEvent event) {
+    public void mouseWheelRotated(final PInputEvent event) {
     }
 
-    public void mouseWheelRotatedByBlock(PInputEvent event) {
+    public void mouseWheelRotatedByBlock(final PInputEvent event) {
     }
 
-    public void keyboardFocusGained(PInputEvent event) {
+    public void keyboardFocusGained(final PInputEvent event) {
     }
 
-    public void keyboardFocusLost(PInputEvent event) {
+    public void keyboardFocusLost(final PInputEvent event) {
     }
 
     // ****************************************************************
@@ -192,7 +193,7 @@ public class PBasicInputEventHandler implements PInputEventListener {
      * Returns a string representation of this object for debugging purposes.
      */
     public String toString() {
-        String result = super.toString().replaceAll(".*\\.", "");
+        final String result = super.toString().replaceAll(".*\\.", "");
         return result + "[" + paramString() + "]";
     }
 
@@ -205,7 +206,7 @@ public class PBasicInputEventHandler implements PInputEventListener {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
         result.append("eventFilter=" + eventFilter == null ? "null" : eventFilter.toString());
         return result.toString();
     }

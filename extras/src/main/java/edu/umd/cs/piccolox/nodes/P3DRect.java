@@ -28,11 +28,18 @@
  */
 package edu.umd.cs.piccolox.nodes;
 
-import java.awt.*;
-import java.awt.geom.*;
-import edu.umd.cs.piccolo.*;
-import edu.umd.cs.piccolo.util.*;
-import edu.umd.cs.piccolox.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Stroke;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
+
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPaintContext;
+import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This is a simple node that draws a "3D" rectangle within the bounds of the
@@ -45,12 +52,16 @@ import edu.umd.cs.piccolox.*;
  */
 public class P3DRect extends PNode {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private Color topLeftOuterColor;
     private Color topLeftInnerColor;
     private Color bottomRightInnerColor;
     private Color bottomRightOuterColor;
-    private GeneralPath path;
-    private Stroke stroke;
+    private final GeneralPath path;
+    private final Stroke stroke;
     private boolean raised;
 
     public P3DRect() {
@@ -59,16 +70,16 @@ public class P3DRect extends PNode {
         path = new GeneralPath();
     }
 
-    public P3DRect(Rectangle2D bounds) {
+    public P3DRect(final Rectangle2D bounds) {
         this(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
     }
 
-    public P3DRect(double x, double y, double width, double height) {
+    public P3DRect(final double x, final double y, final double width, final double height) {
         this();
         setBounds(x, y, width, height);
     }
 
-    public void setRaised(boolean raised) {
+    public void setRaised(final boolean raised) {
         this.raised = raised;
         setPaint(getPaint());
     }
@@ -77,18 +88,18 @@ public class P3DRect extends PNode {
         return raised;
     }
 
-    protected void paint(PPaintContext paintContext) {
-        Graphics2D g2 = paintContext.getGraphics();
+    protected void paint(final PPaintContext paintContext) {
+        final Graphics2D g2 = paintContext.getGraphics();
 
-        double x = getX();
-        double y = getY();
-        double width = getWidth();
-        double height = getHeight();
-        double magX = g2.getTransform().getScaleX();
-        double magY = g2.getTransform().getScaleY();
-        double dx = (float) (1.0 / magX);
-        double dy = (float) (1.0 / magY);
-        PBounds bounds = getBounds();
+        final double x = getX();
+        final double y = getY();
+        final double width = getWidth();
+        final double height = getHeight();
+        final double magX = g2.getTransform().getScaleX();
+        final double magY = g2.getTransform().getScaleY();
+        final double dx = (float) (1.0 / magX);
+        final double dy = (float) (1.0 / magY);
+        final PBounds bounds = getBounds();
 
         g2.setPaint(getPaint());
         g2.fill(bounds);
@@ -109,25 +120,25 @@ public class P3DRect extends PNode {
         g2.draw(path);
 
         path.reset();
-        path.moveTo((float) (x + width), (float) (y));
+        path.moveTo((float) (x + width), (float) y);
         path.lineTo((float) (x + width), (float) (y + height));
-        path.lineTo((float) (x), (float) (y + height));
+        path.lineTo((float) x, (float) (y + height));
         g2.setPaint(bottomRightOuterColor);
         g2.draw(path);
 
         path.reset();
         path.moveTo((float) (x + width - dx), (float) (y + dy));
         path.lineTo((float) (x + width - dx), (float) (y + height - dy));
-        path.lineTo((float) (x), (float) (y + height - dy));
+        path.lineTo((float) x, (float) (y + height - dy));
         g2.setPaint(bottomRightInnerColor);
         g2.draw(path);
     }
 
-    public void setPaint(Paint newPaint) {
+    public void setPaint(final Paint newPaint) {
         super.setPaint(newPaint);
 
         if (newPaint instanceof Color) {
-            Color color = (Color) newPaint;
+            final Color color = (Color) newPaint;
 
             if (raised) {
                 topLeftOuterColor = color.brighter();
@@ -150,15 +161,20 @@ public class P3DRect extends PNode {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new PFrame() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             public void initialize() {
                 getCanvas().setDefaultRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
 
-                P3DRect rect1 = new P3DRect(50, 50, 100, 100);
+                final P3DRect rect1 = new P3DRect(50, 50, 100, 100);
                 rect1.setPaint(new Color(239, 235, 222));
 
-                P3DRect rect2 = new P3DRect(50, 50, 100, 100);
+                final P3DRect rect2 = new P3DRect(50, 50, 100, 100);
                 rect2.setPaint(new Color(239, 235, 222));
                 rect2.translate(110, 0);
                 rect2.setRaised(false);

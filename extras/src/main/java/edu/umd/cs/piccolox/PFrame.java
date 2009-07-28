@@ -57,19 +57,23 @@ import edu.umd.cs.piccolo.PCanvas;
  */
 public class PFrame extends JFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private PCanvas canvas;
-    private GraphicsDevice graphicsDevice;
+    private final GraphicsDevice graphicsDevice;
     private EventListener escapeFullScreenModeListener;
 
     public PFrame() {
         this("", false, null);
     }
 
-    public PFrame(String title, boolean fullScreenMode, PCanvas aCanvas) {
+    public PFrame(final String title, final boolean fullScreenMode, final PCanvas aCanvas) {
         this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, aCanvas);
     }
 
-    public PFrame(String title, GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
+    public PFrame(final String title, final GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
         super(title, aDevice.getDefaultConfiguration());
 
         graphicsDevice = aDevice;
@@ -80,7 +84,7 @@ public class PFrame extends JFrame {
         try {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-        catch (SecurityException e) {
+        catch (final SecurityException e) {
         } // expected from applets
 
         if (aCanvas == null) {
@@ -125,7 +129,7 @@ public class PFrame extends JFrame {
         return graphicsDevice.getFullScreenWindow() != null;
     }
 
-    public void setFullScreenMode(boolean fullScreenMode) {
+    public void setFullScreenMode(final boolean fullScreenMode) {
         if (fullScreenMode) {
             addEscapeFullScreenModeListener();
 
@@ -157,18 +161,18 @@ public class PFrame extends JFrame {
         }
     }
 
-    protected void chooseBestDisplayMode(GraphicsDevice device) {
-        DisplayMode best = getBestDisplayMode(device);
+    protected void chooseBestDisplayMode(final GraphicsDevice device) {
+        final DisplayMode best = getBestDisplayMode(device);
         if (best != null) {
             device.setDisplayMode(best);
         }
     }
 
-    protected DisplayMode getBestDisplayMode(GraphicsDevice device) {
-        Iterator itr = getPreferredDisplayModes(device).iterator();
+    protected DisplayMode getBestDisplayMode(final GraphicsDevice device) {
+        final Iterator itr = getPreferredDisplayModes(device).iterator();
         while (itr.hasNext()) {
-            DisplayMode each = (DisplayMode) itr.next();
-            DisplayMode[] modes = device.getDisplayModes();
+            final DisplayMode each = (DisplayMode) itr.next();
+            final DisplayMode[] modes = device.getDisplayModes();
             for (int i = 0; i < modes.length; i++) {
                 if (modes[i].getWidth() == each.getWidth() && modes[i].getHeight() == each.getHeight()
                         && modes[i].getBitDepth() == each.getBitDepth()) {
@@ -184,8 +188,8 @@ public class PFrame extends JFrame {
      * By default return the current display mode. Subclasses may override this
      * method to return other modes in the collection.
      */
-    protected Collection getPreferredDisplayModes(GraphicsDevice device) {
-        ArrayList result = new ArrayList();
+    protected Collection getPreferredDisplayModes(final GraphicsDevice device) {
+        final ArrayList result = new ArrayList();
 
         result.add(device.getDisplayMode());
         /*
@@ -205,7 +209,7 @@ public class PFrame extends JFrame {
     public void addEscapeFullScreenModeListener() {
         removeEscapeFullScreenModeListener();
         escapeFullScreenModeListener = new KeyAdapter() {
-            public void keyPressed(KeyEvent aEvent) {
+            public void keyPressed(final KeyEvent aEvent) {
                 if (aEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     setFullScreenMode(false);
                 }
@@ -249,7 +253,7 @@ public class PFrame extends JFrame {
     public void initialize() {
     }
 
-    public static void main(String[] argv) {
+    public static void main(final String[] argv) {
         new PFrame();
     }
 }

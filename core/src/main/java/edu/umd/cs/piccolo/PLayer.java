@@ -59,7 +59,7 @@ public class PLayer extends PNode {
      * formats.
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * The property name that identifies a change in the set of this layer's
      * cameras (see {@link #getCamera getCamera}, {@link #getCameraCount
@@ -102,7 +102,7 @@ public class PLayer extends PNode {
     /**
      * Get the camera in this layer's camera list at the specified index.
      */
-    public PCamera getCamera(int index) {
+    public PCamera getCamera(final int index) {
         return (PCamera) cameras.get(index);
     }
 
@@ -110,7 +110,7 @@ public class PLayer extends PNode {
      * Add a camera to this layer's camera list. This method it called
      * automatically when a layer is added to a camera.
      */
-    public void addCamera(PCamera camera) {
+    public void addCamera(final PCamera camera) {
         addCamera(cameras.size(), camera);
     }
 
@@ -118,7 +118,7 @@ public class PLayer extends PNode {
      * Add a camera to this layer's camera list at the specified index. This
      * method it called automatically when a layer is added to a camera.
      */
-    public void addCamera(int index, PCamera camera) {
+    public void addCamera(final int index, final PCamera camera) {
         cameras.add(index, camera);
         invalidatePaint();
         firePropertyChange(PROPERTY_CODE_CAMERAS, PROPERTY_CAMERAS, null, cameras);
@@ -126,20 +126,20 @@ public class PLayer extends PNode {
 
     /**
      * Remove the camera from this layer's camera list.
-     */    
-    public PCamera removeCamera(PCamera camera) {
+     */
+    public PCamera removeCamera(final PCamera camera) {
         if (cameras.remove(camera)) {
             invalidatePaint();
             firePropertyChange(PROPERTY_CODE_CAMERAS, PROPERTY_CAMERAS, null, cameras);
         }
-        return camera;        
+        return camera;
     }
 
     /**
      * Remove the camera at the given index from this layer's camera list.
      */
-    public PCamera removeCamera(int index) {
-        PCamera result = (PCamera) cameras.remove(index);
+    public PCamera removeCamera(final int index) {
+        final PCamera result = (PCamera) cameras.remove(index);
         invalidatePaint();
         firePropertyChange(PROPERTY_CODE_CAMERAS, PROPERTY_CAMERAS, null, cameras);
         return result;
@@ -155,7 +155,7 @@ public class PLayer extends PNode {
      * Override repaints and forward them to the cameras that are viewing this
      * layer.
      */
-    public void repaintFrom(PBounds localBounds, PNode childOrThis) {
+    public void repaintFrom(final PBounds localBounds, final PNode childOrThis) {
         if (childOrThis != this) {
             localToParent(localBounds);
         }
@@ -167,10 +167,10 @@ public class PLayer extends PNode {
         }
     }
 
-    protected void notifyCameras(PBounds parentBounds) {
-        int count = getCameraCount();
+    protected void notifyCameras(final PBounds parentBounds) {
+        final int count = getCameraCount();
         for (int i = 0; i < count; i++) {
-            PCamera each = (PCamera) cameras.get(i);
+            final PCamera each = (PCamera) cameras.get(i);
             each.repaintFromLayer(parentBounds, this);
         }
     }
@@ -188,10 +188,10 @@ public class PLayer extends PNode {
      * they will only get written out if someone else writes them
      * unconditionally.
      */
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
-        int count = getCameraCount();
+        final int count = getCameraCount();
         for (int i = 0; i < count; i++) {
             ((PObjectOutputStream) out).writeConditionalObject(cameras.get(i));
         }
@@ -199,13 +199,13 @@ public class PLayer extends PNode {
         out.writeObject(Boolean.FALSE);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
         cameras = new ArrayList();
 
         while (true) {
-            Object each = in.readObject();
+            final Object each = in.readObject();
             if (each != null) {
                 if (each.equals(Boolean.FALSE)) {
                     break;

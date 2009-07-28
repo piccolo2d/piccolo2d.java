@@ -42,31 +42,36 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class ActivityExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public ActivityExample() {
         this(null);
     }
 
-    public ActivityExample(PCanvas aCanvas) {
+    public ActivityExample(final PCanvas aCanvas) {
         super("ActivityExample", false, aCanvas);
     }
 
     public void initialize() {
-        long currentTime = System.currentTimeMillis();
+        final long currentTime = System.currentTimeMillis();
 
         // Create a new node that we will apply different activities to, and
         // place that node at location 200, 200.
         final PNode aNode = PPath.createRectangle(0, 0, 100, 80);
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
         layer.addChild(aNode);
         aNode.setOffset(200, 200);
 
         // Create a new custom "flash" activity. This activity will start
         // running in five seconds, and while it runs it will flash aNode's
         // paint between red and green every half second.
-        PActivity flash = new PActivity(-1, 500, currentTime + 5000) {
+        final PActivity flash = new PActivity(-1, 500, currentTime + 5000) {
             boolean fRed = true;
 
-            protected void activityStep(long elapsedTime) {
+            protected void activityStep(final long elapsedTime) {
                 super.activityStep(elapsedTime);
 
                 if (fRed) {
@@ -89,10 +94,10 @@ public class ActivityExample extends PFrame {
         // the node's position. Since our node already descends from the root
         // node the animate methods will automatically schedule these activities
         // for us.
-        PActivity a1 = aNode.animateToPositionScaleRotation(0, 0, 0.5, 0, 5000);
-        PActivity a2 = aNode.animateToPositionScaleRotation(100, 0, 1.5, Math.toRadians(110), 5000);
-        PActivity a3 = aNode.animateToPositionScaleRotation(200, 100, 1, 0, 5000);
-        PActivity a4 = aNode.animateToTransparency(0.25f, 3000);
+        final PActivity a1 = aNode.animateToPositionScaleRotation(0, 0, 0.5, 0, 5000);
+        final PActivity a2 = aNode.animateToPositionScaleRotation(100, 0, 1.5, Math.toRadians(110), 5000);
+        final PActivity a3 = aNode.animateToPositionScaleRotation(200, 100, 1, 0, 5000);
+        final PActivity a4 = aNode.animateToTransparency(0.25f, 3000);
 
         // the animate activities will start immediately (in the next call to
         // PRoot.processInputs) by default. Here we set their start times (in
@@ -111,7 +116,7 @@ public class ActivityExample extends PFrame {
         // a4.setStartTime(currentTime + 15000);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new ActivityExample();
     }
 }

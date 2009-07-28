@@ -51,124 +51,120 @@ public class PPathTest extends TestCase {
     public void setUp() {
         mockListener = new MockPropertyChangeListener();
     }
-    
-	public void testStrokeIsNotNullByDefault() {
-	    PPath path = new PPath();
-	    assertNotNull(path.getStroke());	    
-	}
-	
-	public void testStrokePaintIsBlackByDefault() {
-	    PPath path = new PPath();
-	    assertEquals(Color.BLACK, path.getStrokePaint());
-	}
-	
-	public void testClone() {
-		PPath p = PPath.createEllipse(0, 0, 100, 100);
-		PBounds b = p.getBounds();
-		p = (PPath) p.clone();
-		assertEquals(p.getBounds(), b);
-	}
 
-	public void testSerialization() throws IOException, ClassNotFoundException {
-		final PPath srcPath = PPath.createEllipse(0, 0, 100, 100);
-		final PBounds srcBounds = srcPath.getBounds();
+    public void testStrokeIsNotNullByDefault() {
+        final PPath path = new PPath();
+        assertNotNull(path.getStroke());
+    }
 
-		File file = File.createTempFile("test", "ser");
-		
-		serializeToFile(srcPath, file);
+    public void testStrokePaintIsBlackByDefault() {
+        final PPath path = new PPath();
+        assertEquals(Color.BLACK, path.getStrokePaint());
+    }
 
-		PPath resultPath = deserializeFromFile(srcBounds, file);
+    public void testClone() {
+        PPath p = PPath.createEllipse(0, 0, 100, 100);
+        final PBounds b = p.getBounds();
+        p = (PPath) p.clone();
+        assertEquals(p.getBounds(), b);
+    }
 
-		assertEquals(resultPath.getBounds(), srcBounds);
-	}
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        final PPath srcPath = PPath.createEllipse(0, 0, 100, 100);
+        final PBounds srcBounds = srcPath.getBounds();
 
-	private PPath deserializeFromFile(PBounds b, File file)
-			throws FileNotFoundException, IOException, ClassNotFoundException {
-		PPath path;
-		FileInputStream fin = new FileInputStream(file);
-		ObjectInputStream in = new ObjectInputStream(fin);
-		path = (PPath) in.readObject();		
-		file.delete();
-		
-		return path;
-	}
+        final File file = File.createTempFile("test", "ser");
 
-	private void serializeToFile(PPath p, File file)
-			throws FileNotFoundException, IOException {
-		FileOutputStream fout = new FileOutputStream(file);
-		PObjectOutputStream out = new PObjectOutputStream(fout);
-		out.writeObjectTree(p);
-		out.flush();
-		out.close();
-	}
-	
+        serializeToFile(srcPath, file);
+
+        final PPath resultPath = deserializeFromFile(srcBounds, file);
+
+        assertEquals(resultPath.getBounds(), srcBounds);
+    }
+
+    private PPath deserializeFromFile(final PBounds b, final File file) throws FileNotFoundException, IOException,
+            ClassNotFoundException {
+        PPath path;
+        final FileInputStream fin = new FileInputStream(file);
+        final ObjectInputStream in = new ObjectInputStream(fin);
+        path = (PPath) in.readObject();
+        file.delete();
+
+        return path;
+    }
+
+    private void serializeToFile(final PPath p, final File file) throws FileNotFoundException, IOException {
+        final FileOutputStream fout = new FileOutputStream(file);
+        final PObjectOutputStream out = new PObjectOutputStream(fout);
+        out.writeObjectTree(p);
+        out.flush();
+        out.close();
+    }
+
     public void testCreateRectangleReturnsValidPPath() {
-        PPath path = PPath.createRectangle(0, 0, 100, 50);
+        final PPath path = PPath.createRectangle(0, 0, 100, 50);
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
     }
 
     public void testCreateEllipseReturnsValidPPath() {
-        PPath path = PPath.createEllipse(0, 0, 100, 50);
+        final PPath path = PPath.createEllipse(0, 0, 100, 50);
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
     }
-    
+
     public void testCreateRoundedRectReturnsValidPPath() {
-        PPath path = PPath.createRoundRectangle(0, 0, 100, 50, 10, 10);
+        final PPath path = PPath.createRoundRectangle(0, 0, 100, 50, 10, 10);
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
     }
-    
+
     public void testCreateLineReturnsValidPPath() {
-        PPath path = PPath.createLine(0,0, 100,0);
+        final PPath path = PPath.createLine(0, 0, 100, 0);
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0,0,100,0), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 0), path.getBounds(), 1);
     }
-    
+
     public void testCreatePolyLinePoint2DReturnsValidPPath() {
-        PPath path = PPath.createPolyline(new Point2D[] {
-                new Point2D.Double(0, 0),
-                new Point2D.Double(100, 50),
-                new Point2D.Double(100, 0)
-        });
+        final PPath path = PPath.createPolyline(new Point2D[] { new Point2D.Double(0, 0), new Point2D.Double(100, 50),
+                new Point2D.Double(100, 0) });
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2);
     }
-    
+
     public void testCreatePolyLineFloatsReturnsValidPPath() {
-        PPath path = PPath.createPolyline(new float[] { 0, 100, 100}, new float[] { 0, 50, 0 });
+        final PPath path = PPath.createPolyline(new float[] { 0, 100, 100 }, new float[] { 0, 50, 0 });
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0,0,100,50), path.getBounds(), 2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2);
     }
-    
+
     public void testSetStrokePaintPersists() {
-        PPath path = new PPath();
+        final PPath path = new PPath();
         path.setStrokePaint(Color.RED);
         assertEquals(Color.RED, path.getStrokePaint());
     }
-    
+
     public void testSetStrokeFiresPropertyChangeEvent() {
-        PPath path = new PPath();
+        final PPath path = new PPath();
         path.addPropertyChangeListener(PPath.PROPERTY_STROKE_PAINT, mockListener);
         path.setStrokePaint(Color.RED);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
-    
+
     public void testChangingPathFiresPropertyChangeEvent() {
-        PPath path = new PPath();
+        final PPath path = new PPath();
         path.addPropertyChangeListener(PPath.PROPERTY_PATH, mockListener);
         path.append(new Rectangle2D.Double(0, 0, 100, 50), true);
         assertEquals(1, mockListener.getPropertyChangeCount());

@@ -44,20 +44,25 @@ import edu.umd.cs.piccolox.nodes.PComposite;
  */
 public class CompositeExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public CompositeExample() {
         this(null);
     }
 
-    public CompositeExample(PCanvas aCanvas) {
+    public CompositeExample(final PCanvas aCanvas) {
         super("CompositeExample", false, aCanvas);
     }
 
     public void initialize() {
-        PComposite composite = new PComposite();
+        final PComposite composite = new PComposite();
 
-        PNode circle = PPath.createEllipse(0, 0, 100, 100);
-        PNode rectangle = PPath.createRectangle(50, 50, 100, 100);
-        PNode text = new PText("Hello world!");
+        final PNode circle = PPath.createEllipse(0, 0, 100, 100);
+        final PNode rectangle = PPath.createRectangle(50, 50, 100, 100);
+        final PNode text = new PText("Hello world!");
 
         composite.addChild(circle);
         composite.addChild(rectangle);
@@ -74,7 +79,7 @@ public class CompositeExample extends PFrame {
         getCanvas().addInputEventListener(new PDragEventHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new CompositeExample();
     }
 

@@ -39,26 +39,31 @@ import edu.umd.cs.piccolox.nodes.PNodeCache;
 
 public class NodeCacheExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public NodeCacheExample() {
         this(null);
     }
 
-    public NodeCacheExample(PCanvas aCanvas) {
+    public NodeCacheExample(final PCanvas aCanvas) {
         super("NodeCacheExample", false, aCanvas);
     }
 
     public void initialize() {
-        PCanvas canvas = getCanvas();
+        final PCanvas canvas = getCanvas();
 
-        PPath circle = PPath.createEllipse(0, 0, 100, 100);
+        final PPath circle = PPath.createEllipse(0, 0, 100, 100);
         circle.setStroke(new BasicStroke(10));
         circle.setPaint(Color.YELLOW);
 
-        PPath rectangle = PPath.createRectangle(-100, -50, 100, 100);
+        final PPath rectangle = PPath.createRectangle(-100, -50, 100, 100);
         rectangle.setStroke(new BasicStroke(15));
         rectangle.setPaint(Color.ORANGE);
 
-        PNodeCache cache = new PNodeCache();
+        final PNodeCache cache = new PNodeCache();
         cache.addChild(circle);
         cache.addChild(rectangle);
 
@@ -69,7 +74,7 @@ public class NodeCacheExample extends PFrame {
         canvas.addInputEventListener(new PDragEventHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new NodeCacheExample();
     }
 }

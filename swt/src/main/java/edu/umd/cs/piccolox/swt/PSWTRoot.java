@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolox.swt;
 
 import java.awt.event.ActionListener;
+
 import javax.swing.Timer;
 
 import org.eclipse.swt.widgets.Composite;
@@ -47,13 +48,17 @@ import edu.umd.cs.piccolo.PRoot;
  */
 public class PSWTRoot extends PRoot {
 
-    private Composite composite;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private final Composite composite;
 
-    public PSWTRoot(Composite composite) {
+    public PSWTRoot(final Composite composite) {
         this.composite = composite;
     }
 
-    public Timer createTimer(int delay, ActionListener listener) {
+    public Timer createTimer(final int delay, final ActionListener listener) {
         return new SWTTimer(composite.getDisplay(), delay, listener);
     }
 

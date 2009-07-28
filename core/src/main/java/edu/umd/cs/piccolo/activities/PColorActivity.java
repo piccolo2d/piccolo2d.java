@@ -43,7 +43,7 @@ public class PColorActivity extends PInterpolatingActivity {
 
     private Color source;
     private Color destination;
-    private Target target;
+    private final Target target;
 
     /**
      * <b>Target</b> Objects that want their color to be set by the color
@@ -65,11 +65,11 @@ public class PColorActivity extends PInterpolatingActivity {
         public Color getColor();
     }
 
-    public PColorActivity(long duration, long stepRate, Target aTarget) {
+    public PColorActivity(final long duration, final long stepRate, final Target aTarget) {
         this(duration, stepRate, aTarget, null);
     }
 
-    public PColorActivity(long duration, long stepRate, Target aTarget, Color aDestination) {
+    public PColorActivity(final long duration, final long stepRate, final Target aTarget, final Color aDestination) {
         this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, aTarget, aDestination);
     }
 
@@ -85,7 +85,8 @@ public class PColorActivity extends PInterpolatingActivity {
      *            the source state will be taken from.
      * @param aDestination the destination color state
      */
-    public PColorActivity(long duration, long stepRate, int loopCount, int mode, Target aTarget, Color aDestination) {
+    public PColorActivity(final long duration, final long stepRate, final int loopCount, final int mode,
+            final Target aTarget, final Color aDestination) {
         super(duration, stepRate, loopCount, mode);
         target = aTarget;
         destination = aDestination;
@@ -107,22 +108,23 @@ public class PColorActivity extends PInterpolatingActivity {
      * Set the final color that will be set on the color activities target when
      * the activity stops stepping.
      */
-    public void setDestinationColor(Color newDestination) {
+    public void setDestinationColor(final Color newDestination) {
         destination = newDestination;
     }
 
     protected void activityStarted() {
-        if (getFirstLoop())
+        if (getFirstLoop()) {
             source = target.getColor();
+        }
         super.activityStarted();
     }
 
-    public void setRelativeTargetValue(float zeroToOne) {
+    public void setRelativeTargetValue(final float zeroToOne) {
         super.setRelativeTargetValue(zeroToOne);
-        float red = (float) (source.getRed() + (zeroToOne * (destination.getRed() - source.getRed())));
-        float green = (float) (source.getGreen() + (zeroToOne * (destination.getGreen() - source.getGreen())));
-        float blue = (float) (source.getBlue() + (zeroToOne * (destination.getBlue() - source.getBlue())));
-        float alpha = (float) (source.getAlpha() + (zeroToOne * (destination.getAlpha() - source.getAlpha())));
+        final float red = (source.getRed() + zeroToOne * (destination.getRed() - source.getRed()));
+        final float green = (source.getGreen() + zeroToOne * (destination.getGreen() - source.getGreen()));
+        final float blue = (source.getBlue() + zeroToOne * (destination.getBlue() - source.getBlue()));
+        final float alpha = (source.getAlpha() + zeroToOne * (destination.getAlpha() - source.getAlpha()));
         target.setColor(new Color(red / 255, green / 255, blue / 255, alpha / 255));
     }
 
@@ -139,7 +141,7 @@ public class PColorActivity extends PInterpolatingActivity {
      * @return a string representation of this object's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("source=" + (source == null ? "null" : source.toString()));
         result.append(",destination=" + (destination == null ? "null" : destination.toString()));

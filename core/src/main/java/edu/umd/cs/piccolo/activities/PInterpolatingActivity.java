@@ -55,11 +55,11 @@ public class PInterpolatingActivity extends PActivity {
     private int loopCount;
     private boolean firstLoop;
 
-    public PInterpolatingActivity(long duration, long stepRate) {
+    public PInterpolatingActivity(final long duration, final long stepRate) {
         this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION);
     }
 
-    public PInterpolatingActivity(long duration, long stepRate, int loopCount, int mode) {
+    public PInterpolatingActivity(final long duration, final long stepRate, final int loopCount, final int mode) {
         this(duration, stepRate, System.currentTimeMillis(), loopCount, mode);
     }
 
@@ -74,7 +74,8 @@ public class PInterpolatingActivity extends PActivity {
      * @param loopCount number of times the activity should reschedule itself
      * @param mode defines how the activity interpolates between states
      */
-    public PInterpolatingActivity(long duration, long stepRate, long startTime, int loopCount, int mode) {
+    public PInterpolatingActivity(final long duration, final long stepRate, final long startTime, final int loopCount,
+            final int mode) {
         super(duration, stepRate, startTime);
         this.loopCount = loopCount;
         this.mode = mode;
@@ -87,9 +88,10 @@ public class PInterpolatingActivity extends PActivity {
      * the startStepping method is called. The duration must be greater then
      * zero so that the interpolation value can be computed.
      */
-    public void setDuration(long aDuration) {
-        if (aDuration <= 0)
+    public void setDuration(final long aDuration) {
+        if (aDuration <= 0) {
             throw new IllegalArgumentException("Duration for PInterpolatingActivity must be greater then 0");
+        }
 
         super.setDuration(aDuration);
     }
@@ -109,7 +111,7 @@ public class PInterpolatingActivity extends PActivity {
     /**
      * Set the mode that defines how the activity interpolates between states.
      */
-    public void setMode(int mode) {
+    public void setMode(final int mode) {
         this.mode = mode;
     }
 
@@ -125,7 +127,7 @@ public class PInterpolatingActivity extends PActivity {
      * Set the number of times the activity should automatically reschedule
      * itself after it has finished.
      */
-    public void setLoopCount(int loopCount) {
+    public void setLoopCount(final int loopCount) {
         this.loopCount = loopCount;
     }
 
@@ -142,7 +144,7 @@ public class PInterpolatingActivity extends PActivity {
      * initialize their source state on the first loop. This method will rarely
      * need to be called, unless your are reusing activities.
      */
-    public void setFirstLoop(boolean firstLoop) {
+    public void setFirstLoop(final boolean firstLoop) {
         this.firstLoop = firstLoop;
     }
 
@@ -150,7 +152,7 @@ public class PInterpolatingActivity extends PActivity {
         return slowInSlowOut;
     }
 
-    public void setSlowInSlowOut(boolean isSlowInSlowOut) {
+    public void setSlowInSlowOut(final boolean isSlowInSlowOut) {
         slowInSlowOut = isSlowInSlowOut;
     }
 
@@ -167,7 +169,7 @@ public class PInterpolatingActivity extends PActivity {
         setRelativeTargetValueAdjustingForMode(0);
     }
 
-    protected void activityStep(long elapsedTime) {
+    protected void activityStep(final long elapsedTime) {
         super.activityStep(elapsedTime);
 
         float t = elapsedTime / (float) getDuration();
@@ -186,10 +188,11 @@ public class PInterpolatingActivity extends PActivity {
         setRelativeTargetValueAdjustingForMode(1);
         super.activityFinished();
 
-        PActivityScheduler scheduler = getActivityScheduler();
+        final PActivityScheduler scheduler = getActivityScheduler();
         if (loopCount > 1) {
-            if (loopCount != Integer.MAX_VALUE)
+            if (loopCount != Integer.MAX_VALUE) {
                 loopCount--;
+            }
             firstLoop = false;
             setStartTime(scheduler.getRoot().getGlobalTime());
             scheduler.addActivity(this);
@@ -210,16 +213,16 @@ public class PInterpolatingActivity extends PActivity {
      * Subclasses should override this method and set the value on their target
      * (the object that they are modifying) accordingly.
      */
-    public void setRelativeTargetValue(float zeroToOne) {
+    public void setRelativeTargetValue(final float zeroToOne) {
     }
 
-    public float computeSlowInSlowOut(float zeroToOne) {
+    public float computeSlowInSlowOut(final float zeroToOne) {
         if (zeroToOne < 0.5) {
             return 2.0f * zeroToOne * zeroToOne;
         }
         else {
-            float complement = 1.0f - zeroToOne;
-            return 1.0f - (2.0f * complement * complement);
+            final float complement = 1.0f - zeroToOne;
+            return 1.0f - 2.0f * complement * complement;
         }
     }
 
@@ -237,7 +240,7 @@ public class PInterpolatingActivity extends PActivity {
                     zeroToOne *= 2;
                 }
                 else {
-                    zeroToOne = 1 - ((zeroToOne - 0.5f) * 2);
+                    zeroToOne = 1 - (zeroToOne - 0.5f) * 2;
                 }
                 break;
         }
@@ -258,7 +261,7 @@ public class PInterpolatingActivity extends PActivity {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         if (slowInSlowOut) {
             result.append("slowinSlowOut,");

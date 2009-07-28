@@ -107,7 +107,7 @@ public class PInputEventFilterTest extends TestCase {
         filter.setAcceptsMouseMoved(false);
         assertFalse(filter.getAcceptsMouseMoved());
     }
-    
+
     public void testSetAcceptsMouseDraggedPersists() {
         filter.setAcceptsMouseDragged(false);
         assertFalse(filter.getAcceptsMouseDragged());
@@ -129,12 +129,12 @@ public class PInputEventFilterTest extends TestCase {
     }
 
     public void testAcceptsSimpleEvent() {
-        PInputEvent event = buildTestEvent();
+        final PInputEvent event = buildTestEvent();
         assertAcceptsEvent(event);
     }
 
     public void testRejectsAcceptedEventIfAcceptsHandledEventsIsFalse() {
-        PInputEvent event = buildTestEvent();
+        final PInputEvent event = buildTestEvent();
         event.setHandled(true);
         filter.setAcceptsAlreadyHandledEvents(false);
         assertRejectsEvent(event);
@@ -144,63 +144,63 @@ public class PInputEventFilterTest extends TestCase {
         PInputEvent event = buildTestEvent();
         filter.setAndMask(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
         assertRejectsEvent(event);
-        event = buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);       
+        event = buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
         assertAcceptsEvent(event);
-        
-        event = buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.META_MASK);       
+
+        event = buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.META_MASK);
         assertAcceptsEvent(event);
     }
-    
+
     public void testRejectsEventsUnlessModifiersContainOneOfOrMask() {
-        PInputEvent event = buildTestEvent();
+        final PInputEvent event = buildTestEvent();
         filter.setOrMask(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
         assertRejectsEvent(event);
-        assertRejectsEvent(buildTestEvent(InputEvent.META_MASK));        
+        assertRejectsEvent(buildTestEvent(InputEvent.META_MASK));
         assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_MASK));
         assertAcceptsEvent(buildTestEvent(InputEvent.ALT_MASK));
-        assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK));   
+        assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
     }
-    
+
     public void testRejectsEventsUnlessTheyMatchOneOfNotMask() {
-        PInputEvent event = buildTestEvent();
+        final PInputEvent event = buildTestEvent();
         filter.setNotMask(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
         assertAcceptsEvent(event);
 
-        assertAcceptsEvent(buildTestEvent(InputEvent.META_MASK));        
+        assertAcceptsEvent(buildTestEvent(InputEvent.META_MASK));
         assertRejectsEvent(buildTestEvent(InputEvent.CTRL_MASK));
         assertRejectsEvent(buildTestEvent(InputEvent.ALT_MASK));
-        assertRejectsEvent(buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK));                              
+        assertRejectsEvent(buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
     }
-    
+
     public void testRejectsMouseEventsIfMouseClickFilterSet() {
-        filter.setAcceptClickCount((short)1);        
+        filter.setAcceptClickCount((short) 1);
         assertRejectsEvent(buildTestEvent(0, 0));
         assertAcceptsEvent(buildTestEvent(0, 1));
         assertRejectsEvent(buildTestEvent(0, 2));
         assertRejectsEvent(buildTestEvent(0, 3));
     }
-    
+
     public void testMarksEventsAsHandledIsHonnored() {
         filter.setMarksAcceptedEventsAsHandled(true);
-        PInputEvent event = buildTestEvent();        
+        final PInputEvent event = buildTestEvent();
         assertAcceptsEvent(event);
         assertTrue(event.isHandled());
     }
-    
+
     public void testRejectAllClickCountsIsHonoured() {
         filter.rejectAllClickCounts();
         assertRejectsEvent(buildTestEvent(0, 0));
         assertRejectsEvent(buildTestEvent(0, 1));
         assertRejectsEvent(buildTestEvent(0, 2));
         assertRejectsEvent(buildTestEvent(0, 3));
-        
+
     }
 
-    private void assertRejectsEvent(PInputEvent event) {
+    private void assertRejectsEvent(final PInputEvent event) {
         assertFalse(filter.acceptsEvent(event, MouseEvent.MOUSE_CLICKED));
     }
 
-    private void assertAcceptsEvent(PInputEvent event) {
+    private void assertAcceptsEvent(final PInputEvent event) {
         assertTrue(filter.acceptsEvent(event, MouseEvent.MOUSE_CLICKED));
     }
 
@@ -208,15 +208,16 @@ public class PInputEventFilterTest extends TestCase {
         return buildTestEvent(InputEvent.BUTTON1_MASK);
     }
 
-    private PInputEvent buildTestEvent(int modifiers) {
+    private PInputEvent buildTestEvent(final int modifiers) {
         return buildTestEvent(modifiers, 0);
     }
-    
-    private PInputEvent buildTestEvent(int modifiers, int clickCount) {
-        JComponent component = new JPanel();
-        PInputManager inputManager = new PInputManager();
 
-        MouseEvent event = new MouseEvent(component, 1, System.currentTimeMillis(), modifiers, 1, 1, clickCount, false);
+    private PInputEvent buildTestEvent(final int modifiers, final int clickCount) {
+        final JComponent component = new JPanel();
+        final PInputManager inputManager = new PInputManager();
+
+        final MouseEvent event = new MouseEvent(component, 1, System.currentTimeMillis(), modifiers, 1, 1, clickCount,
+                false);
         return new PInputEvent(inputManager, event);
     }
 }

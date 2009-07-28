@@ -52,8 +52,8 @@ import edu.umd.cs.piccolo.util.PPickPath;
  */
 public class PInputManager extends PBasicInputEventHandler implements PRoot.InputSource {
 
-    private Point2D lastCanvasPosition;
-    private Point2D currentCanvasPosition;
+    private final Point2D lastCanvasPosition;
+    private final Point2D currentCanvasPosition;
 
     private InputEvent nextInput;
     private int nextType;
@@ -88,8 +88,8 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
     /**
      * Set the node that should receive key events.
      */
-    public void setKeyboardFocus(PInputEventListener eventHandler) {
-        PInputEvent focusEvent = new PInputEvent(this, null);
+    public void setKeyboardFocus(final PInputEventListener eventHandler) {
+        final PInputEvent focusEvent = new PInputEvent(this, null);
 
         if (keyboardFocus != null) {
             dispatchEventToListener(focusEvent, FocusEvent.FOCUS_LOST, keyboardFocus);
@@ -112,7 +112,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
         return mouseFocus;
     }
 
-    public void setMouseFocus(PPickPath path) {
+    public void setMouseFocus(final PPickPath path) {
         previousMouseFocus = mouseFocus;
         mouseFocus = path;
     }
@@ -124,7 +124,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
         return mouseOver;
     }
 
-    public void setMouseOver(PPickPath path) {
+    public void setMouseOver(final PPickPath path) {
         mouseOver = path;
     }
 
@@ -144,74 +144,76 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
     // focus nodes.
     // ****************************************************************
 
-    public void keyPressed(PInputEvent event) {
+    public void keyPressed(final PInputEvent event) {
         dispatchEventToListener(event, KeyEvent.KEY_PRESSED, keyboardFocus);
     }
 
-    public void keyReleased(PInputEvent event) {
+    public void keyReleased(final PInputEvent event) {
         dispatchEventToListener(event, KeyEvent.KEY_RELEASED, keyboardFocus);
     }
 
-    public void keyTyped(PInputEvent event) {
+    public void keyTyped(final PInputEvent event) {
         dispatchEventToListener(event, KeyEvent.KEY_TYPED, keyboardFocus);
     }
 
-    public void mouseClicked(PInputEvent event) {
+    public void mouseClicked(final PInputEvent event) {
         dispatchEventToListener(event, MouseEvent.MOUSE_CLICKED, previousMouseFocus);
     }
 
-    public void mouseWheelRotated(PInputEvent event) {
+    public void mouseWheelRotated(final PInputEvent event) {
         setMouseFocus(getMouseOver());
         dispatchEventToListener(event, MouseWheelEvent.WHEEL_UNIT_SCROLL, mouseOver);
     }
 
-    public void mouseWheelRotatedByBlock(PInputEvent event) {
+    public void mouseWheelRotatedByBlock(final PInputEvent event) {
         setMouseFocus(getMouseOver());
         dispatchEventToListener(event, MouseWheelEvent.WHEEL_BLOCK_SCROLL, mouseOver);
     }
 
-    public void mouseDragged(PInputEvent event) {
+    public void mouseDragged(final PInputEvent event) {
         checkForMouseEnteredAndExited(event);
         dispatchEventToListener(event, MouseEvent.MOUSE_DRAGGED, mouseFocus);
     }
 
-    public void mouseEntered(PInputEvent event) {
+    public void mouseEntered(final PInputEvent event) {
         dispatchEventToListener(event, MouseEvent.MOUSE_ENTERED, mouseOver);
     }
 
-    public void mouseExited(PInputEvent event) {
+    public void mouseExited(final PInputEvent event) {
         dispatchEventToListener(event, MouseEvent.MOUSE_EXITED, previousMouseOver);
     }
 
-    public void mouseMoved(PInputEvent event) {
+    public void mouseMoved(final PInputEvent event) {
         checkForMouseEnteredAndExited(event);
         dispatchEventToListener(event, MouseEvent.MOUSE_MOVED, mouseOver);
     }
 
-    public void mousePressed(PInputEvent event) {
+    public void mousePressed(final PInputEvent event) {
         if (pressedCount == 0) {
             setMouseFocus(getMouseOver());
         }
         pressedCount++;
         dispatchEventToListener(event, MouseEvent.MOUSE_PRESSED, mouseFocus);
-        if (pressedCount < 1 || pressedCount > 3)
+        if (pressedCount < 1 || pressedCount > 3) {
             System.err.println("invalid pressedCount on mouse pressed: " + pressedCount);
+        }
     }
 
-    public void mouseReleased(PInputEvent event) {
+    public void mouseReleased(final PInputEvent event) {
         pressedCount--;
         checkForMouseEnteredAndExited(event);
         dispatchEventToListener(event, MouseEvent.MOUSE_RELEASED, mouseFocus);
         if (pressedCount == 0) {
             setMouseFocus(null);
         }
-        if (pressedCount < 0 || pressedCount > 2)
+        if (pressedCount < 0 || pressedCount > 2) {
             System.err.println("invalid pressedCount on mouse released: " + pressedCount);
+        }
     }
 
-    protected void checkForMouseEnteredAndExited(PInputEvent event) {
-        PNode c = (mouseOver != null) ? mouseOver.getPickedNode() : null;
-        PNode p = (previousMouseOver != null) ? previousMouseOver.getPickedNode() : null;
+    protected void checkForMouseEnteredAndExited(final PInputEvent event) {
+        final PNode c = mouseOver != null ? mouseOver.getPickedNode() : null;
+        final PNode p = previousMouseOver != null ? previousMouseOver.getPickedNode() : null;
 
         if (c != p) {
             dispatchEventToListener(event, MouseEvent.MOUSE_EXITED, previousMouseOver);
@@ -225,18 +227,19 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
     // ****************************************************************
 
     public void processInput() {
-        if (nextInput == null)
+        if (nextInput == null) {
             return;
+        }
 
-        PInputEvent e = new PInputEvent(this, nextInput);
+        final PInputEvent e = new PInputEvent(this, nextInput);
 
         Point2D newCurrentCanvasPosition = null;
         Point2D newLastCanvasPosition = null;
 
         if (e.isMouseEvent()) {
             if (e.isMouseEnteredOrMouseExited()) {
-                PPickPath aPickPath = nextInputSource.pick(((MouseEvent) nextInput).getX(), ((MouseEvent) nextInput)
-                        .getY(), 1);
+                final PPickPath aPickPath = nextInputSource.pick(((MouseEvent) nextInput).getX(),
+                        ((MouseEvent) nextInput).getY(), 1);
                 setMouseOver(aPickPath);
                 previousMouseOver = aPickPath;
                 newCurrentCanvasPosition = (Point2D) currentCanvasPosition.clone();
@@ -245,8 +248,8 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
             else {
                 lastCanvasPosition.setLocation(currentCanvasPosition);
                 currentCanvasPosition.setLocation(((MouseEvent) nextInput).getX(), ((MouseEvent) nextInput).getY());
-                PPickPath aPickPath = nextInputSource.pick(currentCanvasPosition.getX(), currentCanvasPosition.getY(),
-                        1);
+                final PPickPath aPickPath = nextInputSource.pick(currentCanvasPosition.getX(), currentCanvasPosition
+                        .getY(), 1);
                 setMouseOver(aPickPath);
             }
         }
@@ -254,7 +257,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
         nextInput = null;
         nextInputSource = null;
 
-        this.processEvent(e, nextType);
+        processEvent(e, nextType);
 
         if (newCurrentCanvasPosition != null && newLastCanvasPosition != null) {
             currentCanvasPosition.setLocation(newCurrentCanvasPosition);
@@ -262,7 +265,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
         }
     }
 
-    public void processEventFromCamera(InputEvent event, int type, PCamera camera) {
+    public void processEventFromCamera(final InputEvent event, final int type, final PCamera camera) {
         // queue input
         nextInput = event;
         nextType = type;
@@ -272,7 +275,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
         camera.getRoot().processInputs();
     }
 
-    private void dispatchEventToListener(PInputEvent event, int type, PInputEventListener listener) {
+    private void dispatchEventToListener(final PInputEvent event, final int type, final PInputEventListener listener) {
         if (listener != null) {
             // clear the handled bit since the same event object is used to send
             // multiple events such as mouseEntered/mouseExited and mouseMove.

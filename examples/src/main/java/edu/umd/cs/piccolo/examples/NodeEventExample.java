@@ -44,16 +44,21 @@ import edu.umd.cs.piccolox.PFrame;
  */
 public class NodeEventExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public NodeEventExample() {
         this(null);
     }
 
-    public NodeEventExample(PCanvas aCanvas) {
+    public NodeEventExample(final PCanvas aCanvas) {
         super("NodeEventExample", false, aCanvas);
     }
 
     public void initialize() {
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
 
         // create a new node and override some of the event handling
         // methods so that the node changes to orange when the mouse (Button 1)
@@ -70,20 +75,20 @@ public class NodeEventExample extends PFrame {
         // uncomment the aEvent.setHandled() calls and see what happens.
         final PNode aNode = new PNode();
         aNode.addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent aEvent) {
+            public void mousePressed(final PInputEvent aEvent) {
                 aNode.setPaint(Color.orange);
                 printEventCoords(aEvent);
                 aEvent.setHandled(true);
             }
 
-            public void mouseDragged(PInputEvent aEvent) {
-                Dimension2D delta = aEvent.getDeltaRelativeTo(aNode);
+            public void mouseDragged(final PInputEvent aEvent) {
+                final Dimension2D delta = aEvent.getDeltaRelativeTo(aNode);
                 aNode.translate(delta.getWidth(), delta.getHeight());
                 printEventCoords(aEvent);
                 aEvent.setHandled(true);
             }
 
-            public void mouseReleased(PInputEvent aEvent) {
+            public void mouseReleased(final PInputEvent aEvent) {
                 aNode.setPaint(Color.green);
                 printEventCoords(aEvent);
                 aEvent.setHandled(true);
@@ -99,7 +104,7 @@ public class NodeEventExample extends PFrame {
             // node then the local coordinates become different then the screen
             // and global coordinates. When you pan or zoom then the screen
             // coordinates become different from the global coordinates.
-            public void printEventCoords(PInputEvent aEvent) {
+            public void printEventCoords(final PInputEvent aEvent) {
                 System.out.println("Canvas Location: " + aEvent.getCanvasPosition());
                 // System.out.println("Global Location: " +
                 // aEvent.getGlobalLocation());
@@ -126,7 +131,7 @@ public class NodeEventExample extends PFrame {
         layer.addChild(aNode);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new NodeEventExample();
     }
 }

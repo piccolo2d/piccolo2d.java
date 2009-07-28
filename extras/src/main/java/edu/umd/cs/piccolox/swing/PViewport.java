@@ -28,9 +28,16 @@
  */
 package edu.umd.cs.piccolox.swing;
 
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.JViewport;
+import javax.swing.ViewportLayout;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.util.PBounds;
@@ -43,6 +50,10 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public class PViewport extends JViewport {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     /**
      * Controls what happens when scrolling occurs
      */
@@ -83,7 +94,7 @@ public class PViewport extends JViewport {
      * 
      * @param scrollDirector The new scroll director
      */
-    public void setScrollDirector(PScrollDirector scrollDirector) {
+    public void setScrollDirector(final PScrollDirector scrollDirector) {
         if (this.scrollDirector != null) {
             this.scrollDirector.unInstall();
         }
@@ -105,7 +116,7 @@ public class PViewport extends JViewport {
      * 
      * @param view The new view - it better be a ZCanvas!
      */
-    public void setView(Component view) {
+    public void setView(final Component view) {
         if (!(view instanceof PCanvas)) {
             throw new UnsupportedOperationException("PViewport only supports ZCanvas");
         }
@@ -123,14 +134,15 @@ public class PViewport extends JViewport {
      * 
      * @param p a <code>Point</code> object giving the upper left coordinates
      */
-    public void setViewPosition(Point p) {
+    public void setViewPosition(final Point p) {
         if (getView() == null) {
             return;
         }
 
-        double oldX = 0, oldY = 0, x = p.x, y = p.y;
+        double oldX = 0, oldY = 0;
+        final double x = p.x, y = p.y;
 
-        Point2D vp = getViewPosition();
+        final Point2D vp = getViewPosition();
         if (vp != null) {
             oldX = vp.getX();
             oldY = vp.getY();
@@ -140,10 +152,10 @@ public class PViewport extends JViewport {
          * Send the scroll director the exact view position and let it interpret
          * it as needed
          */
-        double newX = x;
-        double newY = y;
+        final double newX = x;
+        final double newY = y;
 
-        if ((oldX != newX) || (oldY != newY)) {
+        if (oldX != newX || oldY != newY) {
             scrollUnderway = true;
 
             scrollDirector.setViewPosition(newX, newY);
@@ -160,7 +172,7 @@ public class PViewport extends JViewport {
      */
     public Point getViewPosition() {
         if (scrollDirector != null) {
-            Dimension extent = getExtentSize();
+            final Dimension extent = getExtentSize();
             return scrollDirector.getViewPosition(new PBounds(0, 0, extent.getWidth(), extent.getHeight()));
         }
         else {
@@ -175,7 +187,7 @@ public class PViewport extends JViewport {
      * @return The new view size
      */
     public Dimension getViewSize() {
-        Dimension extent = getExtentSize();
+        final Dimension extent = getExtentSize();
         return scrollDirector.getViewSize(new PBounds(0, 0, extent.getWidth(), extent.getHeight()));
     }
 
@@ -186,7 +198,7 @@ public class PViewport extends JViewport {
      * @param r The extent size from which the view is computed
      * @return The new view size
      */
-    public Dimension getViewSize(Rectangle2D r) {
+    public Dimension getViewSize(final Rectangle2D r) {
         return scrollDirector.getViewSize(r);
     }
 
@@ -203,19 +215,24 @@ public class PViewport extends JViewport {
      */
     public static class PViewportLayout extends ViewportLayout {
         /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * Called when the specified container needs to be laid out.
          * 
          * @param parent the container to lay out
          */
-        public void layoutContainer(Container parent) {
-            JViewport vp = (JViewport) parent;
-            Component view = vp.getView();
+        public void layoutContainer(final Container parent) {
+            final JViewport vp = (JViewport) parent;
+            final Component view = vp.getView();
 
             if (view == null) {
                 return;
             }
 
-            Dimension extentSize = vp.getSize();
+            final Dimension extentSize = vp.getSize();
 
             vp.setViewSize(extentSize);
         }

@@ -55,15 +55,15 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
         return draggedNode;
     }
 
-    protected void setDraggedNode(PNode draggedNode) {
+    protected void setDraggedNode(final PNode draggedNode) {
         this.draggedNode = draggedNode;
     }
 
-    protected boolean shouldStartDragInteraction(PInputEvent event) {
+    protected boolean shouldStartDragInteraction(final PInputEvent event) {
         return super.shouldStartDragInteraction(event) && event.getPickedNode() != event.getTopCamera();
     }
 
-    protected void startDrag(PInputEvent event) {
+    protected void startDrag(final PInputEvent event) {
         super.startDrag(event);
         draggedNode = event.getPickedNode();
         if (moveToFrontOnPress) {
@@ -71,14 +71,14 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void drag(PInputEvent event) {
+    protected void drag(final PInputEvent event) {
         super.drag(event);
-        PDimension d = event.getDeltaRelativeTo(draggedNode);
+        final PDimension d = event.getDeltaRelativeTo(draggedNode);
         draggedNode.localToParent(d);
         draggedNode.offset(d.getWidth(), d.getHeight());
     }
 
-    protected void endDrag(PInputEvent event) {
+    protected void endDrag(final PInputEvent event) {
         super.endDrag(event);
         draggedNode = null;
     }
@@ -87,7 +87,7 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
         return moveToFrontOnPress;
     }
 
-    public void setMoveToFrontOnPress(boolean moveToFrontOnPress) {
+    public void setMoveToFrontOnPress(final boolean moveToFrontOnPress) {
         this.moveToFrontOnPress = moveToFrontOnPress;
     }
 
@@ -104,11 +104,12 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("draggedNode=" + draggedNode == null ? "null" : draggedNode.toString());
-        if (moveToFrontOnPress)
+        if (moveToFrontOnPress) {
             result.append(",moveToFrontOnPress");
+        }
         result.append(',');
         result.append(super.paramString());
 

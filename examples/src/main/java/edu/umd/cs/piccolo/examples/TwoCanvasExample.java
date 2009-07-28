@@ -41,20 +41,25 @@ import edu.umd.cs.piccolox.handles.PBoundsHandle;
 
 public class TwoCanvasExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public TwoCanvasExample() {
         this(null);
     }
 
-    public TwoCanvasExample(PCanvas aCanvas) {
+    public TwoCanvasExample(final PCanvas aCanvas) {
         super("TwoCanvasExample", false, aCanvas);
     }
 
     public void initialize() {
-        PRoot root = getCanvas().getRoot();
-        PLayer layer = getCanvas().getLayer();
+        final PRoot root = getCanvas().getRoot();
+        final PLayer layer = getCanvas().getLayer();
 
-        PNode n = PPath.createRectangle(0, 0, 100, 80);
-        PNode sticky = PPath.createRectangle(0, 0, 50, 50);
+        final PNode n = PPath.createRectangle(0, 0, 100, 80);
+        final PNode sticky = PPath.createRectangle(0, 0, 50, 50);
         PBoundsHandle.addBoundsHandlesTo(n);
         sticky.setPaint(Color.YELLOW);
         PBoundsHandle.addBoundsHandlesTo(sticky);
@@ -62,18 +67,18 @@ public class TwoCanvasExample extends PFrame {
         layer.addChild(n);
         getCanvas().getCamera().addChild(sticky);
 
-        PCamera otherCamera = new PCamera();
+        final PCamera otherCamera = new PCamera();
         otherCamera.addLayer(layer);
         root.addChild(otherCamera);
 
-        PCanvas other = new PCanvas();
+        final PCanvas other = new PCanvas();
         other.setCamera(otherCamera);
-        PFrame result = new PFrame("TwoCanvasExample", false, other);
+        final PFrame result = new PFrame("TwoCanvasExample", false, other);
         result.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         result.setLocation(500, 100);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new TwoCanvasExample();
     }
 }

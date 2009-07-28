@@ -59,7 +59,7 @@ public class PPaintContext {
 
     private static double[] PTS = new double[4];
 
-    private Graphics2D graphics;
+    private final Graphics2D graphics;
     protected PStack compositeStack;
     protected PStack clipStack;
     protected PStack localClipStack;
@@ -67,7 +67,7 @@ public class PPaintContext {
     protected PStack transformStack;
     protected int renderQuality;
 
-    public PPaintContext(Graphics2D aGraphics) {
+    public PPaintContext(final Graphics2D aGraphics) {
         super();
         graphics = aGraphics;
         compositeStack = new PStack();
@@ -114,11 +114,11 @@ public class PPaintContext {
     // popped.
     // ****************************************************************
 
-    public void pushCamera(PCamera aCamera) {
+    public void pushCamera(final PCamera aCamera) {
         cameraStack.push(aCamera);
     }
 
-    public void popCamera(PCamera aCamera) {
+    public void popCamera(final PCamera aCamera) {
         cameraStack.pop();
     }
 
@@ -126,57 +126,60 @@ public class PPaintContext {
         return (PCamera) cameraStack.peek();
     }
 
-    public void pushClip(Shape aClip) {
-        Shape currentClip = graphics.getClip();
+    public void pushClip(final Shape aClip) {
+        final Shape currentClip = graphics.getClip();
         clipStack.push(currentClip);
         graphics.clip(aClip);
-        Rectangle2D newLocalClip = aClip.getBounds2D();
+        final Rectangle2D newLocalClip = aClip.getBounds2D();
         Rectangle2D.intersect(getLocalClip(), newLocalClip, newLocalClip);
         localClipStack.push(newLocalClip);
     }
 
-    public void popClip(Shape aClip) {
-        Shape newClip = (Shape) clipStack.pop();
+    public void popClip(final Shape aClip) {
+        final Shape newClip = (Shape) clipStack.pop();
         graphics.setClip(newClip);
         localClipStack.pop();
     }
 
-    public void pushTransparency(float transparency) {
+    public void pushTransparency(final float transparency) {
         if (transparency == 1) {
             return;
         }
-        Composite current = graphics.getComposite();
+        final Composite current = graphics.getComposite();
         float currentAlaph = 1.0f;
         compositeStack.push(current);
 
         if (current instanceof AlphaComposite) {
             currentAlaph = ((AlphaComposite) current).getAlpha();
         }
-        AlphaComposite newComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentAlaph * transparency);
+        final AlphaComposite newComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentAlaph
+                * transparency);
         graphics.setComposite(newComposite);
     }
 
-    public void popTransparency(float transparency) {
+    public void popTransparency(final float transparency) {
         if (transparency == 1) {
             return;
         }
-        Composite c = (Composite) compositeStack.pop();
+        final Composite c = (Composite) compositeStack.pop();
         graphics.setComposite(c);
     }
 
-    public void pushTransform(PAffineTransform aTransform) {
-        if (aTransform == null)
+    public void pushTransform(final PAffineTransform aTransform) {
+        if (aTransform == null) {
             return;
-        Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
+        }
+        final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
         aTransform.inverseTransform(newLocalClip, newLocalClip);
         transformStack.push(graphics.getTransform());
         localClipStack.push(newLocalClip);
         graphics.transform(aTransform);
     }
 
-    public void popTransform(PAffineTransform aTransform) {
-        if (aTransform == null)
+    public void popTransform(final PAffineTransform aTransform) {
+        if (aTransform == null) {
             return;
+        }
         graphics.setTransform((AffineTransform) transformStack.pop());
         localClipStack.pop();
     }
@@ -200,7 +203,7 @@ public class PPaintContext {
      * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setRenderQuality(int requestedQuality) {
+    public void setRenderQuality(final int requestedQuality) {
         renderQuality = requestedQuality;
 
         switch (renderQuality) {

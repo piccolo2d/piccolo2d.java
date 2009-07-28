@@ -219,7 +219,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     private transient PNode parent;
     private List children;
-    private PBounds bounds;
+    private final PBounds bounds;
     private PAffineTransform transform;
     private Paint paint;
     private float transparency;
@@ -285,7 +285,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PInterpolatingActivity animateToBounds(double x, double y, double width, double height, long duration) {
+    public PInterpolatingActivity animateToBounds(final double x, final double y, final double width,
+            final double height, final long duration) {
         if (duration == 0) {
             setBounds(x, y, width, height);
             return null;
@@ -293,7 +294,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         else {
             final PBounds dst = new PBounds(x, y, width, height);
 
-            PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
+            final PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
                 private PBounds src;
 
                 protected void activityStarted() {
@@ -302,10 +303,10 @@ public class PNode implements Cloneable, Serializable, Printable {
                     super.activityStarted();
                 }
 
-                public void setRelativeTargetValue(float zeroToOne) {
-                    PNode.this.setBounds(src.x + (zeroToOne * (dst.x - src.x)), src.y + (zeroToOne * (dst.y - src.y)),
-                            src.width + (zeroToOne * (dst.width - src.width)), src.height
-                                    + (zeroToOne * (dst.height - src.height)));
+                public void setRelativeTargetValue(final float zeroToOne) {
+                    PNode.this.setBounds(src.x + zeroToOne * (dst.x - src.x), src.y + zeroToOne * (dst.y - src.y),
+                            src.width + zeroToOne * (dst.width - src.width), src.height + zeroToOne
+                                    * (dst.height - src.height));
                 }
 
                 protected void activityFinished() {
@@ -335,11 +336,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PTransformActivity animateTransformToBounds(double x, double y, double width, double height, long duration) {
-        PAffineTransform t = new PAffineTransform();
+    public PTransformActivity animateTransformToBounds(final double x, final double y, final double width,
+            final double height, final long duration) {
+        final PAffineTransform t = new PAffineTransform();
         t.setToScale(width / getWidth(), height / getHeight());
-        double scale = t.getScale();
-        t.setOffset(x - (getX() * scale), y - (getY() * scale));
+        final double scale = t.getScale();
+        t.setOffset(x - getX() * scale, y - getY() * scale);
         return animateToTransform(t, duration);
     }
 
@@ -357,9 +359,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param theta final theta value (in radians) for the animation
      * @return the newly scheduled activity
      */
-    public PTransformActivity animateToPositionScaleRotation(double x, double y, double scale, double theta,
-            long duration) {
-        PAffineTransform t = getTransform();
+    public PTransformActivity animateToPositionScaleRotation(final double x, final double y, final double scale,
+            final double theta, final long duration) {
+        final PAffineTransform t = getTransform();
         t.setOffset(x, y);
         t.setScale(scale);
         t.setRotation(theta);
@@ -380,23 +382,24 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PTransformActivity animateToTransform(AffineTransform destTransform, long duration) {
+    public PTransformActivity animateToTransform(final AffineTransform destTransform, final long duration) {
         if (duration == 0) {
             setTransform(destTransform);
             return null;
         }
         else {
-            PTransformActivity.Target t = new PTransformActivity.Target() {
-                public void setTransform(AffineTransform aTransform) {
+            final PTransformActivity.Target t = new PTransformActivity.Target() {
+                public void setTransform(final AffineTransform aTransform) {
                     PNode.this.setTransform(aTransform);
                 }
 
-                public void getSourceMatrix(double[] aSource) {
+                public void getSourceMatrix(final double[] aSource) {
                     PNode.this.getTransformReference(true).getMatrix(aSource);
                 }
             };
 
-            PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destTransform);
+            final PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t,
+                    destTransform);
             addActivity(ta);
             return ta;
         }
@@ -416,23 +419,23 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PInterpolatingActivity animateToColor(Color destColor, long duration) {
+    public PInterpolatingActivity animateToColor(final Color destColor, final long duration) {
         if (duration == 0) {
             setPaint(destColor);
             return null;
         }
         else {
-            PColorActivity.Target t = new PColorActivity.Target() {
+            final PColorActivity.Target t = new PColorActivity.Target() {
                 public Color getColor() {
                     return (Color) getPaint();
                 }
 
-                public void setColor(Color color) {
+                public void setColor(final Color color) {
                     setPaint(color);
                 }
             };
 
-            PColorActivity ca = new PColorActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destColor);
+            final PColorActivity ca = new PColorActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destColor);
             addActivity(ca);
             return ca;
         }
@@ -452,7 +455,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
-    public PInterpolatingActivity animateToTransparency(float zeroToOne, long duration) {
+    public PInterpolatingActivity animateToTransparency(final float zeroToOne, final long duration) {
         if (duration == 0) {
             setTransparency(zeroToOne);
             return null;
@@ -460,7 +463,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         else {
             final float dest = zeroToOne;
 
-            PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
+            final PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
                 private float source;
 
                 protected void activityStarted() {
@@ -468,8 +471,8 @@ public class PNode implements Cloneable, Serializable, Printable {
                     super.activityStarted();
                 }
 
-                public void setRelativeTargetValue(float zeroToOne) {
-                    PNode.this.setTransparency(source + (zeroToOne * (dest - source)));
+                public void setRelativeTargetValue(final float zeroToOne) {
+                    PNode.this.setTransparency(source + zeroToOne * (dest - source));
                 }
             };
 
@@ -486,8 +489,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param activity new activity to schedule
      * @return true if the activity is successfully scheduled.
      */
-    public boolean addActivity(PActivity activity) {
-        PRoot r = getRoot();
+    public boolean addActivity(final PActivity activity) {
+        final PRoot r = getRoot();
         if (r != null) {
             return r.addActivity(activity);
         }
@@ -521,7 +524,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return the value of this attribute or null
      */
-    public Object getAttribute(Object key) {
+    public Object getAttribute(final Object key) {
         if (clientProperties == null || key == null) {
             return null;
         }
@@ -539,11 +542,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * <p>
      * If value is null this method will remove the attribute.
      */
-    public void addAttribute(Object key, Object value) {
-        if (value == null && clientProperties == null)
+    public void addAttribute(final Object key, final Object value) {
+        if (value == null && clientProperties == null) {
             return;
+        }
 
-        Object oldValue = getAttribute(key);
+        final Object oldValue = getAttribute(key);
 
         if (value != oldValue) {
             if (clientProperties == null) {
@@ -582,37 +586,37 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     // convenience methods for attributes
 
-    public Object getAttribute(Object key, Object def) {
-        Object o = getAttribute(key);
-        return (o == null ? def : o);
+    public Object getAttribute(final Object key, final Object def) {
+        final Object o = getAttribute(key);
+        return o == null ? def : o;
     }
 
-    public boolean getBooleanAttribute(Object key, boolean def) {
-        Boolean b = (Boolean) getAttribute(key);
-        return (b == null ? def : b.booleanValue());
+    public boolean getBooleanAttribute(final Object key, final boolean def) {
+        final Boolean b = (Boolean) getAttribute(key);
+        return b == null ? def : b.booleanValue();
     }
 
-    public int getIntegerAttribute(Object key, int def) {
-        Number n = (Number) getAttribute(key);
-        return (n == null ? def : n.intValue());
+    public int getIntegerAttribute(final Object key, final int def) {
+        final Number n = (Number) getAttribute(key);
+        return n == null ? def : n.intValue();
     }
 
-    public double getDoubleAttribute(Object key, double def) {
-        Number n = (Number) getAttribute(key);
-        return (n == null ? def : n.doubleValue());
+    public double getDoubleAttribute(final Object key, final double def) {
+        final Number n = (Number) getAttribute(key);
+        return n == null ? def : n.doubleValue();
     }
 
     /**
      * @deprecated use getAttribute(Object key)instead.
      */
-    public Object getClientProperty(Object key) {
+    public Object getClientProperty(final Object key) {
         return getAttribute(key);
     }
 
     /**
      * @deprecated use addAttribute(Object key, Object value)instead.
      */
-    public void addClientProperty(Object key, Object value) {
+    public void addClientProperty(final Object key, final Object value) {
         addAttribute(key, value);
     }
 
@@ -650,13 +654,13 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public Object clone() {
         try {
-            byte[] ser = PObjectOutputStream.toByteArray(this);
-            return (PNode) new ObjectInputStream(new ByteArrayInputStream(ser)).readObject();
+            final byte[] ser = PObjectOutputStream.toByteArray(this);
+            return new ObjectInputStream(new ByteArrayInputStream(ser)).readObject();
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             return null;
         }
-        catch (ClassNotFoundException e) {
+        catch (final ClassNotFoundException e) {
             return null;
         }
     }
@@ -706,9 +710,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param localPoint point in local coordinate system to be transformed.
      * @return point in parent's local coordinate system
      */
-    public Point2D localToParent(Point2D localPoint) {
-        if (transform == null)
+    public Point2D localToParent(final Point2D localPoint) {
+        if (transform == null) {
             return localPoint;
+        }
         return transform.transform(localPoint, localPoint);
     }
 
@@ -721,9 +726,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transformed.
      * @return dimension in parent's local coordinate system
      */
-    public Dimension2D localToParent(Dimension2D localDimension) {
-        if (transform == null)
+    public Dimension2D localToParent(final Dimension2D localDimension) {
+        if (transform == null) {
             return localDimension;
+        }
         return transform.transform(localDimension, localDimension);
     }
 
@@ -736,9 +742,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transformed.
      * @return rectangle in parent's local coordinate system
      */
-    public Rectangle2D localToParent(Rectangle2D localRectangle) {
-        if (transform == null)
+    public Rectangle2D localToParent(final Rectangle2D localRectangle) {
+        if (transform == null) {
             return localRectangle;
+        }
         return transform.transform(localRectangle, localRectangle);
     }
 
@@ -750,9 +757,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param parentPoint point in parent's coordinate system to be transformed.
      * @return point in this node's local coordinate system
      */
-    public Point2D parentToLocal(Point2D parentPoint) {
-        if (transform == null)
+    public Point2D parentToLocal(final Point2D parentPoint) {
+        if (transform == null) {
             return parentPoint;
+        }
 
         return transform.inverseTransform(parentPoint, parentPoint);
     }
@@ -766,9 +774,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transformed.
      * @return dimension in this node's local coordinate system
      */
-    public Dimension2D parentToLocal(Dimension2D parentDimension) {
-        if (transform == null)
+    public Dimension2D parentToLocal(final Dimension2D parentDimension) {
+        if (transform == null) {
             return parentDimension;
+        }
         return transform.inverseTransform(parentDimension, parentDimension);
     }
 
@@ -781,9 +790,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transformed.
      * @return rectangle in this node's local coordinate system
      */
-    public Rectangle2D parentToLocal(Rectangle2D parentRectangle) {
-        if (transform == null)
+    public Rectangle2D parentToLocal(final Rectangle2D parentRectangle) {
+        if (transform == null) {
             return parentRectangle;
+        }
         return transform.inverseTransform(parentRectangle, parentRectangle);
     }
 
@@ -893,8 +903,9 @@ public class PNode implements Cloneable, Serializable, Printable {
     public PAffineTransform getLocalToGlobalTransform(PAffineTransform dest) {
         if (parent != null) {
             dest = parent.getLocalToGlobalTransform(dest);
-            if (transform != null)
+            if (transform != null) {
                 dest.concatenate(transform);
+            }
         }
         else {
             if (dest == null) {
@@ -924,7 +935,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         try {
             dest.setTransform(dest.createInverse());
         }
-        catch (NoninvertibleTransformException e) {
+        catch (final NoninvertibleTransformException e) {
             throw new PAffineTransformException(e, dest);
         }
         return dest;
@@ -956,9 +967,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param listener the new input listener
      */
-    public void addInputEventListener(PInputEventListener listener) {
-        if (listenerList == null)
+    public void addInputEventListener(final PInputEventListener listener) {
+        if (listenerList == null) {
             listenerList = new EventListenerList();
+        }
         getListenerList().add(PInputEventListener.class, listener);
     }
 
@@ -968,9 +980,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param listener the input listener to remove
      */
-    public void removeInputEventListener(PInputEventListener listener) {
-        if (listenerList == null)
+    public void removeInputEventListener(final PInputEventListener listener) {
+        if (listenerList == null) {
             return;
+        }
         getListenerList().remove(PInputEventListener.class, listener);
         if (listenerList.getListenerCount() == 0) {
             listenerList = null;
@@ -984,7 +997,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param listener The PropertyChangeListener to be added
      */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
         if (changeSupport == null) {
             changeSupport = new SwingPropertyChangeSupport(this);
         }
@@ -1000,7 +1013,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param propertyName The name of the property to listen on.
      * @param listener The PropertyChangeListener to be added
      */
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         if (listener == null) {
             return;
         }
@@ -1016,7 +1029,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param listener The PropertyChangeListener to be removed
      */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final PropertyChangeListener listener) {
         if (changeSupport != null) {
             changeSupport.removePropertyChangeListener(listener);
         }
@@ -1028,7 +1041,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param propertyName The name of the property that was listened on.
      * @param listener The PropertyChangeListener to be removed
      */
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         if (listener == null) {
             return;
         }
@@ -1052,7 +1065,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * events are forwared to this nodes parent so that its property change
      * listeners will also be notified.
      */
-    public void setPropertyChangeParentMask(int propertyChangeParentMask) {
+    public void setPropertyChangeParentMask(final int propertyChangeParentMask) {
         this.propertyChangeParentMask = propertyChangeParentMask;
     }
 
@@ -1068,7 +1081,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param oldValue The old value of the property.
      * @param newValue The new value of the property.
      */
-    protected void firePropertyChange(int propertyCode, String propertyName, Object oldValue, Object newValue) {
+    protected void firePropertyChange(final int propertyCode, final String propertyName, final Object oldValue,
+            final Object newValue) {
         PropertyChangeEvent event = null;
 
         if (changeSupport != null) {
@@ -1076,8 +1090,9 @@ public class PNode implements Cloneable, Serializable, Printable {
             changeSupport.firePropertyChange(event);
         }
         if (parent != null && (propertyCode & propertyChangeParentMask) != 0) {
-            if (event == null)
+            if (event == null) {
                 event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+            }
             parent.fireChildPropertyChange(event, propertyCode);
         }
     }
@@ -1093,7 +1108,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            values.
      * @param propertyCode The code of the property changed.
      */
-    protected void fireChildPropertyChange(PropertyChangeEvent event, int propertyCode) {
+    protected void fireChildPropertyChange(final PropertyChangeEvent event, final int propertyCode) {
         if (changeSupport != null) {
             changeSupport.firePropertyChange(event);
         }
@@ -1156,19 +1171,19 @@ public class PNode implements Cloneable, Serializable, Printable {
     public void endResizeBounds() {
     }
 
-    public boolean setX(double x) {
+    public boolean setX(final double x) {
         return setBounds(x, getY(), getWidth(), getHeight());
     }
 
-    public boolean setY(double y) {
+    public boolean setY(final double y) {
         return setBounds(getX(), y, getWidth(), getHeight());
     }
 
-    public boolean setWidth(double width) {
+    public boolean setWidth(final double width) {
         return setBounds(getX(), getY(), width, getHeight());
     }
 
-    public boolean setHeight(double height) {
+    public boolean setHeight(final double height) {
         return setBounds(getX(), getY(), getWidth(), height);
     }
 
@@ -1178,7 +1193,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return true if the bounds changed.
      */
-    public boolean setBounds(Rectangle2D newBounds) {
+    public boolean setBounds(final Rectangle2D newBounds) {
         return setBounds(newBounds.getX(), newBounds.getY(), newBounds.getWidth(), newBounds.getHeight());
     }
 
@@ -1193,7 +1208,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return true if the bounds changed.
      */
-    public boolean setBounds(double x, double y, double width, double height) {
+    public boolean setBounds(final double x, final double y, final double width, final double height) {
         if (bounds.x != x || bounds.y != y || bounds.width != width || bounds.height != height) {
             bounds.setRect(x, y, width, height);
 
@@ -1221,7 +1236,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * See PPath for an example that uses this method.
      */
-    protected void internalUpdateBounds(double x, double y, double width, double height) {
+    protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
     }
 
     /**
@@ -1276,9 +1291,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return true if the bounds changed.
      */
-    public boolean centerBoundsOnPoint(double localX, double localY) {
-        double dx = localX - bounds.getCenterX();
-        double dy = localY - bounds.getCenterY();
+    public boolean centerBoundsOnPoint(final double localX, final double localY) {
+        final double dx = localX - bounds.getCenterX();
+        final double dy = localY - bounds.getCenterY();
         return setBounds(bounds.x + dx, bounds.y + dy, bounds.width, bounds.height);
     }
 
@@ -1288,9 +1303,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * this meathod will modify the nodes transform, while centerBoundsOnPoint
      * will modify the nodes bounds.
      */
-    public void centerFullBoundsOnPoint(double parentX, double parentY) {
-        double dx = parentX - getFullBoundsReference().getCenterX();
-        double dy = parentY - getFullBoundsReference().getCenterY();
+    public void centerFullBoundsOnPoint(final double parentX, final double parentY) {
+        final double dx = parentX - getFullBoundsReference().getCenterX();
+        final double dy = parentY - getFullBoundsReference().getCenterY();
         offset(dx, dy);
     }
 
@@ -1304,9 +1319,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param localBounds the bounds to test for intersection against
      * @return true if the given rectangle intersects this nodes geometry.
      */
-    public boolean intersects(Rectangle2D localBounds) {
-        if (localBounds == null)
+    public boolean intersects(final Rectangle2D localBounds) {
+        if (localBounds == null) {
             return true;
+        }
         return getBoundsReference().intersects(localBounds);
     }
 
@@ -1358,8 +1374,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param dstBounds if not null the new bounds will be stored here
      * @return the full bounds in the parent coordinate system of this node
      */
-    public PBounds computeFullBounds(PBounds dstBounds) {
-        PBounds result = getUnionOfChildrenBounds(dstBounds);
+    public PBounds computeFullBounds(final PBounds dstBounds) {
+        final PBounds result = getUnionOfChildrenBounds(dstBounds);
         result.add(getBoundsReference());
         localToParent(result);
         return result;
@@ -1380,9 +1396,9 @@ public class PNode implements Cloneable, Serializable, Printable {
             dstBounds.resetToZero();
         }
 
-        int count = getChildrenCount();
+        final int count = getChildrenCount();
         for (int i = 0; i < count; i++) {
-            PNode each = (PNode) children.get(i);
+            final PNode each = (PNode) children.get(i);
             dstBounds.add(each.getFullBoundsReference());
         }
 
@@ -1396,7 +1412,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the full bounds in global coordinate system.
      */
     public PBounds getGlobalFullBounds() {
-        PBounds b = getFullBounds();
+        final PBounds b = getFullBounds();
         if (parent != null) {
             parent.localToGlobal(b);
         }
@@ -1411,9 +1427,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            (specified in parent's coordinate system)
      * @return true if this nodes full bounds intersect the given bounds.
      */
-    public boolean fullIntersects(Rectangle2D parentBounds) {
-        if (parentBounds == null)
+    public boolean fullIntersects(final Rectangle2D parentBounds) {
+        if (parentBounds == null) {
             return true;
+        }
         return getFullBoundsReference().intersects(parentBounds);
     }
 
@@ -1450,7 +1467,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param childBoundsVolatile true if this node has a descendent with
      *            volatile bounds
      */
-    protected void setChildBoundsVolatile(boolean childBoundsVolatile) {
+    protected void setChildBoundsVolatile(final boolean childBoundsVolatile) {
         this.childBoundsVolatile = childBoundsVolatile;
     }
 
@@ -1470,7 +1487,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param boundsChanged true if this nodes bounds have changed.
      */
-    protected void setBoundsChanged(boolean boundsChanged) {
+    protected void setBoundsChanged(final boolean boundsChanged) {
         this.boundsChanged = boundsChanged;
     }
 
@@ -1489,7 +1506,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * of this node need to be recomputed as is the case when this node is
      * transformed or when one of this node's children changes geometry.
      */
-    protected void setFullBoundsInvalid(boolean fullBoundsInvalid) {
+    protected void setFullBoundsInvalid(final boolean fullBoundsInvalid) {
         this.fullBoundsInvalid = fullBoundsInvalid;
     }
 
@@ -1504,7 +1521,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Set the flag indicating that one of this node's descendents has invalid
      * bounds.
      */
-    protected void setChildBoundsInvalid(boolean childBoundsInvalid) {
+    protected void setChildBoundsInvalid(final boolean childBoundsInvalid) {
         this.childBoundsInvalid = childBoundsInvalid;
     }
 
@@ -1519,9 +1536,9 @@ public class PNode implements Cloneable, Serializable, Printable {
         setBoundsChanged(true);
         firePropertyChange(PROPERTY_CODE_BOUNDS, PROPERTY_BOUNDS, null, bounds);
 
-        int count = getChildrenCount();
+        final int count = getChildrenCount();
         for (int i = 0; i < count; i++) {
-            PNode each = (PNode) children.get(i);
+            final PNode each = (PNode) children.get(i);
             each.parentBoundsChanged();
         }
     }
@@ -1553,8 +1570,9 @@ public class PNode implements Cloneable, Serializable, Printable {
             n = n.parent;
         }
 
-        if (SCENE_GRAPH_DELEGATE != null)
+        if (SCENE_GRAPH_DELEGATE != null) {
             SCENE_GRAPH_DELEGATE.nodeFullBoundsInvalidated(this);
+        }
     }
 
     /**
@@ -1565,7 +1583,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return true if this node or any of its descendents have volatile bounds
      */
     protected boolean validateFullBounds() {
-        boolean boundsVolatile = getBoundsVolatile();
+        final boolean boundsVolatile = getBoundsVolatile();
 
         // 1. Only compute new bounds if invalid flags are set.
         if (fullBoundsInvalid || childBoundsInvalid || boundsVolatile || childBoundsVolatile) {
@@ -1588,9 +1606,9 @@ public class PNode implements Cloneable, Serializable, Printable {
             // validate the bounds of all of my children.
             if (childBoundsInvalid || childBoundsVolatile) {
                 childBoundsVolatile = false;
-                int count = getChildrenCount();
+                final int count = getChildrenCount();
                 for (int i = 0; i < count; i++) {
-                    PNode each = (PNode) children.get(i);
+                    final PNode each = (PNode) children.get(i);
                     childBoundsVolatile |= each.validateFullBounds();
                 }
             }
@@ -1609,11 +1627,11 @@ public class PNode implements Cloneable, Serializable, Printable {
             // bounds cache here after our own bounds and the children's bounds
             // have been computed above.
             if (fullBoundsInvalid) {
-                double oldX = fullBoundsCache.x;
-                double oldY = fullBoundsCache.y;
-                double oldWidth = fullBoundsCache.width;
-                double oldHeight = fullBoundsCache.height;
-                boolean oldEmpty = fullBoundsCache.isEmpty();
+                final double oldX = fullBoundsCache.x;
+                final double oldY = fullBoundsCache.y;
+                final double oldWidth = fullBoundsCache.width;
+                final double oldHeight = fullBoundsCache.height;
+                final boolean oldEmpty = fullBoundsCache.isEmpty();
 
                 // 6. This will call getFullBoundsReference on all of the
                 // children. So if the above
@@ -1622,7 +1640,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 // validated again here.
                 fullBoundsCache = computeFullBounds(fullBoundsCache);
 
-                boolean fullBoundsChanged = fullBoundsCache.x != oldX || fullBoundsCache.y != oldY
+                final boolean fullBoundsChanged = fullBoundsCache.x != oldX || fullBoundsCache.y != oldY
                         || fullBoundsCache.width != oldWidth || fullBoundsCache.height != oldHeight
                         || fullBoundsCache.isEmpty() != oldEmpty;
 
@@ -1632,8 +1650,9 @@ public class PNode implements Cloneable, Serializable, Printable {
                 // bounds changes
                 // deep in the tree percolate up.
                 if (fullBoundsChanged) {
-                    if (parent != null)
+                    if (parent != null) {
                         parent.invalidateFullBounds();
+                    }
                     firePropertyChange(PROPERTY_CODE_FULL_BOUNDS, PROPERTY_FULL_BOUNDS, null, fullBoundsCache);
 
                     // 8. If our paint was invalid make sure to repaint our old
@@ -1687,8 +1706,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return rotation in radians.
      */
     public double getRotation() {
-        if (transform == null)
+        if (transform == null) {
             return 0;
+        }
         return transform.getRotation();
     }
 
@@ -1698,7 +1718,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param theta rotation in radians
      */
-    public void setRotation(double theta) {
+    public void setRotation(final double theta) {
         rotate(theta - getRotation());
     }
 
@@ -1708,7 +1728,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param theta the amount to rotate by in radians
      */
-    public void rotate(double theta) {
+    public void rotate(final double theta) {
         rotateAboutPoint(theta, 0, 0);
     }
 
@@ -1718,10 +1738,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param theta the amount to rotate by in radians
      */
-    public void rotateInPlace(double theta) {
+    public void rotateInPlace(final double theta) {
         PBounds b = getFullBoundsReference();
-        double px = b.x;
-        double py = b.y;
+        final double px = b.x;
+        final double py = b.y;
         rotateAboutPoint(theta, 0, 0);
         b = getFullBoundsReference();
         offset(px - b.x, py - b.y);
@@ -1733,7 +1753,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param theta the amount to rotate by in radians
      */
-    public void rotateAboutPoint(double theta, Point2D point) {
+    public void rotateAboutPoint(final double theta, final Point2D point) {
         rotateAboutPoint(theta, point.getX(), point.getY());
     }
 
@@ -1743,7 +1763,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param theta the amount to rotate by in radians
      */
-    public void rotateAboutPoint(double theta, double x, double y) {
+    public void rotateAboutPoint(final double theta, final double x, final double y) {
         getTransformReference(true).rotate(theta, x, y);
         invalidatePaint();
         invalidateFullBounds();
@@ -1769,7 +1789,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param theta the amount to rotate by in radians relative to the global
      *            coord system.
      */
-    public void setGlobalRotation(double theta) {
+    public void setGlobalRotation(final double theta) {
         if (parent != null) {
             setRotation(theta - parent.getGlobalRotation());
         }
@@ -1785,8 +1805,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return scale applied by this nodes transform.
      */
     public double getScale() {
-        if (transform == null)
+        if (transform == null) {
             return 1;
+        }
         return transform.getScale();
     }
 
@@ -1796,9 +1817,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param scale the scale to set the transform to
      */
-    public void setScale(double scale) {
-        if (scale == 0)
+    public void setScale(final double scale) {
+        if (scale == 0) {
             throw new RuntimeException("Can't set scale to 0");
+        }
         scale(scale / getScale());
     }
 
@@ -1808,7 +1830,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param scale the amount to scale by
      */
-    public void scale(double scale) {
+    public void scale(final double scale) {
         scaleAboutPoint(scale, 0, 0);
     }
 
@@ -1819,7 +1841,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param scale the amount to scale by
      * @param point the point to scale about
      */
-    public void scaleAboutPoint(double scale, Point2D point) {
+    public void scaleAboutPoint(final double scale, final Point2D point) {
         scaleAboutPoint(scale, point.getX(), point.getY());
     }
 
@@ -1829,7 +1851,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param scale the amount to scale by
      */
-    public void scaleAboutPoint(double scale, double x, double y) {
+    public void scaleAboutPoint(final double scale, final double x, final double y) {
         getTransformReference(true).scaleAboutPoint(scale, x, y);
         invalidatePaint();
         invalidateFullBounds();
@@ -1851,7 +1873,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param scale the desired global scale
      */
-    public void setGlobalScale(double scale) {
+    public void setGlobalScale(final double scale) {
         if (parent != null) {
             setScale(scale / parent.getGlobalScale());
         }
@@ -1861,14 +1883,16 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     public double getXOffset() {
-        if (transform == null)
+        if (transform == null) {
             return 0;
+        }
         return transform.getTranslateX();
     }
 
     public double getYOffset() {
-        if (transform == null)
+        if (transform == null) {
             return 0;
+        }
         return transform.getTranslateY();
     }
 
@@ -1881,8 +1905,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return a point representing the x and y offset
      */
     public Point2D getOffset() {
-        if (transform == null)
+        if (transform == null) {
             return new Point2D.Double();
+        }
         return new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
     }
 
@@ -1895,7 +1920,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param point a point representing the x and y offset
      */
-    public void setOffset(Point2D point) {
+    public void setOffset(final Point2D point) {
         setOffset(point.getX(), point.getY());
     }
 
@@ -1909,7 +1934,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param x amount of x offset
      * @param y amount of y offset
      */
-    public void setOffset(double x, double y) {
+    public void setOffset(final double x, final double y) {
         getTransformReference(true).setOffset(x, y);
         invalidatePaint();
         invalidateFullBounds();
@@ -1922,7 +1947,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * directly adding dx to the m02 position and dy to the m12 position in the
      * affine transform.
      */
-    public void offset(double dx, double dy) {
+    public void offset(final double dx, final double dy) {
         getTransformReference(true);
         setOffset(transform.getTranslateX() + dx, transform.getTranslateY() + dy);
     }
@@ -1932,7 +1957,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * affine transform translate method. This translation effects this node and
      * all of its descendents.
      */
-    public void translate(double dx, double dy) {
+    public void translate(final double dx, final double dy) {
         getTransformReference(true).translate(dx, dy);
         invalidatePaint();
         invalidateFullBounds();
@@ -1944,7 +1969,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * transform together with the transforms of all its ancestors.
      */
     public Point2D getGlobalTranslation() {
-        Point2D p = getOffset();
+        final Point2D p = getOffset();
         if (parent != null) {
             parent.localToGlobal(p);
         }
@@ -1958,7 +1983,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param globalPoint the desired global translation
      */
-    public void setGlobalTranslation(Point2D globalPoint) {
+    public void setGlobalTranslation(final Point2D globalPoint) {
         if (parent != null) {
             parent.getGlobalToLocalTransform(null).transform(globalPoint, globalPoint);
         }
@@ -1970,7 +1995,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param aTransform the transform to apply.
      */
-    public void transformBy(AffineTransform aTransform) {
+    public void transformBy(final AffineTransform aTransform) {
         getTransformReference(true).concatenate(aTransform);
         invalidatePaint();
         invalidateFullBounds();
@@ -1986,8 +2011,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param b to Point
      * @param t variable 'time' parameter
      */
-    static public double lerp(double t, double a, double b) {
-        return (a + t * (b - a));
+    static public double lerp(final double t, final double a, final double b) {
+        return a + t * (b - a);
     }
 
     /**
@@ -2022,7 +2047,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            this transform's node
      * @param millis Number of milliseconds over which to perform the animation
      */
-    public PActivity animateToRelativePosition(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
+    public PActivity animateToRelativePosition(final Point2D srcPt, final Point2D destPt, final Rectangle2D destBounds,
+            final int millis) {
         double srcx, srcy;
         double destx, desty;
         double dx, dy;
@@ -2033,7 +2059,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
         else {
             // First compute translation amount in global coordinates
-            Rectangle2D srcBounds = getGlobalFullBounds();
+            final Rectangle2D srcBounds = getGlobalFullBounds();
             srcx = lerp(srcPt.getX(), srcBounds.getX(), srcBounds.getX() + srcBounds.getWidth());
             srcy = lerp(srcPt.getY(), srcBounds.getY(), srcBounds.getY() + srcBounds.getHeight());
             destx = lerp(destPt.getX(), destBounds.getX(), destBounds.getX() + destBounds.getWidth());
@@ -2044,11 +2070,11 @@ public class PNode implements Cloneable, Serializable, Printable {
             globalToLocal(pt1);
             pt2 = new Point2D.Double(destx, desty);
             globalToLocal(pt2);
-            dx = (pt2.getX() - pt1.getX());
-            dy = (pt2.getY() - pt1.getY());
+            dx = pt2.getX() - pt1.getX();
+            dy = pt2.getY() - pt1.getY();
 
             // Finally, animate change
-            PAffineTransform at = new PAffineTransform(getTransformReference(true));
+            final PAffineTransform at = new PAffineTransform(getTransformReference(true));
             at.translate(dx, dy);
             return animateToTransform(at, millis);
         }
@@ -2090,7 +2116,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            this transform's node
      * @param millis Number of milliseconds over which to perform the animation
      */
-    public void position(Point2D srcPt, Point2D destPt, Rectangle2D destBounds, int millis) {
+    public void position(final Point2D srcPt, final Point2D destPt, final Rectangle2D destBounds, final int millis) {
         animateToRelativePosition(srcPt, destPt, destBounds, millis);
     };
 
@@ -2119,7 +2145,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return reference to this node's transform
      */
-    public PAffineTransform getTransformReference(boolean createNewTransformIfNull) {
+    public PAffineTransform getTransformReference(final boolean createNewTransformIfNull) {
         if (transform == null && createNewTransformIfNull) {
             transform = new PAffineTransform();
         }
@@ -2139,7 +2165,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         try {
             return new PAffineTransform(transform.createInverse());
         }
-        catch (NoninvertibleTransformException e) {
+        catch (final NoninvertibleTransformException e) {
             throw new PAffineTransformException(e, transform);
         }
     }
@@ -2149,7 +2175,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param newTransform the new transform value
      */
-    public void setTransform(AffineTransform newTransform) {
+    public void setTransform(final AffineTransform newTransform) {
         if (newTransform == null) {
             transform = null;
         }
@@ -2204,7 +2230,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param paintInvalid true if this node should be repainted
      */
-    public void setPaintInvalid(boolean paintInvalid) {
+    public void setPaintInvalid(final boolean paintInvalid) {
         this.paintInvalid = paintInvalid;
     }
 
@@ -2222,7 +2248,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param childPaintInvalid true if this node has a child with invalid paint
      */
-    public void setChildPaintInvalid(boolean childPaintInvalid) {
+    public void setChildPaintInvalid(final boolean childPaintInvalid) {
         this.childPaintInvalid = childPaintInvalid;
     }
 
@@ -2239,8 +2265,9 @@ public class PNode implements Cloneable, Serializable, Printable {
             n = n.parent;
         }
 
-        if (SCENE_GRAPH_DELEGATE != null)
+        if (SCENE_GRAPH_DELEGATE != null) {
             SCENE_GRAPH_DELEGATE.nodePaintInvalidated(this);
+        }
     }
 
     /**
@@ -2253,9 +2280,9 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (getChildPaintInvalid()) {
-            int count = getChildrenCount();
+            final int count = getChildrenCount();
             for (int i = 0; i < count; i++) {
-                PNode each = (PNode) children.get(i);
+                final PNode each = (PNode) children.get(i);
                 each.validateFullPaint();
             }
             setChildPaintInvalid(false);
@@ -2279,7 +2306,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param childOrThis if childOrThis does not equal this then this nodes
      *            transform will be applied to the localBounds param
      */
-    public void repaintFrom(PBounds localBounds, PNode childOrThis) {
+    public void repaintFrom(final PBounds localBounds, final PNode childOrThis) {
         if (parent != null) {
             if (childOrThis != this) {
                 localToParent(localBounds);
@@ -2296,7 +2323,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     // complete.
     // ****************************************************************
 
-    public boolean isOpaque(Rectangle2D boundary) {
+    public boolean isOpaque(final Rectangle2D boundary) {
         return false;
     }
 
@@ -2304,7 +2331,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         return occluded;
     }
 
-    public void setOccluded(boolean isOccluded) {
+    public void setOccluded(final boolean isOccluded) {
         occluded = isOccluded;
     }
 
@@ -2345,10 +2372,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param isVisible true if this node and its descendents are visible
      */
-    public void setVisible(boolean isVisible) {
+    public void setVisible(final boolean isVisible) {
         if (getVisible() != isVisible) {
-            if (!isVisible)
+            if (!isVisible) {
                 repaint();
+            }
             visible = isVisible;
             firePropertyChange(PROPERTY_CODE_VISIBLE, PROPERTY_VISIBLE, null, null);
             invalidatePaint();
@@ -2365,11 +2393,12 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Set the paint used to paint this node. This value may be set to null.
      */
-    public void setPaint(Paint newPaint) {
-        if (paint == newPaint)
+    public void setPaint(final Paint newPaint) {
+        if (paint == newPaint) {
             return;
+        }
 
-        Paint old = paint;
+        final Paint old = paint;
         paint = newPaint;
         invalidatePaint();
         firePropertyChange(PROPERTY_CODE_PAINT, PROPERTY_PAINT, old, paint);
@@ -2387,9 +2416,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Set the transparency used to paint this node. Note that this transparency
      * applies to this node and all of its descendents.
      */
-    public void setTransparency(float zeroToOne) {
-        if (transparency == zeroToOne)
+    public void setTransparency(final float zeroToOne) {
+        if (transparency == zeroToOne) {
             return;
+        }
 
         transparency = zeroToOne;
         invalidatePaint();
@@ -2403,9 +2433,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param paintContext the paint context to use for painting the node
      */
-    protected void paint(PPaintContext paintContext) {
+    protected void paint(final PPaintContext paintContext) {
         if (paint != null) {
-            Graphics2D g2 = paintContext.getGraphics();
+            final Graphics2D g2 = paintContext.getGraphics();
             g2.setPaint(paint);
             g2.fill(getBoundsReference());
         }
@@ -2419,17 +2449,18 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param paintContext the paint context to use for painting this node and
      *            its children
      */
-    public void fullPaint(PPaintContext paintContext) {
+    public void fullPaint(final PPaintContext paintContext) {
         if (getVisible() && fullIntersects(paintContext.getLocalClip())) {
             paintContext.pushTransform(transform);
             paintContext.pushTransparency(transparency);
 
-            if (!getOccluded())
+            if (!getOccluded()) {
                 paint(paintContext);
+            }
 
-            int count = getChildrenCount();
+            final int count = getChildrenCount();
             for (int i = 0; i < count; i++) {
-                PNode each = (PNode) children.get(i);
+                final PNode each = (PNode) children.get(i);
                 each.fullPaint(paintContext);
             }
 
@@ -2447,7 +2478,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param paintContext the paint context to sue for painting after the
      *            children are painted
      */
-    protected void paintAfterChildren(PPaintContext paintContext) {
+    protected void paintAfterChildren(final PPaintContext paintContext) {
     }
 
     /**
@@ -2457,7 +2488,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return a new image representing this node and its descendents
      */
     public Image toImage() {
-        PBounds b = getFullBoundsReference();
+        final PBounds b = getFullBoundsReference();
         return toImage((int) Math.ceil(b.getWidth()), (int) Math.ceil(b.getHeight()), null);
     }
 
@@ -2471,14 +2502,14 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param height pixel height of the resulting image
      * @return a new image representing this node and its descendents
      */
-    public Image toImage(int width, int height, Paint backGroundPaint) {
+    public Image toImage(final int width, final int height, final Paint backGroundPaint) {
         BufferedImage result;
 
         if (GraphicsEnvironment.isHeadless()) {
             result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         }
         else {
-            GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            final GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
                     .getDefaultScreenDevice().getDefaultConfiguration();
             result = graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
         }
@@ -2494,10 +2525,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return a rendering of this image and its descendents into the specified
      *         image
      */
-    public Image toImage(BufferedImage image, Paint backGroundPaint) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        Graphics2D g2 = image.createGraphics();
+    public Image toImage(final BufferedImage image, final Paint backGroundPaint) {
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        final Graphics2D g2 = image.createGraphics();
 
         if (backGroundPaint != null) {
             g2.setPaint(backGroundPaint);
@@ -2505,10 +2536,10 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         // reuse print method
-        Paper paper = new Paper();
+        final Paper paper = new Paper();
         paper.setSize(width, height);
         paper.setImageableArea(0, 0, width, height);
-        PageFormat pageFormat = new PageFormat();
+        final PageFormat pageFormat = new PageFormat();
         pageFormat.setPaper(paper);
         print(g2, pageFormat, 0);
 
@@ -2520,9 +2551,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * print to, And then prints the node.
      */
     public void print() {
-        PrinterJob printJob = PrinterJob.getPrinterJob();
-        PageFormat pageFormat = printJob.defaultPage();
-        Book book = new Book();
+        final PrinterJob printJob = PrinterJob.getPrinterJob();
+        final PageFormat pageFormat = printJob.defaultPage();
+        final Book book = new Book();
         book.append(this, pageFormat);
         printJob.setPageable(book);
 
@@ -2530,7 +2561,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             try {
                 printJob.print();
             }
-            catch (PrinterException e) {
+            catch (final PrinterException e) {
                 System.out.println("Error Printing");
                 e.printStackTrace();
             }
@@ -2548,13 +2579,13 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param pageFormat the size and orientation of the page
      * @param pageIndex the zero based index of the page to be drawn
      */
-    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) {
+    public int print(final Graphics graphics, final PageFormat pageFormat, final int pageIndex) {
         if (pageIndex != 0) {
             return NO_SUCH_PAGE;
         }
 
-        Graphics2D g2 = (Graphics2D) graphics;
-        PBounds imageBounds = getFullBounds();
+        final Graphics2D g2 = (Graphics2D) graphics;
+        final PBounds imageBounds = getFullBounds();
 
         imageBounds.expandNearestIntegerDimensions();
 
@@ -2570,7 +2601,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         g2.scale(scale, scale);
         g2.translate(-imageBounds.x, -imageBounds.y);
 
-        PPaintContext pc = new PPaintContext(g2);
+        final PPaintContext pc = new PPaintContext(g2);
         pc.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         fullPaint(pc);
 
@@ -2622,7 +2653,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param isPickable true if this node is pickable
      */
-    public void setPickable(boolean isPickable) {
+    public void setPickable(final boolean isPickable) {
         if (getPickable() != isPickable) {
             pickable = isPickable;
             firePropertyChange(PROPERTY_CODE_PICKABLE, PROPERTY_PICKABLE, null, null);
@@ -2646,7 +2677,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param areChildrenPickable true if this node tries to pick its children
      */
-    public void setChildrenPickable(boolean areChildrenPickable) {
+    public void setChildrenPickable(final boolean areChildrenPickable) {
         if (getChildrenPickable() != areChildrenPickable) {
             childrenPickable = areChildrenPickable;
             firePropertyChange(PROPERTY_CODE_CHILDREN_PICKABLE, PROPERTY_CHILDREN_PICKABLE, null, null);
@@ -2661,7 +2692,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param pickPath the pick path used for the pick operation
      * @return true if this node was picked
      */
-    protected boolean pick(PPickPath pickPath) {
+    protected boolean pick(final PPickPath pickPath) {
         return false;
     }
 
@@ -2673,23 +2704,24 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param pickPath the pick path to add the node to if its picked
      * @return true if this node or one of its descendents was picked.
      */
-    public boolean fullPick(PPickPath pickPath) {
+    public boolean fullPick(final PPickPath pickPath) {
         if ((getPickable() || getChildrenPickable()) && fullIntersects(pickPath.getPickBounds())) {
             pickPath.pushNode(this);
             pickPath.pushTransform(transform);
 
-            boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
+            final boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
 
             if (thisPickable && pick(pickPath)) {
                 return true;
             }
 
             if (getChildrenPickable()) {
-                int count = getChildrenCount();
+                final int count = getChildrenCount();
                 for (int i = count - 1; i >= 0; i--) {
-                    PNode each = (PNode) children.get(i);
-                    if (each.fullPick(pickPath))
+                    final PNode each = (PNode) children.get(i);
+                    if (each.fullPick(pickPath)) {
                         return true;
+                    }
                 }
             }
 
@@ -2704,17 +2736,17 @@ public class PNode implements Cloneable, Serializable, Printable {
         return false;
     }
 
-    public void findIntersectingNodes(Rectangle2D fullBounds, ArrayList results) {
+    public void findIntersectingNodes(final Rectangle2D fullBounds, final ArrayList results) {
         if (fullIntersects(fullBounds)) {
-            Rectangle2D localBounds = parentToLocal((Rectangle2D) fullBounds.clone());
+            final Rectangle2D localBounds = parentToLocal((Rectangle2D) fullBounds.clone());
 
             if (intersects(localBounds)) {
                 results.add(this);
             }
 
-            int count = getChildrenCount();
+            final int count = getChildrenCount();
             for (int i = count - 1; i >= 0; i--) {
-                PNode each = (PNode) children.get(i);
+                final PNode each = (PNode) children.get(i);
                 each.findIntersectingNodes(localBounds, results);
             }
         }
@@ -2728,7 +2760,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param pickPath the pick path used for the pick operation
      * @return true if this node was picked
      */
-    protected boolean pickAfterChildren(PPickPath pickPath) {
+    protected boolean pickAfterChildren(final PPickPath pickPath) {
         if (intersects(pickPath.getPickBounds())) {
             return true;
         }
@@ -2750,10 +2782,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param child the new child to add to this node
      */
-    public void addChild(PNode child) {
+    public void addChild(final PNode child) {
         int insertIndex = getChildrenCount();
-        if (child.parent == this)
+        if (child.parent == this) {
             insertIndex--;
+        }
         addChild(insertIndex, child);
     }
 
@@ -2764,8 +2797,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param child the new child to add to this node
      */
-    public void addChild(int index, PNode child) {
-        PNode oldParent = child.getParent();
+    public void addChild(final int index, final PNode child) {
+        final PNode oldParent = child.getParent();
 
         if (oldParent != null) {
             oldParent.removeChild(child);
@@ -2785,10 +2818,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param nodes a collection of nodes to be added to this node
      */
-    public void addChildren(Collection nodes) {
-        Iterator i = nodes.iterator();
+    public void addChildren(final Collection nodes) {
+        final Iterator i = nodes.iterator();
         while (i.hasNext()) {
-            PNode each = (PNode) i.next();
+            final PNode each = (PNode) i.next();
             addChild(each);
         }
     }
@@ -2799,11 +2832,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param node a possible descendent node
      * @return true if this node is an ancestor of the given node
      */
-    public boolean isAncestorOf(PNode node) {
+    public boolean isAncestorOf(final PNode node) {
         PNode p = node.parent;
         while (p != null) {
-            if (p == this)
+            if (p == this) {
                 return true;
+            }
             p = p.parent;
         }
         return false;
@@ -2815,11 +2849,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param node a possible ancestor node
      * @return true if this nodes descends from the given node
      */
-    public boolean isDescendentOf(PNode node) {
+    public boolean isDescendentOf(final PNode node) {
         PNode p = parent;
         while (p != null) {
-            if (p == node)
+            if (p == node) {
                 return true;
+            }
             p = p.parent;
         }
         return false;
@@ -2837,7 +2872,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * will draw in back of all of its other sibling nodes.
      */
     public void moveToBack() {
-        PNode p = parent;
+        final PNode p = parent;
         if (p != null) {
             p.removeChild(this);
             p.addChild(0, this);
@@ -2848,11 +2883,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Change the order of this node in its parent's children list so that it
      * will draw in front of all of its other sibling nodes.
      */
-    public void moveInBackOf(PNode sibling) {
-        PNode p = parent;
+    public void moveInBackOf(final PNode sibling) {
+        final PNode p = parent;
         if (p != null && p == sibling.getParent()) {
             p.removeChild(this);
-            int index = p.indexOfChild(sibling);
+            final int index = p.indexOfChild(sibling);
             p.addChild(index, this);
         }
     }
@@ -2862,7 +2897,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * will draw after the given sibling node.
      */
     public void moveToFront() {
-        PNode p = parent;
+        final PNode p = parent;
         if (p != null) {
             p.removeChild(this);
             p.addChild(this);
@@ -2873,11 +2908,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Change the order of this node in its parent's children list so that it
      * will draw before the given sibling node.
      */
-    public void moveInFrontOf(PNode sibling) {
-        PNode p = parent;
+    public void moveInFrontOf(final PNode sibling) {
+        final PNode p = parent;
         if (p != null && p == sibling.getParent()) {
             p.removeChild(this);
-            int index = p.indexOfChild(sibling);
+            final int index = p.indexOfChild(sibling);
             p.addChild(index + 1, this);
         }
     }
@@ -2896,8 +2931,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Set the parent of this node. Note this is set automatically when adding
      * and removing children.
      */
-    public void setParent(PNode newParent) {
-        PNode old = parent;
+    public void setParent(final PNode newParent) {
+        final PNode old = parent;
         parent = newParent;
         firePropertyChange(PROPERTY_CODE_PARENT, PROPERTY_PARENT, old, parent);
     }
@@ -2905,9 +2940,10 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Return the index where the given child is stored.
      */
-    public int indexOfChild(PNode child) {
-        if (children == null)
+    public int indexOfChild(final PNode child) {
+        if (children == null) {
             return -1;
+        }
         return children.indexOf(child);
     }
 
@@ -2919,8 +2955,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param child the child to remove
      * @return the removed child
      */
-    public PNode removeChild(PNode child) {
-        int index = indexOfChild(child);
+    public PNode removeChild(final PNode child) {
+        final int index = indexOfChild(child);
         if (index == -1) {
             return null;
         }
@@ -2935,11 +2971,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param index the index of the child to remove
      * @return the removed child
      */
-    public PNode removeChild(int index) {
+    public PNode removeChild(final int index) {
         if (children == null) {
             return null;
         }
-        PNode child = (PNode) children.remove(index);
+        final PNode child = (PNode) children.remove(index);
 
         if (children.size() == 0) {
             children = null;
@@ -2960,10 +2996,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param childrenNodes the collection of children to remove
      */
-    public void removeChildren(Collection childrenNodes) {
-        Iterator i = childrenNodes.iterator();
+    public void removeChildren(final Collection childrenNodes) {
+        final Iterator i = childrenNodes.iterator();
         while (i.hasNext()) {
-            PNode each = (PNode) i.next();
+            final PNode each = (PNode) i.next();
             removeChild(each);
         }
     }
@@ -2974,9 +3010,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public void removeAllChildren() {
         if (children != null) {
-            int count = children.size();
+            final int count = children.size();
             for (int i = 0; i < count; i++) {
-                PNode each = (PNode) children.get(i);
+                final PNode each = (PNode) children.get(i);
                 each.setParent(null);
             }
             children = null;
@@ -3002,9 +3038,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param newParent The new parent of this node.
      */
-    public void reparent(PNode newParent) {
-        AffineTransform originalTransform = getLocalToGlobalTransform(null);
-        AffineTransform newTransform = newParent.getGlobalToLocalTransform(null);
+    public void reparent(final PNode newParent) {
+        final AffineTransform originalTransform = getLocalToGlobalTransform(null);
+        final AffineTransform newTransform = newParent.getGlobalToLocalTransform(null);
         newTransform.concatenate(originalTransform);
 
         removeFromParent();
@@ -3025,10 +3061,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param replacementNode the new node that replaces the current node in the
      *            scene graph tree.
      */
-    public void replaceWith(PNode replacementNode) {
+    public void replaceWith(final PNode replacementNode) {
         if (parent != null) {
-            PNode p = this.parent;
-            int index = p.getChildrenReference().indexOf(this);
+            final PNode p = parent;
+            final int index = p.getChildrenReference().indexOf(this);
             p.removeChild(this);
             p.addChild(index, replacementNode);
         }
@@ -3052,7 +3088,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param index a child index
      * @return the child node at the specified index
      */
-    public PNode getChild(int index) {
+    public PNode getChild(final int index) {
         return (PNode) children.get(index);
     }
 
@@ -3111,16 +3147,18 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param filter the filter used to determine the subset
      * @return a collection containing this node and all descendents
      */
-    public Collection getAllNodes(PNodeFilter filter, Collection results) {
-        if (results == null)
+    public Collection getAllNodes(final PNodeFilter filter, Collection results) {
+        if (results == null) {
             results = new ArrayList();
-        if (filter == null || filter.accept(this))
+        }
+        if (filter == null || filter.accept(this)) {
             results.add(this);
+        }
 
         if (filter == null || filter.acceptChildrenOf(this)) {
-            int count = getChildrenCount();
+            final int count = getChildrenCount();
             for (int i = 0; i < count; i++) {
-                PNode each = (PNode) children.get(i);
+                final PNode each = (PNode) children.get(i);
                 each.getAllNodes(filter, results);
             }
         }
@@ -3144,7 +3182,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param out the output stream to write to, must be an instance of
      *            PObjectOutputStream
      */
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         ((PObjectOutputStream) out).writeConditionalObject(parent);
     }
@@ -3154,7 +3192,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param in the stream to read from
      */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         parent = (PNode) in.readObject();
     }
@@ -3167,7 +3205,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Returns a string representation of this object for debugging purposes.
      */
     public String toString() {
-        String result = super.toString().replaceAll(".*\\.", "");
+        final String result = super.toString().replaceAll(".*\\.", "");
         return result + "[" + paramString() + "]";
     }
 
@@ -3180,7 +3218,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("bounds=" + (bounds == null ? "null" : bounds.toString()));
         result.append(",fullBounds=" + (fullBoundsCache == null ? "null" : fullBoundsCache.toString()));
@@ -3209,12 +3247,13 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     public PInputEventListener[] getInputEventListeners() {
-        if (listenerList == null || listenerList.getListenerCount() == 0)
+        if (listenerList == null || listenerList.getListenerCount() == 0) {
             return new PInputEventListener[] {};
+        }
 
-        EventListener[] listeners = listenerList.getListeners(PInputEventListener.class);
+        final EventListener[] listeners = listenerList.getListeners(PInputEventListener.class);
 
-        PInputEventListener[] result = new PInputEventListener[listeners.length];
+        final PInputEventListener[] result = new PInputEventListener[listeners.length];
         for (int i = 0; i < listeners.length; i++) {
             result[i] = (PInputEventListener) listeners[i];
         }

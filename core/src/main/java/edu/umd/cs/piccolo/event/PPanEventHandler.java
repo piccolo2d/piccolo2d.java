@@ -28,9 +28,9 @@
  */
 package edu.umd.cs.piccolo.event;
 
-import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.util.PBounds;
@@ -58,17 +58,17 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
         setAutopan(true);
     }
 
-    protected void drag(PInputEvent e) {
+    protected void drag(final PInputEvent e) {
         super.drag(e);
         pan(e);
     }
 
-    protected void pan(PInputEvent e) {
-        PCamera c = e.getCamera();
-        Point2D l = e.getPosition();
+    protected void pan(final PInputEvent e) {
+        final PCamera c = e.getCamera();
+        final Point2D l = e.getPosition();
 
         if (c.getViewBounds().contains(l)) {
-            PDimension d = e.getDelta();
+            final PDimension d = e.getDelta();
             c.translateView(d.getWidth(), d.getHeight());
         }
     }
@@ -77,7 +77,7 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     // Auto Pan
     // ****************************************************************
 
-    public void setAutopan(boolean autopan) {
+    public void setAutopan(final boolean autopan) {
         this.autopan = autopan;
     }
 
@@ -90,7 +90,7 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
      * 
      * @param minAutopanSpeed
      */
-    public void setMinAutopanSpeed(double minAutopanSpeed) {
+    public void setMinAutopanSpeed(final double minAutopanSpeed) {
         this.minAutopanSpeed = minAutopanSpeed;
     }
 
@@ -99,10 +99,10 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
      * 
      * @param maxAutopanSpeed
      */
-    public void setMaxAutopanSpeed(double maxAutopanSpeed) {
+    public void setMaxAutopanSpeed(final double maxAutopanSpeed) {
         this.maxAutopanSpeed = maxAutopanSpeed;
     }
-    
+
     /**
      * Returns the minAutoPan speed in pixels per second.
      * 
@@ -124,28 +124,29 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     /**
      * Do auto panning even when the mouse is not moving.
      */
-    protected void dragActivityStep(PInputEvent aEvent) {
-        if (!autopan)
+    protected void dragActivityStep(final PInputEvent aEvent) {
+        if (!autopan) {
             return;
-
-        PCamera c = aEvent.getCamera();
-        PBounds b = c.getBoundsReference();
-        Point2D l = aEvent.getPositionRelativeTo(c);
-        int outcode = b.outcode(l);
-        PDimension delta = new PDimension();
-
-        if ((outcode & Rectangle.OUT_TOP) != 0) {
-            delta.height = validatePanningSpeed(-1.0 - (0.5 * Math.abs(l.getY() - b.getY())));
-        }
-        else if ((outcode & Rectangle.OUT_BOTTOM) != 0) {
-            delta.height = validatePanningSpeed(1.0 + (0.5 * Math.abs(l.getY() - (b.getY() + b.getHeight()))));
         }
 
-        if ((outcode & Rectangle.OUT_RIGHT) != 0) {
-            delta.width = validatePanningSpeed(1.0 + (0.5 * Math.abs(l.getX() - (b.getX() + b.getWidth()))));
+        final PCamera c = aEvent.getCamera();
+        final PBounds b = c.getBoundsReference();
+        final Point2D l = aEvent.getPositionRelativeTo(c);
+        final int outcode = b.outcode(l);
+        final PDimension delta = new PDimension();
+
+        if ((outcode & Rectangle2D.OUT_TOP) != 0) {
+            delta.height = validatePanningSpeed(-1.0 - 0.5 * Math.abs(l.getY() - b.getY()));
         }
-        else if ((outcode & Rectangle.OUT_LEFT) != 0) {
-            delta.width = validatePanningSpeed(-1.0 - (0.5 * Math.abs(l.getX() - b.getX())));
+        else if ((outcode & Rectangle2D.OUT_BOTTOM) != 0) {
+            delta.height = validatePanningSpeed(1.0 + 0.5 * Math.abs(l.getY() - (b.getY() + b.getHeight())));
+        }
+
+        if ((outcode & Rectangle2D.OUT_RIGHT) != 0) {
+            delta.width = validatePanningSpeed(1.0 + 0.5 * Math.abs(l.getX() - (b.getX() + b.getWidth())));
+        }
+        else if ((outcode & Rectangle2D.OUT_LEFT) != 0) {
+            delta.width = validatePanningSpeed(-1.0 - 0.5 * Math.abs(l.getX() - b.getX()));
         }
 
         c.localToView(delta);
@@ -156,17 +157,20 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     }
 
     protected double validatePanningSpeed(double delta) {
-        double minDelta = minAutopanSpeed / (1000d / getDragActivity().getStepRate());
-        double maxDelta = maxAutopanSpeed / (1000d / getDragActivity().getStepRate());
+        final double minDelta = minAutopanSpeed / (1000d / getDragActivity().getStepRate());
+        final double maxDelta = maxAutopanSpeed / (1000d / getDragActivity().getStepRate());
 
-        boolean deltaNegative = delta < 0;
+        final boolean deltaNegative = delta < 0;
         delta = Math.abs(delta);
-        if (delta < minDelta)
+        if (delta < minDelta) {
             delta = minDelta;
-        if (delta > maxDelta)
+        }
+        if (delta > maxDelta) {
             delta = maxDelta;
-        if (deltaNegative)
+        }
+        if (deltaNegative) {
             delta = -delta;
+        }
         return delta;
     }
 
@@ -183,12 +187,13 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
      * @return a string representation of this node's state
      */
     protected String paramString() {
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
 
         result.append("minAutopanSpeed=" + minAutopanSpeed);
         result.append(",maxAutopanSpeed=" + maxAutopanSpeed);
-        if (autopan)
+        if (autopan) {
             result.append(",autopan");
+        }
         result.append(',');
         result.append(super.paramString());
 

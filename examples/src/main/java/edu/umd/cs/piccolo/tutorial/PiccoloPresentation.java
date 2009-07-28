@@ -42,6 +42,10 @@ import edu.umd.cs.piccolox.PFrame;
 
 public class PiccoloPresentation extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     protected PNode slideBar;
     protected PNode currentSlide;
     protected PBasicInputEventHandler eventHandler;
@@ -56,17 +60,17 @@ public class PiccoloPresentation extends PFrame {
         loadSlides();
 
         eventHandler = new PBasicInputEventHandler() {
-            public void keyReleased(PInputEvent event) {
+            public void keyReleased(final PInputEvent event) {
                 if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-                    int newIndex = slides.indexOf(currentSlide) + 1;
+                    final int newIndex = slides.indexOf(currentSlide) + 1;
                     if (newIndex < slides.size()) {
                         goToSlide((PNode) slides.get(newIndex));
                     }
                 }
             }
 
-            public void mouseReleased(PInputEvent event) {
-                PNode picked = event.getPickedNode();
+            public void mouseReleased(final PInputEvent event) {
+                final PNode picked = event.getPickedNode();
 
                 if (picked.getParent() == slideBar) {
                     picked.moveToFront();
@@ -87,7 +91,7 @@ public class PiccoloPresentation extends PFrame {
         getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
     }
 
-    public void goToSlide(PNode slide) {
+    public void goToSlide(final PNode slide) {
         if (currentSlide != null) {
             currentSlide.animateToTransform((AffineTransform) currentSlide.getAttribute("small"), 1000);
         }
@@ -107,11 +111,11 @@ public class PiccoloPresentation extends PFrame {
         slideBar.setOffset(0, getCanvas().getHeight() - 100);
         getCanvas().getLayer().addChild(slideBar);
 
-        File[] slideFiles = new File("slides").listFiles();
+        final File[] slideFiles = new File("slides").listFiles();
         for (int i = 0; i < slideFiles.length; i++) {
             PNode slide = new PImage(slideFiles[i].getPath());
 
-            if (slide.getHeight() != (getHeight() - 100)) {
+            if (slide.getHeight() != getHeight() - 100) {
                 slide = new PImage(slide.toImage(getWidth(), getHeight() - 100, null));
             }
             slide.offset((getWidth() - slide.getWidth()) / 2, -(getHeight() - 100));
@@ -129,7 +133,7 @@ public class PiccoloPresentation extends PFrame {
         goToSlide((PNode) slides.get(0));
     }
 
-    public static void main(String[] argv) {
+    public static void main(final String[] argv) {
         new PiccoloPresentation();
     }
 }

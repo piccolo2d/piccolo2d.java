@@ -28,20 +28,23 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Point;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+
+import javax.swing.SwingUtilities;
+
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventListener;
 import edu.umd.cs.piccolo.util.PAffineTransformException;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
 
 /**
  * Event handler to send MousePressed, MouseReleased, MouseMoved, MouseClicked,
@@ -66,11 +69,11 @@ public class PSwingEventHandler implements PInputEventListener {
 
     private boolean recursing = false;// to avoid accidental recursive handling
 
-    private ButtonData leftButtonData = new ButtonData();
-    private ButtonData rightButtonData = new ButtonData();
-    private ButtonData middleButtonData = new ButtonData();
+    private final ButtonData leftButtonData = new ButtonData();
+    private final ButtonData rightButtonData = new ButtonData();
+    private final ButtonData middleButtonData = new ButtonData();
 
-    private PSwingCanvas canvas;
+    private final PSwingCanvas canvas;
 
     /**
      * Constructs a new PSwingEventHandler for the given canvas, and a node that
@@ -79,7 +82,7 @@ public class PSwingEventHandler implements PInputEventListener {
      * @param canvas the canvas associated with this PSwingEventHandler.
      * @param node the node the mouse listeners will be attached to.
      */
-    public PSwingEventHandler(PSwingCanvas canvas, PNode node) {
+    public PSwingEventHandler(final PSwingCanvas canvas, final PNode node) {
         this.canvas = canvas;
         listenNode = node;
     }
@@ -87,7 +90,7 @@ public class PSwingEventHandler implements PInputEventListener {
     /**
      * Constructs a new PSwingEventHandler for the given canvas.
      */
-    public PSwingEventHandler(PSwingCanvas canvas) {
+    public PSwingEventHandler(final PSwingCanvas canvas) {
         this.canvas = canvas;
     }
 
@@ -96,7 +99,7 @@ public class PSwingEventHandler implements PInputEventListener {
      * 
      * @param active
      */
-    void setActive(boolean active) {
+    void setActive(final boolean active) {
         if (this.active && !active) {
             if (listenNode != null) {
                 this.active = false;
@@ -126,20 +129,20 @@ public class PSwingEventHandler implements PInputEventListener {
      * @param y
      * @return the component at the specified location.
      */
-    private Component findShowingComponentAt(Component c, int x, int y) {
+    private Component findShowingComponentAt(final Component c, final int x, final int y) {
         if (!c.contains(x, y)) {
             return null;
         }
 
         if (c instanceof Container) {
-            Container contain = ((Container) c);
-            int ncomponents = contain.getComponentCount();
-            Component component[] = contain.getComponents();
+            final Container contain = (Container) c;
+            final int ncomponents = contain.getComponentCount();
+            final Component component[] = contain.getComponents();
 
             for (int i = 0; i < ncomponents; i++) {
                 Component comp = component[i];
                 if (comp != null) {
-                    Point p = comp.getLocation();
+                    final Point p = comp.getLocation();
                     if (comp instanceof Container) {
                         comp = findShowingComponentAt(comp, x - (int) p.getX(), y - (int) p.getY());
                     }
@@ -164,21 +167,21 @@ public class PSwingEventHandler implements PInputEventListener {
      * @param pSwingMouseEvent
      * @param aEvent
      */
-    void dispatchEvent(PSwingMouseEvent pSwingMouseEvent, PInputEvent aEvent) {
+    void dispatchEvent(final PSwingMouseEvent pSwingMouseEvent, final PInputEvent aEvent) {
         Component comp = null;
         Point2D pt = null;
-        PNode pickedNode = pSwingMouseEvent.getPath().getPickedNode();
+        final PNode pickedNode = pSwingMouseEvent.getPath().getPickedNode();
 
         // The offsets to put the event in the correct context
         int offX = 0;
         int offY = 0;
 
-        PNode currentNode = pSwingMouseEvent.getCurrentNode();
+        final PNode currentNode = pSwingMouseEvent.getCurrentNode();
 
         if (currentNode instanceof PSwing) {
 
-            PSwing swing = (PSwing) currentNode;
-            PNode grabNode = pickedNode;
+            final PSwing swing = (PSwing) currentNode;
+            final PNode grabNode = pickedNode;
 
             if (grabNode.isDescendentOf(canvas.getRoot())) {
                 pt = new Point2D.Double(pSwingMouseEvent.getX(), pSwingMouseEvent.getY());
@@ -242,13 +245,13 @@ public class PSwingEventHandler implements PInputEventListener {
         // and mouseMoved events
         else if ((pSwingMouseEvent.getID() == MouseEvent.MOUSE_PRESSED
                 || pSwingMouseEvent.getID() == MouseEvent.MOUSE_CLICKED || pSwingMouseEvent.getID() == MouseEvent.MOUSE_MOVED)
-                && (comp != null)) {
+                && comp != null) {
 
-            MouseEvent e_temp = new MouseEvent(comp, pSwingMouseEvent.getID(), pSwingMouseEvent.getWhen(),
+            final MouseEvent e_temp = new MouseEvent(comp, pSwingMouseEvent.getID(), pSwingMouseEvent.getWhen(),
                     pSwingMouseEvent.getModifiers(), (int) pt.getX() - offX, (int) pt.getY() - offY, pSwingMouseEvent
                             .getClickCount(), pSwingMouseEvent.isPopupTrigger());
 
-            PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+            final PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
             dispatchEvent(comp, e2);
         }
 
@@ -260,9 +263,9 @@ public class PSwingEventHandler implements PInputEventListener {
 
             // This shouldn't happen - since we're only getting node events
             if (comp == null || pSwingMouseEvent.getID() == MouseEvent.MOUSE_EXITED) {
-                MouseEvent e_temp = createExitEvent(pSwingMouseEvent);
+                final MouseEvent e_temp = createExitEvent(pSwingMouseEvent);
 
-                PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+                final PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
 
                 dispatchEvent(prevComponent, e2);
                 prevComponent = null;
@@ -282,8 +285,8 @@ public class PSwingEventHandler implements PInputEventListener {
         else {
             // This means mouseEntered
             if (comp != null) {
-                MouseEvent e_temp = createEnterEvent(comp, pSwingMouseEvent, offX, offY);
-                PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+                final MouseEvent e_temp = createEnterEvent(comp, pSwingMouseEvent, offX, offY);
+                final PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
                 dispatchEvent(comp, e2);
             }
         }
@@ -313,28 +316,28 @@ public class PSwingEventHandler implements PInputEventListener {
         }
     }
 
-    private MouseEvent createEnterEvent(Component comp, PSwingMouseEvent e1, int offX, int offY) {
+    private MouseEvent createEnterEvent(final Component comp, final PSwingMouseEvent e1, final int offX, final int offY) {
         return new MouseEvent(comp, MouseEvent.MOUSE_ENTERED, e1.getWhen(), 0, (int) prevPoint.getX() - offX,
                 (int) prevPoint.getY() - offY, e1.getClickCount(), e1.isPopupTrigger());
     }
 
-    private MouseEvent createExitEvent(PSwingMouseEvent e1) {
+    private MouseEvent createExitEvent(final PSwingMouseEvent e1) {
         return new MouseEvent(prevComponent, MouseEvent.MOUSE_EXITED, e1.getWhen(), 0, (int) prevPoint.getX()
                 - (int) prevOff.getX(), (int) prevPoint.getY() - (int) prevOff.getY(), e1.getClickCount(), e1
                 .isPopupTrigger());
     }
 
-    private void handleButton(PSwingMouseEvent e1, PInputEvent aEvent, ButtonData buttonData) {
+    private void handleButton(final PSwingMouseEvent e1, final PInputEvent aEvent, final ButtonData buttonData) {
         Point2D pt;
         if (buttonData.getPNode().isDescendentOf(canvas.getRoot())) {
             pt = new Point2D.Double(e1.getX(), e1.getY());
             cameraToLocal(e1.getPath().getTopCamera(), pt, buttonData.getPNode());
             // todo this probably won't handle viewing through multiple cameras.
-            MouseEvent e_temp = new MouseEvent(buttonData.getFocusedComponent(), e1.getID(), e1.getWhen(), e1
+            final MouseEvent e_temp = new MouseEvent(buttonData.getFocusedComponent(), e1.getID(), e1.getWhen(), e1
                     .getModifiers(), (int) pt.getX() - buttonData.getOffsetX(), (int) pt.getY()
                     - buttonData.getOffsetY(), e1.getClickCount(), e1.isPopupTrigger());
 
-            PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+            final PSwingMouseEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
             dispatchEvent(buttonData.getFocusedComponent(), e2);
         }
         else {
@@ -357,14 +360,15 @@ public class PSwingEventHandler implements PInputEventListener {
         });
     }
 
-    private void cameraToLocal(PCamera topCamera, Point2D pt, PNode node) {
+    private void cameraToLocal(final PCamera topCamera, final Point2D pt, final PNode node) {
         AffineTransform inverse;
         try {
-             inverse = topCamera.getViewTransform().createInverse();
-        } catch (NoninvertibleTransformException e) {
+            inverse = topCamera.getViewTransform().createInverse();
+        }
+        catch (final NoninvertibleTransformException e) {
             throw new PAffineTransformException(e, topCamera.getViewTransform());
         }
-      
+
         /*
          * Only apply the camera's view transform when this node is a descendant
          * of PLayer
@@ -391,12 +395,12 @@ public class PSwingEventHandler implements PInputEventListener {
      * @param aEvent
      * @param type
      */
-    public void processEvent(PInputEvent aEvent, int type) {
+    public void processEvent(final PInputEvent aEvent, final int type) {
         if (aEvent.isMouseEvent()) {
-            InputEvent sourceSwingEvent = aEvent.getSourceSwingEvent();
+            final InputEvent sourceSwingEvent = aEvent.getSourceSwingEvent();
             if (sourceSwingEvent instanceof MouseEvent) {
-                MouseEvent swingMouseEvent = (MouseEvent) sourceSwingEvent;
-                PSwingMouseEvent pSwingMouseEvent = PSwingMouseEvent.createMouseEvent(swingMouseEvent.getID(),
+                final MouseEvent swingMouseEvent = (MouseEvent) sourceSwingEvent;
+                final PSwingMouseEvent pSwingMouseEvent = PSwingMouseEvent.createMouseEvent(swingMouseEvent.getID(),
                         swingMouseEvent, aEvent);
                 if (!recursing) {
                     recursing = true;
@@ -411,7 +415,7 @@ public class PSwingEventHandler implements PInputEventListener {
                 new Exception("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
                         + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName()).printStackTrace();
             }
-        }        
+        }
     }
 
     /**
@@ -424,7 +428,8 @@ public class PSwingEventHandler implements PInputEventListener {
         private int focusOffX = 0;
         private int focusOffY = 0;
 
-        public void setState(PSwing swing, PNode visualNode, Component comp, int offX, int offY) {
+        public void setState(final PSwing swing, final PNode visualNode, final Component comp, final int offX,
+                final int offY) {
             focusPSwing = swing;
             focusComponent = comp;
             focusNode = visualNode;

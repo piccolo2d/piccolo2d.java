@@ -8,44 +8,45 @@ import junit.framework.TestCase;
 
 public class PComboBoxTest extends TestCase {
     public void testPComboInstallsItsOwnUI() {
-        PComboBox combo = new PComboBox();
+        final PComboBox combo = new PComboBox();
         assertTrue(combo.getUI() instanceof PComboBox.PBasicComboBoxUI);
     }
 
     public void testConstructsWithVector() {
-        Vector items = new Vector();
+        final Vector items = new Vector();
         items.add("A");
         items.add("B");
-        PComboBox combo = new PComboBox(items);
+        final PComboBox combo = new PComboBox(items);
         assertEquals(2, combo.getModel().getSize());
     }
 
     public void testConstructsWithArray() {
-        String[] items = new String[] { "A", "B" };
-        PComboBox combo = new PComboBox(items);
+        final String[] items = new String[] { "A", "B" };
+        final PComboBox combo = new PComboBox(items);
         assertEquals(2, combo.getModel().getSize());
     }
-    
+
     public void testConstructsWithComboBoxModel() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        final DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement("A");
-        model.addElement("B");        
-        PComboBox combo = new PComboBox(model);
+        model.addElement("B");
+        final PComboBox combo = new PComboBox(model);
         assertEquals(2, combo.getModel().getSize());
     }
-    
+
     public void testSetEnvironmentPersists() {
-        PComboBox combo = new PComboBox();
-        
-        PSwingCanvas canvas = new PSwingCanvas();
-        PSwing pCombo = new PSwing(combo);
+        final PComboBox combo = new PComboBox();
+
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final PSwing pCombo = new PSwing(combo);
         combo.setEnvironment(pCombo, canvas);
-        
+
         assertEquals(pCombo, combo.getPSwing());
         assertEquals(canvas, combo.getCanvas());
     }
-    
+
     public void testPopupIsRepositioned() {
-       // Need a way of dispatching mock events to canvas before this can be tested
+        // Need a way of dispatching mock events to canvas before this can be
+        // tested
     }
 }

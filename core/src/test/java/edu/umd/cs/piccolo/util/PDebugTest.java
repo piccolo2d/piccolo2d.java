@@ -8,7 +8,7 @@ public class PDebugTest extends TestCase {
     public void setUp() {
         PDebug.resetFPSTiming();
     }
-    
+
     public void testGetDebugColourGeneratesGraysInCycle() {
         assertEquals(new Color(100, 100, 100, 150), PDebug.getDebugPaintColor());
         assertEquals(new Color(110, 110, 110, 150), PDebug.getDebugPaintColor());
@@ -22,13 +22,13 @@ public class PDebugTest extends TestCase {
         assertEquals(new Color(190, 190, 190, 150), PDebug.getDebugPaintColor());
         assertEquals(new Color(100, 100, 100, 150), PDebug.getDebugPaintColor());
     }
-    
-    public void testUnlessOutputWasProcessedFPSisZero() throws InterruptedException {        
+
+    public void testUnlessOutputWasProcessedFPSisZero() throws InterruptedException {
         assertEquals(0.0, PDebug.getInputFPS(), 0.00001);
         PDebug.startProcessingInput();
-        Thread.sleep(2);        
+        Thread.sleep(2);
         PDebug.endProcessingInput();
-        
-        assertEquals(0.0, PDebug.getTotalFPS(), 0.0001);        
-    }    
+
+        assertEquals(0.0, PDebug.getTotalFPS(), 0.0001);
+    }
 }

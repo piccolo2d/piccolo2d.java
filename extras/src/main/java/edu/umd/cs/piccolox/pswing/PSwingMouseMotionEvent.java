@@ -28,10 +28,10 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import edu.umd.cs.piccolo.event.PInputEvent;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+
+import edu.umd.cs.piccolo.event.PInputEvent;
 
 /**
  * <b>PMouseMotionEvent</b> is an event which indicates that a mouse motion
@@ -69,12 +69,17 @@ import java.awt.event.MouseMotionListener;
 public class PSwingMouseMotionEvent extends PSwingMouseEvent {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Constructs a new PMouse event from a Java MouseEvent.
      * 
      * @param id The event type (MOUSE_MOVED, MOUSE_DRAGGED)
      * @param e The original Java mouse event when in MOUSE_DRAGGED events.
      */
-    protected PSwingMouseMotionEvent(int id, MouseEvent e, PInputEvent event) {
+    protected PSwingMouseMotionEvent(final int id, final MouseEvent e, final PInputEvent event) {
         super(id, e, event);
     }
 
@@ -83,13 +88,13 @@ public class PSwingMouseMotionEvent extends PSwingMouseEvent {
      * 
      * @param listener the target for dispatch.
      */
-    public void dispatchTo(Object listener) {
-        MouseMotionListener mouseMotionListener = (MouseMotionListener) listener;
+    public void dispatchTo(final Object listener) {
+        final MouseMotionListener mouseMotionListener = (MouseMotionListener) listener;
         switch (getID()) {
-            case PSwingMouseEvent.MOUSE_DRAGGED:
+            case MouseEvent.MOUSE_DRAGGED:
                 mouseMotionListener.mouseDragged(this);
                 break;
-            case PSwingMouseEvent.MOUSE_MOVED:
+            case MouseEvent.MOUSE_MOVED:
                 mouseMotionListener.mouseMoved(this);
                 break;
             default:

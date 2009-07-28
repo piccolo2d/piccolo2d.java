@@ -32,6 +32,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -48,7 +49,7 @@ public class PCameraTest extends TestCase {
 
     private PCamera camera;
 
-    public PCameraTest(String name) {
+    public PCameraTest(final String name) {
         super(name);
     }
 
@@ -59,13 +60,13 @@ public class PCameraTest extends TestCase {
     }
 
     public void testClone() {
-        PNode n = new PNode();
+        final PNode n = new PNode();
 
-        PLayer layer1 = new PLayer();
-        PLayer layer2 = new PLayer();
+        final PLayer layer1 = new PLayer();
+        final PLayer layer2 = new PLayer();
 
-        PCamera camera1 = new PCamera();
-        PCamera camera2 = new PCamera();
+        final PCamera camera1 = new PCamera();
+        final PCamera camera2 = new PCamera();
 
         n.addChild(layer1);
         n.addChild(layer2);
@@ -78,7 +79,7 @@ public class PCameraTest extends TestCase {
         camera2.addLayer(layer2);
 
         // no layers should be written out since they are written conditionally.
-        PCamera cameraCopy = (PCamera) camera1.clone();
+        final PCamera cameraCopy = (PCamera) camera1.clone();
         assertEquals(cameraCopy.getLayerCount(), 0);
 
         n.clone();
@@ -89,7 +90,7 @@ public class PCameraTest extends TestCase {
     public void testCameraShouldHaveNullComponentUntilAssigned() {
         assertNull(camera.getComponent());
 
-        MockPComponent component = new MockPComponent();
+        final MockPComponent component = new MockPComponent();
         camera.setComponent(component);
 
         assertNotNull(camera.getComponent());
@@ -105,7 +106,7 @@ public class PCameraTest extends TestCase {
     }
 
     public void testIndexOfLayerReturnsMinusOneWhenLayerNotFound() {
-        PLayer orphanLayer = new PLayer();
+        final PLayer orphanLayer = new PLayer();
         assertEquals(-1, camera.indexOfLayer(orphanLayer));
 
         camera.addLayer(new PLayer());
@@ -113,61 +114,61 @@ public class PCameraTest extends TestCase {
     }
 
     public void testRemoveLayerByReferenceWorks() {
-        PLayer layer = new PLayer();
+        final PLayer layer = new PLayer();
         camera.addLayer(layer);
         camera.removeLayer(layer);
         assertEquals(0, camera.getLayerCount());
     }
 
     public void testRemoveLayerByReferenceDoesNothingWithStrangeLayerWorks() {
-        PLayer strangeLayer = new PLayer();
-        camera.removeLayer(strangeLayer);        
+        final PLayer strangeLayer = new PLayer();
+        camera.removeLayer(strangeLayer);
     }
-    
+
     public void testRemoveLayerRemovesTheCameraFromTheLayer() {
-        PLayer layer = new PLayer();
-        camera.addLayer(layer);        
+        final PLayer layer = new PLayer();
+        camera.addLayer(layer);
         camera.removeLayer(layer);
         assertEquals(0, layer.getCameraCount());
     }
-    
+
     public void testAddingLayerAddCameraToLayer() {
-        PLayer layer = new PLayer();
-        camera.addLayer(layer);               
+        final PLayer layer = new PLayer();
+        camera.addLayer(layer);
         assertSame(camera, layer.getCamera(0));
     }
 
     public void testGetFullUnionOfLayerFullBoundsWorks() {
-        PLayer layer1 = new PLayer();
+        final PLayer layer1 = new PLayer();
         layer1.setBounds(0, 0, 10, 10);
         camera.addLayer(layer1);
 
-        PLayer layer2 = new PLayer();
+        final PLayer layer2 = new PLayer();
         layer2.setBounds(10, 10, 10, 10);
         camera.addLayer(layer2);
 
-        PBounds fullLayerBounds = camera.getUnionOfLayerFullBounds();
+        final PBounds fullLayerBounds = camera.getUnionOfLayerFullBounds();
         assertEquals(new PBounds(0, 0, 20, 20), fullLayerBounds);
     }
 
     public void testPaintPaintsAllLayers() {
-        PCanvas canvas = new PCanvas();
-        PCamera camera = canvas.getCamera();
+        final PCanvas canvas = new PCanvas();
+        final PCamera camera = canvas.getCamera();
 
-        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D g2 = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
 
-        PLayer layer1 = canvas.getLayer();
-        PNode blueSquare = new PNode();
+        final PLayer layer1 = canvas.getLayer();
+        final PNode blueSquare = new PNode();
         blueSquare.setPaint(Color.BLUE);
         blueSquare.setBounds(0, 0, 10, 10);
         layer1.addChild(blueSquare);
         camera.addLayer(layer1);
 
-        PLayer layer2 = new PLayer();
+        final PLayer layer2 = new PLayer();
         canvas.getLayer().getRoot().addChild(layer2);
         layer2.setOffset(10, 10);
-        PNode redSquare = new PNode();
+        final PNode redSquare = new PNode();
         redSquare.setPaint(Color.RED);
         redSquare.setBounds(0, 0, 10, 10);
         layer2.addChild(redSquare);
@@ -181,22 +182,22 @@ public class PCameraTest extends TestCase {
     }
 
     public void testPickPackWorksInSimpleCases() {
-        PLayer layer = new PLayer();
+        final PLayer layer = new PLayer();
         camera.addChild(layer);
 
-        PNode node1 = new PNode();
+        final PNode node1 = new PNode();
         node1.setBounds(0, 0, 10, 10);
         layer.addChild(node1);
 
-        PNode node2 = new PNode();
+        final PNode node2 = new PNode();
         node2.setBounds(0, 0, 10, 10);
         node2.setOffset(10, 10);
         layer.addChild(node2);
 
-        PPickPath path1 = camera.pick(5, 5, 1);
+        final PPickPath path1 = camera.pick(5, 5, 1);
         assertEquals(node1, path1.getPickedNode());
 
-        PPickPath path2 = camera.pick(15, 15, 1);
+        final PPickPath path2 = camera.pick(15, 15, 1);
         assertEquals(node2, path2.getPickedNode());
     }
 
@@ -232,16 +233,16 @@ public class PCameraTest extends TestCase {
     }
 
     public void testViewTransformedFiresChangeEvent() {
-        MockPropertyChangeListener mockListener = new MockPropertyChangeListener();
+        final MockPropertyChangeListener mockListener = new MockPropertyChangeListener();
         camera.addPropertyChangeListener(PCamera.PROPERTY_VIEW_TRANSFORM, mockListener);
-        camera.setViewTransform(PAffineTransform.getScaleInstance(2, 2));
+        camera.setViewTransform(AffineTransform.getScaleInstance(2, 2));
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
 
     public void testAnimateViewToCenterBoundsIsImmediateWhenDurationIsZero() {
         camera.setViewBounds(new PBounds(0, 0, 10, 10));
-        PBounds targetBounds = new PBounds(-5, -5, 10, 10);
-        PActivity activity = camera.animateViewToCenterBounds(targetBounds, true, 0);
+        final PBounds targetBounds = new PBounds(-5, -5, 10, 10);
+        final PActivity activity = camera.animateViewToCenterBounds(targetBounds, true, 0);
         assertNull(activity);
 
         assertEquals(-5, camera.getViewTransform().getTranslateX(), 0.001);
@@ -250,8 +251,8 @@ public class PCameraTest extends TestCase {
 
     public void testAnimateViewToCenterBoundsCreatesValidActivity() {
         camera.setViewBounds(new PBounds(0, 0, 10, 10));
-        PBounds targetBounds = new PBounds(-5, -5, 10, 10);
-        PActivity activity = camera.animateViewToCenterBounds(targetBounds, true, 100);
+        final PBounds targetBounds = new PBounds(-5, -5, 10, 10);
+        final PActivity activity = camera.animateViewToCenterBounds(targetBounds, true, 100);
         assertNotNull(activity);
 
         assertEquals(100, activity.getDuration());
@@ -267,28 +268,28 @@ public class PCameraTest extends TestCase {
 
     public void testAnimateViewToPanToBoundsIsImmediateWhenDurationIsZero() {
         camera.setViewBounds(new PBounds(0, 0, 10, 10));
-        PActivity activity = camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 10), 0);
+        final PActivity activity = camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 10), 0);
 
         assertNull(activity);
-        assertEquals(PAffineTransform.getTranslateInstance(-15, -15), camera.getViewTransform());
+        assertEquals(AffineTransform.getTranslateInstance(-15, -15), camera.getViewTransform());
     }
 
     public void testAnimateViewToPanToBoundsReturnsAppropriatelyConfiguredActivity() {
         camera.setViewBounds(new PBounds(0, 0, 10, 10));
-        PTransformActivity activity = camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 10), 100);
+        final PTransformActivity activity = camera.animateViewToPanToBounds(new PBounds(10, 10, 10, 10), 100);
 
         assertNotNull(activity);
         assertEquals(100, activity.getDuration());
         assertFalse(activity.isStepping());
-        assertEquals(PAffineTransform.getTranslateInstance(-15, -15), new PAffineTransform(activity
+        assertEquals(AffineTransform.getTranslateInstance(-15, -15), new PAffineTransform(activity
                 .getDestinationTransform()));
     }
 
     public void testPDebugDebugBoundsPaintsBounds() throws IOException {
-        PCanvas canvas = new PCanvas();
+        final PCanvas canvas = new PCanvas();
 
-        PNode parent = new PNode();
-        PNode child = new PNode();
+        final PNode parent = new PNode();
+        final PNode child = new PNode();
 
         parent.addChild(child);
         parent.setBounds(0, 0, 10, 10);
@@ -303,11 +304,11 @@ public class PCameraTest extends TestCase {
         PDebug.debugBounds = true;
         PDebug.debugFullBounds = false;
 
-        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
         graphics.setPaint(Color.WHITE);
         graphics.fillRect(0, 0, 100, 100);
-        PPaintContext pc = new PPaintContext(graphics);
+        final PPaintContext pc = new PPaintContext(graphics);
         canvas.setDefaultRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
         canvas.getCamera().paint(pc);
 
@@ -327,7 +328,7 @@ public class PCameraTest extends TestCase {
         assertPointColor(Color.WHITE, img, 15, 10);
     }
 
-    private void assertPointColor(Color expectedColor, BufferedImage img, int x, int y) {
+    private void assertPointColor(final Color expectedColor, final BufferedImage img, final int x, final int y) {
         assertEquals(expectedColor.getRGB(), img.getRGB(x, y));
     }
 
@@ -347,7 +348,7 @@ public class PCameraTest extends TestCase {
         camera.setViewConstraint(PCamera.VIEW_CONSTRAINT_ALL);
         assertEquals(PCamera.VIEW_CONSTRAINT_ALL, camera.getViewConstraint());
     }
-    
+
     static class MockPComponent implements PComponent {
 
         public void paintImmediately() {
@@ -356,13 +357,13 @@ public class PCameraTest extends TestCase {
         public void popCursor() {
         }
 
-        public void pushCursor(Cursor cursor) {
+        public void pushCursor(final Cursor cursor) {
         }
 
-        public void repaint(PBounds bounds) {
+        public void repaint(final PBounds bounds) {
         }
 
-        public void setInteracting(boolean interacting) {
+        public void setInteracting(final boolean interacting) {
         }
     }
 }

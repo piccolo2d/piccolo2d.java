@@ -43,17 +43,27 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class PSWTMouseEvent extends MouseEvent {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     static Component fakeSrc = new Component() {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
     };
 
     protected org.eclipse.swt.events.MouseEvent swtEvent;
 
     protected int clickCount;
 
-    public PSWTMouseEvent(org.eclipse.swt.events.MouseEvent me, int type, int clickCount) {
-        super(fakeSrc, type, me.time, 0, me.x, me.y, clickCount, (me.button == 3), me.button);
+    public PSWTMouseEvent(final org.eclipse.swt.events.MouseEvent me, final int type, final int clickCount) {
+        super(fakeSrc, type, me.time, 0, me.x, me.y, clickCount, me.button == 3, me.button);
 
-        this.swtEvent = me;
+        swtEvent = me;
         this.clickCount = clickCount;
     }
 

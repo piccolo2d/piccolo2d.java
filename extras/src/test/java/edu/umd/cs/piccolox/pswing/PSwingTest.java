@@ -45,7 +45,7 @@ import junit.framework.TestCase;
  * 
  * @author Stephen Chin
  */
-public class PSwingTest extends TestCase {   
+public class PSwingTest extends TestCase {
     public void setUp() {
         RepaintManager.setCurrentManager(new PSwingRepaintManager());
     }
@@ -53,29 +53,35 @@ public class PSwingTest extends TestCase {
     public void testConstructorFailsOnNullComponent() {
         try {
             new PSwing(null);
-        } catch (NullPointerException e) {
+        }
+        catch (final NullPointerException e) {
             // expected
         }
     }
 
     public void testPSwingRegistersItselfWithComponent() {
-        JPanel panel = new JPanel();
-        PSwing pSwing = new PSwing(panel);
+        final JPanel panel = new JPanel();
+        final PSwing pSwing = new PSwing(panel);
 
         assertEquals(pSwing, panel.getClientProperty(PSwing.PSWING_PROPERTY));
     }
 
     public void testGetComponentReturnsValidComponent() {
-        JPanel panel = new JPanel();
-        PSwing pSwing = new PSwing(panel);
+        final JPanel panel = new JPanel();
+        final PSwing pSwing = new PSwing(panel);
         assertEquals(panel, pSwing.getComponent());
     }
 
     public void testPSwingResizesItselfWhenComponentIsResized() {
         final boolean[] reshaped = new boolean[1];
-        JPanel panel = new JPanel();
+        final JPanel panel = new JPanel();
 
         new PSwing(panel) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             protected void reshape() {
                 super.reshape();
 
@@ -87,37 +93,36 @@ public class PSwingTest extends TestCase {
     }
 
     public void testPSwingDelegatesPaintingToItsComponent() throws IOException {
-        JPanel panel = new JPanel();
-        PSwing pSwing = new PSwing(panel);
+        final JPanel panel = new JPanel();
+        final PSwing pSwing = new PSwing(panel);
         panel.setBackground(Color.RED);
         panel.setPreferredSize(new Dimension(100, 100));
 
-        BufferedImage img = new BufferedImage(100, 100,
-                BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .createGraphics(img);
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
 
         pSwing.paint(graphics);
         assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
     }
-    
-    public void testHidingComponentHidesPSwing() throws InterruptedException {        
-        JPanel panel = new JPanel();
-        PSwing pSwing = new PSwing(panel);
+
+    public void testHidingComponentHidesPSwing() throws InterruptedException {
+        final JPanel panel = new JPanel();
+        final PSwing pSwing = new PSwing(panel);
         panel.setPreferredSize(new Dimension(100, 100));
         pSwing.setBounds(0, 0, 00, 100);
         panel.setVisible(false);
-        
-        // Wow, do I hate this next line. Turns out that the event dispatch 
-        // thread needs time to push the component hidden method before this test passes
+
+        // Wow, do I hate this next line. Turns out that the event dispatch
+        // thread needs time to push the component hidden method before this
+        // test passes
         // There has to be a way of forcing this without a sleep
         Thread.sleep(50);
         assertFalse(pSwing.getVisible());
     }
-    
+
     public void testHidingPNodeHidesComponent() {
-        JPanel panel = new JPanel();
-        PSwing pSwing = new PSwing(panel);
+        final JPanel panel = new JPanel();
+        final PSwing pSwing = new PSwing(panel);
         pSwing.setVisible(false);
         assertFalse(panel.isVisible());
     }

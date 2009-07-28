@@ -61,13 +61,17 @@ import edu.umd.cs.piccolox.nodes.P3DRect;
  */
 public class BirdsEyeViewExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     boolean fIsPressed = false;
 
     public BirdsEyeViewExample() {
         this(null);
     }
 
-    public BirdsEyeViewExample(PCanvas aCanvas) {
+    public BirdsEyeViewExample(final PCanvas aCanvas) {
         super("BirdsEyeViewExample", false, aCanvas);
     }
 
@@ -86,9 +90,9 @@ public class BirdsEyeViewExample extends PFrame {
         getCanvas().addInputEventListener(new PDragEventHandler());
 
         // this will create the actual BirdsEyeView and put it in a JDialog
-        BirdsEyeView bev = new BirdsEyeView();
+        final BirdsEyeView bev = new BirdsEyeView();
         bev.connect(getCanvas(), new PLayer[] { getCanvas().getLayer() });
-        JDialog bird = new JDialog();
+        final JDialog bird = new JDialog();
         bird.getContentPane().add(bev);
         bird.pack();
         bird.setSize(150, 150);
@@ -99,8 +103,8 @@ public class BirdsEyeViewExample extends PFrame {
     // This method demonstrates the kinds of things that can be done with any
     // node.
     public void nodeDemo() {
-        PLayer layer = getCanvas().getLayer();
-        PNode aNode = PPath.createRectangle(0, 0, 100, 80);
+        final PLayer layer = getCanvas().getLayer();
+        final PNode aNode = PPath.createRectangle(0, 0, 100, 80);
 
         // A node needs to be a descendent of the root to be displayed on the
         // screen.
@@ -128,7 +132,7 @@ public class BirdsEyeViewExample extends PFrame {
         aNode.setTransparency(0.75f);
 
         // Its easy to copy nodes.
-        PNode aCopy = (PNode) aNode.clone();
+        final PNode aCopy = (PNode) aNode.clone();
 
         // Make is so that the copies children are not pickable. For this
         // example that means you will not be able to grab the child and remove
@@ -149,7 +153,7 @@ public class BirdsEyeViewExample extends PFrame {
     // So far we have just been using PNode, but of course PNode has many
     // subclasses that you can try out to.
     public void createNodeUsingExistingClasses() {
-        PLayer layer = getCanvas().getLayer();
+        final PLayer layer = getCanvas().getLayer();
         layer.addChild(PPath.createEllipse(0, 0, 100, 100));
         layer.addChild(PPath.createRectangle(0, 100, 100, 100));
         layer.addChild(new PText("Hello World"));
@@ -167,10 +171,15 @@ public class BirdsEyeViewExample extends PFrame {
     public void subclassExistingClasses() {
         final PNode n = new PPath(new Ellipse2D.Float(0, 0, 100, 80)) {
 
-            public void paint(PPaintContext aPaintContext) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            public void paint(final PPaintContext aPaintContext) {
                 if (fIsPressed) {
                     // if mouse is pressed draw self as a square.
-                    Graphics2D g2 = aPaintContext.getGraphics();
+                    final Graphics2D g2 = aPaintContext.getGraphics();
                     g2.setPaint(getPaint());
                     g2.fill(getBoundsReference());
                 }
@@ -182,14 +191,14 @@ public class BirdsEyeViewExample extends PFrame {
         };
 
         n.addInputEventListener(new PBasicInputEventHandler() {
-            public void mousePressed(PInputEvent aEvent) {
+            public void mousePressed(final PInputEvent aEvent) {
                 super.mousePressed(aEvent);
                 fIsPressed = true;
                 n.invalidatePaint(); // this tells the framework that the node
                 // needs to be redisplayed.
             }
 
-            public void mouseReleased(PInputEvent aEvent) {
+            public void mouseReleased(final PInputEvent aEvent) {
                 super.mousePressed(aEvent);
                 fIsPressed = false;
                 n.invalidatePaint(); // this tells the framework that the node
@@ -204,13 +213,13 @@ public class BirdsEyeViewExample extends PFrame {
     // Here a new "face" node is created. But instead of drawing the face
     // directly using Graphics2D we compose the face from other nodes.
     public void composeOtherNodes() {
-        PNode myCompositeFace = PPath.createRectangle(0, 0, 100, 80);
+        final PNode myCompositeFace = PPath.createRectangle(0, 0, 100, 80);
 
         // create parts for the face.
-        PNode eye1 = PPath.createEllipse(0, 0, 20, 20);
+        final PNode eye1 = PPath.createEllipse(0, 0, 20, 20);
         eye1.setPaint(Color.YELLOW);
-        PNode eye2 = (PNode) eye1.clone();
-        PNode mouth = PPath.createRectangle(0, 0, 40, 20);
+        final PNode eye2 = (PNode) eye1.clone();
+        final PNode mouth = PPath.createRectangle(0, 0, 40, 20);
         mouth.setPaint(Color.BLACK);
 
         // add the face parts
@@ -226,7 +235,7 @@ public class BirdsEyeViewExample extends PFrame {
         mouth.translate(0, 30);
 
         // set the face bounds so that it neatly contains the face parts.
-        PBounds b = myCompositeFace.getUnionOfChildrenBounds(null);
+        final PBounds b = myCompositeFace.getUnionOfChildrenBounds(null);
         myCompositeFace.setBounds(b.inset(-5, -5));
 
         // opps it to small, so scale it up.
@@ -239,15 +248,20 @@ public class BirdsEyeViewExample extends PFrame {
     // all the drawing ourselves here instead of passing the work off to
     // other parts of the framework.
     public void createCustomNode() {
-        PNode n = new PNode() {
-            public void paint(PPaintContext aPaintContext) {
-                double bx = getX();
-                double by = getY();
-                double rightBorder = bx + getWidth();
-                double bottomBorder = by + getHeight();
+        final PNode n = new PNode() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
 
-                Line2D line = new Line2D.Double();
-                Graphics2D g2 = aPaintContext.getGraphics();
+            public void paint(final PPaintContext aPaintContext) {
+                final double bx = getX();
+                final double by = getY();
+                final double rightBorder = bx + getWidth();
+                final double bottomBorder = by + getHeight();
+
+                final Line2D line = new Line2D.Double();
+                final Graphics2D g2 = aPaintContext.getGraphics();
 
                 g2.setStroke(new BasicStroke(0));
                 g2.setPaint(getPaint());
@@ -269,7 +283,7 @@ public class BirdsEyeViewExample extends PFrame {
         getCanvas().getLayer().addChild(n);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new BirdsEyeViewExample();
     }
 
@@ -277,6 +291,11 @@ public class BirdsEyeViewExample extends PFrame {
      * The Birds Eye View Class
      */
     public class BirdsEyeView extends PCanvas implements PropertyChangeListener {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
 
         /**
          * This is the node that shows the viewed area.
@@ -303,7 +322,7 @@ public class BirdsEyeViewExample extends PFrame {
             // create the PropertyChangeListener for listening to the viewed
             // canvas
             changeListener = new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
+                public void propertyChange(final PropertyChangeEvent evt) {
                     updateFromViewed();
                 }
             };
@@ -317,13 +336,14 @@ public class BirdsEyeViewExample extends PFrame {
 
             // add the drag event handler
             getCamera().addInputEventListener(new PDragSequenceEventHandler() {
-                protected void startDrag(PInputEvent e) {
-                    if (e.getPickedNode() == areaVisiblePNode)
+                protected void startDrag(final PInputEvent e) {
+                    if (e.getPickedNode() == areaVisiblePNode) {
                         super.startDrag(e);
+                    }
                 }
 
-                protected void drag(PInputEvent e) {
-                    PDimension dim = e.getDelta();
+                protected void drag(final PInputEvent e) {
+                    final PDimension dim = e.getDelta();
                     viewedCanvas.getCamera().translateView(0 - dim.getWidth(), 0 - dim.getHeight());
                 }
 
@@ -337,9 +357,9 @@ public class BirdsEyeViewExample extends PFrame {
 
         }
 
-        public void connect(PCanvas canvas, PLayer[] viewed_layers) {
+        public void connect(final PCanvas canvas, final PLayer[] viewed_layers) {
 
-            this.viewedCanvas = canvas;
+            viewedCanvas = canvas;
             layerCount = 0;
 
             viewedCanvas.getCamera().addPropertyChangeListener(changeListener);
@@ -353,7 +373,7 @@ public class BirdsEyeViewExample extends PFrame {
         /**
          * Add a layer to list of viewed layers
          */
-        public void addLayer(PLayer new_layer) {
+        public void addLayer(final PLayer new_layer) {
             getCamera().addLayer(new_layer);
             layerCount++;
         }
@@ -361,7 +381,7 @@ public class BirdsEyeViewExample extends PFrame {
         /**
          * Remove the layer from the viewed layers
          */
-        public void removeLayer(PLayer old_layer) {
+        public void removeLayer(final PLayer old_layer) {
             getCamera().removeLayer(old_layer);
             layerCount--;
         }
@@ -382,7 +402,7 @@ public class BirdsEyeViewExample extends PFrame {
         /**
          * This method will get called when the viewed canvas changes
          */
-        public void propertyChange(PropertyChangeEvent event) {
+        public void propertyChange(final PropertyChangeEvent event) {
             updateFromViewed();
         }
 
@@ -397,45 +417,53 @@ public class BirdsEyeViewExample extends PFrame {
             double viewedHeight;
             double viewedWidth;
 
-            double ul_camera_x = viewedCanvas.getCamera().getViewBounds().getX();
-            double ul_camera_y = viewedCanvas.getCamera().getViewBounds().getY();
-            double lr_camera_x = ul_camera_x + viewedCanvas.getCamera().getViewBounds().getWidth();
-            double lr_camera_y = ul_camera_y + viewedCanvas.getCamera().getViewBounds().getHeight();
+            final double ul_camera_x = viewedCanvas.getCamera().getViewBounds().getX();
+            final double ul_camera_y = viewedCanvas.getCamera().getViewBounds().getY();
+            final double lr_camera_x = ul_camera_x + viewedCanvas.getCamera().getViewBounds().getWidth();
+            final double lr_camera_y = ul_camera_y + viewedCanvas.getCamera().getViewBounds().getHeight();
 
-            Rectangle2D drag_bounds = getCamera().getUnionOfLayerFullBounds();
+            final Rectangle2D drag_bounds = getCamera().getUnionOfLayerFullBounds();
 
-            double ul_layer_x = drag_bounds.getX();
-            double ul_layer_y = drag_bounds.getY();
-            double lr_layer_x = drag_bounds.getX() + drag_bounds.getWidth();
-            double lr_layer_y = drag_bounds.getY() + drag_bounds.getHeight();
+            final double ul_layer_x = drag_bounds.getX();
+            final double ul_layer_y = drag_bounds.getY();
+            final double lr_layer_x = drag_bounds.getX() + drag_bounds.getWidth();
+            final double lr_layer_y = drag_bounds.getY() + drag_bounds.getHeight();
 
             // find the upper left corner
 
             // set to the lesser value
-            if (ul_camera_x < ul_layer_x)
+            if (ul_camera_x < ul_layer_x) {
                 viewedX = ul_layer_x;
-            else
+            }
+            else {
                 viewedX = ul_camera_x;
+            }
 
             // same for y
-            if (ul_camera_y < ul_layer_y)
+            if (ul_camera_y < ul_layer_y) {
                 viewedY = ul_layer_y;
-            else
+            }
+            else {
                 viewedY = ul_camera_y;
+            }
 
             // find the lower right corner
 
             // set to the greater value
-            if (lr_camera_x < lr_layer_x)
+            if (lr_camera_x < lr_layer_x) {
                 viewedWidth = lr_camera_x - viewedX;
-            else
+            }
+            else {
                 viewedWidth = lr_layer_x - viewedX;
+            }
 
             // same for height
-            if (lr_camera_y < lr_layer_y)
+            if (lr_camera_y < lr_layer_y) {
                 viewedHeight = lr_camera_y - viewedY;
-            else
+            }
+            else {
                 viewedHeight = lr_layer_y - viewedY;
+            }
 
             Rectangle2D bounds = new Rectangle2D.Double(viewedX, viewedY, viewedWidth, viewedHeight);
             bounds = getCamera().viewToLocal(bounds);

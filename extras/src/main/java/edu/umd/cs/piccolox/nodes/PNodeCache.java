@@ -59,6 +59,10 @@ import edu.umd.cs.piccolo.util.PPickPath;
  */
 public class PNodeCache extends PNode {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private transient Image imageCache;
     private boolean validatingCache;
 
@@ -68,17 +72,17 @@ public class PNodeCache extends PNode {
      * Fill in the cacheOffsetRef if needed to make your image cache line up
      * with the nodes children.
      */
-    public Image createImageCache(Dimension2D cacheOffsetRef) {
+    public Image createImageCache(final Dimension2D cacheOffsetRef) {
         return toImage();
     }
 
     public Image getImageCache() {
         if (imageCache == null) {
-            PDimension cacheOffsetRef = new PDimension();
+            final PDimension cacheOffsetRef = new PDimension();
             validatingCache = true;
             resetBounds();
             imageCache = createImageCache(cacheOffsetRef);
-            PBounds b = getFullBoundsReference();
+            final PBounds b = getFullBoundsReference();
             setBounds(b.getX() + cacheOffsetRef.getWidth(), b.getY() + cacheOffsetRef.getHeight(), imageCache
                     .getWidth(null), imageCache.getHeight(null));
             validatingCache = false;
@@ -96,24 +100,24 @@ public class PNodeCache extends PNode {
         }
     }
 
-    public void repaintFrom(PBounds localBounds, PNode childOrThis) {
+    public void repaintFrom(final PBounds localBounds, final PNode childOrThis) {
         if (!validatingCache) {
             super.repaintFrom(localBounds, childOrThis);
             invalidateCache();
         }
     }
 
-    public void fullPaint(PPaintContext paintContext) {
+    public void fullPaint(final PPaintContext paintContext) {
         if (validatingCache) {
             super.fullPaint(paintContext);
         }
         else {
-            Graphics2D g2 = paintContext.getGraphics();
+            final Graphics2D g2 = paintContext.getGraphics();
             g2.drawImage(getImageCache(), (int) getX(), (int) getY(), null);
         }
     }
 
-    protected boolean pickAfterChildren(PPickPath pickPath) {
+    protected boolean pickAfterChildren(final PPickPath pickPath) {
         return false;
     }
 }

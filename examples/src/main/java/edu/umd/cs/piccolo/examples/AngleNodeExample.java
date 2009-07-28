@@ -53,26 +53,35 @@ import edu.umd.cs.piccolox.util.PLocator;
  */
 public class AngleNodeExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public AngleNodeExample() {
         this(null);
     }
 
-    public AngleNodeExample(PCanvas aCanvas) {
+    public AngleNodeExample(final PCanvas aCanvas) {
         super("AngleNodeExample", false, aCanvas);
     }
 
     public void initialize() {
-        PCanvas c = getCanvas();
-        PLayer l = c.getLayer();
+        final PCanvas c = getCanvas();
+        final PLayer l = c.getLayer();
         l.addChild(new AngleNode());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new AngleNodeExample();
     }
 
     // the angle node class
     public static class AngleNode extends PNode {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
         protected Point2D.Double pointOne;
         protected Point2D.Double pointTwo;
         protected Stroke stroke;
@@ -89,6 +98,11 @@ public class AngleNodeExample extends PFrame {
         public void addHandles() {
             // point one
             PLocator l = new PLocator() {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+
                 public double locateX() {
                     return pointOne.getX();
                 }
@@ -98,7 +112,12 @@ public class AngleNodeExample extends PFrame {
                 }
             };
             PHandle h = new PHandle(l) {
-                public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+
+                public void dragHandle(final PDimension aLocalDimension, final PInputEvent aEvent) {
                     localToParent(aLocalDimension);
                     pointOne.setLocation(pointOne.getX() + aLocalDimension.getWidth(), pointOne.getY()
                             + aLocalDimension.getHeight());
@@ -110,6 +129,11 @@ public class AngleNodeExample extends PFrame {
 
             // point two
             l = new PLocator() {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+
                 public double locateX() {
                     return pointTwo.getX();
                 }
@@ -119,7 +143,12 @@ public class AngleNodeExample extends PFrame {
                 }
             };
             h = new PHandle(l) {
-                public void dragHandle(PDimension aLocalDimension, PInputEvent aEvent) {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+
+                public void dragHandle(final PDimension aLocalDimension, final PInputEvent aEvent) {
                     localToParent(aLocalDimension);
                     pointTwo.setLocation(pointTwo.getX() + aLocalDimension.getWidth(), pointTwo.getY()
                             + aLocalDimension.getHeight());
@@ -130,28 +159,28 @@ public class AngleNodeExample extends PFrame {
             addChild(h);
         }
 
-        protected void paint(PPaintContext paintContext) {
-            Graphics2D g2 = paintContext.getGraphics();
+        protected void paint(final PPaintContext paintContext) {
+            final Graphics2D g2 = paintContext.getGraphics();
             g2.setStroke(stroke);
             g2.setPaint(getPaint());
             g2.draw(getAnglePath());
         }
 
         protected void updateBounds() {
-            GeneralPath p = getAnglePath();
-            Rectangle2D b = stroke.createStrokedShape(p).getBounds2D();
+            final GeneralPath p = getAnglePath();
+            final Rectangle2D b = stroke.createStrokedShape(p).getBounds2D();
             super.setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
         }
 
         public GeneralPath getAnglePath() {
-            GeneralPath p = new GeneralPath();
+            final GeneralPath p = new GeneralPath();
             p.moveTo((float) pointOne.getX(), (float) pointOne.getY());
             p.lineTo(0, 0);
             p.lineTo((float) pointTwo.getX(), (float) pointTwo.getY());
             return p;
         }
 
-        public boolean setBounds(double x, double y, double width, double height) {
+        public boolean setBounds(final double x, final double y, final double width, final double height) {
             return false; // bounds can be set externally
         }
     }

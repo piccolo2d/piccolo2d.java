@@ -28,8 +28,9 @@
  */
 package edu.umd.cs.piccolox.swing;
 
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 
 import edu.umd.cs.piccolo.PCanvas;
 

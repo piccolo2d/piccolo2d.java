@@ -41,16 +41,21 @@ import edu.umd.cs.piccolox.nodes.PClip;
  */
 public class ClipExample extends PFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public ClipExample() {
         this(null);
     }
 
-    public ClipExample(PCanvas aCanvas) {
+    public ClipExample(final PCanvas aCanvas) {
         super("ClipExample", false, aCanvas);
     }
 
     public void initialize() {
-        PClip clip = new PClip();
+        final PClip clip = new PClip();
         clip.setPathToEllipse(0, 0, 100, 100);
         clip.setPaint(Color.red);
 
@@ -61,7 +66,7 @@ public class ClipExample extends PFrame {
         getCanvas().addInputEventListener(new PDragEventHandler());
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new ClipExample();
     }
 }
