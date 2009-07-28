@@ -412,8 +412,8 @@ public class PSwingEventHandler implements PInputEventListener {
                 }
             }
             else {
-                new Exception("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
-                        + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName()).printStackTrace();
+                throw new RuntimeException("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
+                        + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName());
             }
         }
     }

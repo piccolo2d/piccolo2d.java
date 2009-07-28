@@ -106,7 +106,7 @@ public class PCanvasTest extends TestCase {
         final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
         assertEquals(3, listeners.length); // 3 since pan and zoom are attached
-                                           // by default
+        // by default
     }
 
     public void testRemoveInputEventListenersIsHonoured() {
@@ -115,7 +115,7 @@ public class PCanvasTest extends TestCase {
         final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
         assertEquals(2, listeners.length); // 3 since pan and zoom are attached
-                                           // by default
+        // by default
     }
 
     public void testMemoryLeak() throws InterruptedException {

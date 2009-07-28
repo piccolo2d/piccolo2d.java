@@ -121,10 +121,10 @@ public class PColorActivity extends PInterpolatingActivity {
 
     public void setRelativeTargetValue(final float zeroToOne) {
         super.setRelativeTargetValue(zeroToOne);
-        final float red = (source.getRed() + zeroToOne * (destination.getRed() - source.getRed()));
-        final float green = (source.getGreen() + zeroToOne * (destination.getGreen() - source.getGreen()));
-        final float blue = (source.getBlue() + zeroToOne * (destination.getBlue() - source.getBlue()));
-        final float alpha = (source.getAlpha() + zeroToOne * (destination.getAlpha() - source.getAlpha()));
+        final float red = source.getRed() + zeroToOne * (destination.getRed() - source.getRed());
+        final float green = source.getGreen() + zeroToOne * (destination.getGreen() - source.getGreen());
+        final float blue = source.getBlue() + zeroToOne * (destination.getBlue() - source.getBlue());
+        final float alpha = source.getAlpha() + zeroToOne * (destination.getAlpha() - source.getAlpha());
         target.setColor(new Color(red / 255, green / 255, blue / 255, alpha / 255));
     }
 

@@ -390,7 +390,8 @@ public class PSWTPath extends PNode {
             return new Line2D.Double(l2.getP1(), l2.getP2());
         }
         else {
-            new Exception().printStackTrace();
+            // again: either throw or don't - but nothing in between please.
+            // new Exception().printStackTrace();
             final GeneralPath aPath = new GeneralPath();
             aPath.append(aShape, false);
             return aPath;

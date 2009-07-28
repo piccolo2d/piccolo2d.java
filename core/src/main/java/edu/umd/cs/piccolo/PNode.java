@@ -2580,8 +2580,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 printJob.print();
             }
             catch (final PrinterException e) {
-                System.out.println("Error Printing");
-                e.printStackTrace();
+                throw new RuntimeException("Error Printing", e);
             }
         }
     }
