@@ -75,80 +75,6 @@ public class PNodeTest extends TestCase {
         mockListener = new MockPropertyChangeListener();
     }
 
-    public void testDefaultNameIsNull() {
-        assertNull(node.getName());
-    }
-
-    public void testConstructorWithNameAcceptsNull() {
-        node = new PNode(null);
-        assertNull(node.getName());
-    }
-
-    public void testConstructorWithInvaliNameThrowsException() {
-        try {
-            node = new PNode("-_");
-            fail("Invalid name for constructor should throw exception");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-
-    public void testSetNamePersists() {
-        node.setName("name");
-        assertEquals("name", node.getName());
-    }
-
-    public void testNameMayContainPeriods() {
-        node.setName("_.");
-        assertEquals("_.", node.getName());
-    }
-
-    public void testNameMayStartWithUnderscore() {
-        node.setName("_-");
-        assertEquals("_-", node.getName());
-    }
-
-    public void testNameMayNotStartWithDash() {
-        try {
-            node.setName("-_");
-            fail();
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-
-    public void testNameMayNotBeEmptyString() {
-        try {
-            node.setName("");
-            fail();
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-
-    public void testNameMayNotContainColons() {
-        try {
-            node.setName("a:b");
-            fail();
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-
-    public void testNameMayNotStartWithADigit() {
-        try {
-            node.setName("0name");
-            fail();
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-
     public void testCenterBaseBoundsOnPoint() {
         node.setBounds(100, 300, 100, 80);
         node.centerBoundsOnPoint(0, 0);
@@ -955,8 +881,7 @@ public class PNodeTest extends TestCase {
         try {
             node.getInverseTransform();
             fail("Exception not thrown");
-        }
-        catch (PAffineTransformException e) {
+        } catch (PAffineTransformException e) {
             // expected
         }
     }
