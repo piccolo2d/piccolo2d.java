@@ -26,7 +26,7 @@ public class HTMLExample extends PFrame {
     public void initialize() {
         html = new StringBuffer();
         html.append("<p style='margin-bottom: 10px;'>");
-        html.append("This is an example <a href='#testing'>of what can</a> be done with PHtml.");
+        html.append("This is an example <a href='#testing' title=\"<a href='FIXME!'\">of what can</a> be done with PHtml.");
         html.append("</p>");
         html.append("<p>It supports:</p>");
         appendFeatures();
