@@ -12,13 +12,14 @@ import edu.umd.cs.piccolo.nodes.PHtml;
 import edu.umd.cs.piccolox.PFrame;
 
 public class HTMLExample extends PFrame {
+    private static final long serialVersionUID = 1L;
     private StringBuffer html;
 
     public HTMLExample() {
         this(null);
     }
 
-    public HTMLExample(PCanvas aCanvas) {
+    public HTMLExample(final PCanvas aCanvas) {
         super("HTMLExample", false, aCanvas);
     }
 
@@ -33,17 +34,18 @@ public class HTMLExample extends PFrame {
         final PHtml htmlNode = new PHtml(html.toString());
         htmlNode.setBounds(0, 0, 400, 400);
         getCanvas().getLayer().addChild(htmlNode);
-        
+
         getCanvas().addInputEventListener(new PBasicInputEventHandler() {
-            public void mouseClicked(PInputEvent event) {
-                PNode clickedNode = event.getPickedNode();
-                if (!(clickedNode instanceof PHtml))
+            public void mouseClicked(final PInputEvent event) {
+                final PNode clickedNode = event.getPickedNode();
+                if (!(clickedNode instanceof PHtml)) {
                     return;
-                
-                Point2D clickPoint = event.getPositionRelativeTo(clickedNode);
-                PHtml htmlNode = (PHtml)clickedNode;
-                
-                String url = htmlNode.getClickedAddress(clickPoint);
+                }
+
+                final Point2D clickPoint = event.getPositionRelativeTo(clickedNode);
+                final PHtml htmlNode = (PHtml) clickedNode;
+
+                final String url = htmlNode.getClickedAddress(clickPoint);
                 JOptionPane.showMessageDialog(null, url);
             }
         });
@@ -55,7 +57,7 @@ public class HTMLExample extends PFrame {
         html.append("<li><font style='color:red; font-style: italic;'>Limited CSS 1.0</font></li>");
         html.append("<li>Tables:");
         appendTable();
-        html.append("</li>");        
+        html.append("</li>");
         html.append("</ul>");
     }
 
@@ -66,7 +68,7 @@ public class HTMLExample extends PFrame {
         html.append("</table>");
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new HTMLExample();
     }
 }
