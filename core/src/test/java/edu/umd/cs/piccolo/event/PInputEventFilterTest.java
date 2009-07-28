@@ -7,7 +7,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import junit.framework.TestCase;
-import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PInputManager;
 
 public class PInputEventFilterTest extends TestCase {
@@ -216,9 +215,8 @@ public class PInputEventFilterTest extends TestCase {
     private PInputEvent buildTestEvent(int modifiers, int clickCount) {
         JComponent component = new JPanel();
         PInputManager inputManager = new PInputManager();
-        PCamera camera = new PCamera();
 
         MouseEvent event = new MouseEvent(component, 1, System.currentTimeMillis(), modifiers, 1, 1, clickCount, false);
-        return new PInputEvent(inputManager, event, camera);
+        return new PInputEvent(inputManager, event);
     }
 }

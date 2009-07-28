@@ -5,7 +5,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
 import junit.framework.TestCase;
+import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PPickPath;
 
 public class PInputEventTest extends TestCase {
     private PCanvas canvas;
@@ -17,12 +20,10 @@ public class PInputEventTest extends TestCase {
         canvas.setPreferredSize(new Dimension(100, 100));
         canvas.setBounds(0, 0, 100, 100);
         swingEvent = buildSwingClick(5, 5);
-
-        mouseEvent = new PInputEvent(canvas.getRoot().getDefaultInputManager(), swingEvent, canvas.getCamera());        
-    }
-
-    public void testGetCameraUsesInputSourceIfPathIsNull() {
-        assertEquals(canvas.getCamera(), mouseEvent.getCamera());
+        PCamera camera = canvas.getCamera();
+        PPickPath pickPath = new PPickPath(camera, new PBounds(0, 0, 10, 10));
+        mouseEvent = new PInputEvent(canvas.getRoot().getDefaultInputManager(), swingEvent);
+        mouseEvent.setPath(pickPath);
     }
 
     public void testInputManagerShouldBeSameAsGivenToConstructor() {

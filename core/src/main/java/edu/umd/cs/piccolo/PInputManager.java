@@ -89,7 +89,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
      * Set the node that should receive key events.
      */
     public void setKeyboardFocus(PInputEventListener eventHandler) {
-        PInputEvent focusEvent = new PInputEvent(this, null, null);
+        PInputEvent focusEvent = new PInputEvent(this, null);
 
         if (keyboardFocus != null) {
             dispatchEventToListener(focusEvent, FocusEvent.FOCUS_LOST, keyboardFocus);
@@ -228,7 +228,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
         if (nextInput == null)
             return;
 
-        PInputEvent e = new PInputEvent(this, nextInput, nextInputSource);
+        PInputEvent e = new PInputEvent(this, nextInput);
 
         Point2D newCurrentCanvasPosition = null;
         Point2D newLastCanvasPosition = null;

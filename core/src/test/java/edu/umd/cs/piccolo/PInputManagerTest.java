@@ -78,14 +78,14 @@ public class PInputManagerTest extends TestCase {
 	
 	public void testKeyPressedDispatchesToCurrentFocus() {		
 		manager.setKeyboardFocus(mockListener);
-		PInputEvent event = new PInputEvent(manager, null, null);
+		PInputEvent event = new PInputEvent(manager, null);
 		manager.keyPressed(event);
 		assertEquals(2, mockListener.getNotificationCount());
 		assertEquals(KeyEvent.KEY_PRESSED, mockListener.getNotification(1).type);
 	}
 	public void testKeyReleasedDispatchesToCurrentFocus() {		
 		manager.setKeyboardFocus(mockListener);
-		PInputEvent event = new PInputEvent(manager, null, null);
+		PInputEvent event = new PInputEvent(manager, null);
 		manager.keyReleased(event);
 		assertEquals(2, mockListener.getNotificationCount());
 		assertEquals(KeyEvent.KEY_RELEASED, mockListener.getNotification(1).type);
@@ -93,7 +93,7 @@ public class PInputManagerTest extends TestCase {
 	
 	public void testKeyTypedDispatchesToCurrentFocus() {		
 		manager.setKeyboardFocus(mockListener);
-		PInputEvent event = new PInputEvent(manager, null, null);
+		PInputEvent event = new PInputEvent(manager, null);
 		manager.keyTyped(event);
 		assertEquals(2, mockListener.getNotificationCount());
 		assertEquals(KeyEvent.KEY_TYPED, mockListener.getNotification(1).type);

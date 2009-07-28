@@ -64,14 +64,12 @@ public class PInputEvent {
     private InputEvent inputEvent;
     private PPickPath pickPath;
     private PInputManager inputManager;
-    private PCamera inputSource;
     private boolean handled;
 
-    public PInputEvent(PInputManager inputManager, InputEvent event, PCamera inputSource) {
+    public PInputEvent(PInputManager inputManager, InputEvent event) {
         super();
         inputEvent = event;
         this.inputManager = inputManager;
-        this.inputSource = inputSource;
     }
 
     public void pushCursor(Cursor cursor) {
@@ -102,7 +100,7 @@ public class PInputEvent {
      * getTopCamera.
      */
     public PCamera getCamera() {
-        return (getPath() == null) ? inputSource : getPath().getBottomCamera();
+        return getPath().getBottomCamera();
     }
 
     /**
@@ -110,7 +108,7 @@ public class PInputEvent {
      * with the PCanvas that requested the current repaint.
      */
     public PCamera getTopCamera() {
-        return (getPath() == null) ? inputSource : getPath().getTopCamera();
+        return getPath().getTopCamera();
     }
 
     /**

@@ -53,7 +53,7 @@ public class PBasicInputEventListenerTest extends TestCase {
     private PInputEvent buildInputEvent() {
         PCanvas canvas = new PCanvas();
         MouseEvent mouseEvent = new MouseEvent(canvas, 1, System.currentTimeMillis(), 0, 0, 0, 1, false);
-        PInputEvent event = new PInputEvent(canvas.getRoot().getDefaultInputManager(), mouseEvent, canvas.getCamera());
+        PInputEvent event = new PInputEvent(canvas.getRoot().getDefaultInputManager(), mouseEvent);
         return event;
     }
 
