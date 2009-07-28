@@ -64,7 +64,7 @@ public class PHtml extends PNode {
     public static final String PROPERTY_HTML_COLOR = "html color";
     public static final int PROPERTY_CODE_HTML_COLOR = 1 << 22;
 
-    private JLabel htmlLabel;
+    private final JLabel htmlLabel;
     private View htmlView;
     private final Rectangle htmlBounds;
 
@@ -72,15 +72,15 @@ public class PHtml extends PNode {
         this(null, DEFAULT_FONT, DEFAULT_HTML_COLOR);
     }
 
-    public PHtml(String html) {
+    public PHtml(final String html) {
         this(html, DEFAULT_FONT, DEFAULT_HTML_COLOR);
     }
 
-    public PHtml(String html, Color htmlColor) {
+    public PHtml(final String html, final Color htmlColor) {
         this(html, DEFAULT_FONT, htmlColor);
     }
 
-    public PHtml(String html, Font font, Color htmlColor) {
+    public PHtml(final String html, final Font font, final Color htmlColor) {
         htmlLabel = new JLabel(html);
         htmlLabel.setFont(font);
         htmlLabel.setForeground(htmlColor);
@@ -100,18 +100,18 @@ public class PHtml extends PNode {
      * 
      * @param newHtml
      */
-    public void setHTML(String newHtml) {
+    public void setHTML(final String newHtml) {
         if (isNewHtml(newHtml)) {
-            String oldHtml = htmlLabel.getText();
+            final String oldHtml = htmlLabel.getText();
             htmlLabel.setText(newHtml);
             update();
             firePropertyChange(PROPERTY_CODE_HTML, PROPERTY_HTML, oldHtml, newHtml);
         }
     }
 
-    private boolean isNewHtml(String html) {
-        return (htmlLabel.getText() != null && html == null) || (htmlLabel.getText() == null && html != null)
-                || (!htmlLabel.getText().equals(html));
+    private boolean isNewHtml(final String html) {
+        return htmlLabel.getText() != null && html == null || htmlLabel.getText() == null && html != null
+                || !htmlLabel.getText().equals(html);
     }
 
     /**
@@ -126,8 +126,8 @@ public class PHtml extends PNode {
     /**
      * Set the font of this PHtml.
      */
-    public void setFont(Font newFont) {
-        Font oldFont = htmlLabel.getFont();
+    public void setFont(final Font newFont) {
+        final Font oldFont = htmlLabel.getFont();
         htmlLabel.setFont(newFont);
         update();
 
@@ -150,8 +150,8 @@ public class PHtml extends PNode {
      * 
      * @param newColor
      */
-    public void setHTMLColor(Color newColor) {
-        Color oldColor = htmlLabel.getForeground();
+    public void setHTMLColor(final Color newColor) {
+        final Color oldColor = htmlLabel.getForeground();
         htmlLabel.setForeground(newColor);
         repaint();
         firePropertyChange(PROPERTY_CODE_HTML_COLOR, PROPERTY_HTML_COLOR, oldColor, newColor);
@@ -161,23 +161,23 @@ public class PHtml extends PNode {
      * Applies all properties to the underlying JLabel, creates an htmlView and
      * updates bounds
      */
-    private void update() {     
+    private void update() {
         htmlLabel.setSize(htmlLabel.getPreferredSize());
         htmlView = BasicHTML.createHTMLView(htmlLabel, htmlLabel.getText() == null ? "" : htmlLabel.getText());
-        
-        Rectangle2D bounds = getBounds();
+
+        final Rectangle2D bounds = getBounds();
         htmlBounds.setRect(0, 0, bounds.getWidth(), bounds.getHeight());
         repaint();
     }
 
-    public boolean setBounds(double x, double y, double width, double height) {
-        boolean boundsChanged = super.setBounds(x, y, width, height);
+    public boolean setBounds(final double x, final double y, final double width, final double height) {
+        final boolean boundsChanged = super.setBounds(x, y, width, height);
         update();
         return boundsChanged;
     }
 
-    public boolean setBounds(Rectangle2D newBounds) {
-        boolean boundsChanged = super.setBounds(newBounds);
+    public boolean setBounds(final Rectangle2D newBounds) {
+        final boolean boundsChanged = super.setBounds(newBounds);
         update();
         return boundsChanged;
     }
@@ -188,11 +188,11 @@ public class PHtml extends PNode {
      * 
      * @param paintContext
      */
-    protected void paint(PPaintContext paintContext) {
+    protected void paint(final PPaintContext paintContext) {
         super.paint(paintContext);
 
         if (htmlLabel.getWidth() != 0 && htmlLabel.getHeight() != 0) {
-            Graphics2D g2 = paintContext.getGraphics();
+            final Graphics2D g2 = paintContext.getGraphics();
 
             htmlView.paint(g2, htmlBounds);
         }
@@ -205,29 +205,30 @@ public class PHtml extends PNode {
      * @return String containing value of href for clicked link, or null if no
      *         link clicked
      */
-    public String getClickedAddress(Point2D clickedPoint) {
+    public String getClickedAddress(final Point2D clickedPoint) {
         int position = pointToModelIndex(clickedPoint);
 
-        Matcher tagMatcher = tagPattern.matcher(htmlLabel.getText());
+        final Matcher tagMatcher = tagPattern.matcher(htmlLabel.getText());
 
         String address = null;
-        
+
         while (tagMatcher.find()) {
             if (position <= tagMatcher.start()) {
                 break;
             }
             position += tagMatcher.end() - tagMatcher.start();
 
-            String tag = tagMatcher.group().toLowerCase();
+            final String tag = tagMatcher.group().toLowerCase();
             if ("</a>".equals(tag)) {
                 address = null;
             }
             else {
-                Matcher linkMatcher = linkPattern.matcher(tag);
+                final Matcher linkMatcher = linkPattern.matcher(tag);
                 if (linkMatcher.find()) {
                     address = linkMatcher.group(2);
-                    if (address == null)
+                    if (address == null) {
                         address = linkMatcher.group(3);
+                    }
                 }
             }
         }
@@ -235,8 +236,8 @@ public class PHtml extends PNode {
         return address;
     }
 
-    private int pointToModelIndex(Point2D clickedPoint) {
-        Position.Bias[] biasReturn = new Position.Bias[1];
+    private int pointToModelIndex(final Point2D clickedPoint) {
+        final Position.Bias[] biasReturn = new Position.Bias[1];
         return htmlView.viewToModel((float) clickedPoint.getX(), (float) clickedPoint.getY(), getBounds(), biasReturn);
     }
 }
