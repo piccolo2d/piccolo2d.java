@@ -39,7 +39,7 @@ public class SvgSaxHandlerTest extends TestCase {
         final SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);
         spf.setValidating(true);
-        // spf.setXIncludeAware(false);
+        spf.setXIncludeAware(false);
 
         final SAXParser sp = spf.newSAXParser();
         sp
@@ -49,7 +49,7 @@ public class SvgSaxHandlerTest extends TestCase {
                                         "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns='http://www.w3.org/2000/svg'><circle class='circle-12' /></svg>")),
                         new DefaultHandler() {
                             public InputSource resolveEntity(final String publicId, final String systemId)
-                                    throws SAXException {
+                                    throws IOException, SAXException {
                                 if ("-//W3C//DTD SVG 1.1//EN".equals(publicId)
                                         && "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd".equals(systemId)) {
                                     // return new

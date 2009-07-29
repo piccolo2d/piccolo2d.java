@@ -36,6 +36,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -653,7 +654,7 @@ class SvgSaxHandler extends DefaultHandler {
         return style;
     }
 
-    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException {
+    public InputSource resolveEntity(final String publicId, final String systemId) throws IOException, SAXException {
         if ("-//W3C//DTD SVG 1.1//EN".equals(publicId)
                 && "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd".equals(systemId)) {
             // return new
