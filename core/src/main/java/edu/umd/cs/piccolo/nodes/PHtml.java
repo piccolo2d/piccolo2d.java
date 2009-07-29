@@ -61,12 +61,6 @@ public class PHtml extends PNode {
 
     private static final long serialVersionUID = 1L;
 
-    // FIXME: imagine <img alt="2>1" src="here comes the meat" />
-    private static final Pattern tagPattern = Pattern.compile("</?[^>]+>");
-    // FIXME: imagine <a href="where to go"
-    // title="this is not the href='gotcha!' " />
-    private static final Pattern linkPattern = Pattern.compile("<a .*href=(\\\"([^\\\"]*)\\\"|\\\'([^\\\"]*)\\\')");
-
     private static final Font DEFAULT_FONT = new JTextField().getFont();
     private static final Color DEFAULT_HTML_COLOR = Color.BLACK;
 
@@ -253,32 +247,103 @@ public class PHtml extends PNode {
     public String getClickedAddress(final Point2D clickedPoint) {
         int position = pointToModelIndex(clickedPoint);
 
-        final Matcher tagMatcher = tagPattern.matcher(htmlLabel.getText());
+        String html = htmlLabel.getText();
 
         String address = null;
 
-        while (tagMatcher.find()) {
-            if (position <= tagMatcher.start()) {
+        int currentPos = 0;
+        while (currentPos < html.length()) {
+            if (html.charAt(currentPos) != '<') {
+                currentPos++;
+            }
+            else if (position < currentPos) {
                 break;
             }
-            position += tagMatcher.end() - tagMatcher.start();
-
-            final String tag = tagMatcher.group().toLowerCase();
-            if ("</a>".equals(tag)) {
-                address = null;
-            }
             else {
-                final Matcher linkMatcher = linkPattern.matcher(tag);
-                if (linkMatcher.find()) {
-                    address = linkMatcher.group(2);
-                    if (address == null) {
-                        address = linkMatcher.group(3);
-                    }
+                int tagStart = currentPos;
+                int tagEnd = findTagEnd(html, currentPos);
+
+                currentPos = tagEnd + 1;
+
+                String tag = html.substring(tagStart, tagEnd);
+
+                position += tag.length();
+
+                if ("</a>".equals(tag)) {
+                    address = null;
+                }
+                else if (tag.startsWith("<a ")) {
+                    address = extractHref(tag);
                 }
             }
         }
 
         return address;
+    }
+
+    private String extractHref(String tag) {
+        int currentPos = 0;
+
+        String href = null;
+        int tagLength = tag.length();
+
+        while (currentPos < tag.length() - 1) {
+            currentPos++;
+            if (tag.charAt(currentPos) != '=') {
+                currentPos++;
+            }
+            else if (currentPos > 4 && " href".equals(tag.substring(currentPos - 5, currentPos))) {
+                currentPos++;
+                if (tag.charAt(currentPos) == '\"') {
+                    int startHref = currentPos + 1;
+                    if (currentPos < tagLength) {
+                        do {
+                            ++currentPos;
+                        } while (currentPos < tagLength && tag.charAt(currentPos) != '\"');
+                    }
+                    return tag.substring(startHref, currentPos);
+                }
+                else if (currentPos < tagLength && tag.charAt(currentPos) == '\'') {
+                    int startHref = currentPos + 1;
+                    if (currentPos < tagLength) {
+                        do {
+                            ++currentPos;
+                        } while (currentPos < tagLength && tag.charAt(currentPos) != '\'');
+                    }
+                    return tag.substring(startHref, currentPos);
+                }
+                else {
+                    int startHref = currentPos;
+
+                    if (currentPos < tagLength) {
+                        do {
+                            currentPos++;
+                        } while (currentPos < tagLength && tag.charAt(currentPos) != ' '
+                                && tag.charAt(currentPos) != '>');
+                    }
+                    return tag.substring(startHref, currentPos);
+                }
+            }
+        }
+        return href;
+    }
+
+    private int findTagEnd(String html, final int startPos) {
+        int currentPos = startPos;
+
+        while (html.charAt(currentPos) != '>') {
+            if (html.charAt(currentPos) == '\"') {
+                while (html.charAt(++currentPos) != '\"')
+                    ;
+            }
+            else if (html.charAt(currentPos) == '\'') {
+                while (html.charAt(++currentPos) != '\'')
+                    ;
+            }
+            currentPos++;
+        }
+
+        return currentPos + 1;
     }
 
     private int pointToModelIndex(final Point2D clickedPoint) {
