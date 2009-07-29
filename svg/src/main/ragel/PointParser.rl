@@ -103,7 +103,7 @@ class PointParser implements RagelParser {
 		if(data == null)
 			return gp;
 		// high-level buffers
-		final StringBuilder buf = new StringBuilder();
+		final StringBuffer buf = new StringBuffer();
 		final float[] argv = new float[2];
 		int argc = 0;
 		

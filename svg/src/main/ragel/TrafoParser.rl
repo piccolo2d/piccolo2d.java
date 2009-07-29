@@ -153,7 +153,7 @@ class TrafoParser implements RagelParser {
 			return t;
 		// high-level buffers
 		boolean two = false;
-		final StringBuilder buf = new StringBuilder();
+		final StringBuffer buf = new StringBuffer();
 		final double[] argv = new double[6];
 		int argc = 0;
 		

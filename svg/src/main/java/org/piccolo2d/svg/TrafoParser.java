@@ -1,3 +1,4 @@
+
 // line 1 "src/main/ragel/TrafoParser.rl"
 /*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
@@ -40,11 +41,12 @@ import org.piccolo2d.svg.util.RagelParser;
  * </p>
  */
 class TrafoParser implements RagelParser {
+
 // line 141 "src/main/ragel/TrafoParser.rl"
 
 
 
-// line 48 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
+// line 50 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
 private static byte[] init__trafo_actions_0()
 {
 	return new byte [] {
@@ -395,6 +397,7 @@ static final int trafo_error = 0;
 
 static final int trafo_en_main = 168;
 
+
 // line 144 "src/main/ragel/TrafoParser.rl"
 
 	final AffineTransform parse(final CharSequence data, final AffineTransform t) throws ParseException {
@@ -408,7 +411,7 @@ static final int trafo_en_main = 168;
 			return t;
 		// high-level buffers
 		boolean two = false;
-		final StringBuilder buf = new StringBuilder();
+		final StringBuffer buf = new StringBuffer();
 		final double[] argv = new double[6];
 		int argc = 0;
 		
@@ -419,13 +422,14 @@ static final int trafo_en_main = 168;
 		int top;
 
 		
-// line 423 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
+// line 426 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
 	{
 	cs = trafo_start;
 	}
+
 // line 167 "src/main/ragel/TrafoParser.rl"
 		
-// line 429 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
+// line 433 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -577,7 +581,7 @@ case 1:
 		t.preConcatenate(new AffineTransform(argv));
 	}
 	break;
-// line 581 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
+// line 585 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
 			}
 		}
 	}
@@ -644,7 +648,7 @@ case 4:
 		t.preConcatenate(new AffineTransform(argv));
 	}
 	break;
-// line 648 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
+// line 652 "src/main/java/org/piccolo2d/svg/TrafoParser.java"
 		}
 	}
 	}
@@ -653,6 +657,7 @@ case 5:
 	}
 	break; }
 	}
+
 // line 168 "src/main/ragel/TrafoParser.rl"
 
 		if ( cs < trafo_first_final )

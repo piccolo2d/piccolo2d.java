@@ -64,7 +64,7 @@ public class SvgLoader {
         final SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);
         spf.setValidating(false);
-        spf.setXIncludeAware(false);
+        // spf.setXIncludeAware(false);
         try {
             // final SchemaFactory sf =
             // SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");

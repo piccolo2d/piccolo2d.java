@@ -121,7 +121,7 @@ class CSSStyleDeclaration implements Map, Style {
     }
 
     public CharSequence getCssText() {
-        final StringBuilder s = new StringBuilder();
+        final StringBuffer s = new StringBuffer();
         s.append("{");
         final Iterator it = properties.entrySet().iterator();
         if (it.hasNext()) {

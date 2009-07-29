@@ -1,3 +1,4 @@
+
 // line 1 "src/main/ragel/PathParser.rl"
 /*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
@@ -41,11 +42,12 @@ import org.piccolo2d.svg.util.RagelParser;
  * See also https://lib2geom.svn.sourceforge.net/svnroot/lib2geom/lib2geom/trunk/src/2geom/svg-path-parser.rl
  */
 class PathParser implements RagelParser {
+
 // line 267 "src/main/ragel/PathParser.rl"
 
 
 
-// line 49 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 51 "src/main/java/org/piccolo2d/svg/PathParser.java"
 private static byte[] init__path_actions_0()
 {
 	return new byte [] {
@@ -802,6 +804,7 @@ static final int path_error = 0;
 
 static final int path_en_main = 232;
 
+
 // line 270 "src/main/ragel/PathParser.rl"
 
 	final GeneralPath parse(final CharSequence data) throws ParseException {
@@ -832,13 +835,14 @@ static final int path_en_main = 232;
 		int top;
 
 		
-// line 836 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 839 "src/main/java/org/piccolo2d/svg/PathParser.java"
 	{
 	cs = path_start;
 	}
+
 // line 299 "src/main/ragel/PathParser.rl"
 		
-// line 842 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 846 "src/main/java/org/piccolo2d/svg/PathParser.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -1027,7 +1031,7 @@ case 1:
 		pb.closePath();		
 	}
 	break;
-// line 1031 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 1035 "src/main/java/org/piccolo2d/svg/PathParser.java"
 			}
 		}
 	}
@@ -1125,7 +1129,7 @@ case 4:
 		pb.closePath();		
 	}
 	break;
-// line 1129 "src/main/java/org/piccolo2d/svg/PathParser.java"
+// line 1133 "src/main/java/org/piccolo2d/svg/PathParser.java"
 		}
 	}
 	}
@@ -1134,6 +1138,7 @@ case 5:
 	}
 	break; }
 	}
+
 // line 300 "src/main/ragel/PathParser.rl"
 
 		if ( cs < path_first_final )

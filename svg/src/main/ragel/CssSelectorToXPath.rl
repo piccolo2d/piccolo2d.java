@@ -140,7 +140,7 @@ class CssSelectorToXPath implements RagelParser {
     final CharSequence parse(final char[] data) throws ParseException {
 		// high-level buffers
         final List classes = new LinkedList();
-        final StringBuilder xpath = new StringBuilder();
+        final StringBuffer xpath = new StringBuffer();
         char combinator = ' ';
 		int start = -1;
 		

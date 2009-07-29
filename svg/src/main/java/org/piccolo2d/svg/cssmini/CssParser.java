@@ -1,3 +1,4 @@
+
 // line 1 "src/main/ragel/CssParser.rl"
 /*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
@@ -46,11 +47,12 @@ import org.piccolo2d.svg.util.RagelParser;
  * </ul>
  */
 class CssParser implements RagelParser {
+
 // line 162 "src/main/ragel/CssParser.rl"
 
 
 
-// line 54 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
+// line 56 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
 private static byte[] init__css_actions_0()
 {
 	return new byte [] {
@@ -322,6 +324,7 @@ static final int css_error = 0;
 
 static final int css_en_main = 86;
 
+
 // line 165 "src/main/ragel/CssParser.rl"
 
     // Collection<CSSStyleRule>
@@ -349,13 +352,14 @@ static final int css_en_main = 86;
 		int cs, p = 0;
 
 		
-// line 353 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
+// line 356 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
 	{
 	cs = css_start;
 	}
+
 // line 191 "src/main/ragel/CssParser.rl"
 		
-// line 359 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
+// line 363 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -542,7 +546,7 @@ case 1:
 		sel.clear();
 	}
 	break;
-// line 546 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
+// line 550 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
 			}
 		}
 	}
@@ -578,7 +582,7 @@ case 4:
 // line 161 "src/main/ragel/CssParser.rl"
 	{if(debug) System.out.println("---");}
 	break;
-// line 582 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
+// line 586 "src/main/java/org/piccolo2d/svg/cssmini/CssParser.java"
 		}
 	}
 	}
@@ -587,6 +591,7 @@ case 5:
 	}
 	break; }
 	}
+
 // line 192 "src/main/ragel/CssParser.rl"
 
 		if ( cs < css_first_final )

@@ -507,7 +507,7 @@ class SvgSaxHandler extends DefaultHandler {
     private static CharSequence appendXPath(final CharSequence parent, final CharSequence localName,
             final CharSequence classes) {
         // get the current xpath incl. @class attribute
-        final StringBuilder txt = new StringBuilder(parent);
+        final StringBuffer txt = new StringBuffer(parent.toString());
         // append the element name
         txt.append('/');
         txt.append(localName);
@@ -569,7 +569,7 @@ class SvgSaxHandler extends DefaultHandler {
     // <CssManager.Style>
     private final Stack inherited = new Stack();
     private PNode root = null;
-    private final StringBuilder txt = new StringBuilder();
+    private final StringBuffer txt = new StringBuffer();
 
     // <String>
     private final Stack xpath = new Stack();
@@ -654,7 +654,7 @@ class SvgSaxHandler extends DefaultHandler {
         return style;
     }
 
-    public InputSource resolveEntity(final String publicId, final String systemId) throws IOException, SAXException {
+    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException {
         if ("-//W3C//DTD SVG 1.1//EN".equals(publicId)
                 && "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd".equals(systemId)) {
             // return new

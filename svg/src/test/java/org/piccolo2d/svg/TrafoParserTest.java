@@ -38,7 +38,7 @@ public class TrafoParserTest extends TestCase {
         final String s = e.getMessage();
         final int off = e.getErrorOffset();
 
-        final StringBuilder b = new StringBuilder(s.length() * 2 + 2);
+        final StringBuffer b = new StringBuffer(s.length() * 2 + 2);
         b.append(s).append("\n");
         for (int i = 0; i < s.length(); i++) {
             if (i == off) {

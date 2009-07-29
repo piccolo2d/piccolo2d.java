@@ -1,3 +1,4 @@
+
 // line 1 "src/main/ragel/PointParser.rl"
 /*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
@@ -40,11 +41,12 @@ import org.piccolo2d.svg.util.RagelParser;
  * </p>
  */
 class PointParser implements RagelParser {
+
 // line 93 "src/main/ragel/PointParser.rl"
 
 
 
-// line 48 "src/main/java/org/piccolo2d/svg/PointParser.java"
+// line 50 "src/main/java/org/piccolo2d/svg/PointParser.java"
 private static byte[] init__points_actions_0()
 {
 	return new byte [] {
@@ -198,6 +200,7 @@ static final int points_error = 0;
 
 static final int points_en_main = 28;
 
+
 // line 96 "src/main/ragel/PointParser.rl"
 
 	final GeneralPath parse(final CharSequence data) throws ParseException {
@@ -209,7 +212,7 @@ static final int points_en_main = 28;
 		if(data == null)
 			return gp;
 		// high-level buffers
-		final StringBuilder buf = new StringBuilder();
+		final StringBuffer buf = new StringBuffer();
 		final float[] argv = new float[2];
 		int argc = 0;
 		
@@ -220,13 +223,14 @@ static final int points_en_main = 28;
 		int top;
 
 		
-// line 224 "src/main/java/org/piccolo2d/svg/PointParser.java"
+// line 227 "src/main/java/org/piccolo2d/svg/PointParser.java"
 	{
 	cs = points_start;
 	}
+
 // line 117 "src/main/ragel/PointParser.rl"
 		
-// line 230 "src/main/java/org/piccolo2d/svg/PointParser.java"
+// line 234 "src/main/java/org/piccolo2d/svg/PointParser.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -339,7 +343,7 @@ case 1:
 		argc = 0;
 	}
 	break;
-// line 343 "src/main/java/org/piccolo2d/svg/PointParser.java"
+// line 347 "src/main/java/org/piccolo2d/svg/PointParser.java"
 			}
 		}
 	}
@@ -381,7 +385,7 @@ case 4:
 		argc = 0;
 	}
 	break;
-// line 385 "src/main/java/org/piccolo2d/svg/PointParser.java"
+// line 389 "src/main/java/org/piccolo2d/svg/PointParser.java"
 		}
 	}
 	}
@@ -390,6 +394,7 @@ case 5:
 	}
 	break; }
 	}
+
 // line 118 "src/main/ragel/PointParser.rl"
 
 		if ( cs < points_first_final )

@@ -63,7 +63,7 @@ public class BatikSvgNode extends PNode {
         if (dst == null) {
             return;
         }
-        final StringBuilder indent = new StringBuilder();
+        final StringBuffer indent = new StringBuffer();
         for (int i = 0; i < nesting; i++) {
             indent.append("\t");
         }

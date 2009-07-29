@@ -21,6 +21,7 @@ ragel $opts -p -V -o $target/$file.dot $src/$file.rl
 #dot -o $target/$file.png -Tpng $target/$file.dot
 dot -o $target/$file.svg -Tsvg $target/$file.dot
 ragel $opts -s -J -o $target_java/$file.java $src/$file.rl
+echo created `pwd`/$target_java/$file.java
 
 file=TrafoParser
 opts="-e"
@@ -28,6 +29,7 @@ ragel $opts -p -V -o $target/$file.dot $src/$file.rl
 #dot -o $target/$file.png -Tpng $target/$file.dot
 dot -o $target/$file.svg -Tsvg $target/$file.dot
 ragel $opts -s -J -o $target_java/$file.java $src/$file.rl
+echo created `pwd`/$target_java/$file.java
 
 file=PathParser
 opts="-e"
@@ -35,6 +37,7 @@ ragel $opts -p -V -o $target/$file.dot $src/$file.rl
 #dot -o $target/$file.png -Tpng $target/$file.dot
 #dot -o $target/$file.svg -Tsvg $target/$file.dot
 ragel $opts -s -J -o $target_java/$file.java $src/$file.rl
+echo created `pwd`/$target_java/$file.java
 
 file=CssParser
 opts="-e"
@@ -42,6 +45,7 @@ opts="-e"
 #dot -o $target/$file.png -Tpng $target/$file.dot
 #dot -o $target/$file.svg -Tsvg $target/$file.dot
 ragel $opts -s -J -o $target_java/cssmini/$file.java $src/$file.rl
+echo created `pwd`/$target_java/$file.java
 
 file=CssSelectorToXPath
 opts="-e"
@@ -49,5 +53,6 @@ ragel $opts -p -V -o $target/$file.dot $src/$file.rl
 #dot -o $target/$file.png -Tpng $target/$file.dot
 dot -o $target/$file.svg -Tsvg $target/$file.dot
 ragel $opts -s -J -o $target_java/cssmini/$file.java $src/$file.rl
+echo created `pwd`/$target_java/$file.java
 
 cd $cwd

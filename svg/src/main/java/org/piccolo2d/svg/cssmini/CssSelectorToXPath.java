@@ -1,3 +1,4 @@
+
 // line 1 "src/main/ragel/CssSelectorToXPath.rl"
 /*
  * Copyright (c) 2008, Piccolo2D project, http://piccolo2d.org
@@ -47,11 +48,12 @@ import org.piccolo2d.svg.util.RagelParser;
  * </ul>
  */
 class CssSelectorToXPath implements RagelParser {
+
 // line 132 "src/main/ragel/CssSelectorToXPath.rl"
 
 
 
-// line 55 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
+// line 57 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
 private static byte[] init__selector_actions_0()
 {
 	return new byte [] {
@@ -175,6 +177,7 @@ static final int selector_error = 0;
 
 static final int selector_en_main = 1;
 
+
 // line 135 "src/main/ragel/CssSelectorToXPath.rl"
 
     final CharSequence parse(final CharSequence data) throws ParseException {
@@ -184,7 +187,7 @@ static final int selector_en_main = 1;
     final CharSequence parse(final char[] data) throws ParseException {
 		// high-level buffers
         final List classes = new LinkedList();
-        final StringBuilder xpath = new StringBuilder();
+        final StringBuffer xpath = new StringBuffer();
         char combinator = ' ';
 		int start = -1;
 		
@@ -196,13 +199,14 @@ static final int selector_en_main = 1;
 		int cs, p = 0;
 
 		
-// line 200 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
+// line 203 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
 	{
 	cs = selector_start;
 	}
+
 // line 155 "src/main/ragel/CssSelectorToXPath.rl"
 		
-// line 206 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
+// line 210 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -356,7 +360,7 @@ case 1:
 		combinator = ' ';
 	}
 	break;
-// line 360 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
+// line 364 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
 			}
 		}
 	}
@@ -420,7 +424,7 @@ case 4:
 // line 131 "src/main/ragel/CssSelectorToXPath.rl"
 	{if(debug) System.out.println("---");}
 	break;
-// line 424 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
+// line 428 "src/main/java/org/piccolo2d/svg/cssmini/CssSelectorToXPath.java"
 		}
 	}
 	}
@@ -429,6 +433,7 @@ case 5:
 	}
 	break; }
 	}
+
 // line 156 "src/main/ragel/CssSelectorToXPath.rl"
 
 		if (cs < selector_first_final)

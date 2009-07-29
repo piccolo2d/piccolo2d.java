@@ -57,9 +57,9 @@ class CSSSelectorBuilderXPath implements Builder {
     private static final CssSelectorToXPath sel2xpath = new CssSelectorToXPath();
     private final List classes = new ArrayList();
     private final Collection selector = new ArrayList();
-    private final StringBuilder selectorPattern = new StringBuilder();
-    private final StringBuilder xpath = new StringBuilder();
-    private final StringBuilder xpathPattern = new StringBuilder();
+    private final StringBuffer selectorPattern = new StringBuffer();
+    private final StringBuffer xpath = new StringBuffer();
+    private final StringBuffer xpathPattern = new StringBuffer();
 
     CSSSelectorBuilderXPath() {
         reset();
@@ -122,7 +122,7 @@ class CSSSelectorBuilderXPath implements Builder {
 
     public CSSSelector finish() {
         try {
-            final StringBuilder sB = new StringBuilder();
+            final StringBuffer sB = new StringBuffer();
             {
                 final Iterator it = selector.iterator();
                 if (it.hasNext()) {
