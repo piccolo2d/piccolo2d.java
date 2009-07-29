@@ -37,9 +37,7 @@ import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.DocumentLoader;
 import org.apache.batik.bridge.GVTBuilder;
 import org.apache.batik.bridge.UserAgentAdapter;
-import org.apache.batik.dom.GenericAttr;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.dom.svg.SVGOMRectElement;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.NamedNodeMap;
@@ -77,8 +75,9 @@ public class BatikSvgNode extends PNode {
         final NodeList children = parent.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             final Node c = children.item(i);
-            if (c instanceof SVGElement)
+            if (c instanceof SVGElement) {
                 printTree((SVGElement) c, nesting + 1, dst);
+            }
         }
     }
 

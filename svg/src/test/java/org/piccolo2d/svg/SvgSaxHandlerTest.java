@@ -53,7 +53,7 @@ public class SvgSaxHandlerTest extends TestCase {
                                 if ("-//W3C//DTD SVG 1.1//EN".equals(publicId)
                                         && "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd".equals(systemId)) {
                                     // return new
-                                    //InputSource(getClass().getResourceAsStream
+                                    // InputSource(getClass().getResourceAsStream
                                     // ("/svg11-flat-20030114.dtd"));
                                     return new InputSource(new StringReader(""));
                                 }

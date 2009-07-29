@@ -36,7 +36,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Arrays;

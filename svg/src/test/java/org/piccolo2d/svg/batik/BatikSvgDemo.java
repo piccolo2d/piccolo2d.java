@@ -57,8 +57,9 @@ public class BatikSvgDemo {
         }
         final PNode world;
         final long start = System.currentTimeMillis();
-        if (true)
+        if (true) {
             world = new BatikSvgNode(BatikSvgDemo.class.getResourceAsStream("/w3c-svg/Use04-GeneratedContent.svg"));
+        }
         System.out.println(System.currentTimeMillis() - start);
 
         zui.getLayer().addChild(world);
