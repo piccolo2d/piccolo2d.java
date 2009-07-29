@@ -1,1 +1,12 @@
+# eclipse settings (maybe git them?):
+.classpath
+.project
+.settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.jdt.ui.prefs
+.settings/org.maven.ide.eclipse.prefs
+
+# maven built:
 target/
+
+# strange - where comes this from?
+core/C:\\test.jpg
