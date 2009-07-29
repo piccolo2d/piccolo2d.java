@@ -25,6 +25,7 @@
       <item name="Extras" href="../piccolo2d-extras/index.html"/>
       <item name="SWT" href="../piccolo2d-swt/index.html"/>
       <item name="Examples" href="../piccolo2d-examples/index.html"/>
+      <item name="SVG" href="../piccolo2d-svg/index.html"/>
     </menu>
     <menu ref="reports" />
   </body>
