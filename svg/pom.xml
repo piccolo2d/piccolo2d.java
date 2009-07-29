@@ -89,12 +89,12 @@
   </dependencies>
   <scm>
 	<connection>
-		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/svg
+		scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/svg2009
 	</connection>
 	<developerConnection>
-		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/svg
+		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/svg2009
 	</developerConnection>
-	<url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/branches/svg</url>
+	<url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/branches/svg2009</url>
   </scm>
   <reporting>
     <plugins>
