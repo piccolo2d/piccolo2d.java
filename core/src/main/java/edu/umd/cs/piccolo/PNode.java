@@ -2722,7 +2722,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return true if this node or one of its descendents was picked.
      */
     public boolean fullPick(final PPickPath pickPath) {
-        if ((getPickable() || getChildrenPickable()) && fullIntersects(pickPath.getPickBounds())) {
+        if (getVisible() && (getPickable() || getChildrenPickable()) && fullIntersects(pickPath.getPickBounds())) {
             pickPath.pushNode(this);
             pickPath.pushTransform(transform);
 

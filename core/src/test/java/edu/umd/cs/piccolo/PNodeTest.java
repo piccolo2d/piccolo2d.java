@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolo;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
@@ -52,6 +53,7 @@ import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.activities.PColorActivity.Target;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
+import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PAffineTransformException;
 import edu.umd.cs.piccolo.util.PBounds;
@@ -1289,5 +1291,26 @@ public class PNodeTest extends TestCase {
     public void testSetOccludedPersistes() {
         node.setOccluded(true);
         assertTrue(node.getOccluded());
+    }
+    
+    public void testHiddenNodesAreNotPickable() {
+        PCanvas canvas = new PCanvas();        
+        canvas.setBounds(0, 0, 400, 400);
+        canvas.setPreferredSize(new Dimension(400, 400));        
+        PNode node1 = new PNode();
+        node1.setBounds(0, 0, 100, 100);
+        node1.setPaint(Color.RED);
+        canvas.getLayer().addChild(node1);        
+        
+        PNode node2 = (PNode) node1.clone();
+        node2.setPaint(Color.BLUE);
+        
+        PLayer layer2 = new PLayer();        
+        layer2.addChild(node2);
+        layer2.setVisible(false);
+        canvas.getCamera().addLayer(layer2);
+        
+        PPickPath path = canvas.getCamera().pick(5, 5, 5);
+        assertSame(node1, path.getPickedNode());             
     }
 }
