@@ -33,8 +33,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -49,9 +47,6 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * PHtml is a Piccolo node for rendering HTML text. It uses a JLabel under the
  * hood so you have the same restrictions regarding html as you have when using
  * standard Swing components (HTML 3.2 + subset of CSS 1.0).
- * 
- * FIXME: so it's not necessary well-formed? Atts like <a href=unquoted /> are
- * ok?
  * 
  * @author Chris Malley (cmal...@pixelzoom.com)
  * @author Sam Reid
@@ -68,29 +63,24 @@ public class PHtml extends PNode {
      * The property name that identifies a change of this node's font (see
      * {@link #getFont getFont}). Both old and new value will be set in any
      * property change event.
-     * 
-     * FIXME what's that?
      */
-    public static final String PROPERTY_FONT = "font";
-    // FIXME what's that?
+    public static final String PROPERTY_FONT = "font";    // 
     public static final int PROPERTY_CODE_FONT = 1 << 20;
 
     /**
      * The property name that identifies a change of this node's html (see
      * {@link #getHTML getHTML}). Both old and new value will be set in any
-     * property change event. FIXME what's that?
+     * property change event. 
      */
     public static final String PROPERTY_HTML = "html";
-    // FIXME what's that?
     public static final int PROPERTY_CODE_HTML = 1 << 21;
 
     /**
      * The property name that identifies a change of this node's html color (see
      * {@link #getHtml getHTMLColor}). Both old and new value will be set in any
-     * property change event. FIXME what's that?
+     * property change event. 
      */
     public static final String PROPERTY_HTML_COLOR = "html color";
-    // FIXME what's that?
     public static final int PROPERTY_CODE_HTML_COLOR = 1 << 22;
 
     private final JLabel htmlLabel;
@@ -118,22 +108,18 @@ public class PHtml extends PNode {
     }
 
     /**
-     * FIXME better name innerHtml as w3c does?
-     * 
      * @return HTML being rendered by this node
      */
-    public String getHTML() {
+    public String getHtml() {
         return htmlLabel.getText();
     }
 
     /**
      * Changes the HTML being rendered by this node
      * 
-     * FIXME better name innerHtml as w3c does?
-     * 
      * @param newHtml
      */
-    public void setHTML(final String newHtml) {
+    public void setHtml(final String newHtml) {
         if (isNewHtml(newHtml)) {
             final String oldHtml = htmlLabel.getText();
             htmlLabel.setText(newHtml);
@@ -143,9 +129,13 @@ public class PHtml extends PNode {
     }
 
     private boolean isNewHtml(final String html) {
-        // FIXME NPE if both are null - can this happen?
-        return htmlLabel.getText() != null && html == null || htmlLabel.getText() == null && html != null
-                || !htmlLabel.getText().equals(html);
+        if (html == null && getHtml() == null) {
+            return false;
+        } else if (html == null || getHtml() == null) {
+            return true;
+        } else {
+            return !htmlLabel.getText().equals(html);
+        }
     }
 
     /**
@@ -172,11 +162,9 @@ public class PHtml extends PNode {
      * Gets the color used to render the HTML. If you want to get the paint used
      * for the node, use getPaint.
      * 
-     * FIXME be more consistent - either always HTML or Html but don't mix.
-     * 
      * @return the color used to render the HTML.
      */
-    public Color getHTMLColor() {
+    public Color getHtmlColor() {
         return htmlLabel.getForeground();
     }
 
@@ -186,7 +174,7 @@ public class PHtml extends PNode {
      * 
      * @param newColor
      */
-    public void setHTMLColor(final Color newColor) {
+    public void setHtmlColor(final Color newColor) {
         final Color oldColor = htmlLabel.getForeground();
         htmlLabel.setForeground(newColor);
         repaint();
@@ -233,121 +221,159 @@ public class PHtml extends PNode {
             htmlView.paint(g2, htmlBounds);
         }
     }
-
+    
     /**
-     * Returns the address specified in the link under the given point.
-     * 
-     * FIXME this method looks shaky - can you refactor to get it into a test
-     * harness?
+     * Returns the address specified in the link under the given point.     
      * 
      * @param clickedPoint
      * @return String containing value of href for clicked link, or null if no
      *         link clicked
      */
-    public String getClickedAddress(final Point2D clickedPoint) {
-        int position = pointToModelIndex(clickedPoint);
+    public String getClickedAddress(Point2D.Double clickedPoint) {
+        return getClickedAddress(clickedPoint.getX(), clickedPoint.getY());
+    }
 
-        String html = htmlLabel.getText();
+    /**
+     * Returns the address specified in the link under the given point.     
+     * 
+     * @param clickedPoint
+     * @return String containing value of href for clicked link, or null if no
+     *         link clicked
+     */
+    public String getClickedAddress(final double x, final double y) {
+        int position = pointToModelIndex(x, y);
+
+        final String html = htmlLabel.getText();
 
         String address = null;
 
         int currentPos = 0;
         while (currentPos < html.length()) {
-            if (html.charAt(currentPos) != '<') {
-                currentPos++;
-            }
-            else if (position < currentPos) {
+            currentPos = html.indexOf('<', currentPos);
+            if (currentPos == -1 || position < currentPos) {
                 break;
             }
-            else {
-                int tagStart = currentPos;
-                int tagEnd = findTagEnd(html, currentPos);
 
-                currentPos = tagEnd + 1;
+            final int tagStart = currentPos;
+            final int tagEnd = findTagEnd(html, currentPos);
 
-                String tag = html.substring(tagStart, tagEnd);
+            if (tagEnd == -1) {
+                return null;
+            }
 
-                position += tag.length();
+            currentPos = tagEnd + 1;
 
-                if ("</a>".equals(tag)) {
-                    address = null;
-                }
-                else if (tag.startsWith("<a ")) {
-                    address = extractHref(tag);
-                }
+            final String tag = html.substring(tagStart, currentPos);
+
+            position += tag.length();
+
+            if ("</a>".equals(tag)) {
+                address = null;
+            }
+            else if (tag.startsWith("<a ")) {
+                address = extractHref(tag);
             }
         }
 
         return address;
     }
 
-    private String extractHref(String tag) {
+    private int pointToModelIndex(final double x, final double y) {
+        final Position.Bias[] biasReturn = new Position.Bias[1];
+        return htmlView.viewToModel((float) x, (float) y, getBounds(), biasReturn);
+    }
+
+    /**
+     * Starting from the startPos, it finds the position at which the given tag
+     * ends.
+     * 
+     * Returns -1 if the end of the string was encountered before the end of the
+     * tag was encountered.
+     * 
+     * @param html
+     * @param startPos
+     * @return
+     */
+    private int findTagEnd(final String html, final int startPos) {
+        int currentPos = startPos;
+
+        currentPos++;
+
+        while (currentPos > 0 && currentPos < html.length() && html.charAt(currentPos) != '>') {
+            if (html.charAt(currentPos) == '\"') {
+                currentPos = html.indexOf('\"', currentPos + 1);
+            }
+            else if (html.charAt(currentPos) == '\'') {
+                currentPos = html.indexOf('\'', currentPos + 1);
+            }
+            currentPos++;
+        }
+
+        return currentPos == 0 || currentPos >= html.length() ? -1 : currentPos + 1;
+    }
+
+    /**
+     * Given a tag, extracts the value of the href attribute, returns null if
+     * none was found
+     * 
+     * @param tag
+     * @return
+     */
+    private String extractHref(final String tag) {
         int currentPos = 0;
 
-        String href = null;
-        int tagLength = tag.length();
+        final String href = null;
 
-        while (currentPos < tag.length() - 1) {
-            currentPos++;
-            if (tag.charAt(currentPos) != '=') {
-                currentPos++;
-            }
-            else if (currentPos > 4 && " href".equals(tag.substring(currentPos - 5, currentPos))) {
-                currentPos++;
-                if (tag.charAt(currentPos) == '\"') {
-                    int startHref = currentPos + 1;
-                    if (currentPos < tagLength) {
-                        do {
-                            ++currentPos;
-                        } while (currentPos < tagLength && tag.charAt(currentPos) != '\"');
-                    }
-                    return tag.substring(startHref, currentPos);
-                }
-                else if (currentPos < tagLength && tag.charAt(currentPos) == '\'') {
-                    int startHref = currentPos + 1;
-                    if (currentPos < tagLength) {
-                        do {
-                            ++currentPos;
-                        } while (currentPos < tagLength && tag.charAt(currentPos) != '\'');
-                    }
-                    return tag.substring(startHref, currentPos);
-                }
-                else {
-                    int startHref = currentPos;
-
-                    if (currentPos < tagLength) {
-                        do {
-                            currentPos++;
-                        } while (currentPos < tagLength && tag.charAt(currentPos) != ' '
-                                && tag.charAt(currentPos) != '>');
-                    }
-                    return tag.substring(startHref, currentPos);
-                }
+        while (currentPos >= 0 && currentPos < tag.length() - 1) {
+            currentPos = tag.indexOf('=', currentPos + 1);
+            if (currentPos != -1 && isHrefAttributeAssignment(tag, currentPos)) {
+                return extractHrefValue(tag, currentPos + 1);
             }
         }
         return href;
     }
 
-    private int findTagEnd(String html, final int startPos) {
+    /**
+     * Starting at the character after the equal sign of an href=...,
+     * it extract the value.  Handles single, double, and no quotes.
+     * 
+     * @param tag
+     * @param startPos
+     * @return value of href or null if not found.
+     */
+    private String extractHrefValue(final String tag, final int startPos) {
         int currentPos = startPos;
 
-        while (html.charAt(currentPos) != '>') {
-            if (html.charAt(currentPos) == '\"') {
-                while (html.charAt(++currentPos) != '\"')
-                    ;
-            }
-            else if (html.charAt(currentPos) == '\'') {
-                while (html.charAt(++currentPos) != '\'')
-                    ;
-            }
-            currentPos++;
+        if (tag.charAt(currentPos) == '\"') {
+            final int startHref = currentPos + 1;
+            currentPos = tag.indexOf('\"', startHref);
+            return currentPos == -1 ? null : tag.substring(startHref, currentPos);
         }
+        else if (currentPos < tag.length() && tag.charAt(currentPos) == '\'') {
+            final int startHref = currentPos + 1;
+            currentPos = tag.indexOf('\'', startHref);
+            return currentPos == -1 ? null : tag.substring(startHref, currentPos);
+        }
+        else {
+            final int startHref = currentPos;
 
-        return currentPos + 1;
+            if (currentPos < tag.length()) {
+                do {
+                    currentPos++;
+                } while (currentPos < tag.length() && tag.charAt(currentPos) != ' ' && tag.charAt(currentPos) != '>');
+            }
+            return tag.substring(startHref, currentPos);
+        }
     }
 
-    private int pointToModelIndex(final Point2D clickedPoint) {
-        final Position.Bias[] biasReturn = new Position.Bias[1];
-        return htmlView.viewToModel((float) clickedPoint.getX(), (float) clickedPoint.getY(), getBounds(), biasReturn);
+    /**
+     * Given the position in a string returns whether it points to the equal sign of an href attribute
+     * 
+     * @param tag
+     * @param equalPos
+     * @return
+     */
+    private boolean isHrefAttributeAssignment(final String tag, final int equalPos) {
+        return tag.charAt(equalPos) == '=' && equalPos > 4 && " href".equals(tag.substring(equalPos - 5, equalPos));
     }
 }
