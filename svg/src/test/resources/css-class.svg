@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14ft" height="31ft" viewBox="-7 -22 14 31" version="1.1">
+  <!--
+ jcurl curling simulation framework http://www.jcurl.org Copyright (C)
+ 2005-2008 M. Rohrmoser
+ 
+ This program is free software; you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free Software
+ Foundation; either version 2 of the License, or (at your option) any later
+ version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ details.
+ 
+ You should have received a copy of the GNU General Public License along with
+ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ Place, Suite 330, Boston, MA 02111-1307 USA
+-->
+  <desc>Sheet of curling ice with one rock of each color - http://www.jcurl.org</desc>
+  <defs>
+    <style type="text/css">
+      .circle-12 { fill: #ff3131; stroke: none }
+    </style>
+  </defs>
+  <circle class="circle-12" r="6"/>
+</svg>

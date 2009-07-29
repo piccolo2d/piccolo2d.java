@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="14ft"
+   height="31ft"
+   viewBox="-7 -22 14 31"
+   version="1.1"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="ice-inkscape.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata177">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="719"
+     inkscape:window-width="641"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="0.014755078"
+     inkscape:cx="7560"
+     inkscape:cy="16740"
+     inkscape:window-x="0"
+     inkscape:window-y="26"
+     inkscape:current-layer="svg2" />
+<!--
+ jcurl curling simulation framework http://www.jcurl.org Copyright (C)
+ 2005-2008 M. Rohrmoser
+ 
+ This program is free software; you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free Software
+ Foundation; either version 2 of the License, or (at your option) any later
+ version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ details.
+ 
+ You should have received a copy of the GNU General Public License along with
+ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ Place, Suite 330, Boston, MA 02111-1307 USA
+-->  <desc
+     id="desc4">Sheet of curling ice with one rock of each color - http://www.jcurl.org</desc>
+  <defs
+     id="defs6">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 16740 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="15120 : 16740 : 1"
+       inkscape:persp3d-origin="7560 : 11160 : 1"
+       id="perspective179" />
+    <style
+       type="text/css"
+       id="style8">
+      .rock-dark { fill: #e01010; stroke: none }
+      .rock-light { fill: #e0e010; stroke: none }
+      .rock-granite { fill: #565755; stroke: none }
+      .rock-number { fill: black; font-size: 0.65; alignment-baseline: central; text-anchor: middle }
+      .circle-12 { fill: #ff3131; stroke: none }
+      .circle-8 { fill: #ffffff; stroke: none }
+      .circle-4 { fill: #3131ff; stroke: none }
+      .circle-1 { fill: #ffffff; stroke: none }
+      .line { stroke: black; stroke-width: 0.025 }
+      .ice-house { fill: #e8e8ff; stroke: none; }
+      .watermark { fill: black; opacity: 0.75; font-size: 0.4; }
+      .ghost { opacity: 0.5; }
+    </style>
+    <g
+       id="ice">
+<!-- upper house area -->      <rect
+         class="ice-house"
+         x="-6"
+         y="0"
+         width="12"
+         height="21"
+         id="rect11" />
+<!-- 4-ft lines -->      <line
+         class="line"
+         x1="-2"
+         y1="-6"
+         x2="-2"
+         y2="93"
+         id="line13" />
+      <line
+         class="line"
+         x1="2"
+         y1="-6"
+         x2="2"
+         y2="93"
+         id="line15" />
+<!-- lower house area -->      <rect
+         class="ice-house"
+         x="-6"
+         y="-6"
+         width="12"
+         height="6"
+         id="rect17" />
+<!-- 12 ft -->      <circle
+         class="circle-12"
+         r="6"
+         id="circle19" />
+<!-- 8 ft -->      <circle
+         class="circle-8"
+         r="4"
+         id="circle21" />
+<!-- 4 ft -->      <circle
+         class="circle-4"
+         r="2"
+         id="circle23" />
+<!-- 1 ft -->      <circle
+         class="circle-1"
+         r="0.5"
+         id="circle25" />
+<!-- tee -->      <line
+         class="line"
+         x1="-7"
+         y1="0"
+         x2="7"
+         y2="0"
+         id="line27" />
+<!-- back -->      <line
+         class="line"
+         x1="-7"
+         y1="-6"
+         x2="7"
+         y2="-6"
+         id="line29" />
+<!-- near hog -->      <line
+         class="line"
+         x1="-7"
+         y1="21"
+         x2="7"
+         y2="21"
+         id="line31" />
+<!-- far hog -->      <line
+         class="line"
+         x1="-7"
+         y1="93"
+         x2="7"
+         y2="93"
+         id="line33" />
+<!-- hack -->      <line
+         class="line"
+         x1="-0.5"
+         y1="132"
+         x2="0.5"
+         y2="132"
+         id="line35" />
+<!-- center line -->      <line
+         class="line"
+         x1="0"
+         y1="-6"
+         x2="0"
+         y2="132"
+         id="line37" />
+<!-- side lines -->      <line
+         class="line"
+         x1="-6"
+         y1="-6"
+         x2="-6"
+         y2="93"
+         id="line39" />
+      <line
+         class="line"
+         x1="6"
+         y1="-6"
+         x2="6"
+         y2="93"
+         id="line41" />
+      <a
+         xlink:href="http://www.jcurl.org"
+         xlink:title="JCurl Homepage"
+         xlink:show="new"
+         transform="scale(1,-1)"
+         id="a43">
+        <text
+           class="watermark"
+           x="-6"
+           y="5.8"
+           id="text45">http://www.jcurl.org</text>
+      </a>
+    </g>
+    <g
+       id="rock_body">
+      <circle
+         class="rock-granite"
+         r="0.5"
+         id="circle48" />
+      <circle
+         r="0.35"
+         id="circle50" />
+    </g>
+    <g
+       id="rock_1">
+      <use
+         xlink:href="#rock_body"
+         id="use53" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g55">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text57">1</text>
+      </g>
+    </g>
+    <g
+       id="rock_2">
+      <use
+         xlink:href="#rock_body"
+         id="use60" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g62">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text64">2</text>
+      </g>
+    </g>
+    <g
+       id="rock_3">
+      <use
+         xlink:href="#rock_body"
+         id="use67" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g69">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text71">3</text>
+      </g>
+    </g>
+    <g
+       id="rock_4">
+      <use
+         xlink:href="#rock_body"
+         id="use74" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g76">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text78">4</text>
+      </g>
+    </g>
+    <g
+       id="rock_5">
+      <use
+         xlink:href="#rock_body"
+         id="use81" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g83">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text85">5</text>
+      </g>
+    </g>
+    <g
+       id="rock_6">
+      <use
+         xlink:href="#rock_body"
+         id="use88" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g90">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text92">6</text>
+      </g>
+    </g>
+    <g
+       id="rock_7">
+      <use
+         xlink:href="#rock_body"
+         id="use95" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g97">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text99">7</text>
+      </g>
+    </g>
+    <g
+       id="rock_8">
+      <use
+         xlink:href="#rock_body"
+         id="use102" />
+<!-- make left-handed again -->      <g
+         transform="scale(1,-1)"
+         id="g104">
+        <text
+           class="rock-number"
+           transform="translate(0,0.25)"
+           id="text106">8</text>
+      </g>
+    </g>
+  </defs>
+<!-- make coord-sys right handed -->  <g
+     transform="scale(1,-1)"
+     id="g108">
+    <use
+       xlink:href="#ice"
+       id="use110" />
+<!-- opaque rocks -->    <use
+       xlink:href="#rock_1"
+       class="rock-light"
+       x="-2.0"
+       y="-7.0"
+       id="use112" />
+    <use
+       xlink:href="#rock_2"
+       class="rock-light"
+       x="-2.0"
+       y="-8.2"
+       id="use114" />
+    <use
+       xlink:href="#rock_3"
+       class="rock-light"
+       x="-3.2"
+       y="-7.0"
+       id="use116" />
+    <use
+       xlink:href="#rock_4"
+       class="rock-light"
+       x="-3.2"
+       y="-8.2"
+       id="use118" />
+    <use
+       xlink:href="#rock_5"
+       class="rock-light"
+       x="-4.4"
+       y="-7.0"
+       id="use120" />
+    <use
+       xlink:href="#rock_6"
+       class="rock-light"
+       x="-4.4"
+       y="-8.2"
+       id="use122" />
+    <use
+       xlink:href="#rock_7"
+       class="rock-light"
+       x="-5.6"
+       y="-7.0"
+       id="use124" />
+    <use
+       xlink:href="#rock_8"
+       class="rock-light"
+       x="-5.6"
+       y="-8.2"
+       id="use126" />
+    <use
+       xlink:href="#rock_1"
+       class="rock-dark"
+       x="2.0"
+       y="-7.0"
+       id="use128" />
+    <use
+       xlink:href="#rock_2"
+       class="rock-dark"
+       x="2.0"
+       y="-8.2"
+       id="use130" />
+    <use
+       xlink:href="#rock_3"
+       class="rock-dark"
+       x="3.2"
+       y="-7.0"
+       id="use132" />
+    <use
+       xlink:href="#rock_4"
+       class="rock-dark"
+       x="3.2"
+       y="-8.2"
+       id="use134" />
+    <use
+       xlink:href="#rock_5"
+       class="rock-dark"
+       x="4.4"
+       y="-7.0"
+       id="use136" />
+    <use
+       xlink:href="#rock_6"
+       class="rock-dark"
+       x="4.4"
+       y="-8.2"
+       id="use138" />
+    <use
+       xlink:href="#rock_7"
+       class="rock-dark"
+       x="5.6"
+       y="-7.0"
+       id="use140" />
+    <use
+       xlink:href="#rock_8"
+       class="rock-dark"
+       x="5.6"
+       y="-8.2"
+       id="use142" />
+<!-- transparent rocks -->    <use
+       xlink:href="#rock_1"
+       class="rock-light ghost"
+       x="-6.6"
+       y="28.0"
+       id="use144" />
+    <use
+       xlink:href="#rock_2"
+       class="rock-light ghost"
+       x="-6.6"
+       y="27.0"
+       id="use146" />
+    <use
+       xlink:href="#rock_3"
+       class="rock-light ghost"
+       x="-6.6"
+       y="26.0"
+       id="use148" />
+    <use
+       xlink:href="#rock_4"
+       class="rock-light ghost"
+       x="-6.6"
+       y="25.0"
+       id="use150" />
+    <use
+       xlink:href="#rock_5"
+       class="rock-light ghost"
+       x="-6.6"
+       y="24.0"
+       id="use152" />
+    <use
+       xlink:href="#rock_6"
+       class="rock-light ghost"
+       x="-6.6"
+       y="23.0"
+       id="use154" />
+    <use
+       xlink:href="#rock_7"
+       class="rock-light ghost"
+       x="-6.6"
+       y="22.0"
+       id="use156" />
+    <use
+       xlink:href="#rock_8"
+       class="rock-light ghost"
+       x="-6.6"
+       y="21.0"
+       id="use158" />
+    <use
+       xlink:href="#rock_1"
+       class="rock-dark ghost"
+       x="6.6"
+       y="28.0"
+       id="use160" />
+    <use
+       xlink:href="#rock_2"
+       class="rock-dark ghost"
+       x="6.6"
+       y="27.0"
+       id="use162" />
+    <use
+       xlink:href="#rock_3"
+       class="rock-dark ghost"
+       x="6.6"
+       y="26.0"
+       id="use164" />
+    <use
+       xlink:href="#rock_4"
+       class="rock-dark ghost"
+       x="6.6"
+       y="25.0"
+       id="use166" />
+    <use
+       xlink:href="#rock_5"
+       class="rock-dark ghost"
+       x="6.6"
+       y="24.0"
+       id="use168" />
+    <use
+       xlink:href="#rock_6"
+       class="rock-dark ghost"
+       x="6.6"
+       y="23.0"
+       id="use170" />
+    <use
+       xlink:href="#rock_7"
+       class="rock-dark ghost"
+       x="6.6"
+       y="22.0"
+       id="use172" />
+    <use
+       xlink:href="#rock_8"
+       class="rock-dark ghost"
+       x="6.6"
+       y="21.0"
+       id="use174" />
+  </g>
+</svg>

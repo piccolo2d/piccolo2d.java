@@ -1,0 +1,172 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14ft" height="31ft" viewBox="-7 -22 14 31" version="1.1">
+  <!--
+ jcurl curling simulation framework http://www.jcurl.org Copyright (C)
+ 2005-2008 M. Rohrmoser
+ 
+ This program is free software; you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free Software
+ Foundation; either version 2 of the License, or (at your option) any later
+ version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ details.
+ 
+ You should have received a copy of the GNU General Public License along with
+ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ Place, Suite 330, Boston, MA 02111-1307 USA
+-->
+  <desc>Sheet of curling ice with one rock of each color - http://www.jcurl.org</desc>
+  <defs>
+    <style type="text/css"><![CDATA[
+      .rock-dark { fill: #e01010; stroke: none }
+      .rock-light { fill: #e0e010; stroke: none }
+      .rock-granite { fill: #565755; stroke: none }
+      .rock-number { fill: black; font-size: 0.65; alignment-baseline: central; text-anchor: middle }
+      .circle-12 { fill: #ff3131; stroke: none }
+      .circle-8 { fill: #ffffff; stroke: none }
+      .circle-4 { fill: #3131ff; stroke: none }
+      .circle-1 { fill: #ffffff; stroke: none }
+      .line { stroke: black; stroke-width: 0.025 /* feet, world-coordinates */ }
+      .ice-house { fill: #e8e8ff; stroke: none; }
+      .watermark { fill: black; opacity: 0.75; font-size: 0.4; }
+      .ghost { opacity: 0.5; }
+    ]]></style>
+    <g id="ice">
+      <!-- upper house area -->
+      <rect class="ice-house" x="-6" y="0" width="12" height="21"/>
+      <!-- 4-ft lines -->
+      <line class="line" x1="-2" y1="-6" x2="-2" y2="93"/>
+      <line class="line" x1="2" y1="-6" x2="2" y2="93"/>
+      <!-- lower house area -->
+      <rect class="ice-house" x="-6" y="-6" width="12" height="6"/>
+      <!-- 12 ft -->
+      <circle class="circle-12" r="6"/>
+      <!-- 8 ft -->
+      <circle class="circle-8" r="4"/>
+      <!-- 4 ft -->
+      <circle class="circle-4" r="2"/>
+      <!-- 1 ft -->
+      <circle class="circle-1" r="0.5"/>
+      <!-- tee -->
+      <line class="line" x1="-7" y1="0" x2="7" y2="0"/>
+      <!-- back -->
+      <line class="line" x1="-7" y1="-6" x2="7" y2="-6"/>
+      <!-- near hog -->
+      <line class="line" x1="-7" y1="21" x2="7" y2="21"/>
+      <!-- far hog -->
+      <line class="line" x1="-7" y1="93" x2="7" y2="93"/>
+      <!-- hack -->
+      <line class="line" x1="-0.5" y1="132" x2="0.5" y2="132"/>
+      <!-- center line -->
+      <line class="line" x1="0" y1="-6" x2="0" y2="132"/>
+      <!-- side lines -->
+      <line class="line" x1="-6" y1="-6" x2="-6" y2="93"/>
+      <line class="line" x1="6" y1="-6" x2="6" y2="93"/>
+      <a xlink:href="http://www.jcurl.org" xlink:title="JCurl Homepage" xlink:show="new" transform="scale(1,-1)">
+        <text class="watermark" x="-6" y="5.8">http://www.jcurl.org</text>
+      </a>
+    </g>
+    <g id="rock_body">
+      <circle class="rock-granite" r="0.5"/>
+      <circle r="0.35"/>
+    </g>
+    <g id="rock_1">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">1</text>
+      </g>
+    </g>
+    <g id="rock_2">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">2</text>
+      </g>
+    </g>
+    <g id="rock_3">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">3</text>
+      </g>
+    </g>
+    <g id="rock_4">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">4</text>
+      </g>
+    </g>
+    <g id="rock_5">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">5</text>
+      </g>
+    </g>
+    <g id="rock_6">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">6</text>
+      </g>
+    </g>
+    <g id="rock_7">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">7</text>
+      </g>
+    </g>
+    <g id="rock_8">
+      <use xlink:href="#rock_body"/>
+      <!-- make left-handed again -->
+      <g transform="scale(1,-1)">
+        <text class="rock-number" transform="translate(0,0.25)">8</text>
+      </g>
+    </g>
+  </defs>
+  <!-- make coord-sys right handed -->
+  <g transform="scale(1,-1)">
+    <use xlink:href="#ice"/>
+    <!-- opaque rocks -->
+    <use xlink:href="#rock_1" class="rock-light" x="-2.0" y="-7.0"/>
+    <use xlink:href="#rock_2" class="rock-light" x="-2.0" y="-8.2"/>
+    <use xlink:href="#rock_3" class="rock-light" x="-3.2" y="-7.0"/>
+    <use xlink:href="#rock_4" class="rock-light" x="-3.2" y="-8.2"/>
+    <use xlink:href="#rock_5" class="rock-light" x="-4.4" y="-7.0"/>
+    <use xlink:href="#rock_6" class="rock-light" x="-4.4" y="-8.2"/>
+    <use xlink:href="#rock_7" class="rock-light" x="-5.6" y="-7.0"/>
+    <use xlink:href="#rock_8" class="rock-light" x="-5.6" y="-8.2"/>
+    <use xlink:href="#rock_1" class="rock-dark" x="2.0" y="-7.0"/>
+    <use xlink:href="#rock_2" class="rock-dark" x="2.0" y="-8.2"/>
+    <use xlink:href="#rock_3" class="rock-dark" x="3.2" y="-7.0"/>
+    <use xlink:href="#rock_4" class="rock-dark" x="3.2" y="-8.2"/>
+    <use xlink:href="#rock_5" class="rock-dark" x="4.4" y="-7.0"/>
+    <use xlink:href="#rock_6" class="rock-dark" x="4.4" y="-8.2"/>
+    <use xlink:href="#rock_7" class="rock-dark" x="5.6" y="-7.0"/>
+    <use xlink:href="#rock_8" class="rock-dark" x="5.6" y="-8.2"/>
+    <!-- transparent rocks -->
+    <use xlink:href="#rock_1" class="rock-light ghost" x="-6.6" y="28.0"/>
+    <use xlink:href="#rock_2" class="rock-light ghost" x="-6.6" y="27.0"/>
+    <use xlink:href="#rock_3" class="rock-light ghost" x="-6.6" y="26.0"/>
+    <use xlink:href="#rock_4" class="rock-light ghost" x="-6.6" y="25.0"/>
+    <use xlink:href="#rock_5" class="rock-light ghost" x="-6.6" y="24.0"/>
+    <use xlink:href="#rock_6" class="rock-light ghost" x="-6.6" y="23.0"/>
+    <use xlink:href="#rock_7" class="rock-light ghost" x="-6.6" y="22.0"/>
+    <use xlink:href="#rock_8" class="rock-light ghost" x="-6.6" y="21.0"/>
+    <use xlink:href="#rock_1" class="rock-dark ghost" x="6.6" y="28.0"/>
+    <use xlink:href="#rock_2" class="rock-dark ghost" x="6.6" y="27.0"/>
+    <use xlink:href="#rock_3" class="rock-dark ghost" x="6.6" y="26.0"/>
+    <use xlink:href="#rock_4" class="rock-dark ghost" x="6.6" y="25.0"/>
+    <use xlink:href="#rock_5" class="rock-dark ghost" x="6.6" y="24.0"/>
+    <use xlink:href="#rock_6" class="rock-dark ghost" x="6.6" y="23.0"/>
+    <use xlink:href="#rock_7" class="rock-dark ghost" x="6.6" y="22.0"/>
+    <use xlink:href="#rock_8" class="rock-dark ghost" x="6.6" y="21.0"/>
+  </g>
+</svg>

@@ -166,8 +166,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * The property name that identifies a change of this node's pickable status
-     * (see {@link #getPickable getPickable}). Both old value and new value will
-     * be null in any property change event.
+     * (see {@link #getPickable getPickable}). Both old value and new value
+     * will be null in any property change event.
      */
     public static final String PROPERTY_PICKABLE = "pickable";
     public static final int PROPERTY_CODE_PICKABLE = 1 << 7;
@@ -183,9 +183,9 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * The property name that identifies a change in the set of this node's
      * direct children (see {@link #getChildrenReference getChildrenReference},
-     * {@link #getChildrenIterator getChildrenIterator}). In any property change
-     * event the new value will be a reference to this node's children, but old
-     * value will always be null.
+     * {@link #getChildrenIterator getChildrenIterator}). In any property
+     * change event the new value will be a reference to this node's children,
+     * but old value will always be null.
      */
     public static final String PROPERTY_CHILDREN = "children";
     public static final int PROPERTY_CODE_CHILDREN = 1 << 9;
@@ -201,12 +201,12 @@ public class PNode implements Cloneable, Serializable, Printable {
     private static final PBounds TEMP_REPAINT_BOUNDS = new PBounds();
 
     /**
-     * The single scene graph delegate that recives low level node events.
+     * The single scene graph delegate that receives low level node events.
      */
     public static PSceneGraphDelegate SCENE_GRAPH_DELEGATE = null;
 
     /**
-     * <b>PSceneGraphDelegate</b> is an interface to recive low level node
+     * <b>PSceneGraphDelegate</b> is an interface to receive low level node
      * events. It together with PNode.SCENE_GRAPH_DELEGATE gives Piccolo users
      * an efficient way to learn about low level changes in Piccolo's scene
      * graph. Most users will not need to use this.
@@ -218,6 +218,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     private transient PNode parent;
+    // TODO make final and use clear() instead assigning null?
+    // TODO make an ArrayList to internally document quick index access?
     private List children;
     private final PBounds bounds;
     private PAffineTransform transform;
@@ -1331,8 +1333,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Return true if this node intersects the given rectangle specified in
      * local bounds. If the geometry of this node is complex this method can
      * become expensive, it is therefore recommended that
-     * <code>fullIntersects</code> is used for quick rejects before calling this
-     * method.
+     * <code>fullIntersects</code> is used for quick rejects before calling
+     * this method.
      * 
      * @param localBounds the bounds to test for intersection against
      * @return true if the given rectangle intersects this nodes geometry.
