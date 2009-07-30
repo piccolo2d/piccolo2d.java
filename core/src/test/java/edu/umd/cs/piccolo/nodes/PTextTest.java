@@ -103,6 +103,54 @@ public class PTextTest extends TestCase {
         assertEquals(Component.RIGHT_ALIGNMENT, textNode.getJustification(), 0.000001);
     }
 
+    public void testHorizontalAlignmentIsLeftByDefault() {
+        assertEquals(Component.LEFT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
+    }
+
+    public void testSetHorizontalAlignmentPersists() {
+        textNode.setHorizontalAlignment(Component.RIGHT_ALIGNMENT);
+        assertEquals(Component.RIGHT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
+    }
+
+    public void testSetHorizontalAlignmentInvalidValues() {
+        try {
+            textNode.setHorizontalAlignment(-2.0f);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(2.0f);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(-Float.MAX_VALUE);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(Float.MAX_VALUE);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(-1.00f);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(1.00f);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
     public void testTextPaintIsBlackByDefault() {
         assertEquals(Color.BLACK, textNode.getTextPaint());
     }

@@ -46,7 +46,6 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 /**
  * <b>PText</b> is a multi-line text node. The text will flow to base on the
  * width of the node's bounds.
- * <P>
  * 
  * @version 1.1
  * @author Jesse Grosjean
@@ -75,87 +74,170 @@ public class PText extends PNode {
     public static final String PROPERTY_FONT = "font";
     public static final int PROPERTY_CODE_FONT = 1 << 20;
 
-    public static Font DEFAULT_FONT = new Font("Helvetica", Font.PLAIN, 12);
-    public static double DEFAULT_GREEK_THRESHOLD = 5.5;
+    /**
+     * The property name that identifies a change of this node's text paint (see
+     * {@link #getTextPaint getTextPaint}). Both old and new value will be set in any
+     * property change event.
+     */
+    public static final String PROPERTY_TEXT_PAINT = "text  paint";
+    public static final int PROPERTY_CODE_TEXT_PAINT = 1 << 21;
 
-    private String text;
-    private Paint textPaint;
-    private Font font;
+    /** Default font, 12 point <code>"SansSerif"</code>.  Will be made final in version 2.0. */
+    //public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 12); jdk 1.6+
+    public static Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
+
+    /** Default greek threshold, <code>5.5d</code>.  Will be made final in version 2.0. */
+    public static double DEFAULT_GREEK_THRESHOLD = 5.5d;
+
+    /** Default horizontal alignment, <code>Component.LEFT_ALIGNMENT</code>. */
+    public static final float DEFAULT_HORIZONTAL_ALIGNMENT = Component.LEFT_ALIGNMENT;
+
+    /** Default text, <code>""</code>. */
+    public static final String DEFAULT_TEXT = "";
+
+    /** Default text paint, <code>Color.BLACK</code>. */
+    public static final Paint DEFAULT_TEXT_PAINT = Color.BLACK;
+
+    private static final TextLayout[] EMPTY_TEXT_LAYOUT_ARRAY = new TextLayout[0];
+    private String text = DEFAULT_TEXT;
+    private Paint textPaint = DEFAULT_TEXT_PAINT;
+    private Font font = DEFAULT_FONT;
+    /** Will be made private in version 2.0. */
     protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
-    private float justification = Component.LEFT_ALIGNMENT;
+    private float horizontalAlignment = DEFAULT_HORIZONTAL_ALIGNMENT;
     private boolean constrainHeightToTextHeight = true;
     private boolean constrainWidthToTextWidth = true;
     private transient TextLayout[] lines;
 
+
+    /**
+     * Create a new text node with no text (<code>""</code>).
+     */
     public PText() {
         super();
-        setTextPaint(Color.BLACK);
-        text = "";
     }
 
-    public PText(final String aText) {
+    /**
+     * Create a new text node with the specified text.
+     *
+     * @param text text for this text node
+     */
+    public PText(final String text) {
         this();
-        setText(aText);
+        setText(text);
     }
 
-    /**
-     * Return the justificaiton of the text in the bounds.
-     * 
-     * @return float
-     */
+
+    /** @deprecated by {@link #getHorizontalAlignment()} */
     public float getJustification() {
-        return justification;
+        return getHorizontalAlignment();
+    }
+
+    /** @deprecated by {@link #setHorizontalAlignment(float)}  */
+    public void setJustification(final float justification) {
+        setHorizontalAlignment(justification);
     }
 
     /**
-     * Sets the justificaiton of the text in the bounds.
-     * 
-     * @param just
+     * Return the horizontal alignment for this text node.  The horizontal alignment will be one of 
+     * <code>Component.LEFT_ALIGNMENT</code>, <code>Component.CENTER_ALIGNMENT</code>,
+     * or <code>Component.RIGHT_ALIGNMENT</code>.  Defaults to {@link #DEFAULT_HORIZONTAL_ALIGNMENT}.
+     *
+     * @return the horizontal alignment for this text node
      */
-    public void setJustification(final float just) {
-        justification = just;
-        recomputeLayout();
+    public float getHorizontalAlignment() {
+        return horizontalAlignment;
     }
 
     /**
-     * Get the paint used to paint this nodes text.
+     * Set the horizontal alignment for this text node to <code>horizontalAlignment</code>.
+     *
+     * @param horizontalAlignment horizontal alignment, must be one of
+     *    <code>Component.LEFT_ALIGNMENT</code>, <code>Component.CENTER_ALIGNMENT</code>,
+     *    or <code>Component.RIGHT_ALIGNMENT</code>
+     */
+    public void setHorizontalAlignment(final float horizontalAlignment) {
+        if (!validHorizontalAlignment(horizontalAlignment)) {
+            throw new IllegalArgumentException("horizontalAlignment must be one of Component.LEFT_ALIGNMENT, "
+                    + "Component.CENTER_ALIGNMENT, or Component.RIGHT_ALIGNMENT");
+        }
+        this.horizontalAlignment = horizontalAlignment;
+    }
+
+    /**
+     * Return true if the specified horizontal alignment is one of <code>Component.LEFT_ALIGNMENT</code>,
+     * <code>Component.CENTER_ALIGNMENT</code>, or <code>Component.RIGHT_ALIGNMENT</code>.
+     *
+     * @param horizontalAlignment horizontal alignment
+     * @return true if the specified horizontal alignment is one of <code>Component.LEFT_ALIGNMENT</code>,
+     *    <code>Component.CENTER_ALIGNMENT</code>, or <code>Component.RIGHT_ALIGNMENT</code>
+     */
+    private static boolean validHorizontalAlignment(final float horizontalAlignment) {
+        return Component.LEFT_ALIGNMENT == horizontalAlignment
+                || Component.CENTER_ALIGNMENT == horizontalAlignment
+                || Component.RIGHT_ALIGNMENT == horizontalAlignment;
+    }
+
+    /**
+     * Return the paint used to paint this node's text.
      * 
-     * @return Paint
+     * @return the paint used to paint this node's text
      */
     public Paint getTextPaint() {
         return textPaint;
     }
 
     /**
-     * Set the paint used to paint this node's text background.
-     * 
-     * @param textPaint
+     * Set the paint used to paint this node's text to <code>textPaint</code>.
+     *
+     * <p>This is a <b>bound</b> property.</p>
+     *
+     * @param textPaint text paint
      */
     public void setTextPaint(final Paint textPaint) {
+        if (textPaint == this.textPaint) {
+            return;
+        }
+        final Paint oldTextPaint = this.textPaint;
         this.textPaint = textPaint;
         invalidatePaint();
+        firePropertyChange(PROPERTY_CODE_TEXT_PAINT, PROPERTY_TEXT_PAINT, oldTextPaint, this.textPaint);
     }
 
+    /**
+     * Return true if this text node should constrain its width to the width of its text.
+     * Defaults to <code>true</code>.
+     *
+     * @return true if this text node should constrain its width to the width of its text
+     */
     public boolean isConstrainWidthToTextWidth() {
         return constrainWidthToTextWidth;
     }
 
     /**
-     * Controls whether this node changes its width to fit the width of its
-     * text. If flag is true it does; if flag is false it doesn't
+     * Set to <code>true</code> if this text node should constrain its width the width of its text.
+     *
+     * @param constrainWidthToTextWidth true if this text node should constrain its width to the width of its text
      */
     public void setConstrainWidthToTextWidth(final boolean constrainWidthToTextWidth) {
         this.constrainWidthToTextWidth = constrainWidthToTextWidth;
         recomputeLayout();
     }
 
+    /**
+     * Return true if this text node should constrain its height to the height of its text.
+     * Defaults to <code>true</code>.
+     *
+     * @return true if this text node should constrain its height to the height of its text
+     */
     public boolean isConstrainHeightToTextHeight() {
         return constrainHeightToTextHeight;
     }
 
     /**
-     * Controls whether this node changes its height to fit the height of its
-     * text. If flag is true it does; if flag is false it doesn't
+     * Set to <code>true</code> if this text node should constrain its height the height of its text.
+     *
+     * @param constrainHeightToTextHeight true if this text node should constrain its height to the width of its height
      */
     public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
         this.constrainHeightToTextHeight = constrainHeightToTextHeight;
@@ -163,71 +245,86 @@ public class PText extends PNode {
     }
 
     /**
-     * Returns the current greek threshold. When the screen font size will be
+     * Return the greek threshold in screen font size.  When the screen font size will be
      * below this threshold the text is rendered as 'greek' instead of drawing
-     * the text glyphs.
+     * the text glyphs.  Defaults to {@link DEFAULT_GREEK_THRESHOLD}.
+     *
+     * @return the current greek threshold in screen font size
      */
     public double getGreekThreshold() {
         return greekThreshold;
     }
 
     /**
-     * Sets the current greek threshold. When the screen font size will be below
-     * this threshold the text is rendered as 'greek' instead of drawing the
+     * Set the greek threshold in screen font size to <code>greekThreshold</code>.  When the
+     * screen font size will be below this threshold the text is rendered as 'greek' instead of drawing the
      * text glyphs.
      * 
-     * @param threshold minimum screen font size.
+     * @param greekThreshold greek threshold in screen font size
      */
-    public void setGreekThreshold(final double threshold) {
-        greekThreshold = threshold;
+    public void setGreekThreshold(final double greekThreshold) {
+        this.greekThreshold = greekThreshold;
         invalidatePaint();
     }
 
+    /**
+     * Return the text for this text node.  Defaults to {@link #DEFAULT_TEXT}.
+     *
+     * @return the text for this text node
+     */
     public String getText() {
         return text;
     }
 
     /**
-     * Set the text for this node. The text will be broken up into multiple
+     * Set the text for this node to <code>text</code>. The text will be broken up into multiple
      * lines based on the size of the text and the bounds width of this node.
+     *
+     * <p>This is a <b>bound</b> property.</p>
+     *
+     * @param text text for this text node
      */
-    public void setText(final String aText) {
-        final String old = text;
-        text = aText == null ? "" : aText;
+    public void setText(final String text) {
+        if (text == this.text) {
+            return;
+        }
+        final String oldText = this.text;
+        this.text = text == null ? DEFAULT_TEXT : text;
         lines = null;
         recomputeLayout();
         invalidatePaint();
-        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, old, text);
+        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, oldText, this.text);
     }
 
     /**
-     * Returns the font of this PText.
-     * 
-     * @return the font of this PText.
+     * Return the font for this text node.  Defaults to {@link #DEFAULT_FONT}.
+     *
+     * @return the font for this text node
      */
     public Font getFont() {
-        if (font == null) {
-            font = DEFAULT_FONT;
-        }
         return font;
     }
 
     /**
-     * Set the font of this PText. Note that in Piccolo if you want to change
-     * the size of a text object it's often a better idea to scale the PText
-     * node instead of changing the font size to get that same effect. Using
-     * very large font sizes can slow performance.
+     * Set the font for this text node to <code>font</code>.  Note that in Piccolo if you want to change
+     * the size of a text object it's often a better idea to scale the PText node instead of changing the font
+     * size to get that same effect. Using very large font sizes can slow performance.
+     *
+     * <p>This is a <b>bound</b> property.</p>
+     *
+     * @param font font for this text node
      */
-    public void setFont(final Font aFont) {
-        final Font old = font;
-        font = aFont;
+    public void setFont(final Font font) {
+        if (font == this.font) {
+            return;
+        }
+        final Font oldFont = this.font;
+        this.font = font == null ? DEFAULT_FONT : font;
         lines = null;
         recomputeLayout();
         invalidatePaint();
-        firePropertyChange(PROPERTY_CODE_FONT, PROPERTY_FONT, old, font);
+        firePropertyChange(PROPERTY_CODE_FONT, PROPERTY_FONT, oldFont, this.font);
     }
-
-    private static final TextLayout[] EMPTY_TEXT_LAYOUT_ARRAY = new TextLayout[0];
 
     /**
      * Compute the bounds of the text wrapped by this node. The text layout is
@@ -291,21 +388,36 @@ public class PText extends PNode {
         }
     }
 
-    // provided in case someone needs to override the way that lines are
-    // wrapped.
-    protected TextLayout computeNextLayout(final LineBreakMeasurer measurer, final float availibleWidth,
+    /**
+     * Compute the next layout using the specified line break measurer, available width,
+     * and next line break offset.
+     *
+     * @param lineBreakMeasurer line break measurer
+     * @param availableWidth available width
+     * @param nextLineBreakOffset next line break offset
+     * @return the next layout computed using the specified line break measurer, available width,
+     *    and next line break offset
+     */
+    protected TextLayout computeNextLayout(final LineBreakMeasurer lineBreakMeasurer, final float availableWidth,
             final int nextLineBreakOffset) {
-        return measurer.nextLayout(availibleWidth, nextLineBreakOffset, false);
+        return lineBreakMeasurer.nextLayout(availableWidth, nextLineBreakOffset, false);
     }
 
-    protected void paint(final PPaintContext paintContext) {
-        super.paint(paintContext);
+    /**
+     * Paint greek with the specified paint context
+     *
+     * @param paintContext paint context
+     */
+    protected void paintGreek(final PPaintContext paintContext) {
+        // empty
+    }
 
-        final float screenFontSize = getFont().getSize() * (float) paintContext.getScale();
-        if (textPaint == null || screenFontSize <= greekThreshold) {
-            return;
-        }
-
+    /**
+     * Paint text with the specified paint context.
+     *
+     * @param paintContext paint context
+     */
+    protected void paintText(final PPaintContext paintContext) {
         final float x = (float) getX();
         float y = (float) getY();
         final float bottomY = (float) getHeight() + y;
@@ -328,11 +440,23 @@ public class PText extends PNode {
                 return;
             }
 
-            final float offset = (float) (getWidth() - tl.getAdvance()) * justification;
+            final float offset = (float) (getWidth() - tl.getAdvance()) * horizontalAlignment;
             tl.draw(g2, x + offset, y);
 
             y += tl.getDescent() + tl.getLeading();
         }
+    }
+
+    protected void paint(final PPaintContext paintContext) {
+        super.paint(paintContext);
+        if (textPaint == null) {
+            return;
+        }
+        final float screenFontSize = getFont().getSize() * (float) paintContext.getScale();
+        if (screenFontSize <= greekThreshold) {
+            paintGreek(paintContext);
+        }
+        paintText(paintContext);
     }
 
     protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
