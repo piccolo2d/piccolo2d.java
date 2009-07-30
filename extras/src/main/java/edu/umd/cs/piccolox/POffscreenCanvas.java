@@ -143,27 +143,27 @@ public final class POffscreenCanvas implements PComponent {
     }
 
     /** {@inheritDoc} */
-    public final void paintImmediately() {
+    public void paintImmediately() {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void popCursor() {
+    public void popCursor() {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void pushCursor(final Cursor cursor) {
+    public void pushCursor(final Cursor cursor) {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void repaint(final PBounds repaintBounds) {
+    public void repaint(final PBounds repaintBounds) {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void setInteracting(final boolean interacting) {
+    public void setInteracting(final boolean interacting) {
         // empty
     }
 }

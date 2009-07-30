@@ -116,12 +116,15 @@ public class PSWTBoundsHandle extends PSWTHandle {
 
             public void mouseExited(final PInputEvent aEvent) {
                 final PPickPath focus = aEvent.getInputManager().getMouseFocus();
-                if (cursorPushed) {
-                    if (focus == null || focus.getPickedNode() != PSWTBoundsHandle.this) {
-                        aEvent.popCursor();
-                        cursorPushed = false;
-                    }
+                
+                if (cursorPushed && isNewFocus(focus)) {
+                    aEvent.popCursor();
+                    cursorPushed = false;
                 }
+            }
+
+            private boolean isNewFocus(final PPickPath focus) {
+                return (focus == null || focus.getPickedNode() != PSWTBoundsHandle.this);
             }
 
             public void mouseReleased(final PInputEvent event) {

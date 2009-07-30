@@ -324,7 +324,7 @@ public class PStyledText extends PNode {
         // is a newline
         boolean lastNewLine = true;
 
-        for (int i = 0; tokenizer.hasMoreTokens(); i++) {
+        while (tokenizer.hasMoreTokens()) {
             final String token = tokenizer.nextToken();
 
             // If the token

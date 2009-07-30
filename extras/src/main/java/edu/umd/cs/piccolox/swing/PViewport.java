@@ -49,10 +49,6 @@ import edu.umd.cs.piccolo.util.PBounds;
  * @author Lance Good
  */
 public class PViewport extends JViewport {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     /**
      * Controls what happens when scrolling occurs
@@ -203,20 +199,9 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * Notifies all <code>ChangeListeners</code> when the views size, position,
-     * or the viewports extent size has changed.
-     */
-    public void fireStateChanged() {
-        super.fireStateChanged();
-    }
-
-    /**
      * A simple layout manager to give the ZCanvas the same size as the Viewport
      */
     public static class PViewportLayout extends ViewportLayout {
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
 
         /**

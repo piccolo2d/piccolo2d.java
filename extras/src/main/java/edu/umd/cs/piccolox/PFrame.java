@@ -57,9 +57,6 @@ import edu.umd.cs.piccolo.PCanvas;
  */
 public class PFrame extends JFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private PCanvas canvas;
     private final GraphicsDevice graphicsDevice;
@@ -85,7 +82,8 @@ public class PFrame extends JFrame {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         catch (final SecurityException e) {
-        } // expected from applets
+            // expected from applets
+        }
 
         if (aCanvas == null) {
             canvas = new PCanvas();

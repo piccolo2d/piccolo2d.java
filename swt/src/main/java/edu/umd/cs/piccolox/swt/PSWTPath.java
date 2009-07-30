@@ -44,6 +44,7 @@ import java.awt.geom.RoundRectangle2D;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PAffineTransform;
+import edu.umd.cs.piccolo.util.PAffineTransformException;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
@@ -196,6 +197,7 @@ public class PSWTPath extends PNode {
             inverseXForm = internalXForm.createInverse();
         }
         catch (final Exception e) {
+            throw new PAffineTransformException("unable to invert transform", internalXForm);
         }
     }
 

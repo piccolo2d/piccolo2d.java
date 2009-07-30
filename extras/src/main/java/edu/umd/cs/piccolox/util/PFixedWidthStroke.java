@@ -59,17 +59,9 @@ import java.io.Serializable;
  * @author Jesse Grosjean
  * @author Marcus Rohrmoser
  */
-public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
+public class PFixedWidthStroke extends PSemanticStroke implements Serializable {   
 
-    // make them public if required or delete when cleaning up for 2.0
-    private static final int CAP_BUTT = BasicStroke.CAP_BUTT;
-    private static final int CAP_ROUND = BasicStroke.CAP_ROUND;
-    private static final int CAP_SQUARE = BasicStroke.CAP_SQUARE;
-    private static final int JOIN_BEVEL = BasicStroke.JOIN_BEVEL;
-    private static final int JOIN_MITER = BasicStroke.JOIN_MITER;
-    private static final int JOIN_ROUND = BasicStroke.JOIN_ROUND;
-
-    private static final long serialVersionUID = -2503357070350473610L;
+    private static final long serialVersionUID = 1L;
 
     // avoid repeated cloning:
     private transient final float dash[];

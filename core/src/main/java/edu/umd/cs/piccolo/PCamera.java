@@ -176,7 +176,8 @@ public class PCamera extends PNode {
     public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
         if (repaintedLayer instanceof PLayer) {
             this.repaintFromLayer(viewBounds, (PLayer) repaintedLayer);
-        } else {
+        }
+        else {
             throw new RuntimeException("Passed non PLayer node to repaintFromLayer");
         }
     }

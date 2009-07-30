@@ -190,6 +190,7 @@ public class SWTTimerQueue implements Runnable {
                     timer.postOverride(); // have timer post an event
                 }
                 catch (final SecurityException e) {
+                    throw new RuntimeException("Could not post event", e);
                 }
 
                 // Remove the timer from the queue

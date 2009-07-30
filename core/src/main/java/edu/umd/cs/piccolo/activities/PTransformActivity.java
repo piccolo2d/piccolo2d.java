@@ -31,7 +31,6 @@ package edu.umd.cs.piccolo.activities;
 import java.awt.geom.AffineTransform;
 
 import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PUtil;
 
 /**
  * <b>PTransformActivity</b> interpolates between two transforms setting its
@@ -112,7 +111,12 @@ public class PTransformActivity extends PInterpolatingActivity {
      * target when the transform activity stops stepping.
      */
     public double[] getDestinationTransform() {
-        return (destination == null) ? null : (double[]) destination.clone();
+        if (destination == null) {
+            return null;
+        } 
+        else {
+            return (double[]) destination.clone();
+        }
     }
 
     /**
@@ -120,7 +124,12 @@ public class PTransformActivity extends PInterpolatingActivity {
      * target when the transform activity stops stepping.
      */
     public void setDestinationTransform(final double[] newDestination) {
-        destination = (newDestination == null) ? null : (double[]) newDestination.clone();
+        if (newDestination == null) {
+            destination = null;
+        } 
+        else {
+            destination = (double[]) newDestination.clone();
+        }      
     }
 
     protected void activityStarted() {

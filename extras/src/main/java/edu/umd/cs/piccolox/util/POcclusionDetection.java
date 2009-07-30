@@ -49,37 +49,38 @@ public class POcclusionDetection {
         detectOcclusions(n, new PPickPath(null, parentBounds));
     }
 
-    public void detectOcclusions(final PNode n, final PPickPath pickPath) {
-        if (n.fullIntersects(pickPath.getPickBounds())) {
-            pickPath.pushTransform(n.getTransformReference(false));
-
-            final int count = n.getChildrenCount();
-            for (int i = count - 1; i >= 0; i--) {
-                final PNode each = n.getChild(i);
-                if (n.getOccluded()) {
-                    // if n has been occuded by a previous decendent then
-                    // this child must also be occuded
-                    each.setOccluded(true);
-                }
-                else {
-                    // see if child each occludes n
-                    detectOcclusions(each, pickPath);
-                }
-            }
-
-            // see if n occudes it's parents
-            if (!n.getOccluded()) {
-                if (n.intersects(pickPath.getPickBounds())) {
-                    if (n.isOpaque(pickPath.getPickBounds())) {
-                        final PNode p = n.getParent();
-                        while (p != null && !p.getOccluded()) {
-                            p.setOccluded(true);
-                        }
-                    }
-                }
-            }
-
-            pickPath.popTransform(n.getTransformReference(false));
+    public void detectOcclusions(final PNode node, final PPickPath pickPath) {
+        if (!node.fullIntersects(pickPath.getPickBounds())) {
+            return;
         }
+
+        pickPath.pushTransform(node.getTransformReference(false));
+
+        final int count = node.getChildrenCount();
+        for (int i = count - 1; i >= 0; i--) {
+            final PNode each = node.getChild(i);
+            if (node.getOccluded()) {
+                // if n has been occuded by a previous decendent then
+                // this child must also be occuded
+                each.setOccluded(true);
+            }
+            else {
+                // see if child each occludes n
+                detectOcclusions(each, pickPath);
+            }
+        }
+
+        if (nodeOccludesParents(node, pickPath)) {
+            final PNode parent = node.getParent();
+            while (parent != null && !parent.getOccluded()) {
+                parent.setOccluded(true);
+            }
+        }
+
+        pickPath.popTransform(node.getTransformReference(false));
+    }
+
+    private boolean nodeOccludesParents(final PNode n, final PPickPath pickPath) {
+        return !n.getOccluded() && n.intersects(pickPath.getPickBounds()) && n.isOpaque(pickPath.getPickBounds());
     }
 }
