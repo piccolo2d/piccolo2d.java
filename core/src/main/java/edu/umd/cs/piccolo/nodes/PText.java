@@ -404,7 +404,7 @@ public class PText extends PNode {
     }
 
     /**
-     * Paint greek with the specified paint context
+     * Paint greek with the specified paint context.
      *
      * @param paintContext paint context
      */
