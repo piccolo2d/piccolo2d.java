@@ -116,37 +116,37 @@ public class PTextTest extends TestCase {
         try {
             textNode.setHorizontalAlignment(-2.0f);
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
         try {
             textNode.setHorizontalAlignment(2.0f);
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
         try {
             textNode.setHorizontalAlignment(-Float.MAX_VALUE);
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
         try {
             textNode.setHorizontalAlignment(Float.MAX_VALUE);
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
         try {
             textNode.setHorizontalAlignment(-1.00f);
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
         try {
             textNode.setHorizontalAlignment(1.00f);
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
     }

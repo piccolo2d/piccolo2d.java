@@ -53,7 +53,6 @@ import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.activities.PColorActivity.Target;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
-import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PAffineTransformException;
 import edu.umd.cs.piccolo.util.PBounds;
@@ -1292,25 +1291,25 @@ public class PNodeTest extends TestCase {
         node.setOccluded(true);
         assertTrue(node.getOccluded());
     }
-    
+
     public void testHiddenNodesAreNotPickable() {
-        PCanvas canvas = new PCanvas();        
+        final PCanvas canvas = new PCanvas();
         canvas.setBounds(0, 0, 400, 400);
-        canvas.setPreferredSize(new Dimension(400, 400));        
-        PNode node1 = new PNode();
+        canvas.setPreferredSize(new Dimension(400, 400));
+        final PNode node1 = new PNode();
         node1.setBounds(0, 0, 100, 100);
         node1.setPaint(Color.RED);
-        canvas.getLayer().addChild(node1);        
-        
-        PNode node2 = (PNode) node1.clone();
+        canvas.getLayer().addChild(node1);
+
+        final PNode node2 = (PNode) node1.clone();
         node2.setPaint(Color.BLUE);
-        
-        PLayer layer2 = new PLayer();        
+
+        final PLayer layer2 = new PLayer();
         layer2.addChild(node2);
         layer2.setVisible(false);
         canvas.getCamera().addLayer(layer2);
-        
-        PPickPath path = canvas.getCamera().pick(5, 5, 5);
-        assertSame(node1, path.getPickedNode());             
+
+        final PPickPath path = canvas.getCamera().pick(5, 5, 5);
+        assertSame(node1, path.getPickedNode());
     }
 }
