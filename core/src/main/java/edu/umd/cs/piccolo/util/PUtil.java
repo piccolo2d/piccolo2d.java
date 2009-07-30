@@ -58,8 +58,8 @@ public class PUtil {
     public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
     private static final int PATH_IS_DONE = -1;
 
-    public static final Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
-    public static final Enumeration NULL_ENUMERATION = new Enumeration() {
+    public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
+    public static Enumeration NULL_ENUMERATION = new Enumeration() {
         public boolean hasMoreElements() {
             return false;
         }
@@ -69,7 +69,7 @@ public class PUtil {
         }
     };
 
-    public static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
+    public static OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
         public void close() {
         }
 
