@@ -56,7 +56,7 @@ public class PCacheCamera extends PCamera {
      * 
      */
     private static final long serialVersionUID = 1L;
-    private BufferedImage paintBuffer;
+    private transient BufferedImage paintBuffer;
     private boolean imageAnimate;
     private PBounds imageAnimateBounds;
 
@@ -65,14 +65,27 @@ public class PCacheCamera extends PCamera {
      */
     protected BufferedImage getPaintBuffer() {
         final PBounds fRef = getFullBoundsReference();
-        // TODO eclipse formatting made this ugly
-        if (paintBuffer == null || paintBuffer.getWidth() < fRef.getWidth()
-                || paintBuffer.getHeight() < fRef.getHeight()) {
-            paintBuffer = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-                    .getDefaultConfiguration().createCompatibleImage((int) Math.ceil(fRef.getWidth()),
-                            (int) Math.ceil(fRef.getHeight()));
+        if (paintBuffer == null || isBufferSmallerThanBounds(fRef)) {
+            paintBuffer = buildPaintBuffer(fRef);
         }
         return paintBuffer;
+    }
+
+    private boolean isBufferSmallerThanBounds(final PBounds bounds) {
+        return paintBuffer.getWidth() < bounds.getWidth() || paintBuffer.getHeight() < bounds.getHeight();
+    }
+
+    private BufferedImage buildPaintBuffer(final PBounds fRef) {
+        final int newBufferWidth = (int) Math.ceil(fRef.getWidth());
+        final int newBufferHeight = (int) Math.ceil(fRef.getHeight());
+        
+        if (GraphicsEnvironment.isHeadless()) {
+            return new BufferedImage(newBufferWidth, newBufferHeight, BufferedImage.TYPE_4BYTE_ABGR);
+        }
+        else {
+            return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
+                    .createCompatibleImage(newBufferWidth, newBufferHeight);
+        }
     }
 
     /**
