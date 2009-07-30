@@ -125,6 +125,16 @@ public class PViewport extends JViewport {
     }
 
     /**
+     * Notifies all <code>ChangeListeners</code> when the views size, position,
+     * or the viewports extent size has changed. 
+     * 
+     * PDefaultScrollDirector calls this so it needs to be public.
+     */
+    public void fireStateChanged() {
+        super.fireStateChanged();
+    }
+
+    /**
      * Sets the view coordinates that appear in the upper left hand corner of
      * the viewport, does nothing if there's no view.
      * 
