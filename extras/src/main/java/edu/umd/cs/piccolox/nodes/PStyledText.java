@@ -297,10 +297,10 @@ public class PStyledText extends PNode {
                 font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos).getAttributes());
                 if (font == null) {
                     font = style.getFont(((DefaultStyledDocument) document).getParagraphElement(pos).getAttributes());
-                }
-                if (font == null) {
-                    font = style.getFont(rootElement.getAttributes());
-                }
+                    if (font == null) {
+                        font = style.getFont(rootElement.getAttributes());
+                    }
+                }                
             }
             else {
                 font = style.getFont(rootElement.getAttributes());

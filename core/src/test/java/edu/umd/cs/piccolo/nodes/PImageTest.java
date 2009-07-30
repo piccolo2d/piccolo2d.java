@@ -63,11 +63,11 @@ public class PImageTest extends TestCase {
 
     public void testCanBeCreatedFromFile() throws IOException {
         final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        final File imgFile = File.createTempFile("test", ".jpeg");
-        imgFile.deleteOnExit();
+        final File imgFile = File.createTempFile("test", ".jpeg");        
         ImageIO.write(img, "JPEG", imgFile);
-
+        imgFile.deleteOnExit();
         final PImage imageNode = new PImage(imgFile.getAbsolutePath());
+        assertNotNull(imageNode.getImage());
         assertEquals(100, imageNode.getImage().getWidth(null));
         assertEquals(100, imageNode.getImage().getHeight(null));
     }

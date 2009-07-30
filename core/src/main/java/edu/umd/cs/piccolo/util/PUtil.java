@@ -56,7 +56,7 @@ public class PUtil {
 
     public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
     public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
-    private static final int PATH_IS_DONE = -1;
+    private static final int PATH_TERMINATOR = -1;
 
     public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
     public static Enumeration NULL_ENUMERATION = new Enumeration() {
@@ -197,7 +197,7 @@ public class PUtil {
                     path.closePath();
                     break;
 
-                case PATH_IS_DONE:
+                case PATH_TERMINATOR:
                     return path;
 
                 default:
@@ -253,6 +253,6 @@ public class PUtil {
             i.next();
         }
 
-        out.writeInt(PATH_IS_DONE);
-    }
+        out.writeInt(PATH_TERMINATOR);
+    }   
 }

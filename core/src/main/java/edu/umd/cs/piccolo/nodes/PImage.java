@@ -128,31 +128,13 @@ public class PImage extends PNode {
      * load the image using a MediaTracker before returning.
      */
     public void setImage(final Image newImage) {
-        final Image old = image;
+        final Image oldImage = image;
 
         if (newImage == null || newImage instanceof BufferedImage) {
             image = newImage;
         }
-        else { // else make sure the image is loaded
-            final ImageIcon imageLoader = new ImageIcon(newImage);
-            switch (imageLoader.getImageLoadStatus()) {
-                case MediaTracker.LOADING:
-                    System.err.println("media tracker still loading image after requested to wait until finished");
-
-                case MediaTracker.COMPLETE:
-                    image = imageLoader.getImage();
-                    break;
-
-                case MediaTracker.ABORTED:
-                    System.err.println("media tracker aborted image load");
-                    image = null;
-                    break;
-
-                case MediaTracker.ERRORED:
-                    System.err.println("media tracker errored image load");
-                    image = null;
-                    break;
-            }
+        else {
+            image = getLoadedImage(newImage);
         }
 
         if (image != null) {
@@ -160,7 +142,25 @@ public class PImage extends PNode {
             invalidatePaint();
         }
 
-        firePropertyChange(PROPERTY_CODE_IMAGE, PROPERTY_IMAGE, old, image);
+        firePropertyChange(PROPERTY_CODE_IMAGE, PROPERTY_IMAGE, oldImage, image);
+    }
+
+    /**
+     * Ensures the image is loaded enough (loading is fine)
+     * 
+     * @param newImage to check
+     * @return image or null if not loaded enough.
+     */
+    private Image getLoadedImage(final Image newImage) {
+        final ImageIcon imageLoader = new ImageIcon(newImage);
+        switch (imageLoader.getImageLoadStatus()) {
+            case MediaTracker.LOADING:
+                return imageLoader.getImage();
+            case MediaTracker.COMPLETE:
+                return imageLoader.getImage();
+            default:
+                return null;
+        }
     }
 
     protected void paint(final PPaintContext paintContext) {

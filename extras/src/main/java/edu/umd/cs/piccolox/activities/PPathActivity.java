@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolox.activities;
 
 import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
+import edu.umd.cs.piccolo.util.PUtil;
 
 /**
  * <b>PPathActivity</b> is the abstract base class for all path activity
@@ -67,12 +68,12 @@ public abstract class PPathActivity extends PInterpolatingActivity {
         return knots.length;
     }
 
-    public void setKnots(final float[] knots) {
-        this.knots = knots;
+    public void setKnots(final float[] newKnots) {
+        this.knots = (newKnots == null) ? newKnots : (float[]) newKnots.clone();
     }
 
     public float[] getKnots() {
-        return knots;
+        return (knots == null) ? knots : (float[]) knots.clone();
     }
 
     public void setKnot(final int index, final float knot) {

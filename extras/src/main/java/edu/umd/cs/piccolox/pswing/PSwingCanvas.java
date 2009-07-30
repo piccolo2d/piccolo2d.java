@@ -44,9 +44,6 @@ import edu.umd.cs.piccolo.PCanvas;
  * @author Lance E. Good
  */
 public class PSwingCanvas extends PCanvas {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
     private final ChildWrapper swingWrapper;
@@ -62,14 +59,9 @@ public class PSwingCanvas extends PCanvas {
     }
 
     private void initRepaintManager() {
-        final RepaintManager repaintManager = RepaintManager.currentManager(this);
-        PSwingRepaintManager pSwingRepaintManager;
-        if (repaintManager instanceof PSwingRepaintManager) {
-            pSwingRepaintManager = (PSwingRepaintManager) repaintManager;
-        }
-        else {
-            pSwingRepaintManager = new PSwingRepaintManager();
-            RepaintManager.setCurrentManager(pSwingRepaintManager);
+        final RepaintManager repaintManager = RepaintManager.currentManager(this);        
+        if (!(repaintManager instanceof PSwingRepaintManager)) {            
+            RepaintManager.setCurrentManager(new PSwingRepaintManager());
         }
     }
 

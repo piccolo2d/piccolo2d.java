@@ -2,20 +2,16 @@ package edu.umd.cs.piccolo;
 
 import java.awt.Cursor;
 
-import javax.swing.JPanel;
-
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.event.PInputEventListener;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 public class PCanvasTest extends TestCase {
-    private PCanvas canvas;
-    private int pCanvasFinalizerCount;
+    private PCanvas canvas;    
     private MockPInputEventListener mockListener;
 
-    public void setUp() {
-        pCanvasFinalizerCount = 0;
+    public void setUp() {        
         canvas = new PCanvas();
         mockListener = new MockPInputEventListener();
     }
@@ -105,7 +101,7 @@ public class PCanvasTest extends TestCase {
         canvas.addInputEventListener(mockListener);
         final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
-        assertEquals(3, listeners.length); // 3 since pan and zoom are attached
+        assertEquals(3, listeners.length); // zoom + pan + mockListener
         // by default
     }
 
@@ -114,34 +110,6 @@ public class PCanvasTest extends TestCase {
         canvas.removeInputEventListener(mockListener);
         final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
-        assertEquals(2, listeners.length); // 3 since pan and zoom are attached
-        // by default
+        assertEquals(2, listeners.length); // zoom + pan + mockListener
     }
-
-    public void testMemoryLeak() throws InterruptedException {
-        final JPanel panel = new JPanel();
-        for (int i = 0; i < 10; i++) {
-            PCanvas canvas = new PCanvas() {
-                /**
-                 * 
-                 */
-                private static final long serialVersionUID = 1L;
-
-                public void finalize() {
-                    pCanvasFinalizerCount++;
-                }
-            };
-            panel.add(canvas);
-            panel.remove(canvas);
-            canvas = null;
-        }
-        System.gc();
-        System.runFinalization();
-        PCanvas.CURRENT_ZCANVAS = null;
-
-        // Not sure why I need -1 here, but I do. If I create 10000 it'll always
-        // be 1 less
-        // assertEquals(10-1, pCanvasFinalizerCount);
-    }
-
 }

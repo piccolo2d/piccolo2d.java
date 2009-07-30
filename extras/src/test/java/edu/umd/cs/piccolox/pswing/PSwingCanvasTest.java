@@ -28,7 +28,7 @@
  */
 package edu.umd.cs.piccolox.pswing;
 
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import junit.framework.TestCase;
 
@@ -40,33 +40,11 @@ public class PSwingCanvasTest extends TestCase {
 
     public void setUp() {
         finalizerCallCount = 0;
-    }
-
-    public void testMemoryLeak() throws InterruptedException {
-        JPanel panel = new JPanel();
-        for (int i = 0; i < 10; i++) {
-            PSwingCanvas canvas = new PSwingCanvas() {
-                /**
-                 * 
-                 */
-                private static final long serialVersionUID = 1L;
-
-                public void finalize() {
-                    finalizerCallCount++;
-                }
-            };
-            panel.add(canvas);
-            panel.remove(canvas);
-            canvas = null;
-        }
-        panel = null;
-        System.gc();
-        System.runFinalization();
-
-        // Not sure why I need -1 here, but I do. If I create 10000 it'll always
-        // be 1 less
-        // TODO: make this work in all environments. Will not work at the
-        // command line for some.
-        // assertEquals(10 - 1, finalizerCallCount);
+    }  
+    
+    public void testRemovePSwingDoesNothingWithForeignPSwing() {
+        PSwingCanvas canvas = new PSwingCanvas();
+        PSwing orphanPSwing = new PSwing(new JLabel());
+        canvas.removePSwing(orphanPSwing);
     }
 }

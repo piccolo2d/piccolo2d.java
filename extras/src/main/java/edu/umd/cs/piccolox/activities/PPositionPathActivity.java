@@ -62,8 +62,8 @@ public class PPositionPathActivity extends PPathActivity {
     public PPositionPathActivity(final long duration, final long stepRate, final int loopCount, final int mode,
             final Target aTarget, final float[] knots, final Point2D[] positions) {
         super(duration, stepRate, loopCount, mode, knots);
-        target = aTarget;
-        this.positions = positions;
+        target = aTarget;        
+        this.positions = (Point2D[])positions.clone();
     }
 
     protected boolean isAnimation() {
@@ -71,7 +71,7 @@ public class PPositionPathActivity extends PPathActivity {
     }
 
     public Point2D[] getPositions() {
-        return positions;
+        return (Point2D[])positions.clone();
     }
 
     public Point2D getPosition(final int index) {
@@ -79,7 +79,7 @@ public class PPositionPathActivity extends PPathActivity {
     }
 
     public void setPositions(final Point2D[] positions) {
-        this.positions = positions;
+        this.positions = (Point2D[])positions.clone();
     }
 
     public void setPosition(final int index, final Point2D position) {

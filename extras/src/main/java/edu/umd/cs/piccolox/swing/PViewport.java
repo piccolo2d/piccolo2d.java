@@ -225,6 +225,9 @@ public class PViewport extends JViewport {
          * @param parent the container to lay out
          */
         public void layoutContainer(final Container parent) {
+            if (!(parent instanceof JViewport)) {
+                throw new IllegalArgumentException("PViewport.layoutContainer may only be applied to JViewports");
+            }
             final JViewport vp = (JViewport) parent;
             final Component view = vp.getView();
 

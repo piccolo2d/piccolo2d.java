@@ -66,6 +66,9 @@ public class PScrollPaneLayout extends ScrollPaneLayout {
         /*
          * Sync the (now obsolete) policy fields with the JScrollPane.
          */
+        if (!(parent instanceof JScrollPane)) {
+            throw new IllegalArgumentException("layoutContainer may only be applied to JScrollPanes");
+        }
         final JScrollPane scrollPane = (JScrollPane) parent;
         vsbPolicy = scrollPane.getVerticalScrollBarPolicy();
         hsbPolicy = scrollPane.getHorizontalScrollBarPolicy();

@@ -219,10 +219,10 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /**
      * The cutoff at which the Swing component is rendered greek
      */
-    private final double renderCutoff = 0.3;
+    private static final double GREEK_SCALE_CUT_OFF = 0.3d;
     private JComponent component = null;
     private double minFontSize = Double.MAX_VALUE;
-    private Stroke defaultStroke = new BasicStroke();
+    private transient Stroke defaultStroke = new BasicStroke();
     private Font defaultFont = new Font("Serif", Font.PLAIN, 12);
     private PSwingCanvas canvas;
 
@@ -381,7 +381,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     protected boolean shouldRenderGreek(final PPaintContext renderContext) {
-        return renderContext.getScale() < renderCutoff
+        return renderContext.getScale() < GREEK_SCALE_CUT_OFF
         // && pSwingCanvas.getInteracting()
                 || minFontSize * renderContext.getScale() < 0.5;
     }

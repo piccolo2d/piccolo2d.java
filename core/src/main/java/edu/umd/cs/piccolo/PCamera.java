@@ -174,7 +174,11 @@ public class PCamera extends PNode {
      *             modify the viewBounds parameter.
      */
     public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
-        this.repaintFromLayer(viewBounds, (PLayer) repaintedLayer);
+        if (repaintedLayer instanceof PLayer) {
+            this.repaintFromLayer(viewBounds, (PLayer) repaintedLayer);
+        } else {
+            throw new RuntimeException("Passed non PLayer node to repaintFromLayer");
+        }
     }
 
     // ****************************************************************
