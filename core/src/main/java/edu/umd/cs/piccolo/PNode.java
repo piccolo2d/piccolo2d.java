@@ -109,6 +109,13 @@ public class PNode implements Cloneable, Serializable, Printable {
      * client properties but old value will always be null.
      */
     public static final String PROPERTY_CLIENT_PROPERTIES = "clientProperties";
+
+    /**
+     * The property code that identifies a change in this node's client
+     * propertie (see {@link #getClientProperty getClientProperty}). In an
+     * property change event the new value will be a reference to the map of
+     * client properties but old value will always be null.
+     */
     public static final int PROPERTY_CODE_CLIENT_PROPERTIES = 1 << 0;
 
     /**
@@ -118,6 +125,13 @@ public class PNode implements Cloneable, Serializable, Printable {
      * a reference to this node's bounds, but old value will always be null.
      */
     public static final String PROPERTY_BOUNDS = "bounds";
+
+    /**
+     * The property code that identifies a change of this node's bounds (see
+     * {@link #getBounds getBounds}, {@link #getBoundsReference
+     * getBoundsReference}). In any property change event the new value will be
+     * a reference to this node's bounds, but old value will always be null.
+     */
     public static final int PROPERTY_CODE_BOUNDS = 1 << 1;
 
     /**
@@ -128,6 +142,14 @@ public class PNode implements Cloneable, Serializable, Printable {
      * cache, but old value will always be null.
      */
     public static final String PROPERTY_FULL_BOUNDS = "fullBounds";
+
+    /**
+     * The property code that identifies a change of this node's full bounds
+     * (see {@link #getFullBounds getFullBounds},
+     * {@link #getFullBoundsReference getFullBoundsReference}). In any property
+     * change event the new value will be a reference to this node's full bounds
+     * cache, but old value will always be null.
+     */
     public static final int PROPERTY_CODE_FULL_BOUNDS = 1 << 2;
 
     /**
@@ -138,6 +160,14 @@ public class PNode implements Cloneable, Serializable, Printable {
      * null.
      */
     public static final String PROPERTY_TRANSFORM = "transform";
+
+    /**
+     * The property code that identifies a change of this node's transform (see
+     * {@link #getTransform getTransform}, {@link #getTransformReference
+     * getTransformReference}). In any property change event the new value will
+     * be a reference to this node's transform, but old value will always be
+     * null.
+     */
     public static final int PROPERTY_CODE_TRANSFORM = 1 << 3;
 
     /**
@@ -146,6 +176,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * null in any property change event.
      */
     public static final String PROPERTY_VISIBLE = "visible";
+
+    /**
+     * The property code that identifies a change of this node's visibility (see
+     * {@link #getVisible getVisible}). Both old value and new value will be
+     * null in any property change event.
+     */
     public static final int PROPERTY_CODE_VISIBLE = 1 << 4;
 
     /**
@@ -154,6 +190,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * correctly in any property change event.
      */
     public static final String PROPERTY_PAINT = "paint";
+
+    /**
+     * The property code that identifies a change of this node's paint (see
+     * {@link #getPaint getPaint}). Both old value and new value will be set
+     * correctly in any property change event.
+     */
     public static final int PROPERTY_CODE_PAINT = 1 << 5;
 
     /**
@@ -162,6 +204,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * value will be null in any property change event.
      */
     public static final String PROPERTY_TRANSPARENCY = "transparency";
+
+    /**
+     * The property code that identifies a change of this node's transparency
+     * (see {@link #getTransparency getTransparency}). Both old value and new
+     * value will be null in any property change event.
+     */
     public static final int PROPERTY_CODE_TRANSPARENCY = 1 << 6;
 
     /**
@@ -170,6 +218,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * be null in any property change event.
      */
     public static final String PROPERTY_PICKABLE = "pickable";
+    /**
+     * The property code that identifies a change of this node's pickable status
+     * (see {@link #getPickable getPickable}). Both old value and new value will
+     * be null in any property change event.
+     */
     public static final int PROPERTY_CODE_PICKABLE = 1 << 7;
 
     /**
@@ -178,6 +231,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Both old value and new value will be null in any property change event.
      */
     public static final String PROPERTY_CHILDREN_PICKABLE = "childrenPickable";
+
+    /**
+     * The property code that identifies a change of this node's children
+     * pickable status (see {@link #getChildrenPickable getChildrenPickable}).
+     * Both old value and new value will be null in any property change event.
+     */
     public static final int PROPERTY_CODE_CHILDREN_PICKABLE = 1 << 8;
 
     /**
@@ -188,6 +247,14 @@ public class PNode implements Cloneable, Serializable, Printable {
      * value will always be null.
      */
     public static final String PROPERTY_CHILDREN = "children";
+
+    /**
+     * The property code that identifies a change in the set of this node's
+     * direct children (see {@link #getChildrenReference getChildrenReference},
+     * {@link #getChildrenIterator getChildrenIterator}). In any property change
+     * event the new value will be a reference to this node's children, but old
+     * value will always be null.
+     */
     public static final int PROPERTY_CODE_CHILDREN = 1 << 9;
 
     /**
@@ -196,8 +263,17 @@ public class PNode implements Cloneable, Serializable, Printable {
      * correctly in any property change event.
      */
     public static final String PROPERTY_PARENT = "parent";
+
+    /**
+     * The property code that identifies a change of this node's parent (see
+     * {@link #getParent getParent}). Both old value and new value will be set
+     * correctly in any property change event.
+     */
     public static final int PROPERTY_CODE_PARENT = 1 << 10;
 
+    /**
+     * Is an optimization for use during repaints
+     */
     private static final PBounds TEMP_REPAINT_BOUNDS = new PBounds();
 
     /**
@@ -206,57 +282,119 @@ public class PNode implements Cloneable, Serializable, Printable {
     public static PSceneGraphDelegate SCENE_GRAPH_DELEGATE = null;
 
     /**
-     * <b>PSceneGraphDelegate</b> is an interface to recive low level node
-     * events. It together with PNode.SCENE_GRAPH_DELEGATE gives Piccolo users
-     * an efficient way to learn about low level changes in Piccolo's scene
-     * graph. Most users will not need to use this.
+     * Tracks the parent of this node, may be null.
      */
-    public interface PSceneGraphDelegate {
-        public void nodePaintInvalidated(PNode node);
-
-        public void nodeFullBoundsInvalidated(PNode node);
-    }
-
     private transient PNode parent;
+    /**
+     * Tracks all immediate child nodes.
+     */
     private List children;
+    /**
+     * Bounds of the PNode.
+     */
     private final PBounds bounds;
-    private PAffineTransform transform;
-    private Paint paint;
-    private float transparency;
-    private MutableAttributeSet clientProperties;
-    private PBounds fullBoundsCache;
-
-    private int propertyChangeParentMask = 0;
-    private transient SwingPropertyChangeSupport changeSupport;
-    private transient EventListenerList listenerList;
-
-    private boolean pickable;
-    private boolean childrenPickable;
-    private boolean visible;
-    private boolean childBoundsVolatile;
-    private boolean paintInvalid;
-    private boolean childPaintInvalid;
-    private boolean boundsChanged;
-    private boolean fullBoundsInvalid;
-    private boolean childBoundsInvalid;
-    private boolean occluded;
-
-    private String name;
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     /**
-     * Calls {@link PNode} followed by {@link PNode#setName(String)}.
+     * Transform that applies to this node in relation to its parent.
      */
-    public PNode(final String name) {
+    private PAffineTransform transform;
+
+    /**
+     * The paint to use for the background of this node.
+     */
+    private Paint paint;
+
+    /**
+     * How Opaque this node should be 1f = fully opaque, 0f = completely
+     * transparent.
+     */
+    private float transparency;
+
+    /**
+     * A modifiable set of client properties.
+     */
+    private MutableAttributeSet clientProperties;
+
+    /**
+     * An optimization that remembers the full bounds of a node rather than
+     * computing it every time.
+     */
+    private PBounds fullBoundsCache;
+
+    /**
+     * Mask used when deciding whether to bubble up property change events to
+     * parents.
+     */
+    private int propertyChangeParentMask = 0;
+
+    /**
+     * Used to handle property change listeners.
+     */
+    private transient SwingPropertyChangeSupport changeSupport;
+
+    /**
+     * List of event listeners.
+     */
+    private transient EventListenerList listenerList;
+
+    /**
+     * Whether this node is pickable or not.
+     */
+    private boolean pickable;
+
+    /**
+     * Whether to stop processing pick at this node and not bother drilling down
+     * into children.
+     */
+    private boolean childrenPickable;
+
+    /**
+     * Whether this node will be rendered.
+     */
+    private boolean visible;
+
+    private boolean childBoundsVolatile;
+
+    /**
+     * Whether this node needs to be repainted.
+     */
+    private boolean paintInvalid;
+
+    /**
+     * Whether children need to be repainted.
+     */
+    private boolean childPaintInvalid;
+
+    /**
+     * Whether this node's bounds have changed, and so needs to be relaid out.
+     */
+    private boolean boundsChanged;
+
+    /**
+     * Whether this node's full bounds need to be recomputed.
+     */
+    private boolean fullBoundsInvalid;
+
+    /**
+     * Whether this node's child bounds need to be recomputed.
+     */
+    private boolean childBoundsInvalid;
+
+    private boolean occluded;
+
+    /**
+     * Stores the name associated to this node.
+     */
+    private String name;
+
+    /**
+     * Creates a new PNode with the given name.
+     * 
+     * @param newName name to assign to node
+     */
+    public PNode(final String newName) {
         this();
-        setName(name);
+        setName(newName);
     }
 
     /**
@@ -300,6 +438,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * change the node's transform. Use animateTransformToBounds() to animate
      * the node's transform instead.
      * 
+     * @param x left of target bounds
+     * @param y top of target bounds
+     * @param width width of target bounds
+     * @param height height of target bounds
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
@@ -309,33 +451,33 @@ public class PNode implements Cloneable, Serializable, Printable {
             setBounds(x, y, width, height);
             return null;
         }
-        else {
-            final PBounds dst = new PBounds(x, y, width, height);
 
-            final PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
-                private PBounds src;
+        final PBounds dst = new PBounds(x, y, width, height);
 
-                protected void activityStarted() {
-                    src = getBounds();
-                    startResizeBounds();
-                    super.activityStarted();
-                }
+        final PInterpolatingActivity interpolatingActivity = new PInterpolatingActivity(duration,
+                PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
+            private PBounds src;
 
-                public void setRelativeTargetValue(final float zeroToOne) {
-                    PNode.this.setBounds(src.x + zeroToOne * (dst.x - src.x), src.y + zeroToOne * (dst.y - src.y),
-                            src.width + zeroToOne * (dst.width - src.width), src.height + zeroToOne
-                                    * (dst.height - src.height));
-                }
+            protected void activityStarted() {
+                src = getBounds();
+                startResizeBounds();
+                super.activityStarted();
+            }
 
-                protected void activityFinished() {
-                    super.activityFinished();
-                    endResizeBounds();
-                }
-            };
+            public void setRelativeTargetValue(final float zeroToOne) {
+                PNode.this.setBounds(src.x + zeroToOne * (dst.x - src.x), src.y + zeroToOne * (dst.y - src.y),
+                        src.width + zeroToOne * (dst.width - src.width), src.height + zeroToOne
+                                * (dst.height - src.height));
+            }
 
-            addActivity(ta);
-            return ta;
-        }
+            protected void activityFinished() {
+                super.activityFinished();
+                endResizeBounds();
+            }
+        };
+
+        addActivity(interpolatingActivity);
+        return interpolatingActivity;
     }
 
     /**
@@ -351,6 +493,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * bounds rectangle. Use animateToBounds() to animate the node's bounds
      * rectangle instead.
      * 
+     * @param x left of target bounds
+     * @param y top of target bounds
+     * @param width width of target bounds
+     * @param height height of target bounds
      * @param duration amount of time that the animation should take
      * @return the newly scheduled activity
      */
@@ -373,7 +519,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * applied last on each frame, so it will appear to have replaced the
      * original. Generally you will not want to do that.
      * 
+     * @param x the final target x position of node
+     * @param y the final target y position of node
      * @param duration amount of time that the animation should take
+     * @param scale the final scale for the duration
      * @param theta final theta value (in radians) for the animation
      * @return the newly scheduled activity
      */
@@ -525,8 +674,10 @@ public class PNode implements Cloneable, Serializable, Printable {
     // ****************************************************************
 
     /**
-     * Return mutable attributed set of client properites associated with this
+     * Return mutable attributed set of client properties associated with this
      * node.
+     * 
+     * @return the client properties associated to this node
      */
     public MutableAttributeSet getClientProperties() {
         if (clientProperties == null) {
@@ -539,6 +690,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Returns the value of the client attribute with the specified key. Only
      * attributes added with <code>addAttribute</code> will return a non-null
      * value.
+     * 
+     * @param key key to use while fetching client attribute
      * 
      * @return the value of this attribute or null
      */
@@ -554,11 +707,14 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Add an arbitrary key/value to this node.
      * <p>
-     * The <code>get/add attribute<code> methods provide access to
-     * a small per-instance attribute set. Callers can use get/add attribute
-     * to annotate nodes that were created by another module.
+     * The <code>get/add attribute</code> methods provide access to a small
+     * per-instance attribute set. Callers can use get/add attribute to annotate
+     * nodes that were created by another module.
      * <p>
      * If value is null this method will remove the attribute.
+     * 
+     * @param key to use when adding the attribute
+     * @param value value to associate to the new attribute
      */
     public void addAttribute(final Object key, final Object value) {
         if (value == null && clientProperties == null) {
@@ -604,28 +760,83 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     // convenience methods for attributes
 
-    public Object getAttribute(final Object key, final Object def) {
-        final Object o = getAttribute(key);
-        return o == null ? def : o;
+    /**
+     * Fetches the value of the requested attribute, returning defaultValue is
+     * not found.
+     * 
+     * @param key attribute to search for
+     * @param defaultValue value to return if attribute is not found
+     * 
+     * @return value of attribute or defaultValue if not found
+     */
+    public Object getAttribute(final Object key, final Object defaultValue) {
+        final Object value = getAttribute(key);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value;
     }
 
-    public boolean getBooleanAttribute(final Object key, final boolean def) {
-        final Boolean b = (Boolean) getAttribute(key);
-        return b == null ? def : b.booleanValue();
+    /**
+     * Fetches the boolean value of the requested attribute, returning
+     * defaultValue is not found.
+     * 
+     * @param key attribute to search for
+     * @param defaultValue value to return if attribute is not found
+     * 
+     * @return value of attribute or defaultValue if not found
+     */
+    public boolean getBooleanAttribute(final Object key, final boolean defaultValue) {
+        final Boolean value = (Boolean) getAttribute(key);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value.booleanValue();
     }
 
-    public int getIntegerAttribute(final Object key, final int def) {
-        final Number n = (Number) getAttribute(key);
-        return n == null ? def : n.intValue();
+    /**
+     * Fetches the integer value of the requested attribute, returning
+     * defaultValue is not found.
+     * 
+     * @param key attribute to search for
+     * @param defaultValue value to return if attribute is not found
+     * 
+     * @return value of attribute or defaultValue if not found
+     */
+    public int getIntegerAttribute(final Object key, final int defaultValue) {
+        final Number value = (Number) getAttribute(key);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value.intValue();
     }
 
-    public double getDoubleAttribute(final Object key, final double def) {
-        final Number n = (Number) getAttribute(key);
-        return n == null ? def : n.doubleValue();
+    /**
+     * Fetches the double value of the requested attribute, returning
+     * defaultValue is not found.
+     * 
+     * @param key attribute to search for
+     * @param defaultValue value to return if attribute is not found
+     * 
+     * @return value of attribute or defaultValue if not found
+     */
+    public double getDoubleAttribute(final Object key, final double defaultValue) {
+        final Number value = (Number) getAttribute(key);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value.doubleValue();
     }
 
     /**
      * @deprecated use getAttribute(Object key)instead.
+     * 
+     * @param key name of property to search for
+     * @return value of matching client property
      */
     public Object getClientProperty(final Object key) {
         return getAttribute(key);
@@ -633,6 +844,9 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * @deprecated use addAttribute(Object key, Object value)instead.
+     * 
+     * @param key name of property to add
+     * @param value value or new attribute
      */
     public void addClientProperty(final Object key, final Object value) {
         addAttribute(key, value);
@@ -640,6 +854,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * @deprecated use getClientPropertyKeysEnumerator() instead.
+     * 
+     * @return iterator for client property keys
      */
     public Iterator getClientPropertyKeysIterator() {
         final Enumeration enumeration = getClientPropertyKeysEnumeration();
@@ -822,10 +1038,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param localPoint point in local coordinate system to be transformed.
      * @return point in global coordinates
      */
-    public Point2D localToGlobal(Point2D localPoint) {
+    public Point2D localToGlobal(final Point2D localPoint) {
         PNode n = this;
         while (n != null) {
-            localPoint = n.localToParent(localPoint);
+            n.localToParent(localPoint);
             n = n.parent;
         }
         return localPoint;
@@ -840,10 +1056,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transformed.
      * @return dimension in global coordinates
      */
-    public Dimension2D localToGlobal(Dimension2D localDimension) {
+    public Dimension2D localToGlobal(final Dimension2D localDimension) {
         PNode n = this;
         while (n != null) {
-            localDimension = n.localToParent(localDimension);
+            n.localToParent(localDimension);
             n = n.parent;
         }
         return localDimension;
@@ -858,10 +1074,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transformed.
      * @return rectangle in global coordinates
      */
-    public Rectangle2D localToGlobal(Rectangle2D localRectangle) {
+    public Rectangle2D localToGlobal(final Rectangle2D localRectangle) {
         PNode n = this;
         while (n != null) {
-            localRectangle = n.localToParent(localRectangle);
+            n.localToParent(localRectangle);
             n = n.parent;
         }
         return localRectangle;
@@ -874,9 +1090,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param globalPoint point in global coordinates to be transformed.
      * @return point in this node's local coordinate system.
      */
-    public Point2D globalToLocal(Point2D globalPoint) {
+    public Point2D globalToLocal(final Point2D globalPoint) {
         if (parent != null) {
-            globalPoint = parent.globalToLocal(globalPoint);
+            parent.globalToLocal(globalPoint);
         }
         return parentToLocal(globalPoint);
     }
@@ -889,9 +1105,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param globalDimension dimension in global coordinates to be transformed.
      * @return dimension in this node's local coordinate system.
      */
-    public Dimension2D globalToLocal(Dimension2D globalDimension) {
+    public Dimension2D globalToLocal(final Dimension2D globalDimension) {
         if (parent != null) {
-            globalDimension = parent.globalToLocal(globalDimension);
+            parent.globalToLocal(globalDimension);
         }
         return parentToLocal(globalDimension);
     }
@@ -904,9 +1120,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param globalRectangle rectangle in global coordinates to be transformed.
      * @return rectangle in this node's local coordinate system.
      */
-    public Rectangle2D globalToLocal(Rectangle2D globalRectangle) {
+    public Rectangle2D globalToLocal(final Rectangle2D globalRectangle) {
         if (parent != null) {
-            globalRectangle = parent.globalToLocal(globalRectangle);
+            parent.globalToLocal(globalRectangle);
         }
         return parentToLocal(globalRectangle);
     }
@@ -915,6 +1131,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Return the transform that converts local coordinates at this node to the
      * global coordinate system.
      * 
+     * @param dest PAffineTransform to transform to global coordinates
      * @return The concatenation of transforms from the top node down to this
      *         node.
      */
@@ -925,25 +1142,24 @@ public class PNode implements Cloneable, Serializable, Printable {
                 dest.concatenate(transform);
             }
         }
-        else {
-            if (dest == null) {
-                dest = getTransform();
-            }
-            else {
-                if (transform != null) {
-                    dest.setTransform(transform);
-                }
-                else {
-                    dest.setToIdentity();
-                }
-            }
+        else if (dest == null) {
+            dest = getTransform();
         }
+        else if (transform != null) {
+            dest.setTransform(transform);
+        }
+        else {
+            dest.setToIdentity();
+        }
+
         return dest;
     }
 
     /**
      * Return the transform that converts global coordinates to local
      * coordinates of this node.
+     * 
+     * @param dest PAffineTransform to transform from global to local
      * 
      * @return The inverse of the concatenation of transforms from the root down
      *         to this node.
@@ -1073,6 +1289,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Return the propertyChangeParentMask that determines which property change
      * events are forwared to this nodes parent so that its property change
      * listeners will also be notified.
+     * 
+     * @return mask used for deciding whether to bubble property changes up to
+     *         parent
      */
     public int getPropertyChangeParentMask() {
         return propertyChangeParentMask;
@@ -1082,9 +1301,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Set the propertyChangeParentMask that determines which property change
      * events are forwared to this nodes parent so that its property change
      * listeners will also be notified.
+     * 
+     * @param newPropertyChangeParentMask new mask for property change bubble up
      */
-    public void setPropertyChangeParentMask(final int propertyChangeParentMask) {
-        this.propertyChangeParentMask = propertyChangeParentMask;
+    public void setPropertyChangeParentMask(final int newPropertyChangeParentMask) {
+        this.propertyChangeParentMask = newPropertyChangeParentMask;
     }
 
     /**
@@ -1094,8 +1315,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * also be fired on this nodes parent.
      * 
      * @param propertyCode The code of the property changed.
-     * @param propertyName The programmatic name of the property that was
-     *            changed.
+     * @param propertyName The name of the property that was changed.
      * @param oldValue The old value of the property.
      * @param newValue The new value of the property.
      */
@@ -1159,6 +1379,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Return a copy of this node's bounds. These bounds are stored in the local
      * coordinate system of this node and do not include the bounds of any of
      * this node's children.
+     * 
+     * @return copy of this node's local bounds
      */
     public PBounds getBounds() {
         return (PBounds) getBoundsReference().clone();
@@ -1169,6 +1391,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * in the local coordinate system of this node and do not include the bounds
      * of any of this node's children. The value returned should not be
      * modified.
+     * 
+     * @return direct reference to local bounds
      */
     public PBounds getBoundsReference() {
         return bounds;
@@ -1189,18 +1413,48 @@ public class PNode implements Cloneable, Serializable, Printable {
     public void endResizeBounds() {
     }
 
+    /**
+     * Set's this node's bounds left position, leaving y, width, and height
+     * unchanged.
+     * 
+     * @param x new x position of bounds
+     * 
+     * @return whether the change was successful
+     */
     public boolean setX(final double x) {
         return setBounds(x, getY(), getWidth(), getHeight());
     }
 
+    /**
+     * Set's this node's bounds top position, leaving x, width, and height
+     * unchanged.
+     * 
+     * @param y new y position of bounds
+     * 
+     * @return whether the change was successful
+     */
     public boolean setY(final double y) {
         return setBounds(getX(), y, getWidth(), getHeight());
     }
 
+    /**
+     * Set's this node's bounds width, leaving x, y, and height unchanged.
+     * 
+     * @param width new width position of bounds
+     * 
+     * @return whether the change was successful
+     */
     public boolean setWidth(final double width) {
         return setBounds(getX(), getY(), width, getHeight());
     }
 
+    /**
+     * Set's this node's bounds height, leaving x, y, and width unchanged.
+     * 
+     * @param height new height position of bounds
+     * 
+     * @return whether the change was successful
+     */
     public boolean setHeight(final double height) {
         return setBounds(getX(), getY(), getWidth(), height);
     }
@@ -1208,6 +1462,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Set the bounds of this node to the given value. These bounds are stored
      * in the local coordinate system of this node.
+     * 
+     * @param newBounds bounds to apply to this node
      * 
      * @return true if the bounds changed.
      */
@@ -1223,6 +1479,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * emtpy bit will be set to true.
      * 
      * Subclasses must call the super.setBounds() method.
+     * 
+     * @param x x position of bounds
+     * @param y y position of bounds
+     * @param width width to apply to the bounds
+     * @param height height to apply to the bounds
      * 
      * @return true if the bounds changed.
      */
@@ -1253,6 +1514,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * bounds field will contain the new value.
      * 
      * See PPath for an example that uses this method.
+     * 
+     * @param x x position of bounds
+     * @param y y position of bounds
+     * @param width width to apply to the bounds
+     * @param height height to apply to the bounds
      */
     protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
     }
@@ -1266,6 +1532,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Return the x position (in local coords) of this node's bounds.
+     * 
+     * @return local x position of bounds
      */
     public double getX() {
         return getBoundsReference().getX();
@@ -1273,6 +1541,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Return the y position (in local coords) of this node's bounds.
+     * 
+     * @return local y position of bounds
      */
     public double getY() {
         return getBoundsReference().getY();
@@ -1280,6 +1550,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Return the width (in local coords) of this node's bounds.
+     * 
+     * @return local width of bounds
      */
     public double getWidth() {
         return getBoundsReference().getWidth();
@@ -1287,6 +1559,8 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Return the height (in local coords) of this node's bounds.
+     * 
+     * @return local width of bounds
      */
     public double getHeight() {
         return getBoundsReference().getHeight();
@@ -1303,9 +1577,12 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Center the bounds of this node so that they are centered on the given
-     * point specified on the local coords of this node. Note that this meathod
-     * will modify the nodes bounds, while centerFullBoundsOnPoint will modify
-     * the nodes transform.
+     * point specified on the local coordinates of this node. Note that this
+     * method will modify the nodes bounds, while centerFullBoundsOnPoint will
+     * modify the nodes transform.
+     * 
+     * @param localX x position of point around which to center bounds
+     * @param localY y position of point around which to center bounds
      * 
      * @return true if the bounds changed.
      */
@@ -1316,10 +1593,13 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Center the ffull bounds of this node so that they are centered on the
-     * given point specified on the local coords of this nodes parent. Note that
-     * this meathod will modify the nodes transform, while centerBoundsOnPoint
-     * will modify the nodes bounds.
+     * Center the full bounds of this node so that they are centered on the
+     * given point specified on the local coordinates of this nodes parent. Note
+     * that this method will modify the nodes transform, while
+     * centerBoundsOnPoint will modify the nodes bounds.
+     * 
+     * @param parentX x position around which to center full bounds
+     * @param parentY y position around which to center full bounds
      */
     public void centerFullBoundsOnPoint(final double parentX, final double parentY) {
         final double dx = parentX - getFullBoundsReference().getCenterX();
@@ -1405,6 +1685,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * return the results instead of creating a new PBounds.
      * 
      * @param dstBounds if not null the new bounds will be stored here
+     * @return union of children bounds
      */
     public PBounds getUnionOfChildrenBounds(PBounds dstBounds) {
         if (dstBounds == null) {
@@ -3088,6 +3369,24 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
+     * Sets the name of this null, may be null.
+     * 
+     * @param name new name for this node
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the name given to this node.
+     * 
+     * @return name given to this node, may be null
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * Return the number of children that this node has.
      * 
      * @return the number of children
@@ -3233,5 +3532,28 @@ public class PNode implements Cloneable, Serializable, Printable {
             result[i] = (PInputEventListener) listeners[i];
         }
         return result;
+    }
+
+    /**
+     * <b>PSceneGraphDelegate</b> is an interface to recive low level node
+     * events. It together with PNode.SCENE_GRAPH_DELEGATE gives Piccolo users
+     * an efficient way to learn about low level changes in Piccolo's scene
+     * graph. Most users will not need to use this.
+     */
+    public interface PSceneGraphDelegate {
+        /**
+         * Called to notify delegate that the node needs repainting
+         * 
+         * @param node node needing repaint
+         */
+        public void nodePaintInvalidated(PNode node);
+
+        /**
+         * Called to notify delegate that the node and all it's children need
+         * repainting
+         * 
+         * @param node node needing repaint
+         */
+        public void nodeFullBoundsInvalidated(PNode node);
     }
 }

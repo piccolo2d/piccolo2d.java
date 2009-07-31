@@ -8,10 +8,10 @@ import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 public class PCanvasTest extends TestCase {
-    private PCanvas canvas;    
+    private PCanvas canvas;
     private MockPInputEventListener mockListener;
 
-    public void setUp() {        
+    public void setUp() {
         canvas = new PCanvas();
         mockListener = new MockPInputEventListener();
     }

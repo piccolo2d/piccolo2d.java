@@ -82,23 +82,86 @@ public class PCanvas extends JComponent implements PComponent {
      *             reflect the correct spelling
      */
     public static final String INTERATING_CHANGED_NOTIFICATION = "INTERATING_CHANGED_NOTIFICATION";
+
+    /**
+     * The property name that identifies a change in the interacting state.
+     * 
+     * @deprecated in favor of PROPERTY_INTERACTING
+     */
     public static final String INTERACTING_CHANGED_NOTIFICATION = "INTERACTING_CHANGED_NOTIFICATION";
 
+    /**
+     * The property name that identifies a change in the interacting state.
+     */
+    public static final String PROPERTY_INTERACTING = "INTERACTING_CHANGED_NOTIFICATION";
+
+    /**
+     * Used as a public global to track the current canvas.
+     * 
+     * @deprecated since it falsely assumes that there is only one PCanvas per
+     *             program
+     */
     public static PCanvas CURRENT_ZCANVAS = null;
 
+    /**
+     * The camera though which this Canvas is viewing.
+     */
     private PCamera camera;
+
+    /**
+     * Stack of cursors used to keep track of cursors as they change through
+     * interactions.
+     */
     private final PStack cursorStack;
+
+    /**
+     * Whether the canvas is considered to be interacting, will probably mean
+     * worse render quality.
+     */
     private int interacting;
-    private int defaultRenderQuality;
+    /**
+     * The render quality to use when the scene is not being interacted or
+     * animated.
+     */
+    private int normalRenderQuality;
+    /**
+     * The quality to use while the scene is being animated.
+     */
     private int animatingRenderQuality;
+    /**
+     * The quality to use while the scene is being interacted with.
+     */
     private int interactingRenderQuality;
+    /**
+     * The one and only pan handler.
+     */
     private PPanEventHandler panEventHandler;
+    /**
+     * The one and only ZoomEventHandler.
+     */
     private PZoomEventHandler zoomEventHandler;
+
     private boolean paintingImmediately;
+    /**
+     * Used to track whether the last paint operation was during an animation.
+     */
     private boolean animatingOnLastPaint;
+    /**
+     * The mouse listener that is registered for large scale mouse events.
+     */
     private transient MouseListener mouseListener;
+    /**
+     * Remembers the key processor.
+     */
     private transient KeyEventPostProcessor keyEventPostProcessor;
+    /**
+     * The mouse wheel listeners that's registered to receive wheel events.
+     */
     private transient MouseWheelListener mouseWheelListener;
+    /**
+     * The mouse listener that is registered to receive small scale mouse events
+     * (like motion).
+     */
     private transient MouseMotionListener mouseMotionListener;
 
     /**
@@ -131,6 +194,11 @@ public class PCanvas extends JComponent implements PComponent {
         });
     }
 
+    /**
+     * Creates and returns a basic Scene Graph.
+     * 
+     * @return a built PCamera scene
+     */
     protected PCamera createDefaultCamera() {
         return PUtil.createBasicScenegraph();
     }
@@ -143,6 +211,8 @@ public class PCanvas extends JComponent implements PComponent {
      * Get the pan event handler associated with this canvas. This event handler
      * is set up to get events from the camera associated with this canvas by
      * default.
+     * 
+     * @return the current pan event handler, may be null
      */
     public PPanEventHandler getPanEventHandler() {
         return panEventHandler;
@@ -169,6 +239,8 @@ public class PCanvas extends JComponent implements PComponent {
      * Get the zoom event handler associated with this canvas. This event
      * handler is set up to get events from the camera associated with this
      * canvas by default.
+     * 
+     * @return the current zoom event handler, may be null
      */
     public PZoomEventHandler getZoomEventHandler() {
         return zoomEventHandler;
@@ -195,6 +267,8 @@ public class PCanvas extends JComponent implements PComponent {
      * Return the camera associated with this canvas. All input events from this
      * canvas go through this camera. And this is the camera that paints this
      * canvas.
+     * 
+     * @return camera through which this PCanvas views the scene
      */
     public PCamera getCamera() {
         return camera;
@@ -204,6 +278,8 @@ public class PCanvas extends JComponent implements PComponent {
      * Set the camera associated with this canvas. All input events from this
      * canvas go through this camera. And this is the camera that paints this
      * canvas.
+     * 
+     * @param newCamera the camera which this PCanvas should view the scene
      */
     public void setCamera(final PCamera newCamera) {
         if (camera != null) {
@@ -220,6 +296,8 @@ public class PCanvas extends JComponent implements PComponent {
 
     /**
      * Return root for this canvas.
+     * 
+     * @return the root PNode at the "bottom" of the scene
      */
     public PRoot getRoot() {
         return camera.getRoot();
@@ -227,6 +305,8 @@ public class PCanvas extends JComponent implements PComponent {
 
     /**
      * Return layer for this canvas.
+     * 
+     * @return the first layer attached to this camera
      */
     public PLayer getLayer() {
         return camera.getLayer(0);
@@ -234,6 +314,8 @@ public class PCanvas extends JComponent implements PComponent {
 
     /**
      * Add an input listener to the camera associated with this canvas.
+     * 
+     * @param listener listener to register for event notifications
      */
     public void addInputEventListener(final PInputEventListener listener) {
         getCamera().addInputEventListener(listener);
@@ -241,6 +323,8 @@ public class PCanvas extends JComponent implements PComponent {
 
     /**
      * Remove an input listener to the camera associated with this canvas.
+     * 
+     * @param listener listener to unregister from event notifications
      */
     public void removeInputEventListener(final PInputEventListener listener) {
         getCamera().removeInputEventListener(listener);
@@ -251,8 +335,11 @@ public class PCanvas extends JComponent implements PComponent {
     // ****************************************************************
 
     /**
-     * Return true if this canvas has been marked as interacting. If so the
-     * canvas will normally render at a lower quality that is faster.
+     * Return true if this canvas has been marked as interacting, or whether
+     * it's root is interacting. If so the canvas will normally render at a
+     * lower quality that is faster.
+     * 
+     * @return whether the canvas has been flagged as being interacted with
      */
     public boolean getInteracting() {
         return interacting > 0 || getRoot().getInteracting();
@@ -263,6 +350,8 @@ public class PCanvas extends JComponent implements PComponent {
      * isAnimating were run in the last PRoot.processInputs() loop. This values
      * is used by this canvas to determine the render quality to use for the
      * next paint.
+     * 
+     * @return whether the PCanvas is currently being animated
      */
     public boolean getAnimating() {
         return getRoot().getActivityScheduler().getAnimating();
@@ -272,8 +361,10 @@ public class PCanvas extends JComponent implements PComponent {
      * Set if this canvas is interacting. If so the canvas will normally render
      * at a lower quality that is faster. Also repaints the canvas if the render
      * quality should change.
+     * 
+     * @param isInteracting whether the PCanvas should be considered interacting
      */
-    public void setInteracting(boolean isInteracting) {
+    public void setInteracting(final boolean isInteracting) {
         final boolean wasInteracting = getInteracting();
 
         if (isInteracting) {
@@ -286,7 +377,7 @@ public class PCanvas extends JComponent implements PComponent {
         if (!getInteracting()) { // determine next render quality and repaint if
             // it's greater then the old
             // interacting render quality.
-            int nextRenderQuality = defaultRenderQuality;
+            int nextRenderQuality = normalRenderQuality;
             if (getAnimating()) {
                 nextRenderQuality = animatingRenderQuality;
             }
@@ -295,10 +386,10 @@ public class PCanvas extends JComponent implements PComponent {
             }
         }
 
-        isInteracting = getInteracting();
+        final boolean newInteracting = getInteracting();
 
-        if (wasInteracting != isInteracting) {
-            firePropertyChange(INTERACTING_CHANGED_NOTIFICATION, wasInteracting, isInteracting);
+        if (wasInteracting != newInteracting) {
+            firePropertyChange(PROPERTY_INTERACTING, wasInteracting, newInteracting);
         }
     }
 
@@ -311,7 +402,7 @@ public class PCanvas extends JComponent implements PComponent {
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
     public void setDefaultRenderQuality(final int requestedQuality) {
-        defaultRenderQuality = requestedQuality;
+        normalRenderQuality = requestedQuality;
         repaint();
     }
 
@@ -348,6 +439,8 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Set the canvas cursor, and remember the previous cursor on the cursor
      * stack.
+     * 
+     * @param cursor the cursor to push onto the cursor stack
      */
     public void pushCursor(final Cursor cursor) {
         cursorStack.push(getCursor());
@@ -370,12 +463,23 @@ public class PCanvas extends JComponent implements PComponent {
     // they get delivered to the Piccolo framework.
     // ****************************************************************
 
+    /**
+     * Tracks whether button1 of the mouse is down.
+     */
     private boolean isButton1Pressed;
+    /**
+     * Tracks whether button2 of the mouse is down.
+     */
     private boolean isButton2Pressed;
+    /**
+     * Tracks whether button3 of the mouse is down.
+     */
     private boolean isButton3Pressed;
 
     /**
      * Override setEnabled to install/remove canvas input sources as needed.
+     * 
+     * @param enabled new enable status of the Pcanvas
      */
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
@@ -431,14 +535,14 @@ public class PCanvas extends JComponent implements PComponent {
                 }
 
                 /** {@inheritDoc} */
-                public void mousePressed(MouseEvent e) {
+                public void mousePressed(final MouseEvent rawEvent) {
                     requestFocus();
 
                     boolean shouldBalanceEvent = false;
 
-                    e = copyButtonsFromModifiers(e, MouseEvent.MOUSE_PRESSED);
+                    final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_PRESSED);
 
-                    switch (e.getButton()) {
+                    switch (event.getButton()) {
                         case MouseEvent.BUTTON1:
                             if (isButton1Pressed) {
                                 shouldBalanceEvent = true;
@@ -459,22 +563,25 @@ public class PCanvas extends JComponent implements PComponent {
                             }
                             isButton3Pressed = true;
                             break;
+                        default:
+                            throw new RuntimeException("mousePressed without buttons specified");
+
                     }
 
                     if (shouldBalanceEvent) {
-                        sendRetypedMouseEventToInputManager(e, MouseEvent.MOUSE_RELEASED);
+                        sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
                     }
 
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
+                    sendInputEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
                 }
 
                 /** {@inheritDoc} */
-                public void mouseReleased(MouseEvent e) {
+                public void mouseReleased(final MouseEvent rawEvent) {
                     boolean shouldBalanceEvent = false;
 
-                    e = copyButtonsFromModifiers(e, MouseEvent.MOUSE_RELEASED);
+                    final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_RELEASED);
 
-                    switch (e.getButton()) {
+                    switch (event.getButton()) {
                         case MouseEvent.BUTTON1:
                             if (!isButton1Pressed) {
                                 shouldBalanceEvent = true;
@@ -495,13 +602,15 @@ public class PCanvas extends JComponent implements PComponent {
                             }
                             isButton3Pressed = false;
                             break;
+                        default:
+                            throw new RuntimeException("mouseReleased without buttons specified");
                     }
 
                     if (shouldBalanceEvent) {
-                        sendRetypedMouseEventToInputManager(e, MouseEvent.MOUSE_PRESSED);
+                        sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
                     }
 
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_RELEASED);
+                    sendInputEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
                 }
 
                 private boolean isAnyButtonDown(final MouseEvent e) {
@@ -612,15 +721,33 @@ public class PCanvas extends JComponent implements PComponent {
         keyEventPostProcessor = null;
     }
 
-    protected void sendInputEventToInputManager(final InputEvent e, final int type) {
-        getRoot().getDefaultInputManager().processEventFromCamera(e, type, getCamera());
+    /**
+     * Sends the given input event with the given type to the current
+     * InputManager.
+     * 
+     * @param event event to dispatch
+     * @param type type of event being dispatched
+     */
+    protected void sendInputEventToInputManager(final InputEvent event, final int type) {
+        getRoot().getDefaultInputManager().processEventFromCamera(event, type, getCamera());
     }
 
-    public void setBounds(final int x, final int y, final int w, final int h) {
-        camera.setBounds(camera.getX(), camera.getY(), w, h);
-        super.setBounds(x, y, w, h);
+    /**
+     * Updates the bounds of the component and updates the camera accordingly.
+     * 
+     * @param x left of bounds
+     * @param y top of bounds
+     * @param width width of bounds
+     * @param height height of bounds
+     */
+    public void setBounds(final int x, final int y, final int width, final int height) {
+        camera.setBounds(camera.getX(), camera.getY(), width, height);
+        super.setBounds(x, y, width, height);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void repaint(final PBounds bounds) {
         PDebug.processRepaint();
 
@@ -630,6 +757,9 @@ public class PCanvas extends JComponent implements PComponent {
         repaint((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void paintComponent(final Graphics g) {
         PDebug.startProcessingOutput();
 
@@ -655,7 +785,7 @@ public class PCanvas extends JComponent implements PComponent {
             }
         }
         else {
-            paintContext.setRenderQuality(defaultRenderQuality);
+            paintContext.setRenderQuality(normalRenderQuality);
         }
 
         // paint piccolo
@@ -673,6 +803,10 @@ public class PCanvas extends JComponent implements PComponent {
         PDebug.endProcessingOutput(g2);
     }
 
+    /**
+     * If not painting immediately, send paint notification to RepaintManager,
+     * otherwise does nothing.
+     */
     public void paintImmediately() {
         if (paintingImmediately) {
             return;
@@ -683,22 +817,62 @@ public class PCanvas extends JComponent implements PComponent {
         paintingImmediately = false;
     }
 
+    /**
+     * Helper for creating a timer. It's an extension point for subclasses to
+     * install their own timers.
+     * 
+     * @param delay the number of milliseconds to wait before invoking the
+     *            listener
+     * @param listener the listener to invoke after the delay
+     * 
+     * @return the created Timer
+     */
     public Timer createTimer(final int delay, final ActionListener listener) {
         return new Timer(delay, listener);
     }
 
+    /**
+     * Returns the quality to use when not animating or interacting.
+     * 
+     * @deprecated in favor or getNormalRenderQuality
+     * @return the render quality to use when not animating or interacting
+     */
     public int getDefaultRenderQuality() {
-        return defaultRenderQuality;
+        return normalRenderQuality;
     }
 
+    /**
+     * Returns the quality to use when not animating or interacting.
+     * 
+     * @return the render quality to use when not animating or interacting
+     */
+    public int getNormalRenderQuality() {
+        return normalRenderQuality;
+    }
+
+    /**
+     * Returns the quality to use when animating.
+     * 
+     * @return Returns the quality to use when animating
+     */
     public int getAnimatingRenderQuality() {
         return animatingRenderQuality;
     }
 
+    /**
+     * Returns the quality to use when interacting.
+     * 
+     * @return Returns the quality to use when interacting
+     */
     public int getInteractingRenderQuality() {
         return interactingRenderQuality;
     }
 
+    /**
+     * Returns the input event listeners registered to receive input events.
+     * 
+     * @return array or input event listeners
+     */
     public PInputEventListener[] getInputEventListeners() {
         return camera.getInputEventListeners();
     }

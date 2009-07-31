@@ -113,7 +113,7 @@ public class PTransformActivity extends PInterpolatingActivity {
     public double[] getDestinationTransform() {
         if (destination == null) {
             return null;
-        } 
+        }
         else {
             return (double[]) destination.clone();
         }
@@ -126,10 +126,10 @@ public class PTransformActivity extends PInterpolatingActivity {
     public void setDestinationTransform(final double[] newDestination) {
         if (newDestination == null) {
             destination = null;
-        } 
+        }
         else {
             destination = (double[]) newDestination.clone();
-        }      
+        }
     }
 
     protected void activityStarted() {

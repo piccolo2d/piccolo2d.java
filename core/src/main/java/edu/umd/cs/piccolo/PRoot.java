@@ -84,6 +84,9 @@ public class PRoot extends PNode {
      * in here.
      */
     public static interface InputSource {
+        /**
+         * Causes the system to process any pending Input Events
+         */
         public void processInput();
     }
 

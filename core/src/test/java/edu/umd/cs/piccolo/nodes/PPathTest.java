@@ -76,9 +76,9 @@ public class PPathTest extends TestCase {
         final File file = File.createTempFile("test", "ser");
 
         serializeToFile(srcPath, file);
-        final PPath resultPath = deserializeFromFile(srcBounds, file);        
+        final PPath resultPath = deserializeFromFile(srcBounds, file);
         file.deleteOnExit();
-        
+
         assertEquals(resultPath.getBounds(), srcBounds);
     }
 
@@ -87,7 +87,7 @@ public class PPathTest extends TestCase {
         PPath path;
         final FileInputStream fin = new FileInputStream(file);
         final ObjectInputStream in = new ObjectInputStream(fin);
-        path = (PPath) in.readObject();        
+        path = (PPath) in.readObject();
 
         return path;
     }

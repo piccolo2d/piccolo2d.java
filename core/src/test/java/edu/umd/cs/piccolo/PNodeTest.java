@@ -934,6 +934,27 @@ public class PNodeTest extends TestCase {
         assertEquals(2, paintCounts[0]);
     }
 
+    public void testSetTransparency1MeansInvisible() {
+        final PNode node = new PNode();
+        node.setBounds(0, 0, 100, 100);
+        node.setVisible(true);
+        node.setPaint(Color.RED);
+
+        final PCanvas canvas = buildCanvasContainingNode(node);
+
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics g = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
+
+        canvas.paintComponent(g);
+        node.setTransparency(1f);
+        assertEquals(Color.RED.getRGB(), img.getRGB(10, 10));
+
+        node.setTransparency(0f);
+        canvas.paintComponent(g);
+        assertEquals(Color.WHITE.getRGB(), img.getRGB(10, 10));
+
+    }
+
     private PCanvas buildCanvasContainingNode(final PNode node) {
         final PCanvas canvas = new PCanvas();
         canvas.setSize(100, 100);

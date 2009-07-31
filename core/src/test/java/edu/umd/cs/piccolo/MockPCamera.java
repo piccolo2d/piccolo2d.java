@@ -8,9 +8,9 @@ import java.util.List;
 
 import edu.umd.cs.piccolo.util.PBounds;
 
-class MockPCamera extends PCamera {       
+class MockPCamera extends PCamera {
     private static final long serialVersionUID = 1L;
-    private List notifications = new ArrayList();
+    private final List notifications = new ArrayList();
 
     public void repaintFromLayer(final PBounds bounds, final PLayer layer) {
         notifications.add(new Notification("repaintFromLayer", bounds, layer));
@@ -42,8 +42,8 @@ class MockPCamera extends PCamera {
         return notifications.size();
     }
 
-    public Notification getNotification(int i) {
-       return (Notification)notifications.get(i);
+    public Notification getNotification(final int i) {
+        return (Notification) notifications.get(i);
     }
 
 }

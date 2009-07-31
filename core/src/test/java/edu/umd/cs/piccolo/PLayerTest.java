@@ -96,7 +96,7 @@ public class PLayerTest extends TestCase {
 
         assertEquals(1, camera.getNotificationCount());
 
-        final MockPCamera.Notification notification = (MockPCamera.Notification) camera.getNotification(0);
+        final MockPCamera.Notification notification = camera.getNotification(0);
         assertEquals(layer, notification.getLayer());
         assertEquals(bounds, notification.getBounds());
     }

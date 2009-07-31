@@ -254,5 +254,5 @@ public class PUtil {
         }
 
         out.writeInt(PATH_TERMINATOR);
-    }   
+    }
 }
