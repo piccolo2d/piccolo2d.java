@@ -271,37 +271,25 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public static final int PROPERTY_CODE_PARENT = 1 << 10;
 
-    /**
-     * Is an optimization for use during repaints
-     */
+    /** Is an optimization for use during repaints. */
     private static final PBounds TEMP_REPAINT_BOUNDS = new PBounds();
 
-    /**
-     * The single scene graph delegate that recives low level node events.
-     */
+    /** The single scene graph delegate that receives low level node events. */
     public static PSceneGraphDelegate SCENE_GRAPH_DELEGATE = null;
 
-    /**
-     * Tracks the parent of this node, may be null.
-     */
+    /** Tracks the parent of this node, may be null. */
     private transient PNode parent;
-    /**
-     * Tracks all immediate child nodes.
-     */
+    
+    /** Tracks all immediate child nodes. */
     private List children;
-    /**
-     * Bounds of the PNode.
-     */
+    
+    /** Bounds of the PNode. */
     private final PBounds bounds;
 
-    /**
-     * Transform that applies to this node in relation to its parent.
-     */
+    /** Transform that applies to this node in relation to its parent. */
     private PAffineTransform transform;
 
-    /**
-     * The paint to use for the background of this node.
-     */
+    /** The paint to use for the background of this node. */
     private Paint paint;
 
     /**
@@ -310,9 +298,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     private float transparency;
 
-    /**
-     * A modifiable set of client properties.
-     */
+    /** A modifiable set of client properties. */
     private MutableAttributeSet clientProperties;
 
     /**
@@ -327,19 +313,13 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     private int propertyChangeParentMask = 0;
 
-    /**
-     * Used to handle property change listeners.
-     */
+    /** Used to handle property change listeners. */
     private transient SwingPropertyChangeSupport changeSupport;
 
-    /**
-     * List of event listeners.
-     */
+    /** List of event listeners. */
     private transient EventListenerList listenerList;
 
-    /**
-     * Whether this node is pickable or not.
-     */
+    /** Whether this node is pickable or not. */
     private boolean pickable;
 
     /**
@@ -348,43 +328,29 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     private boolean childrenPickable;
 
-    /**
-     * Whether this node will be rendered.
-     */
+    /** Whether this node will be rendered. */
     private boolean visible;
 
     private boolean childBoundsVolatile;
 
-    /**
-     * Whether this node needs to be repainted.
-     */
+    /** Whether this node needs to be repainted. */
     private boolean paintInvalid;
 
-    /**
-     * Whether children need to be repainted.
-     */
+    /** Whether children need to be repainted. */
     private boolean childPaintInvalid;
 
-    /**
-     * Whether this node's bounds have changed, and so needs to be relaid out.
-     */
+    /** Whether this node's bounds have changed, and so needs to be relaid out. */
     private boolean boundsChanged;
 
-    /**
-     * Whether this node's full bounds need to be recomputed.
-     */
+    /** Whether this node's full bounds need to be recomputed. */
     private boolean fullBoundsInvalid;
 
-    /**
-     * Whether this node's child bounds need to be recomputed.
-     */
+    /** Whether this node's child bounds need to be recomputed. */
     private boolean childBoundsInvalid;
 
     private boolean occluded;
 
-    /**
-     * Stores the name associated to this node.
-     */
+    /** Stores the name associated to this node. */
     private String name;
 
     /**
@@ -1135,24 +1101,25 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return The concatenation of transforms from the top node down to this
      *         node.
      */
-    public PAffineTransform getLocalToGlobalTransform(PAffineTransform dest) {
+    public PAffineTransform getLocalToGlobalTransform(final PAffineTransform dest) {
+        PAffineTransform result = dest;
         if (parent != null) {
-            dest = parent.getLocalToGlobalTransform(dest);
+            result = parent.getLocalToGlobalTransform(result);
             if (transform != null) {
-                dest.concatenate(transform);
+                result.concatenate(transform);
             }
         }
         else if (dest == null) {
-            dest = getTransform();
+            result = getTransform();
         }
         else if (transform != null) {
-            dest.setTransform(transform);
+            result.setTransform(transform);
         }
         else {
-            dest.setToIdentity();
+            result.setToIdentity();
         }
 
-        return dest;
+        return result;
     }
 
     /**
@@ -1164,15 +1131,15 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return The inverse of the concatenation of transforms from the root down
      *         to this node.
      */
-    public PAffineTransform getGlobalToLocalTransform(PAffineTransform dest) {
-        dest = getLocalToGlobalTransform(dest);
+    public PAffineTransform getGlobalToLocalTransform(final PAffineTransform dest) {
+        PAffineTransform result = getLocalToGlobalTransform(dest);
         try {
-            dest.setTransform(dest.createInverse());
+            result.setTransform(result.createInverse());
         }
         catch (final NoninvertibleTransformException e) {
-            throw new PAffineTransformException(e, dest);
+            throw new PAffineTransformException(e, result);
         }
-        return dest;
+        return result;
     }
 
     // ****************************************************************

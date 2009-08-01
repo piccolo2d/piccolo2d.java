@@ -103,9 +103,7 @@ public class PCanvas extends JComponent implements PComponent {
      */
     public static PCanvas CURRENT_ZCANVAS = null;
 
-    /**
-     * The camera though which this Canvas is viewing.
-     */
+    /** The camera though which this Canvas is viewing. */
     private PCamera camera;
 
     /**
@@ -124,39 +122,31 @@ public class PCanvas extends JComponent implements PComponent {
      * animated.
      */
     private int normalRenderQuality;
-    /**
-     * The quality to use while the scene is being animated.
-     */
+
+    /** The quality to use while the scene is being animated. */
     private int animatingRenderQuality;
-    /**
-     * The quality to use while the scene is being interacted with.
-     */
+
+    /** The quality to use while the scene is being interacted with. */
     private int interactingRenderQuality;
-    /**
-     * The one and only pan handler.
-     */
+
+    /** The one and only pan handler. */
     private PPanEventHandler panEventHandler;
-    /**
-     * The one and only ZoomEventHandler.
-     */
+
+    /** The one and only ZoomEventHandler. */
     private PZoomEventHandler zoomEventHandler;
 
     private boolean paintingImmediately;
-    /**
-     * Used to track whether the last paint operation was during an animation.
-     */
+    
+    /** Used to track whether the last paint operation was during an animation. */
     private boolean animatingOnLastPaint;
-    /**
-     * The mouse listener that is registered for large scale mouse events.
-     */
+    
+    /** The mouse listener that is registered for large scale mouse events. */
     private transient MouseListener mouseListener;
-    /**
-     * Remembers the key processor.
-     */
+    
+    /** Remembers the key processor. */
     private transient KeyEventPostProcessor keyEventPostProcessor;
-    /**
-     * The mouse wheel listeners that's registered to receive wheel events.
-     */
+    
+    /** The mouse wheel listeners that's registered to receive wheel events. */
     private transient MouseWheelListener mouseWheelListener;
     /**
      * The mouse listener that is registered to receive small scale mouse events

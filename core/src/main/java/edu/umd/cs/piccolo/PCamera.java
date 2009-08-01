@@ -109,9 +109,7 @@ public class PCamera extends PNode {
      */
     public static final int PROPERTY_CODE_VIEW_TRANSFORM = 1 << 12;
 
-    /**
-     * Denotes that the view has no constraints.
-     */
+    /** Denotes that the view has no constraints. */
     public static final int VIEW_CONSTRAINT_NONE = 0;
     public static final int VIEW_CONSTRAINT_ALL = 1;
     public static final int VIEW_CONSTRAINT_CENTER = 2;
@@ -121,9 +119,7 @@ public class PCamera extends PNode {
      * wishes to be repainted.
      */
     private transient PComponent component;
-    /**
-     * Layers which the camera is viewing.
-     */
+    /** Layers which the camera is viewing. */
     private transient List layers;
     /**
      * Transform that is applied to layers before they are rendered.
@@ -133,14 +129,10 @@ public class PCamera extends PNode {
      */
     private final PAffineTransform viewTransform;
 
-    /**
-     * The constraints to apply to the viewing area.
-     */
+    /** The constraints to apply to the viewing area. */
     private int viewConstraint;
 
-    /**
-     * Construct a new camera with no layers and a default white color.
-     */
+    /** Construct a new camera with no layers and a default white color. */
     public PCamera() {
         super();
         viewTransform = new PAffineTransform();

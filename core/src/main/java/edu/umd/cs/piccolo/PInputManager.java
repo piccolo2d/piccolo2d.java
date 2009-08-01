@@ -52,73 +52,48 @@ import edu.umd.cs.piccolo.util.PPickPath;
  */
 public class PInputManager extends PBasicInputEventHandler implements PRoot.InputSource {
 
-    /**
-     * Records the last known mouse position on the canvas.
-     */
+    /** Records the last known mouse position on the canvas. */
     private final Point2D lastCanvasPosition;
 
-    /**
-     * Records the current known mouse position on the canvas.
-     */
+    /** Records the current known mouse position on the canvas. */
     private final Point2D currentCanvasPosition;
 
-    /**
-     * The next InputEvent that needs to be processed.
-     */
+    /** The next InputEvent that needs to be processed. */
     private InputEvent nextInput;
 
-    /**
-     * The type of the next InputEvent that needs to be processed.
-     */
+    /** The type of the next InputEvent that needs to be processed. */
     private int nextType;
 
-    /**
-     * The Input Source the next event to process came from.
-     */
+    /** The Input Source the next event to process came from. */
     private PCamera nextInputSource;
 
-    /**
-     * The current mouse focus.
-     */
+    /** The current mouse focus. */
     private PPickPath mouseFocus;
 
-    /**
-     * The previous mouse focus.
-     */
+    /** The previous mouse focus. */
     private PPickPath previousMouseFocus;
 
-    /**
-     * Tracks where the mouse is right now on the canvas.
-     */
+    /** Tracks where the mouse is right now on the canvas. */
     private PPickPath mouseOver;
 
-    /**
-     * Tracks the previous location of the mouse on the canvas.
-     */
+    /** Tracks the previous location of the mouse on the canvas. */
     private PPickPath previousMouseOver;
 
-    /**
-     * Tracks the input event listener that should receive keyboard events.
-     */
+    /** Tracks the input event listener that should receive keyboard events. */
     private PInputEventListener keyboardFocus;
 
-    /**
-     * Tracks the number mouse buttons currently pressed.
-     */
+    /** Tracks the number mouse buttons currently pressed. */
     private int buttonsPressed;
 
     /**
-     * Creates a PInputManager and sets last positions to the origin (0,0).
+     * Creates a PInputManager and sets positions (last, current) to the origin
+     * (0,0).
      */
     public PInputManager() {
         super();
         lastCanvasPosition = new Point2D.Double();
         currentCanvasPosition = new Point2D.Double();
     }
-
-    // ****************************************************************
-    // Basic
-    // ****************************************************************
 
     /**
      * Return the node that currently has the keyboard focus. This node receives
