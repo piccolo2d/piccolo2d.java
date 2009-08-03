@@ -36,7 +36,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ComponentAdapter;
@@ -51,6 +50,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -199,44 +199,49 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * @author Sam R. Reid
  * @author Benjamin B. Bederson
  * @author Lance E. Good
- * 
- *         3-23-2007 edited to automatically detect PCamera/PSwingCanvas to
- *         allow single-arg constructor usage
  */
 public class PSwing extends PNode implements Serializable, PropertyChangeListener {
 
-    /**
-     * 
-     */
+    /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
-    /**
-     * Used as a hashtable key for this object in the Swing component's client
-     * properties.
-     */
+
+    /** Key for this object in the Swing component's client properties. */
     public static final String PSWING_PROPERTY = "PSwing";
+
+    /** Temporary repaint bounds. */
     private static PBounds TEMP_REPAINT_BOUNDS2 = new PBounds();
 
-    /**
-     * The cutoff at which the Swing component is rendered greek
-     */
-    private static final double GREEK_SCALE_CUT_OFF = 0.3d;
+    /** Default greek threshold, <code>0.3d</code>. */
+    private static final double DEFAULT_GREEK_THRESHOLD = 0.3d;
+
+    /** Swing component for this Swing node. */
     private JComponent component = null;
+
+    /** Minimum font size. */
     private double minFontSize = Double.MAX_VALUE;
+
+    /** Default stroke, <code>new BasicStroke()</code>.   Cannot be made static because BasicStroke is not serializable. */
     private transient Stroke defaultStroke = new BasicStroke();
-    private Font defaultFont = new Font("Serif", Font.PLAIN, 12);
+
+    /** Default font, 12 point <code>"SansSerif"</code>. Will be made final in version 2.0. */
+    // public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 12); jdk 1.6+
+    public static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
+
+    /** Greek threshold in scale. */
+    private double greekThreshold = DEFAULT_GREEK_THRESHOLD;
+
+    /** Swing canvas for this swing node. */
     private PSwingCanvas canvas;
 
-    // //////////////////////////////////////////////////////////
-    // /////Following fields are for automatic canvas/camera detection
-    // //////////////////////////////////////////////////////////
     /*
      * Keep track of which nodes we've attached listeners to since no built in
      * support in PNode
      */
-    private final ArrayList listeningTo = new ArrayList();
+    private final List listeningTo = new ArrayList();
 
-    /* The parent listener for camera/canvas changes */
+    /* The parent listener for camera/canvas changes. */
     private final PropertyChangeListener parentListener = new PropertyChangeListener() {
+        /** {@inheritDoc} */
         public void propertyChange(final PropertyChangeEvent evt) {
             final PNode parent = (PNode) evt.getNewValue();
             clearListeners((PNode) evt.getOldValue());
@@ -251,9 +256,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     };
 
     /**
-     * Constructs a new visual component wrapper for the Swing component.
+     * Create a new visual component wrapper for the specified Swing component.
      * 
-     * @param component The swing component to be wrapped
+     * @param component Swing component to be wrapped
      */
     public PSwing(final JComponent component) {
         this.component = component;
@@ -262,16 +267,19 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         component.revalidate();
 
         component.addPropertyChangeListener(new PropertyChangeListener() {
+            /** {@inheritDoc} */
             public void propertyChange(final PropertyChangeEvent evt) {
                 reshape();
             }
         });
 
         component.addComponentListener(new ComponentAdapter() {
+            /** {@inheritDoc} */
             public void componentHidden(final ComponentEvent e) {
                 setVisible(false);
             }
 
+            /** {@inheritDoc} */
             public void componentShown(final ComponentEvent e) {
                 setVisible(true);
             }
@@ -281,17 +289,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         listenForCanvas(this);
     }
 
-    /**
-     * Deprecated constructor for application code still depending on this
-     * signature.
-     * 
-     * @param pSwingCanvas
-     * @param component
-     * @deprecated
-     */
-    public PSwing(final PSwingCanvas pSwingCanvas, final JComponent component) {
+    /** @deprecated by {@link PSwing(JComponent)} */
+    public PSwing(final PSwingCanvas swingCanvas, final JComponent component) {
         this(component);
     }
+
 
     /**
      * Ensures the bounds of the underlying component are accurate, and sets the
@@ -312,57 +314,48 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         setBounds(0, 0, width, height);
     }
 
-    /**
-     * Determines if the Swing component should be rendered normally or as a
-     * filled rectangle.
-     * <p/>
-     * The transform, clip, and composite will be set appropriately when this
-     * object is rendered. It is up to this object to restore the transform,
-     * clip, and composite of the Graphics2D if this node changes any of them.
-     * However, the color, font, and stroke are unspecified by Piccolo. This
-     * object should set those things if they are used, but they do not need to
-     * be restored.
-     * 
-     * @param renderContext Contains information about current render.
-     */
-    public void paint(final PPaintContext renderContext) {
-        final Graphics2D g2 = renderContext.getGraphics();
+    /** {@inheritDoc} */
+    protected void paint(final PPaintContext paintContext) {
+        final Graphics2D graphics = paintContext.getGraphics();
 
         if (defaultStroke == null) {
             defaultStroke = new BasicStroke();
         }
-        g2.setStroke(defaultStroke);
+        graphics.setStroke(defaultStroke);
 
-        if (defaultFont == null) {
-            defaultFont = new Font("Serif", Font.PLAIN, 12);
-        }
-
-        g2.setFont(defaultFont);
+        graphics.setFont(DEFAULT_FONT);
 
         if (component.getParent() == null) {
-            // pSwingCanvas.getSwingWrapper().add( component );
             component.revalidate();
         }
 
         if (component instanceof JLabel) {
             final JLabel label = (JLabel) component;
-            enforceNoEllipsis(label.getText(), label.getIcon(), label.getIconTextGap(), g2);
+            enforceNoEllipsis(label.getText(), label.getIcon(), label.getIconTextGap(), graphics);
         }
         else if (component instanceof JButton) {
             final JButton button = (JButton) component;
-            enforceNoEllipsis(button.getText(), button.getIcon(), button.getIconTextGap(), g2);
+            enforceNoEllipsis(button.getText(), button.getIcon(), button.getIconTextGap(), graphics);
         }
 
-        if (shouldRenderGreek(renderContext)) {
-            paintAsGreek(g2);
+        if (shouldRenderGreek(paintContext)) {
+            paintGreek(paintContext);
         }
         else {
-            paint(g2);
+            paintComponent(paintContext);
         }
     }
 
-    private void enforceNoEllipsis(final String text, final Icon icon, final int iconGap, final Graphics2D g2) {
-        final Rectangle2D textBounds = component.getFontMetrics(component.getFont()).getStringBounds(text, g2);
+    /**
+     * Workaround to prevent text-rendering Swing components from drawing an ellipsis incorrectly.
+     *
+     * @param text text
+     * @param icon icon
+     * @param iconGap icon gap
+     * @param graphics graphics
+     */
+    private void enforceNoEllipsis(final String text, final Icon icon, final int iconGap, final Graphics2D graphics) {
+        final Rectangle2D textBounds = component.getFontMetrics(component.getFont()).getStringBounds(text, graphics);
         double minAcceptableWidth = textBounds.getWidth();
         double minAcceptableHeight = textBounds.getHeight();
 
@@ -380,31 +373,67 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         }
     }
 
-    protected boolean shouldRenderGreek(final PPaintContext renderContext) {
-        return renderContext.getScale() < GREEK_SCALE_CUT_OFF
-        // && pSwingCanvas.getInteracting()
-                || minFontSize * renderContext.getScale() < 0.5;
+    /**
+     * Return the greek threshold in scale. When the scale will be below this
+     * threshold the Swing component is rendered as 'greek' instead of painting
+     * the Swing component. Defaults to {@link DEFAULT_GREEK_THRESHOLD}.
+     * 
+     * @see PSwing#paintGreek(PPaintContext)
+     * @return the current greek threshold in scale
+     */
+    public double getGreekThreshold() {
+        return greekThreshold;
     }
 
     /**
-     * Paints the Swing component as greek.
+     * Set the greek threshold in scale to <code>greekThreshold</code>. When the
+     * scale will be below this threshold the Swing component is rendered as
+     * 'greek' instead of painting the Swing component..
      * 
-     * @param g2 The graphics used to render the filled rectangle
+     * @see PSwing#paintGreek(PPaintContext)
+     * @param greekThreshold greek threshold in scale
      */
-    public void paintAsGreek(final Graphics2D g2) {
+    public void setGreekThreshold(final double greekThreshold) {
+        this.greekThreshold = greekThreshold;
+        invalidatePaint();
+    }
+
+    /**
+     * Return true if this Swing node should render as greek given the specified
+     * paint context.
+     * 
+     * @param paintContext paint context
+     * @return true if this Swing node should render as greek given the
+     *         specified paint context
+     */
+    protected boolean shouldRenderGreek(final PPaintContext paintContext) {
+        return paintContext.getScale() < greekThreshold
+                || minFontSize * paintContext.getScale() < 0.5;
+    }
+
+    /**
+     * Paint the Swing component as greek with the specified paint context. The
+     * implementation in this class paints a rectangle with the Swing
+     * component's background color and paints a stroke with the Swing
+     * component's foreground color.
+     * 
+     * @param paintContext paint context
+     */
+    protected void paintGreek(PPaintContext paintContext) {
+        final Graphics2D graphics = paintContext.getGraphics();
         final Color background = component.getBackground();
         final Color foreground = component.getForeground();
         final Rectangle2D rect = getBounds();
 
         if (background != null) {
-            g2.setColor(background);
+            graphics.setColor(background);
         }
-        g2.fill(rect);
+        graphics.fill(rect);
 
         if (foreground != null) {
-            g2.setColor(foreground);
+            graphics.setColor(foreground);
         }
-        g2.draw(rect);
+        graphics.draw(rect);
     }
 
     /**
@@ -418,39 +447,31 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * Renders to a buffered image, then draws that image to the drawing surface
-     * associated with g2 (usually the screen).
-     * 
-     * @param g2 graphics context for rendering the JComponent
+     * Paint the Swing component with the specified paint context.
+     *
+     * @param paintContext paint context
      */
-    public void paint(final Graphics2D g2) {
+    protected void paintComponent(final PPaintContext paintContext) {
         if (component.getBounds().isEmpty()) {
             // The component has not been initialized yet.
             return;
         }
 
+        final Graphics2D graphics = paintContext.getGraphics();
         final PSwingRepaintManager manager = (PSwingRepaintManager) RepaintManager.currentManager(component);
         manager.lockRepaint(component);
-
-        final RenderingHints oldHints = g2.getRenderingHints();
-
-        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-        component.paint(g2);
-
-        g2.setRenderingHints(oldHints);
-
+        component.paint(graphics);
         manager.unlockRepaint(component);
     }
 
+    /** {@inheritDoc} */
     public void setVisible(final boolean visible) {
         super.setVisible(visible);
         component.setVisible(visible);
     }
 
     /**
-     * Repaints the specified portion of this visual component Note that the
+     * Repaints the specified portion of this visual component. Note that the
      * input parameter may be modified as a result of this call.
      * 
      * @param repaintBounds
@@ -471,9 +492,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * Returns the Swing component that this visual component wraps
+     * Return the Swing component that this Swing node wraps.
      * 
-     * @return The Swing component that this visual component wraps
+     * @return the Swing component that this Swing node wraps
      */
     public JComponent getComponent() {
         return component;
@@ -525,23 +546,19 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         }
     }
 
-    /**
-     * Listens for changes in font on components rooted at this PSwing
-     */
+    /** {@inheritDoc} */
     public void propertyChange(final PropertyChangeEvent evt) {
         if (component.isAncestorOf((Component) evt.getSource()) && ((Component) evt.getSource()).getFont() != null) {
             minFontSize = Math.min(minFontSize, ((Component) evt.getSource()).getFont().getSize());
         }
     }
 
+    /** {@inheritDoc} */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         init(component);
     }
 
-    // //////////////////////////////////////////////////////////
-    // /////Start methods for automatic canvas detection
-    // //////////////////////////////////////////////////////////
     /**
      * Attaches a listener to the specified node and all its parents to listen
      * for a change in the PSwingCanvas. Only PROPERTY_PARENT listeners are
@@ -558,7 +575,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             listenToNode(p);
 
             final PNode parent = p;
-            // System.out.println( "parent = " + parent.getClass() );
             if (parent instanceof PCamera) {
                 final PCamera cam = (PCamera) parent;
                 if (cam.getComponent() instanceof PSwingCanvas) {
@@ -567,8 +583,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             }
             else if (parent instanceof PLayer) {
                 final PLayer player = (PLayer) parent;
-                // System.out.println( "Found player: with " +
-                // player.getCameraCount() + " cameras" );
                 for (int i = 0; i < player.getCameraCount(); i++) {
                     final PCamera cam = player.getCamera(i);
                     if (cam.getComponent() instanceof PSwingCanvas) {
@@ -588,7 +602,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @param node the node to listen to for parent/pcamera/pcanvas changes
      */
     private void listenToNode(final PNode node) {
-        // System.out.println( "listeningTo.size() = " + listeningTo.size() );
         if (!listeningTo(node)) {
             listeningTo.add(node);
             node.addPropertyChangeListener(PNode.PROPERTY_PARENT, parentListener);
@@ -649,7 +662,4 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             }
         }
     }
-    // //////////////////////////////////////////////////////////
-    // /////End methods for automatic canvas detection
-    // //////////////////////////////////////////////////////////
 }
