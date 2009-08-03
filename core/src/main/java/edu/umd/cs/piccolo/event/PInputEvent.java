@@ -60,23 +60,46 @@ import edu.umd.cs.piccolo.util.PPickPath;
  * @author Jesse Grosjean
  */
 public class PInputEvent {
-
+    /** The underlying Swing Event. */
     private final InputEvent inputEvent;
+
+    /** Path relating to the current mouse event. */
     private PPickPath pickPath;
+
+    /** Input manager responsible for the creation of this event. */
     private final PInputManager inputManager;
+
+    /** Flag used to identify this event as handled. */
     private boolean handled;
 
+    /**
+     * Create an event with the given inputManager and based on the given swing
+     * event.
+     * 
+     * @param inputManager source of PInputEvent
+     * @param event underlying swing event
+     */
     public PInputEvent(final PInputManager inputManager, final InputEvent event) {
         super();
         inputEvent = event;
         this.inputManager = inputManager;
     }
 
+    /**
+     * Changes the cursor to the one provided and stores it on the cursor stack
+     * for later retrieval.
+     * 
+     * @param cursor
+     */
     public void pushCursor(final Cursor cursor) {
         final PComponent component = getTopCamera().getComponent();
         component.pushCursor(cursor);
     }
 
+    /**
+     * Removes the top most cursor from the cursor stack and sets it as the
+     * current cursor.
+     */
     public void popCursor() {
         final PComponent component = getTopCamera().getComponent();
         component.popCursor();
@@ -98,6 +121,8 @@ public class PInputEvent {
      * Return the bottom most camera that is currently painting. If you are
      * using internal cameras this may be different then what is returned by
      * getTopCamera.
+     * 
+     * @return the current PickPath's bottom camera.
      */
     public PCamera getCamera() {
         return getPath().getBottomCamera();

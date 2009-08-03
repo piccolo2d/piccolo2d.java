@@ -42,9 +42,9 @@ import edu.umd.cs.piccolo.util.PDebug;
 import edu.umd.cs.piccolo.util.PNodeFilter;
 
 /**
- * <b>PRoot</b> serves as the top node in Piccolo's runtime structure. The PRoot
- * responsible for running the main UI loop that processes input from activities
- * and external events.
+ * <b>PRoot</b> serves as the top node in Piccolo2D's runtime structure. The
+ * PRoot responsible for running the main UI loop that processes input from
+ * activities and external events.
  * <P>
  * 
  * @version 1.1
@@ -65,30 +65,59 @@ public class PRoot extends PNode {
      * input sources, but old value will always be null.
      */
     public static final String PROPERTY_INPUT_SOURCES = "inputSources";
-    public static final int PROPERTY_CODE_INPUT_SOURCES = 1 << 14;
-    public static final String PROPERTY_INTERACTING_CHANGED = "INTERACTING_CHANGED_NOTIFICATION";
-    public static final int PROPERTY_CODE_INTERACTING_CHANGED = 1 << 13;
-
-    protected transient boolean processingInputs;
-    protected transient boolean processInputsScheduled;
-
-    private transient int interacting;
-    private PInputManager defaultInputManager;
-    private transient final List inputSources;
-    private transient long globalTime;
-    private final PActivityScheduler activityScheduler;
 
     /**
-     * This interfaces is for advanced use only. If you want to implement a
-     * different kind of input framework then Piccolo provides you can hook it
-     * in here.
+     * The property code that identifies a change in the set of this root's
+     * input sources (see {@link InputSource InputSource}). In any property
+     * change event the new value will be a reference to the list of this root's
+     * input sources, but old value will always be null.
      */
-    public static interface InputSource {
-        /**
-         * Causes the system to process any pending Input Events
-         */
-        public void processInput();
-    }
+    public static final int PROPERTY_CODE_INPUT_SOURCES = 1 << 14;
+
+    /**
+     * The property name that identifies a change in this node's interacting
+     * state.
+     */
+    public static final String PROPERTY_INTERACTING_CHANGED = "INTERACTING_CHANGED_NOTIFICATION";
+
+    /**
+     * The property code that identifies a change in this node's interacting
+     * state.
+     */
+    public static final int PROPERTY_CODE_INTERACTING_CHANGED = 1 << 13;
+
+    /** Whether this not is currently processing inputs. */
+    protected transient boolean processingInputs;
+
+    /** Whether this node needs to have its inputs processed. */
+    protected transient boolean processInputsScheduled;
+
+    /** The number of interactions this node is currently participating in. */
+    private transient int interacting;
+
+    /**
+     * The singleton instance of the default input manager.
+     */
+    private PInputManager defaultInputManager;
+
+    /** The Input Sources that are registered to this node. */
+    private final transient List inputSources;
+
+    /**
+     * Used to provide a consistent clock time to activities as they are being
+     * processed.
+     * 
+     * Should it happen that an activity step take longer than a millisecond,
+     * the next step will be unaffected by the change in clock had it used
+     * System.currentMillis().
+     */
+    private transient long globalTime;
+
+    /**
+     * Object responsible for scheduling activities, regardless of where in the
+     * scene they take place.
+     */
+    private final PActivityScheduler activityScheduler;
 
     /**
      * Construct a new PRoot(). Note the PCanvas already creates a basic scene
@@ -110,6 +139,9 @@ public class PRoot extends PNode {
      * Activities are given a chance to run during each call to the roots
      * <code>processInputs</code> method. When the activity has finished running
      * it will automatically get removed.
+     * 
+     * @param activity Activity that should be scheduled
+     * @return whether it has been scheduled (always true)
      */
     public boolean addActivity(final PActivity activity) {
         getActivityScheduler().addActivity(activity);
@@ -118,6 +150,8 @@ public class PRoot extends PNode {
 
     /**
      * Get the activity scheduler associated with this root.
+     * 
+     * @return associated scheduler
      */
     public PActivityScheduler getActivityScheduler() {
         return activityScheduler;
@@ -150,12 +184,11 @@ public class PRoot extends PNode {
         }
     }
 
-    // ****************************************************************
-    // Basics
-    // ****************************************************************
-
     /**
-     * Return this.
+     * Since getRoot is handled recursively, and root is the lowest point in the
+     * hierarchy, simply returns itself.
+     * 
+     * @return itself
      */
     public PRoot getRoot() {
         return this;
@@ -165,6 +198,8 @@ public class PRoot extends PNode {
      * Get the default input manager to be used when processing input events.
      * PCanvas's use this method when they forward new swing input events to the
      * PInputManager.
+     * 
+     * @return a singleton instance of PInputManager
      */
     public PInputManager getDefaultInputManager() {
         if (defaultInputManager == null) {
@@ -196,7 +231,7 @@ public class PRoot extends PNode {
      * @param isInteracting True if this root has user interaction taking place
      * @see PCanvas#setInteracting(boolean)
      */
-    public void setInteracting(boolean isInteracting) {
+    public void setInteracting(final boolean isInteracting) {
         final boolean wasInteracting = getInteracting();
 
         if (isInteracting) {
@@ -206,8 +241,7 @@ public class PRoot extends PNode {
             interacting--;
         }
 
-        isInteracting = getInteracting();
-        if (!isInteracting) {
+        if (!isInteracting && !getInteracting()) {
             // force all the child cameras to repaint
             for (int i = 0; i < getChildrenCount(); i++) {
                 final PNode child = getChild(i);
@@ -226,7 +260,9 @@ public class PRoot extends PNode {
     /**
      * Advanced. If you want to add additional input sources to the roots UI
      * process you can do that here. You will seldom do this unless you are
-     * making additions to the piccolo framework.
+     * making additions to the Piccolo2D framework.
+     * 
+     * @param inputSource An input source that should be added
      */
     public void addInputSource(final InputSource inputSource) {
         inputSources.add(inputSource);
@@ -236,50 +272,63 @@ public class PRoot extends PNode {
     /**
      * Advanced. If you want to remove the default input source from the roots
      * UI process you can do that here. You will seldom do this unless you are
-     * making additions to the piccolo framework.
+     * making additions to the Piccolo2D framework.
+     * 
+     * @param inputSource input source that should no longer be asked about
+     *            input events
      */
     public void removeInputSource(final InputSource inputSource) {
-        inputSources.remove(inputSource);
-        firePropertyChange(PROPERTY_CODE_INPUT_SOURCES, PROPERTY_INPUT_SOURCES, null, inputSources);
+        if (inputSources.remove(inputSource)) {
+            firePropertyChange(PROPERTY_CODE_INPUT_SOURCES, PROPERTY_INPUT_SOURCES, null, inputSources);
+        }
     }
 
     /**
      * Returns a new timer. This method allows subclasses, such as PSWTRoot to
-     * create custom timers that will be used transparently by the Piccolo
+     * create custom timers that will be used transparently by the Piccolo2D
      * framework.
+     * 
+     * @param delay # of milliseconds before action listener is invoked
+     * @param listener listener to be invoked after delay
+     * 
+     * @return A new Timer
      */
     public Timer createTimer(final int delay, final ActionListener listener) {
         return new Timer(delay, listener);
     }
 
     // ****************************************************************
-    // UI Loop - Methods for running the main UI loop of Piccolo.
+    // UI Loop - Methods for running the main UI loop of Piccolo2D.
     // ****************************************************************
 
     /**
-     * Get the global Piccolo time. This is set to System.currentTimeMillis() at
-     * the beginning of the roots <code>processInputs</code> method. Activities
-     * should usually use this global time instead of System.
+     * Get the global Piccolo2D time. This is set to System.currentTimeMillis()
+     * at the beginning of the roots <code>processInputs</code> method.
+     * Activities should usually use this global time instead of System.
      * currentTimeMillis() so that multiple activities will be synchronized.
+     * 
+     * @return time as recorded at the beginning of activity scheduling
      */
     public long getGlobalTime() {
         return globalTime;
     }
 
     /**
-     * This is the heartbeat of the Piccolo framework. Pending input events are
-     * processed. Activities are given a chance to run, and the bounds caches
-     * and any paint damage is validated.
+     * This is the heartbeat of the Piccolo2D framework. Pending input events
+     * are processed. Activities are given a chance to run, and the bounds
+     * caches and any paint damage is validated.
      */
     public void processInputs() {
         PDebug.startProcessingInput();
         processingInputs = true;
 
         globalTime = System.currentTimeMillis();
-        final int count = inputSources == null ? 0 : inputSources.size();
-        for (int i = 0; i < count; i++) {
-            final InputSource each = (InputSource) inputSources.get(i);
-            each.processInput();
+        if (inputSources.size() > 0) {
+            final Iterator inputSourceIterator = inputSources.iterator();
+            while (inputSourceIterator.hasNext()) {
+                final InputSource each = (InputSource) inputSourceIterator.next();
+                each.processInput();
+            }
         }
 
         activityScheduler.processActivities(globalTime);
@@ -290,26 +339,31 @@ public class PRoot extends PNode {
         PDebug.endProcessingInput();
     }
 
+    /** {@inheritDoc} */
     public void setFullBoundsInvalid(final boolean fullLayoutInvalid) {
         super.setFullBoundsInvalid(fullLayoutInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
+    /** {@inheritDoc} */
     public void setChildBoundsInvalid(final boolean childLayoutInvalid) {
         super.setChildBoundsInvalid(childLayoutInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
+    /** {@inheritDoc} */
     public void setPaintInvalid(final boolean paintInvalid) {
         super.setPaintInvalid(paintInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
+    /** {@inheritDoc} */
     public void setChildPaintInvalid(final boolean childPaintInvalid) {
         super.setChildPaintInvalid(childPaintInvalid);
         scheduleProcessInputsIfNeeded();
     }
 
+    /** {@inheritDoc} */
     public void scheduleProcessInputsIfNeeded() {
         /*
          * The reason for the special case here (when not in the event dispatch
@@ -319,9 +373,9 @@ public class PRoot extends PNode {
          */
         if (!SwingUtilities.isEventDispatchThread()) {
             /*
-             * Piccolo is not thread safe and should amost always be called from
-             * the Swing event dispatch thread. It should only reach this point
-             * when a new canvas is being created.
+             * Piccolo2D is not thread safe and should almost always be called
+             * from the Swing event dispatch thread. It should only reach this
+             * point when a new canvas is being created.
              */
             return;
         }
@@ -339,5 +393,15 @@ public class PRoot extends PNode {
                 }
             });
         }
+    }
+
+    /**
+     * This interfaces is for advanced use only. If you want to implement a
+     * different kind of input framework then Piccolo2D provides you can hook it
+     * in here.
+     */
+    public static interface InputSource {
+        /** Causes the system to process any pending Input Events. */
+        void processInput();
     }
 }

@@ -388,11 +388,11 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is not interacting or animating. The default value is
      * PPaintContext. HIGH_QUALITY_RENDERING.
      * 
-     * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
+     * @param normalRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setDefaultRenderQuality(final int requestedQuality) {
-        normalRenderQuality = requestedQuality;
+    public void setDefaultRenderQuality(final int normalRenderQuality) {
+        this.normalRenderQuality = normalRenderQuality;
         repaint();
     }
 
@@ -401,11 +401,11 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is animating. The default value is
      * PPaintContext.LOW_QUALITY_RENDERING.
      * 
-     * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
+     * @param animatingRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setAnimatingRenderQuality(final int requestedQuality) {
-        animatingRenderQuality = requestedQuality;
+    public void setAnimatingRenderQuality(final int animatingRenderQuality) {
+        this.animatingRenderQuality = animatingRenderQuality;
         if (getAnimating()) {
             repaint();
         }
@@ -416,11 +416,11 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is interacting. The default value is
      * PPaintContext.LOW_QUALITY_RENDERING.
      * 
-     * @param requestedQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
+     * @param interactingRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setInteractingRenderQuality(final int requestedQuality) {
-        interactingRenderQuality = requestedQuality;
+    public void setInteractingRenderQuality(final int interactingRenderQuality) {
+        this.interactingRenderQuality = interactingRenderQuality;
         if (getInteracting()) {
             repaint();
         }
