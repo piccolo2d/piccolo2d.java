@@ -64,6 +64,12 @@ public class PText extends PNode {
      * property change event.
      */
     public static final String PROPERTY_TEXT = "text";
+
+    /**
+     * The property code that identifies a change of this node's text (see
+     * {@link #getText getText}). Both old and new value will be set in any
+     * property change event.
+     */
     public static final int PROPERTY_CODE_TEXT = 1 << 19;
 
     /**
@@ -72,6 +78,12 @@ public class PText extends PNode {
      * property change event.
      */
     public static final String PROPERTY_FONT = "font";
+
+    /**
+     * The property code that identifies a change of this node's font (see
+     * {@link #getFont getFont}). Both old and new value will be set in any
+     * property change event.
+     */
     public static final int PROPERTY_CODE_FONT = 1 << 20;
 
     /**
@@ -80,6 +92,12 @@ public class PText extends PNode {
      * in any property change event.
      */
     public static final String PROPERTY_TEXT_PAINT = "text  paint";
+
+    /**
+     * The property code that identifies a change of this node's text paint (see
+     * {@link #getTextPaint getTextPaint}). Both old and new value will be set
+     * in any property change event.
+     */
     public static final int PROPERTY_CODE_TEXT_PAINT = 1 << 21;
 
     /**
@@ -105,16 +123,33 @@ public class PText extends PNode {
     /** Default text paint, <code>Color.BLACK</code>. */
     public static final Paint DEFAULT_TEXT_PAINT = Color.BLACK;
 
+    /** Empty text layout array. */
     private static final TextLayout[] EMPTY_TEXT_LAYOUT_ARRAY = new TextLayout[0];
+
+    /** Text for this text node. */
     private String text = DEFAULT_TEXT;
+
+    /** Text paint for this text node. */
     private Paint textPaint = DEFAULT_TEXT_PAINT;
+
+    /** Font for this text node. */
     private Font font = DEFAULT_FONT;
-    /** Will be made private in version 2.0. */
+
+    /** Greek threshold in screen font size for this text node.  Will be made private in version 2.0. */
     protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
+
+    /** Horizontal alignment for this text node. */
     private float horizontalAlignment = DEFAULT_HORIZONTAL_ALIGNMENT;
+
+    /** True if this text node should constrain its height to the height of its text. */
     private boolean constrainHeightToTextHeight = true;
+
+    /** True if this text node should constrain its height to the height of its text. */
     private boolean constrainWidthToTextWidth = true;
+
+    /** One or more lines of text layout. */ 
     private transient TextLayout[] lines;
+
 
     /**
      * Create a new text node with no text (<code>""</code>).
@@ -230,7 +265,7 @@ public class PText extends PNode {
     }
 
     /**
-     * Set to <code>true</code> if this text node should constrain its width the
+     * Set to <code>true</code> if this text node should constrain its width to the
      * width of its text.
      * 
      * @param constrainWidthToTextWidth true if this text node should constrain
@@ -253,11 +288,11 @@ public class PText extends PNode {
     }
 
     /**
-     * Set to <code>true</code> if this text node should constrain its height
+     * Set to <code>true</code> if this text node should constrain its height to
      * the height of its text.
      * 
      * @param constrainHeightToTextHeight true if this text node should
-     *            constrain its height to the width of its height
+     *            constrain its height to the width of its text
      */
     public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
         this.constrainHeightToTextHeight = constrainHeightToTextHeight;
@@ -269,6 +304,7 @@ public class PText extends PNode {
      * will be below this threshold the text is rendered as 'greek' instead of
      * drawing the text glyphs. Defaults to {@link DEFAULT_GREEK_THRESHOLD}.
      * 
+     * @see PText#paintGreek(PPaintContext)
      * @return the current greek threshold in screen font size
      */
     public double getGreekThreshold() {
@@ -281,6 +317,7 @@ public class PText extends PNode {
      * threshold the text is rendered as 'greek' instead of drawing the text
      * glyphs.
      * 
+     * @see PText#paintGreek(PPaintContext)
      * @param greekThreshold greek threshold in screen font size
      */
     public void setGreekThreshold(final double greekThreshold) {
@@ -474,6 +511,7 @@ public class PText extends PNode {
         }
     }
 
+    /** {@inheritDoc} */
     protected void paint(final PPaintContext paintContext) {
         super.paint(paintContext);
         if (textPaint == null) {
@@ -486,6 +524,7 @@ public class PText extends PNode {
         paintText(paintContext);
     }
 
+    /** {@inheritDoc} */
     protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
         recomputeLayout();
     }
