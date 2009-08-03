@@ -82,6 +82,12 @@ public class PPath extends PNode {
      * be set correctly to Paint objects in any property change event.
      */
     public static final String PROPERTY_STROKE_PAINT = "strokePaint";
+
+    /**
+     * The property code that identifies a change of this node's stroke paint
+     * (see {@link #getStrokePaint getStrokePaint}). Both old and new value will
+     * be set correctly to Paint objects in any property change event.
+     */
     public static final int PROPERTY_CODE_STROKE_PAINT = 1 << 16;
 
     /**
@@ -90,6 +96,12 @@ public class PPath extends PNode {
      * correctly to Stroke objects in any property change event.
      */
     public static final String PROPERTY_STROKE = "stroke";
+
+    /**
+     * The property code that identifies a change of this node's stroke (see
+     * {@link #getStroke getStroke}). Both old and new value will be set
+     * correctly to Stroke objects in any property change event.
+     */
     public static final int PROPERTY_CODE_STROKE = 1 << 17;
 
     /**
@@ -99,6 +111,13 @@ public class PPath extends PNode {
      * always be null.
      */
     public static final String PROPERTY_PATH = "path";
+
+    /**
+     * The property code that identifies a change of this node's path (see
+     * {@link #getPathReference getPathReference}). In any property change event
+     * the new value will be a reference to this node's path, but old value will
+     * always be null.
+     */
     public static final int PROPERTY_CODE_PATH = 1 << 18;
 
     private static final Rectangle2D.Float TEMP_RECTANGLE = new Rectangle2D.Float();
@@ -114,6 +133,16 @@ public class PPath extends PNode {
     private transient boolean updatingBoundsFromPath;
     private Paint strokePaint;
 
+    /**
+     * Creates a PPath object in the shape of a rectangle.
+     * 
+     * @param x left of the rectangle
+     * @param y top of the rectangle
+     * @param width width of the rectangle
+     * @param height height of the rectangle
+     * 
+     * @return created rectangle
+     */
     public static PPath createRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
         final PPath result = new PPath(TEMP_RECTANGLE);
@@ -121,6 +150,18 @@ public class PPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath object in the shape of a rounded rectangle.
+     * 
+     * @param x left of the rectangle
+     * @param y top of the rectangle
+     * @param width width of the rectangle
+     * @param height height of the rectangle
+     * @param arcWidth the arc width at the corners of the rectangle
+     * @param arcHeight the arc height at the corners of the rectangle
+     * 
+     * @return created rounded rectangle
+     */
     public static PPath createRoundRectangle(final float x, final float y, final float width, final float height,
             final float arcWidth, final float arcHeight) {
         TEMP_ROUNDRECTANGLE.setRoundRect(x, y, width, height, arcWidth, arcHeight);
@@ -129,6 +170,16 @@ public class PPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath object in the shape of an ellipse.
+     * 
+     * @param x left of the ellipse
+     * @param y top of the ellipse
+     * @param width width of the ellipse
+     * @param height height of the ellipse
+     * 
+     * @return created ellipse
+     */
     public static PPath createEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
         final PPath result = new PPath(TEMP_ELLIPSE);
@@ -136,6 +187,16 @@ public class PPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath in the shape of a line.
+     * 
+     * @param x1 x component of the first point
+     * @param y1 y component of the first point
+     * @param x2 x component of the second point
+     * @param y2 y component of the second point
+     * 
+     * @return created line
+     */
     public static PPath createLine(final float x1, final float y1, final float x2, final float y2) {
         final PPath result = new PPath();
         result.moveTo(x1, y1);
@@ -144,6 +205,13 @@ public class PPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath for the poly-line for the given points.
+     * 
+     * @param points array of points for the point lines
+     * 
+     * @return created poly-line for the given points
+     */
     public static PPath createPolyline(final Point2D[] points) {
         final PPath result = new PPath();
         result.setPathToPolyline(points);
@@ -151,6 +219,14 @@ public class PPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath for the poly-line for the given points.
+     * 
+     * @param xp array of x components of the points of the poly-lines
+     * @param yp array of y components of the points of the poly-lines
+     * 
+     * @return created poly-line for the given points
+     */
     public static PPath createPolyline(final float[] xp, final float[] yp) {
         final PPath result = new PPath();
         result.setPathToPolyline(xp, yp);
@@ -158,12 +234,20 @@ public class PPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates an empty PPath with the default paint and stroke.
+     */
     public PPath() {
         strokePaint = DEFAULT_STROKE_PAINT;
         stroke = DEFAULT_STROKE;
         path = new GeneralPath();
     }
 
+    /**
+    * Creates an PPath in the given shape with the default paint and stroke.
+    * 
+    * @param aShape the desired shape
+    */
     public PPath(final Shape aShape) {
         this(aShape, DEFAULT_STROKE);
     }
@@ -176,6 +260,9 @@ public class PPath extends PNode {
      * allows you to override that default stroke before the bounds are ever
      * calculated, so if you pass in a null stroke here you won't ever have to
      * pay that bounds calculation price if you don't need to.
+     * 
+     * @param aShape desired shape or null if you desire an empty path
+     * @param aStroke desired stroke
      */
     public PPath(final Shape aShape, final Stroke aStroke) {
         this();
@@ -189,6 +276,11 @@ public class PPath extends PNode {
     // Stroke
     // ****************************************************************
 
+    /**
+     * Returns the stroke paint of the PPath.
+     * 
+     * @return stroke paint of the PPath
+     */
     public Paint getStrokePaint() {
         return strokePaint;
     }
