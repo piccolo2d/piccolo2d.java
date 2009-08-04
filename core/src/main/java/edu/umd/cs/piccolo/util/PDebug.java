@@ -42,18 +42,34 @@ import javax.swing.SwingUtilities;
  * @author Jesse Grosjean
  */
 public class PDebug {
-
+    /** Set to true to display clip bounds boxes. */
     public static boolean debugRegionManagement = false;
+
+    /**
+     * Set to true if you want to display common errors with painting and
+     * threading.
+     */
     public static boolean debugPaintCalls = false;
+
+    /** Set to true to display frame rate in the console. */
     public static boolean debugPrintFrameRate = false;
+
+    /** Set to true to display used memory in console. */
     public static boolean debugPrintUsedMemory = false;
+
+    /** Displays bounding boxes around nodes. Used in PCamera. */
     public static boolean debugBounds = false;
+
+    /** Displays a tint to all shapes within a bounding box. */
     public static boolean debugFullBounds = false;
+
+    /** Whether to complain whenever common threading issues occur. */
     public static boolean debugThreads = false;
+
+    /** How often in frames result info should be printed to the console. */
     public static int printResultsFrameRate = 10;
 
     private static int debugPaintColor;
-
     private static long framesProcessed;
     private static long startProcessingOutputTime;
     private static long startProcessingInputTime;
@@ -65,18 +81,29 @@ public class PDebug {
         super();
     }
 
+    /**
+     * Generates a color for use while debugging.
+     * 
+     * @return a color for use while debugging.
+     */
     public static Color getDebugPaintColor() {
         final int color = 100 + debugPaintColor++ % 10 * 10;
         return new Color(color, color, color, 150);
     }
 
-    // called when scene graph needs update.
+    /**
+     * Checks that process inputs is being doing from the Swing Dispatch Thread.
+     */
     public static void scheduleProcessInputs() {
         if (debugThreads && !SwingUtilities.isEventDispatchThread()) {
             System.out.println("scene graph manipulated on wrong thread");
         }
     }
 
+    /**
+     * Ensures that painting is not invalidating paint regions and that it's
+     * being called from the dispatch thread.
+     */
     public static void processRepaint() {
         if (processingOutput && debugPaintCalls) {
             System.err
@@ -88,15 +115,28 @@ public class PDebug {
         }
     }
 
+    /**
+     * Returns whether output is being processed.
+     * 
+     * @return whether output is being processed
+     */
     public static boolean getProcessingOutput() {
         return processingOutput;
     }
 
+    /**
+     * Records that processing of ouptut has begun.
+     */
     public static void startProcessingOutput() {
         processingOutput = true;
         startProcessingOutputTime = System.currentTimeMillis();
     }
 
+    /**
+     * Flags processing of output as finished. Updates all stats in the process.
+     * 
+     * @param g graphics context in which processing has finished
+     */
     public static void endProcessingOutput(final Graphics g) {
         processOutputTime += System.currentTimeMillis() - startProcessingOutputTime;
         framesProcessed++;
@@ -124,10 +164,16 @@ public class PDebug {
         processingOutput = false;
     }
 
+    /**
+     * Records that processing of input has started.
+     */
     public static void startProcessingInput() {
         startProcessingInputTime = System.currentTimeMillis();
     }
 
+    /**
+     * Records that processing of input has finished.
+     */
     public static void endProcessingInput() {
         processInputTime += System.currentTimeMillis() - startProcessingInputTime;
     }
@@ -136,6 +182,8 @@ public class PDebug {
      * Return how many frames are processed and painted per second. Note that
      * since piccolo doesn't paint continuously this rate will be slow unless
      * you are interacting with the system or have activities scheduled.
+     * 
+     * @return frame rate achieved
      */
     public static double getTotalFPS() {
         if (framesProcessed > 0) {
@@ -148,6 +196,8 @@ public class PDebug {
 
     /**
      * Return the frames per second used to process input events and activities.
+     * 
+     * @return # of frames per second that were allocated to processing input
      */
     public static double getInputFPS() {
         if (processInputTime > 0 && framesProcessed > 0) {
@@ -160,6 +210,8 @@ public class PDebug {
 
     /**
      * Return the frames per seconds used to paint graphics to the screen.
+     * 
+     * @return # of frames per second that were used up to processing output
      */
     public static double getOutputFPS() {
         if (processOutputTime > 0 && framesProcessed > 0) {
@@ -173,6 +225,8 @@ public class PDebug {
     /**
      * Return the number of frames that have been processed since the last time
      * resetFPSTiming was called.
+     * 
+     * @return total number of frames processed
      */
     public long getFramesProcessed() {
         return framesProcessed;
@@ -189,6 +243,13 @@ public class PDebug {
         processOutputTime = 0;
     }
 
+    /**
+     * Returns an approximation of the amount of memory that is being used.
+     * 
+     * Not that this call might affecting timings.
+     * 
+     * @return approximate # of bytes of memory used
+     */
     public static long getApproximateUsedMemory() {
         System.gc();
         System.runFinalization();

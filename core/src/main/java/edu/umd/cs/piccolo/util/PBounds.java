@@ -59,15 +59,28 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
 
     private boolean isEmpty = true;
 
+    /**
+     * Creates an empty bounds.
+     */
     public PBounds() {
         super();
     }
 
+    /**
+     * Creates a bounds identical to the one provided.
+     * 
+     * @param aBounds bounds to be copied
+     */
     public PBounds(final PBounds aBounds) {
         this(aBounds.x, aBounds.y, aBounds.width, aBounds.height);
         isEmpty = aBounds.isEmpty();
     }
 
+    /**
+     * Creates a bounds with the same shape as the rectangle provided
+     * 
+     * @param aBounds rectangle to be copied
+     */
     public PBounds(final Rectangle2D aBounds) {
         this(aBounds.getX(), aBounds.getY(), aBounds.getWidth(), aBounds.getHeight());
         isEmpty = aBounds.isEmpty();
@@ -83,19 +96,38 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         isEmpty = false;
     }
 
+    /**
+     * Returns a clone of this node.
+     */
     public Object clone() {
         return new PBounds(this);
     }
 
+    /**
+     * Returns true if this bounds has been flagged as empty. Not necessarily if
+     * it is empty.
+     * 
+     * @return true if bounds marked as empty
+     */
     public boolean isEmpty() {
         return isEmpty;
     }
 
+    /**
+     * Flags this bounds as empty.
+     * 
+     * @return itself for chaining
+     */
     public PBounds reset() {
         isEmpty = true;
         return this;
     }
 
+    /**
+     * Resets the bounds to (0,0,0,0) and flags it as empty.
+     * 
+     * @return itself for chaining
+     */
     public PBounds resetToZero() {
         x = 0;
         y = 0;
@@ -105,11 +137,23 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return this;
     }
 
+    /**
+     * Sets the bounds to the same shape as the rectangle. And flags the bounds
+     * as not empty.
+     * 
+     * @param r rectangle to copy
+     */
     public void setRect(final Rectangle2D r) {
         super.setRect(r);
         isEmpty = false;
     }
 
+    /**
+     * Sets the bounds to the same shape as the bounds provided. And flags the
+     * bounds as not empty.
+     * 
+     * @param b bounds to copy
+     */
     public void setRect(final PBounds b) {
         isEmpty = b.isEmpty;
         x = b.x;
@@ -118,14 +162,28 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         height = b.height;
     }
 
-    public void setRect(final double x, final double y, final double w, final double h) {
+    /**
+     * Sets the shape of the bounds to the position and dimension provided.
+     * 
+     * @param x new left of bounds
+     * @param y new top of bounds
+     * @param width new width of bounds
+     * @param height new height of bounds
+     */
+    public void setRect(final double x, final double y, final double width, final double height) {
         this.x = x;
         this.y = y;
-        width = w;
-        height = h;
+        this.width = width;
+        this.height = height;
         isEmpty = false;
     }
 
+    /**
+     * Grows the bounds to contain the coordinate provided.
+     * 
+     * @param newx x component of point
+     * @param newy y component of point
+     */
     public void add(final double newx, final double newy) {
         if (isEmpty) {
             setRect(newx, newy, 0, 0);
@@ -136,6 +194,11 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         }
     }
 
+    /**
+     * Grows bounds to contain the rectangle if needed.
+     * 
+     * @param r rectangle being added
+     */
     public void add(final Rectangle2D r) {
         if (isEmpty) {
             setRect(r);
@@ -145,23 +208,27 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         }
     }
 
-    // optimized add when adding two PBounds together.
-    public void add(final PBounds r) {
-        if (r.isEmpty) {
+    /**
+     * Changes this bounds to contain the provided bounds.
+     * 
+     * @param bounds bounds being added
+     */
+    public void add(final PBounds bounds) {
+        if (bounds.isEmpty) {
             return;
         }
         else if (isEmpty) {
-            x = r.x;
-            y = r.y;
-            width = r.width;
-            height = r.height;
+            x = bounds.x;
+            y = bounds.y;
+            width = bounds.width;
+            height = bounds.height;
             isEmpty = false;
         }
         else {
-            final double x1 = x <= r.x ? x : r.x;
-            final double y1 = y <= r.y ? y : r.y;
-            final double x2 = x + width >= r.x + r.width ? x + width : r.x + r.width;
-            final double y2 = y + height >= r.y + r.height ? y + height : r.y + r.height;
+            final double x1 = x <= bounds.x ? x : bounds.x;
+            final double y1 = y <= bounds.y ? y : bounds.y;
+            final double x2 = x + width >= bounds.x + bounds.width ? x + width : bounds.x + bounds.width;
+            final double y2 = y + height >= bounds.y + bounds.height ? y + height : bounds.y + bounds.height;
 
             x = x1;
             y = y1;
@@ -171,10 +238,22 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         }
     }
 
+    /**
+     * Returns the x,y coordinate of the bounds.
+     * 
+     * @return coordinate of the bounds
+     */
     public Point2D getOrigin() {
         return new Point2D.Double(x, y);
     }
 
+    /**
+     * Changes the origin of these bounds. And flags it as non-empty.
+     * 
+     * @param x new x component of bounds
+     * @param y new y componet of the bounds
+     * @return
+     */
     public PBounds setOrigin(final double x, final double y) {
         this.x = x;
         this.y = y;
@@ -182,23 +261,50 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return this;
     }
 
+    /**
+     * Returns the size of the bounds.
+     * 
+     * @return size of the bounds
+     */
     public Dimension2D getSize() {
         return new PDimension(width, height);
     }
 
+    /**
+     * Changes the size of the bounds, but retains the origin.
+     * 
+     * @param width new width of the bounds
+     * @param height new height of the bounds
+     */
     public void setSize(final double width, final double height) {
         setRect(x, y, width, height);
     }
 
+    /**
+     * Returns the midpoint of the bounds.
+     * 
+     * @return midpoint of the bounds
+     */
     public Point2D getCenter2D() {
         return new Point2D.Double(getCenterX(), getCenterY());
     }
 
+    /**
+     * Translates the bounds by the given deltas.
+     * 
+     * @param dx amount to move x
+     * @param dy amount to move y
+     * @return itself for chaining
+     */
     public PBounds moveBy(final double dx, final double dy) {
         setOrigin(x + dx, y + dy);
         return this;
     }
 
+    /**
+     * Rounds the rectangle to the next largest bounds who's measurements are
+     * integers. Note: this is not the same as rounding its measurements.
+     */
     public void expandNearestIntegerDimensions() {
         x = Math.floor(x);
         y = Math.floor(y);
@@ -206,52 +312,77 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         height = Math.ceil(height);
     }
 
+    /**
+     * Adjust the measurements of this bounds so that they are the amounts given
+     * "in" from their previous border.
+     * 
+     * @param dx amount to move in from border along horizontal axis
+     * @param dy amount to move in from border along vertical axis
+     * @return itself for chaining
+     */
     public PBounds inset(final double dx, final double dy) {
         setRect(x + dx, y + dy, width - dx * 2, height - dy * 2);
         return this;
     }
 
-    public PDimension deltaRequiredToCenter(final Rectangle2D b) {
+    /**
+     * Returns the required translation in order for this bounds origin to sit
+     * on the center of the provided rectangle.
+     * 
+     * @param targetBounds rectangle to measure the center of
+     * @return the delta required to move to center of the targetBounds
+     */
+    public PDimension deltaRequiredToCenter(final Rectangle2D targetBounds) {
         final PDimension result = new PDimension();
-        final double xDelta = getCenterX() - b.getCenterX();
-        final double yDelta = getCenterY() - b.getCenterY();
+        final double xDelta = getCenterX() - targetBounds.getCenterX();
+        final double yDelta = getCenterY() - targetBounds.getCenterY();
         result.setSize(xDelta, yDelta);
         return result;
     }
 
-    public PDimension deltaRequiredToContain(final Rectangle2D b) {
+    /**
+     * Returns the required translation in order for these to contain the bounds
+     * provided.
+     * 
+     * @param targetBounds rectangle to measure the center of
+     * @return the delta required in order for the bounds to overlap completely
+     *         the targetBounds
+     */
+    public PDimension deltaRequiredToContain(final Rectangle2D targetBounds) {
         final PDimension result = new PDimension();
 
-        if (!contains(b)) {
-            final double bMaxX = b.getMaxX();
-            final double bMinX = b.getMinX();
-            final double bMaxY = b.getMaxY();
-            final double bMinY = b.getMinY();
-            final double maxX = getMaxX();
-            final double minX = getMinX();
-            final double maxY = getMaxY();
-            final double minY = getMinY();
+        if (contains(targetBounds)) {
+            return result;
+        }
 
-            if (bMaxX > maxX ^ bMinX < minX) {
-                final double difMaxX = bMaxX - maxX;
-                final double difMinX = bMinX - minX;
-                if (Math.abs(difMaxX) < Math.abs(difMinX)) {
-                    result.width = difMaxX;
-                }
-                else {
-                    result.width = difMinX;
-                }
+        final double targetMaxX = targetBounds.getMaxX();
+        final double targetMinX = targetBounds.getMinX();
+        final double targetMaxY = targetBounds.getMaxY();
+        final double targetMinY = targetBounds.getMinY();
+        final double maxX = getMaxX();
+        final double minX = getMinX();
+        final double maxY = getMaxY();
+        final double minY = getMinY();
+
+        if (targetMaxX > maxX ^ targetMinX < minX) {
+            final double difMaxX = targetMaxX - maxX;
+            final double difMinX = targetMinX - minX;
+            if (Math.abs(difMaxX) < Math.abs(difMinX)) {
+                result.width = difMaxX;
             }
+            else {
+                result.width = difMinX;
+            }
+        }
 
-            if (bMaxY > maxY ^ bMinY < minY) {
-                final double difMaxY = bMaxY - maxY;
-                final double difMinY = bMinY - minY;
-                if (Math.abs(difMaxY) < Math.abs(difMinY)) {
-                    result.height = difMaxY;
-                }
-                else {
-                    result.height = difMinY;
-                }
+        if (targetMaxY > maxY ^ targetMinY < minY) {
+            final double difMaxY = targetMaxY - maxY;
+            final double difMinY = targetMinY - minY;
+            if (Math.abs(difMaxY) < Math.abs(difMinY)) {
+                result.height = difMaxY;
+            }
+            else {
+                result.height = difMinY;
             }
         }
 
@@ -274,6 +405,11 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         height = in.readDouble();
     }
 
+    /**
+     * Returns a string representation of this PBounds for debugging purposes.
+     * 
+     * @return string representation of this PBounds
+     */
     public String toString() {
         final StringBuffer result = new StringBuffer();
 

@@ -59,7 +59,7 @@ public class PHtmlView extends PNode {
     /** Default font to use if not overridden in the HTML markup. */
     private static final Font DEFAULT_FONT = new JTextField().getFont();
 
-    /** Default font color to use if not overridden in the HTML markup */
+    /** Default font color to use if not overridden in the HTML markup. */
     private static final Color DEFAULT_HTML_COLOR = Color.BLACK;
 
     /**
@@ -236,11 +236,17 @@ public class PHtmlView extends PNode {
 
     /**
      * Applies all properties to the underlying JLabel, creates an htmlView and
-     * updates bounds
+     * updates bounds.
      */
     private void update() {
         htmlLabel.setSize(htmlLabel.getPreferredSize());
-        htmlView = BasicHTML.createHTMLView(htmlLabel, htmlLabel.getText() == null ? "" : htmlLabel.getText());
+
+        String htmlContent = htmlLabel.getText();
+        if (htmlContent == null) {
+            htmlContent = "";
+        }
+
+        htmlView = BasicHTML.createHTMLView(htmlLabel, htmlContent);
 
         final Rectangle2D bounds = getBounds();
         htmlBounds.setRect(0, 0, bounds.getWidth(), bounds.getHeight());
@@ -280,18 +286,19 @@ public class PHtmlView extends PNode {
     /**
      * Returns the address specified in the link under the given point.
      * 
-     * @param clickedPoint
+     * @param clickedPoint point under which a link might be
      * @return String containing value of href for clicked link, or null if no
      *         link clicked
      */
-    public String getClickedAddress(final Point2D.Double clickedPoint) {
+    public String getClickedAddress(final Point2D clickedPoint) {
         return getClickedAddress(clickedPoint.getX(), clickedPoint.getY());
     }
 
     /**
      * Returns the address specified in the link under the given point.
      * 
-     * @param clickedPoint
+     * @param x x component of point under which link may be
+     * @param y y component of point under which link may be
      * @return String containing value of href for clicked link, or null if no
      *         link clicked
      */
@@ -370,7 +377,11 @@ public class PHtmlView extends PNode {
             currentPos++;
         }
 
-        return currentPos == 0 || currentPos >= html.length() ? -1 : currentPos + 1;
+        if (currentPos == 0 || currentPos >= html.length()) {
+            return -1;
+        }
+
+        return currentPos + 1;
     }
 
     /**
@@ -408,16 +419,22 @@ public class PHtmlView extends PNode {
         if (tag.charAt(currentPos) == '\"') {
             final int startHref = currentPos + 1;
             currentPos = tag.indexOf('\"', startHref);
-            return currentPos == -1 ? null : tag.substring(startHref, currentPos);
+            if (currentPos == -1) {
+                return null;
+            }
+            return tag.substring(startHref, currentPos);
         }
         else if (currentPos < tag.length() && tag.charAt(currentPos) == '\'') {
             final int startHref = currentPos + 1;
             currentPos = tag.indexOf('\'', startHref);
-            return currentPos == -1 ? null : tag.substring(startHref, currentPos);
+            if (currentPos == -1) {
+                return null;
+            }
+            return tag.substring(startHref, currentPos);
         }
         else {
             final int startHref = currentPos;
-
+            
             if (currentPos < tag.length()) {
                 do {
                     currentPos++;
