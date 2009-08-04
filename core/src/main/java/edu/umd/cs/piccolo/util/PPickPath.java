@@ -63,22 +63,32 @@ import edu.umd.cs.piccolo.event.PInputEventListener;
  * @author Jesse Grosjean
  */
 public class PPickPath implements PInputEventListener {
-
+    /** Global pick path. */
     public static PPickPath CURRENT_PICK_PATH;
 
+    /** Used when calculating the scale. */
     private static double[] PTS = new double[4];
 
+    /** Stack of nodes representing all picked nodes. */
     private PStack nodeStack;
+
+    private final PCamera topCamera;
     private PStack transformStack;
     private PStack pickBoundsStack;
-    private final PCamera topCamera;
     private PCamera bottomCamera;
     private HashMap excludedNodes;
 
-    public PPickPath(final PCamera aCamera, final PBounds aScreenPickBounds) {
+    /**
+     * Creates a pick pack originating from the provided camera and with the
+     * given screen pick bounds.
+     * 
+     * @param camera camera from which the pickpath originates
+     * @param aScreenPickBounds bounds of pick area
+     */
+    public PPickPath(final PCamera camera, final PBounds aScreenPickBounds) {
         super();
         pickBoundsStack = new PStack();
-        topCamera = aCamera;
+        topCamera = camera;
         nodeStack = new PStack();
         transformStack = new PStack();
         pickBoundsStack.push(aScreenPickBounds);

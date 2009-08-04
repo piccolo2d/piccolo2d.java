@@ -52,7 +52,7 @@ import java.awt.event.MouseWheelEvent;
  * @author Jesse Grosjean
  */
 public class PInputEventFilter {
-
+    /** Mask representing all possible modifiers. */
     public static int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK
             | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK
             | InputEvent.META_MASK;

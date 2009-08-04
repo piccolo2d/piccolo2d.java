@@ -53,12 +53,15 @@ import edu.umd.cs.piccolo.PRoot;
  * @author Jesse Grosjean
  */
 public class PUtil {
-
-    public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
+    /**
+     * PActivities are broken into steps, this is how many milliseconds should
+     * pass between steps.
+     */
+    public static long DEFAULT_ACTIVITY_STEP_RATE = 20;    
     public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
-    private static final int PATH_TERMINATOR = -1;
-
     public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
+ 
+    private static final int PATH_TERMINATOR = -1;    
     public static Enumeration NULL_ENUMERATION = new Enumeration() {
         public boolean hasMoreElements() {
             return false;
@@ -69,6 +72,9 @@ public class PUtil {
         }
     };
 
+    /**
+     * @deprecated This has been moved into a private static class of PObjectOutputStream
+     */
     public static OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
         public void close() {
         }
@@ -86,16 +92,21 @@ public class PUtil {
         }
     };
 
+    /**
+     * Creates the simplest possible scene graph.  1 Camera, 1 Layer, 1 Root
+     * 
+     *  @return a basic scene with 1 camera, layer and root
+     */
     public static PCamera createBasicScenegraph() {
-        final PRoot r = new PRoot();
-        final PLayer l = new PLayer();
-        final PCamera c = new PCamera();
+        final PRoot root = new PRoot();
+        final PLayer layer = new PLayer();
+        final PCamera camera = new PCamera();
 
-        r.addChild(c);
-        r.addChild(l);
-        c.addLayer(l);
+        root.addChild(camera);
+        root.addChild(layer);
+        camera.addLayer(layer);
 
-        return c;
+        return camera;
     }
 
     public static void writeStroke(final Stroke stroke, final ObjectOutputStream out) throws IOException {

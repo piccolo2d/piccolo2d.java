@@ -443,7 +443,7 @@ public class PCamera extends PNode {
     public void fullPaint(final PPaintContext paintContext) {
         paintContext.pushCamera(this);
         super.fullPaint(paintContext);
-        paintContext.popCamera(this);
+        paintContext.popCamera();
     }
 
     /**

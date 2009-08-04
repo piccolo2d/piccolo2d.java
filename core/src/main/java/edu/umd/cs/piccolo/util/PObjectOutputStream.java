@@ -111,7 +111,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
     protected void recordUnconditionallyWritten(final Object aRoot) throws IOException {
         class ZMarkObjectOutputStream extends PObjectOutputStream {
             public ZMarkObjectOutputStream() throws IOException {
-                super(PUtil.NULL_OUTPUT_STREAM);
+                super(NULL_OUTPUT_STREAM);
                 enableReplaceObject(true);
             }
 
@@ -125,4 +125,21 @@ public class PObjectOutputStream extends ObjectOutputStream {
         }
         new ZMarkObjectOutputStream().writeObject(aRoot);
     }
+
+    private static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
+        public void close() {
+        }
+
+        public void flush() {
+        }
+
+        public void write(final byte[] b) {
+        }
+
+        public void write(final byte[] b, final int off, final int len) {
+        }
+
+        public void write(final int b) {
+        }
+    };
 }

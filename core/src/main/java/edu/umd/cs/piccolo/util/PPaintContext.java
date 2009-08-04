@@ -49,27 +49,54 @@ import edu.umd.cs.piccolo.PCamera;
  * @author Jesse Grosjean
  */
 public class PPaintContext {
-
+    /** Used for lowering quality of rendering when requested. */
     public static final int LOW_QUALITY_RENDERING = 0;
+
+    /** Used for improving quality of rendering when requested. */
     public static final int HIGH_QUALITY_RENDERING = 1;
 
+    /** Font context to use while in low quality rendering. */
     public static FontRenderContext RENDER_QUALITY_LOW_FRC = new FontRenderContext(null, false, true);
+
+    /** Font context to use while in high quality rendering. */
     public static FontRenderContext RENDER_QUALITY_HIGH_FRC = new FontRenderContext(null, true, true);
+
+    /**
+     * @deprecated will disappear as soon as possible Global for accessing the
+     *             current paint context while painting.
+     **/
     public static PPaintContext CURRENT_PAINT_CONTEXT;
 
+    /** Used while calculating scale at which rendering is occurring. */
     private static double[] PTS = new double[4];
 
+    /** PaintContext is associated with this graphics context */
     private final Graphics2D graphics;
+
+    /** Used while computing transparency. */
     protected PStack compositeStack;
+
+    /** Used to optimize clipping region. */
     protected PStack clipStack;
+
+    /** Tracks clipping region in local coordinate system. */
     protected PStack localClipStack;
+
     protected PStack cameraStack;
+
     protected PStack transformStack;
+
+    /** The current render quality that all rendering should be done in. */
     protected int renderQuality;
 
-    public PPaintContext(final Graphics2D aGraphics) {
+    /**
+     * Creates a PPaintContext associated with the given graphics context.
+     * 
+     * @param graphics graphics context to associate with this paint context
+     */
+    public PPaintContext(final Graphics2D graphics) {
         super();
-        graphics = aGraphics;
+        this.graphics = graphics;
         compositeStack = new PStack();
         clipStack = new PStack();
         localClipStack = new PStack();
@@ -77,10 +104,10 @@ public class PPaintContext {
         transformStack = new PStack();
         renderQuality = HIGH_QUALITY_RENDERING;
 
-        Shape clip = aGraphics.getClip();
+        Shape clip = graphics.getClip();
         if (clip == null) {
             clip = new PBounds(-Integer.MAX_VALUE / 2, -Integer.MAX_VALUE / 2, Integer.MAX_VALUE, Integer.MAX_VALUE);
-            aGraphics.setClip(clip);
+            graphics.setClip(clip);
         }
 
         localClipStack.push(clip.getBounds2D());
@@ -88,6 +115,11 @@ public class PPaintContext {
         CURRENT_PAINT_CONTEXT = this;
     }
 
+    /**
+     * Returns the graphics context associated with this paint context.
+     * 
+     * @return graphics context associated with this paint context
+     */
     public Graphics2D getGraphics() {
         return graphics;
     }
@@ -96,10 +128,24 @@ public class PPaintContext {
     // Context Attributes.
     // ****************************************************************
 
+    /**
+     * Returns the clipping region in the local coordinate system applied by
+     * graphics
+     * 
+     * @return clipping region in the local coordinate system applied by
+     *         graphics
+     */
     public Rectangle2D getLocalClip() {
         return (Rectangle2D) localClipStack.peek();
     }
 
+    /**
+     * Returns scale of the current graphics context. By calculating how a unit
+     * segment gets transformed after transforming it by the graphics context's
+     * transform.
+     * 
+     * @return scale of the current graphics context's transformation
+     */
     public double getScale() {
         PTS[0] = 0;// x1
         PTS[1] = 0;// y1
@@ -114,11 +160,30 @@ public class PPaintContext {
     // popped.
     // ****************************************************************
 
+    /**
+     * Pushes the camera onto the camera stack.
+     * 
+     * @param aCamera camera to push onto the stack
+     */
     public void pushCamera(final PCamera aCamera) {
         cameraStack.push(aCamera);
     }
 
+    /**
+     * @deprecated in favor of popCamera()
+     * 
+     * @param aCamera absolute not used in any way
+     */
     public void popCamera(final PCamera aCamera) {
+        cameraStack.pop();
+    }
+
+    /**
+     * Removes the camera at the top of the camera stack.
+     * 
+     * @param aCamera absolute not used in any way
+     */
+    public void popCamera() {
         cameraStack.pop();
     }
 
@@ -142,7 +207,7 @@ public class PPaintContext {
     }
 
     public void pushTransparency(final float transparency) {
-        if (transparency == 1) {
+        if (transparency == 1.0f) {
             return;
         }
         final Composite current = graphics.getComposite();
@@ -158,7 +223,7 @@ public class PPaintContext {
     }
 
     public void popTransparency(final float transparency) {
-        if (transparency == 1) {
+        if (transparency == 1.0f) {
             return;
         }
         final Composite c = (Composite) compositeStack.pop();
@@ -166,30 +231,43 @@ public class PPaintContext {
     }
 
     public void pushTransform(final PAffineTransform aTransform) {
-        if (aTransform == null) {
-            return;
+        if (aTransform != null) {
+            final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
+            aTransform.inverseTransform(newLocalClip, newLocalClip);
+            transformStack.push(graphics.getTransform());
+            localClipStack.push(newLocalClip);
+            graphics.transform(aTransform);
         }
-        final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
-        aTransform.inverseTransform(newLocalClip, newLocalClip);
-        transformStack.push(graphics.getTransform());
-        localClipStack.push(newLocalClip);
-        graphics.transform(aTransform);
     }
 
+    /**
+     * Pops the topmost Transform from the top of the transform if the passed in
+     * transform is not null.
+     * 
+     * @deprecated in favor of popTransform()
+     * @param aTransform transform that should be at the top of the stack
+     */
     public void popTransform(final PAffineTransform aTransform) {
-        if (aTransform == null) {
-            return;
+        if (aTransform != null) {
+            graphics.setTransform((AffineTransform) transformStack.pop());
+            localClipStack.pop();
         }
-        graphics.setTransform((AffineTransform) transformStack.pop());
-        localClipStack.pop();
     }
 
-    // ****************************************************************
-    // Render Quality.
-    // ****************************************************************/
+    /**
+     * Pops the topmost Transform from the top of the transform stack, or does nothing if it's empty.
+     */
+    public void popTransform() {
+        if (!transformStack.isEmpty()) {
+            graphics.setTransform((AffineTransform) transformStack.pop());
+            localClipStack.pop();
+        }
+    }
 
     /**
      * Return the render quality used by this paint context.
+     * 
+     * @return the current render quality
      */
     public int getRenderQuality() {
         return renderQuality;

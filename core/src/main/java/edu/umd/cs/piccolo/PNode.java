@@ -3642,5 +3642,5 @@ public class PNode implements Cloneable, Serializable, Printable {
          * @param node node needing repaint
          */
         void nodeFullBoundsInvalidated(PNode node);
-    }
+    } 
 }
