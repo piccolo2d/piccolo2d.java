@@ -8,18 +8,18 @@ import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
-import edu.umd.cs.piccolo.nodes.PHtml;
+import edu.umd.cs.piccolo.nodes.PHtmlView;
 import edu.umd.cs.piccolox.PFrame;
 
-public class HTMLExample extends PFrame {
+public class HtmlViewExample extends PFrame {
     private static final long serialVersionUID = 1L;
     private StringBuffer html;
 
-    public HTMLExample() {
+    public HtmlViewExample() {
         this(null);
     }
 
-    public HTMLExample(final PCanvas aCanvas) {
+    public HtmlViewExample(final PCanvas aCanvas) {
         super("HTMLExample", false, aCanvas);
     }
 
@@ -31,19 +31,19 @@ public class HTMLExample extends PFrame {
         html.append("<p>It supports:</p>");
         appendFeatures();
 
-        final PHtml htmlNode = new PHtml(html.toString());
+        final PHtmlView htmlNode = new PHtmlView(html.toString());
         htmlNode.setBounds(0, 0, 400, 400);
         getCanvas().getLayer().addChild(htmlNode);
 
         getCanvas().addInputEventListener(new PBasicInputEventHandler() {
             public void mouseClicked(final PInputEvent event) {
                 final PNode clickedNode = event.getPickedNode();
-                if (!(clickedNode instanceof PHtml)) {
+                if (!(clickedNode instanceof PHtmlView)) {
                     return;
                 }
 
                 final Point2D clickPoint = event.getPositionRelativeTo(clickedNode);
-                final PHtml htmlNode = (PHtml) clickedNode;
+                final PHtmlView htmlNode = (PHtmlView) clickedNode;
 
                 final String url = htmlNode.getClickedAddress(clickPoint);
                 JOptionPane.showMessageDialog(null, url);
@@ -69,6 +69,6 @@ public class HTMLExample extends PFrame {
     }
 
     public static void main(final String[] args) {
-        new HTMLExample();
+        new HtmlViewExample();
     }
 }
