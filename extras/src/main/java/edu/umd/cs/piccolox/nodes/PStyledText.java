@@ -62,24 +62,34 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PStyledText extends PNode {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+
     protected static FontRenderContext SWING_FRC = new FontRenderContext(null, true, false);
+
+    /** Used while painting underlines. */
     protected static Line2D paintLine = new Line2D.Double();
 
+    /**
+     * Underlying document used to handle the complexities involved with
+     * arbitrary text and formatting.
+     */
     protected Document document;
+
+    /** String contents of the document. */
     protected transient ArrayList stringContents;
+
+    /** Tracks the information about line metrics within the document. */
     protected transient LineInfo[] lines;
 
+    /** Whether this node is currently being edited. */
     protected boolean editing;
+
     protected Insets insets = new Insets(0, 0, 0, 0);
     protected boolean constrainHeightToTextHeight = true;
     protected boolean constrainWidthToTextWidth = true;
 
     /**
-     * Constructor for PStyledText.
+     * Constructs an empty PStyledText element.
      */
     public PStyledText() {
         super();
@@ -136,6 +146,9 @@ public class PStyledText extends PNode {
         syncWithDocument();
     }
 
+    /**
+     * Ensures that the current display matches the styling of the underlying document as closely as possible.
+     */
     public void syncWithDocument() {
         // First get the actual text and stick it in an Attributed String
         stringContents = new ArrayList();
@@ -233,6 +246,14 @@ public class PStyledText extends PNode {
         recomputeLayout();
     }
 
+    /**
+     * Returns the first leaf encountered by drilling into the document for the given position.
+     * 
+     * @param pos position under which we're trying to find a leaf
+     * @param rootElement top most element in the document tree
+     * 
+     * @return Leaf element that corresponds to the position provided in the document
+     */
     private Element drillDownFromRoot(final int pos, final Element rootElement) {
         Element curElement;
         // Before each pass, start at the root
@@ -300,7 +321,7 @@ public class PStyledText extends PNode {
                     if (font == null) {
                         font = style.getFont(rootElement.getAttributes());
                     }
-                }                
+                }
             }
             else {
                 font = style.getFont(rootElement.getAttributes());
@@ -505,16 +526,7 @@ public class PStyledText extends PNode {
         // Small assumption here that there is one root element - can fix
         // for more general support later
         final Element rootElement = document.getDefaultRootElement();
-
-        // The current element will be used as a temp variable while searching
-        // for the leaf element at the current position
-        Element curElement = rootElement;
-
-        // Now we descend the hierarchy until we get to a leaf
-        while (!curElement.isLeaf()) {
-            curElement = curElement.getElement(curElement.getElementIndex(0));
-        }
-
+        final Element curElement = drillDownFromRoot(0, rootElement);      
         final StyleContext context = StyleContext.getDefaultStyleContext();
         final Font font = context.getFont(curElement.getAttributes());
 
@@ -590,21 +602,27 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Set whether this text is editing
+     * Set whether this text is editing.
+     * 
+     * @param editing value to set editing flag
      */
     public void setEditing(final boolean editing) {
         this.editing = editing;
     }
 
     /**
-     * Is this document editing
+     * Whether node is currently in editing state.
+     * 
+     * @return true if node is currently editing
      */
     public boolean isEditing() {
         return editing;
     }
 
     /**
-     * Set the insets of the text
+     * Set the insets of the text.
+     * 
+     * @param insets desired insets
      */
     public void setInsets(final Insets insets) {
         if (insets != null) {
@@ -618,17 +636,19 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Get the insets of the text
+     * Get the insets of the text.
+     * 
+     * @return current text insets
      */
     public Insets getInsets() {
         return (Insets) insets.clone();
     }
 
     /**
-     * Add a call to recompute the layout after each bounds change
+     * Add a call to recompute the layout after each bounds change.
      */
-    public boolean setBounds(final double x, final double y, final double w, final double h) {
-        if (document == null || !super.setBounds(x, y, w, h)) {
+    public boolean setBounds(final double x, final double y, final double width, final double height) {
+        if (document == null || !super.setBounds(x, y, width, height)) {
             return false;
         }
 
@@ -637,7 +657,7 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Simple class to represent an range within the document
+     * Simple class to represent an range within the document.
      */
     protected static class RunInfo {
         public int startIndex;
@@ -661,7 +681,7 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Class to represent an integer run and the font in that run
+     * Class to represent an integer run and the font in that run.
      */
     protected static class MetricsRunInfo extends RunInfo {
         public FontMetrics metrics;
@@ -672,7 +692,7 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * The info for rendering a and computing the bounds of a line
+     * The info for rendering and computing the bounds of a line.
      */
     protected static class LineInfo {
         public List segments;
@@ -684,7 +704,7 @@ public class PStyledText extends PNode {
             segments = new ArrayList();
         }
     }
-
+    
     protected static class SegmentInfo {
         public TextLayout layout;
         public Font font;

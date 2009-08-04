@@ -63,33 +63,48 @@ import edu.umd.cs.piccolox.handles.PBoundsHandle;
  * @author Ben Bederson
  */
 public class PSelectionEventHandler extends PDragSequenceEventHandler {
-
+    /**
+     * Notification name that identifies a change in the selection. Used with
+     * PNotificationCenter.
+     */
     public static final String SELECTION_CHANGED_NOTIFICATION = "SELECTION_CHANGED_NOTIFICATION";
 
-    final static int DASH_WIDTH = 5;
-    final static int NUM_STROKES = 10;
+    /** The default dash width when displaying selection rectangle. */
+    static final int DASH_WIDTH = 5;
 
-    // The current selection
+    static final int NUM_STROKES = 10;
+
+    /** The current selection. */
     private HashMap selection = null;
-    // List of nodes whose children can be selected
+    /** List of nodes whose children can be selected. */
     private List selectableParents = null;
+
     private PPath marquee = null;
-    // Node that marquee is added to as a child
+    /** Node that marquee is added to as a child. */
     private PNode marqueeParent = null;
+
     private Point2D presspt = null;
     private Point2D canvasPressPt = null;
     private float strokeNum = 0;
     private Stroke[] strokes = null;
-    // Used within drag handler temporarily
+
+    /** Used within drag handler temporarily. */
     private HashMap allItems = null;
-    // Used within drag handler temporarily
+
+    /** Used within drag handler temporarily */
     private ArrayList unselectList = null;
     private HashMap marqueeMap = null;
-    // Node pressed on (or null if none)
+
+    /** Node pressed on (or null if none). */
     private PNode pressNode = null;
-    // True if DELETE key should delete selection
+
+    /** True if DELETE key should delete selection. */
     private boolean deleteKeyActive = true;
+
+    /** Paint applied when drawing the marquee. */
     private Paint marqueePaint;
+
+    /** How transparent the marquee should be. */
     private float marqueePaintTransparency = 1.0f;
 
     /**
@@ -134,10 +149,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         marqueeMap = new HashMap();
     }
 
-    // /////////////////////////////////////////////////////
-    // Public static methods for manipulating the selection
-    // /////////////////////////////////////////////////////
-
+    /**
+     * Marks all items as selected.
+     * 
+     * @param items collection of items to be selected
+     */
     public void select(final Collection items) {
         boolean changes = false;
         final Iterator itemIt = items.iterator();
@@ -150,10 +166,21 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
+    /**
+     * Marks all keys as selected.
+     * 
+     * @param items map where keys are to be selected
+     */
     public void select(final Map items) {
         select(items.keySet());
     }
 
+    /**
+     * Select the passed node if not already selected.
+     * 
+     * @param node node to be selected
+     * @return true if node was not already selected
+     */
     private boolean internalSelect(final PNode node) {
         if (isSelected(node)) {
             return false;
@@ -164,20 +191,38 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         return true;
     }
 
+    /**
+     * Dispatches a selection changed notification to the PNodificationCenter.
+     */
     private void postSelectionChanged() {
         PNotificationCenter.defaultCenter().postNotification(SELECTION_CHANGED_NOTIFICATION, this);
     }
 
+    /**
+     * Selected the provided node if not already selected.
+     * 
+     * @param node node to be selected
+     */
     public void select(final PNode node) {
         if (internalSelect(node)) {
             postSelectionChanged();
         }
     }
 
+    /**
+     * Adds bound handles to the provided node.
+     * 
+     * @param node node to be decorated
+     */
     public void decorateSelectedNode(final PNode node) {
         PBoundsHandle.addBoundsHandlesTo(node);
     }
 
+    /**
+     * Removes all nodes provided from the selection.
+     * 
+     * @param items items to remove form the selection
+     */
     public void unselect(final Collection items) {
         boolean changes = false;
         final Iterator itemIt = items.iterator();
@@ -190,6 +235,13 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
+    /**
+     * Removes provided selection node if not already selected.
+     * 
+     * @param node node to remove from selection
+     * 
+     * @return true on success
+     */
     private boolean internalUnselect(final PNode node) {
         if (!isSelected(node)) {
             return false;
@@ -200,16 +252,29 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         return true;
     }
 
+    /**
+     * Removes node from selection.
+     * 
+     * @param node node to be removed from selection
+     */
     public void unselect(final PNode node) {
         if (internalUnselect(node)) {
             postSelectionChanged();
         }
     }
 
+    /**
+     * Removes bounds handles from node.
+     * 
+     * @param node to have handles removed from
+     */
     public void undecorateSelectedNode(final PNode node) {
         PBoundsHandle.removeBoundsHandlesFrom(node);
     }
 
+    /**
+     * Empties the selection.
+     */
     public void unselectAll() {
         // Because unselect() removes from selection, we need to
         // take a copy of it first so it isn't changed while we're iterating
@@ -217,6 +282,12 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         unselect(sel);
     }
 
+    /**
+     * Returns true is provided node is selected.
+     * 
+     * @param node - node to be tested
+     * @return true if succeeded
+     */
     public boolean isSelected(final PNode node) {
         if (node != null && selection.containsKey(node)) {
             return true;
@@ -228,6 +299,8 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
 
     /**
      * Returns a copy of the currently selected nodes.
+     * 
+     * @return copy of selection
      */
     public Collection getSelection() {
         final ArrayList sel = new ArrayList(selection.keySet());
@@ -237,14 +310,19 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     /**
      * Gets a reference to the currently selected nodes. You should not modify
      * or store this collection.
+     * 
+     * @return direct reference to selection
      */
     public Collection getSelectionReference() {
         return Collections.unmodifiableCollection(selection.keySet());
     }
 
     /**
-     * Determine if the specified node is selectable (i.e., if it is a child of
-     * the one the list of selectable parents.
+     * Determine if the specified node can be selected (i.e., if it is a child
+     * of the one the list of nodes that can be selected).
+     * 
+     * @param node node being tested
+     * @return true if node can be selected
      */
     protected boolean isSelectable(final PNode node) {
         boolean selectable = false;
@@ -270,28 +348,52 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         return selectable;
     }
 
-    // ////////////////////////////////////////////////////
-    // Methods for modifying the set of selectable parents
-    // ////////////////////////////////////////////////////
-
+    /**
+     * Flags the node provided as a selectable parent. This makes it possible to
+     * select its children.
+     * 
+     * @param node to flag as selectable
+     */
     public void addSelectableParent(final PNode node) {
         selectableParents.add(node);
     }
 
+    /**
+     * Removes the node provided from the set of selectable parents. This makes
+     * its impossible to select its children.
+     * 
+     * @param node to remove from selectable parents
+     */
     public void removeSelectableParent(final PNode node) {
         selectableParents.remove(node);
     }
 
+    /**
+     * Sets the node provided as the *only* selectable parent.
+     * 
+     * @param node node to become the 1 and only selectable parent
+     */
     public void setSelectableParent(final PNode node) {
         selectableParents.clear();
         selectableParents.add(node);
     }
 
+    /**
+     * Sets the collection of selectable parents as the only parents that are
+     * selectable.
+     * 
+     * @param c nodes to become selectable parents.
+     */
     public void setSelectableParents(final Collection c) {
         selectableParents.clear();
         selectableParents.addAll(c);
     }
 
+    /**
+     * Returns all selectable parents.
+     * 
+     * @return selectable parents
+     */
     public Collection getSelectableParents() {
         return new ArrayList(selectableParents);
     }
@@ -300,7 +402,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // The overridden methods from PDragSequenceEventHandler
     // //////////////////////////////////////////////////////
 
-    protected void startDrag(final PInputEvent e) {
+     protected void startDrag(final PInputEvent e) {
         super.startDrag(e);
 
         initializeSelection(e);
@@ -358,14 +460,31 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // Additional methods
     // //////////////////////////
 
+    /**
+     * Used to test whether the event is one that changes the selection.
+     * 
+     * @param pie The event under test      
+     * @return true if event changes the selection
+     */
     public boolean isOptionSelection(final PInputEvent pie) {
         return pie.isShiftDown();
     }
 
+    /**
+     * Tests the input event to see if it is selecting a new node.
+     * 
+     * @param pie event under test
+     * @return true if there is no current selection
+     */
     protected boolean isMarqueeSelection(final PInputEvent pie) {
         return pressNode == null;
     }
 
+    /**
+     * Starts a selection based on the provided event.
+     * 
+     * @param pie event used to populate the selection
+     */
     protected void initializeSelection(final PInputEvent pie) {
         canvasPressPt = pie.getCanvasPosition();
         presspt = pie.getPosition();

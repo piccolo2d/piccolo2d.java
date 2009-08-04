@@ -56,20 +56,47 @@ import edu.umd.cs.piccolo.PCanvas;
  * @author Jesse Grosjean
  */
 public class PFrame extends JFrame {
-
+    /** Used to allow versioned binary streams for serializations. */
     private static final long serialVersionUID = 1L;
+
+    /** Canvas being displayed on this PFrame. */
     private PCanvas canvas;
+
+    /** The graphics device onto which the PFrame is being displayed. */
     private final GraphicsDevice graphicsDevice;
+
+    /** Listener that listens for escape key. */
     private EventListener escapeFullScreenModeListener;
 
+    /**
+     * Creates a PFrame with no title, not full screen, and with the default
+     * canvas.
+     */
     public PFrame() {
         this("", false, null);
     }
 
+    /**
+     * Creates a PFrame with the given title and with the default canvas.
+     * 
+     * @param title title to display at the top of the frame
+     * @param fullScreenMode whether to display a full screen frame or not
+     * @param canvas to embed in the frame
+     */
     public PFrame(final String title, final boolean fullScreenMode, final PCanvas aCanvas) {
         this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, aCanvas);
     }
 
+    /**
+     * Creates a PFrame with the given title and with the default canvas being
+     * displayed on the provided device.
+     * 
+     * @param title title to display at the top of the frame
+     * @param aDevice device onto which PFrame is to be displayed
+     * @param fullScreenMode whether to display a full screen frame or not
+     * @param canvas to embed in the frame, may be null. If so, it'll create a
+     *            default PCanvas
+     */
     public PFrame(final String title, final GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
         super(title, aDevice.getDefaultConfiguration());
 
@@ -111,52 +138,79 @@ public class PFrame extends JFrame {
         });
     }
 
+    /**
+     * Returns the canvas being displayed on this frame.
+     * 
+     * @return canvas being displayed on this frame
+     */
     public PCanvas getCanvas() {
         return canvas;
     }
 
+    /**
+     * Returns the default frame bounds.
+     * 
+     * @return default frame bounds
+     */
     public Rectangle getDefaultFrameBounds() {
         return new Rectangle(100, 100, 400, 400);
     }
 
-    // ****************************************************************
-    // Full Screen Display Mode
-    // ****************************************************************
-
+    /**
+     * Returns whether the frame is currently in full screen mode.
+     * 
+     * @return whether the frame is currently in full screen mode
+     */
     public boolean isFullScreenMode() {
         return graphicsDevice.getFullScreenWindow() != null;
     }
 
+    /**
+     * Switches full screen state.
+     * 
+     * @param fullScreenMode whether to place the frame in full screen mode or
+     *            not.
+     */
     public void setFullScreenMode(final boolean fullScreenMode) {
-        if (fullScreenMode) {
-            addEscapeFullScreenModeListener();
-
-            if (isDisplayable()) {
-                dispose();
+        if (fullScreenMode != isFullScreenMode()) {
+            if (fullScreenMode) {
+                switchToFullScreenMode();
             }
-
-            setUndecorated(true);
-            setResizable(false);
-            graphicsDevice.setFullScreenWindow(this);
-
-            if (graphicsDevice.isDisplayChangeSupported()) {
-                chooseBestDisplayMode(graphicsDevice);
+            else {
+                switchToWindowedMode();
             }
-            validate();
         }
-        else {
-            removeEscapeFullScreenModeListener();
+    }
 
-            if (isDisplayable()) {
-                dispose();
-            }
+    private void switchToFullScreenMode() {
+        addEscapeFullScreenModeListener();
 
-            setUndecorated(false);
-            setResizable(true);
-            graphicsDevice.setFullScreenWindow(null);
-            validate();
-            setVisible(true);
+        if (isDisplayable()) {
+            dispose();
         }
+
+        setUndecorated(true);
+        setResizable(false);
+        graphicsDevice.setFullScreenWindow(this);
+
+        if (graphicsDevice.isDisplayChangeSupported()) {
+            chooseBestDisplayMode(graphicsDevice);
+        }
+        validate();
+    }
+
+    private void switchToWindowedMode() {
+        removeEscapeFullScreenModeListener();
+
+        if (isDisplayable()) {
+            dispose();
+        }
+
+        setUndecorated(false);
+        setResizable(true);
+        graphicsDevice.setFullScreenWindow(null);
+        validate();
+        setVisible(true);
     }
 
     protected void chooseBestDisplayMode(final GraphicsDevice device) {
