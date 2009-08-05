@@ -172,7 +172,7 @@ public class PFrame extends JFrame {
      *            not.
      */
     public void setFullScreenMode(final boolean fullScreenMode) {
-        if (fullScreenMode != isFullScreenMode()) {
+        if (fullScreenMode != isFullScreenMode() || !isVisible()) {
             if (fullScreenMode) {
                 switchToFullScreenMode();
             }
