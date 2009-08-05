@@ -136,16 +136,16 @@ public class PCanvas extends JComponent implements PComponent {
     private PZoomEventHandler zoomEventHandler;
 
     private boolean paintingImmediately;
-    
+
     /** Used to track whether the last paint operation was during an animation. */
     private boolean animatingOnLastPaint;
-    
+
     /** The mouse listener that is registered for large scale mouse events. */
     private transient MouseListener mouseListener;
-    
+
     /** Remembers the key processor. */
     private transient KeyEventPostProcessor keyEventPostProcessor;
-    
+
     /** The mouse wheel listeners that's registered to receive wheel events. */
     private transient MouseWheelListener mouseWheelListener;
     /**
@@ -388,8 +388,8 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is not interacting or animating. The default value is
      * PPaintContext. HIGH_QUALITY_RENDERING.
      * 
-     * @param normalRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
-     *            PPaintContext.LOW_QUALITY_RENDERING
+     * @param normalRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING
+     *            or PPaintContext.LOW_QUALITY_RENDERING
      */
     public void setDefaultRenderQuality(final int normalRenderQuality) {
         this.normalRenderQuality = normalRenderQuality;
@@ -401,7 +401,8 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is animating. The default value is
      * PPaintContext.LOW_QUALITY_RENDERING.
      * 
-     * @param animatingRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
+     * @param animatingRenderQuality supports
+     *            PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
     public void setAnimatingRenderQuality(final int animatingRenderQuality) {
@@ -416,7 +417,8 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is interacting. The default value is
      * PPaintContext.LOW_QUALITY_RENDERING.
      * 
-     * @param interactingRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING or
+     * @param interactingRenderQuality supports
+     *            PPaintContext.HIGH_QUALITY_RENDERING or
      *            PPaintContext.LOW_QUALITY_RENDERING
      */
     public void setInteractingRenderQuality(final int interactingRenderQuality) {
@@ -865,5 +867,39 @@ public class PCanvas extends JComponent implements PComponent {
      */
     public PInputEventListener[] getInputEventListeners() {
         return camera.getInputEventListeners();
+    }
+
+    /**
+     * Prints the entire scene regardless of what the viewable area is.
+     * 
+     * @param g Graphics context onto which to paint the scene for printing
+     */
+    public void printAll(final Graphics g) {
+        final Graphics2D g2 = (Graphics2D) g;
+
+        final PBounds clippingRect = new PBounds(g.getClipBounds());
+        clippingRect.expandNearestIntegerDimensions();
+        
+        final PBounds originalCameraBounds = getCamera().getBounds();
+        final PBounds layerBounds = getCamera().getUnionOfLayerFullBounds();
+        getCamera().setBounds(layerBounds);
+
+        final double clipRatio = clippingRect.getWidth() / clippingRect.getHeight();
+        final double nodeRatio = getWidth() / getHeight();
+        final double scale;
+        if (nodeRatio <= clipRatio) {
+            scale = clippingRect.getHeight() / getCamera().getHeight();
+        }
+        else {
+            scale = clippingRect.getWidth() / getCamera().getWidth();
+        }
+        g2.scale(scale, scale);
+        g2.translate(-clippingRect.x, -clippingRect.y);
+
+        final PPaintContext pc = new PPaintContext(g2);
+        pc.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
+        getCamera().fullPaint(pc);
+
+        getCamera().setBounds(originalCameraBounds);
     }
 }
