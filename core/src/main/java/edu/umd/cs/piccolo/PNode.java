@@ -50,7 +50,6 @@ import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -64,7 +63,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.imageio.ImageIO;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.SwingPropertyChangeSupport;
 import javax.swing.text.MutableAttributeSet;
