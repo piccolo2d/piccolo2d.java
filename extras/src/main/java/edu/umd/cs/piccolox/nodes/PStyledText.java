@@ -84,8 +84,13 @@ public class PStyledText extends PNode {
     /** Whether this node is currently being edited. */
     protected boolean editing;
 
+    /** Insets represent how far away from the bounding box text will be drawn. */
     protected Insets insets = new Insets(0, 0, 0, 0);
+    
+    /** Whether width will be forced to match containing text's height. */
     protected boolean constrainHeightToTextHeight = true;
+    
+    /** Whether width will be forced to match containing text's width. */
     protected boolean constrainWidthToTextWidth = true;
 
     /**
@@ -519,7 +524,7 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Get the height of the font at the beginning of the document
+     * Get the height of the font at the beginning of the document.
      */
     public double getInitialFontHeight() {
 
@@ -535,6 +540,7 @@ public class PStyledText extends PNode {
         return curFM.getMaxAscent() + curFM.getMaxDescent() + curFM.getLeading();
     }
 
+    /** {@inheritDoc} */
     protected void paint(final PPaintContext paintContext) {
         if (lines == null || lines.length == 0) {
             return;
@@ -595,6 +601,9 @@ public class PStyledText extends PNode {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void fullPaint(final PPaintContext paintContext) {
         if (!editing) {
             super.fullPaint(paintContext);
@@ -661,45 +670,45 @@ public class PStyledText extends PNode {
      */
     protected static class RunInfo {
         public int startIndex;
-        public int endIndex;
-
-        public RunInfo() {
-        }
+        public int endIndex;       
 
         public RunInfo(final int runStart, final int runLimit) {
             startIndex = runStart;
             endIndex = runLimit;
         }
 
+        /**
+         * Returns whether the run is empty.
+         * 
+         * @return true is run is empty
+         */
         public boolean isEmpty() {
             return startIndex == endIndex;
         }
 
+        /**
+         * Returns the length of the run.
+         * 
+         * @return length of run
+         */
         public int length() {
             return endIndex - startIndex;
         }
-    }
-
-    /**
-     * Class to represent an integer run and the font in that run.
-     */
-    protected static class MetricsRunInfo extends RunInfo {
-        public FontMetrics metrics;
-
-        public MetricsRunInfo() {
-            super();
-        }
-    }
+    }    
 
     /**
      * The info for rendering and computing the bounds of a line.
      */
     protected static class LineInfo {
+        /** Segments which make up this line's formatting segments. */
         public List segments;
         public double maxAscent;
         public double maxDescent;
         public double leading;
 
+        /**
+         * Creates a LineInfo that contains no segments.
+         */
         public LineInfo() {
             segments = new ArrayList();
         }

@@ -2800,7 +2800,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             paintAfterChildren(paintContext);
 
             paintContext.popTransparency(transparency);
-            paintContext.popTransform(transform);
+            paintContext.popTransform();
         }
     }
 
@@ -2836,7 +2836,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param backgroundPaint paint to fill the image with before drawing this
      *            node, may be null
      * 
-     * @return a new image representing this node and its descendents
+     * @return a new image representing this node and its descendants
      */
     public Image toImage(final int width, final int height, final Paint backgroundPaint) {
         BufferedImage result;
