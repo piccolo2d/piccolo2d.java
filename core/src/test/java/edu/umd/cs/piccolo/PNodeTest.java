@@ -1029,6 +1029,54 @@ public class PNodeTest extends TestCase {
         assertEquals(Color.BLUE.getRGB(), img.getRGB(19, 20));
     }
 
+    public void testToImageScalesAccordingToExactFitStrategy() throws IOException {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
+                Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 39));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 39));
+
+    }
+
+    public void testToImageScalesAccordingToAspectCoverStrategy() throws IOException {        
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+        
+        PNode blueSquare = new PNode();
+        blueSquare.setPaint(Color.BLUE);
+        blueSquare.setBounds(0, 0, 5, 5);
+        node.addChild(blueSquare);
+
+        PNode greenSquare = new PNode();
+        greenSquare.setPaint(Color.GREEN);
+        greenSquare.setBounds(5, 5, 5, 5);
+        node.addChild(greenSquare);
+
+        
+        final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
+                Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(11, 19));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 20));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 20));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 39));
+        
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 0));
+        
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 20));        
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 20));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 39));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 39));
+    }
+    
     public void testGetPickableShouldDefaultToTrue() {
         assertTrue(node.getPickable());
     }

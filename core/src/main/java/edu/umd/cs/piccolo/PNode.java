@@ -44,13 +44,13 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.Book;
 import java.awt.print.PageFormat;
-import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -64,6 +64,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.SwingPropertyChangeSupport;
 import javax.swing.text.MutableAttributeSet;
@@ -352,6 +353,25 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /** Stores the name associated to this node. */
     private String name;
+
+    /**
+     * toImage fill strategy that stretches the node be as large as possible
+     * while still retaining its aspect ratio.
+     */
+    public static final int FILL_STRATEGY_ASPECT_FIT = 1;
+
+    /**
+     * toImage fill strategy that stretches the node be large enough to cover
+     * the image, and centers it.
+     */
+    public static final int FILL_STRATEGY_ASPECT_COVER = 2;
+
+    /**
+     * toImage fill strategy that stretches the node to be exactly the
+     * dimensions of the image. Will result in distortion if the aspect ratios
+     * are different.
+     */
+    public static final int FILL_STRATEGY_EXACT_FIT = 4;
 
     /**
      * Creates a new PNode with the given name.
@@ -2865,23 +2885,79 @@ public class PNode implements Cloneable, Serializable, Printable {
      *         image
      */
     public Image toImage(final BufferedImage image, final Paint backGroundPaint) {
-        final int width = image.getWidth();
-        final int height = image.getHeight();
+        return toImage(image, backGroundPaint, FILL_STRATEGY_ASPECT_FIT);
+    }
+
+    /**
+     * Paint a representation of this node into the specified buffered image. If
+     * background, paint is null, then the image will not be filled with a color
+     * prior to rendering
+     * 
+     * @param image Image onto which this node will be painted
+     * @param backGroundPaint will fill background of image with this. May be
+     *            null.
+     * @param fillStrategy strategy to use regarding how node will cover the
+     *            image
+     * @return a rendering of this image and its descendants onto the specified
+     *         image
+     */
+    public Image toImage(final BufferedImage image, final Paint backGroundPaint, int fillStrategy) {
+        final int imageWidth = image.getWidth();
+        final int imageHeight = image.getHeight();
         final Graphics2D g2 = image.createGraphics();
 
         if (backGroundPaint != null) {
             g2.setPaint(backGroundPaint);
-            g2.fillRect(0, 0, width, height);
+            g2.fillRect(0, 0, imageWidth, imageHeight);
         }
 
-        // reuse print method
-        final Paper paper = new Paper();
-        paper.setSize(width, height);
-        paper.setImageableArea(0, 0, width, height);
-        final PageFormat pageFormat = new PageFormat();
-        pageFormat.setPaper(paper);
-        print(g2, pageFormat, 0);
+        final PBounds imageBounds = getFullBounds();
 
+        imageBounds.expandNearestIntegerDimensions();
+
+        g2.setClip(0, 0, imageWidth, imageHeight);        
+
+        double imageRatio = imageWidth / (imageHeight * 1.0);
+        double nodeRatio = getWidth() / getHeight();
+        double scale;
+        switch (fillStrategy) {
+            case FILL_STRATEGY_ASPECT_FIT:
+                // scale the graphics so node's full bounds fit in the imageable
+                // bounds but aspect ration is retained
+                
+                if (nodeRatio <= imageRatio) {
+                    scale = image.getHeight() / getHeight();
+                }
+                else {
+                    scale = image.getWidth() / getWidth();
+                }
+                g2.scale(scale, scale);
+                g2.translate(-imageBounds.x, -imageBounds.y);
+                break;
+            case FILL_STRATEGY_ASPECT_COVER:
+                // scale the graphics so node completely covers the imageable area, but retains its aspect ratio. 
+                if (nodeRatio <= imageRatio) {
+                    scale = image.getWidth() / getWidth();
+                }
+                else {
+                    scale = image.getHeight() / getHeight();                    
+                }
+                g2.scale(scale, scale);
+                g2.translate(-getWidth()*scale, -getHeight()*scale);
+                break;
+            case FILL_STRATEGY_EXACT_FIT:
+                // scale the node so that it
+                g2.scale(image.getWidth() / getWidth(), image.getHeight() / getHeight());
+
+                g2.translate(-imageBounds.x, -imageBounds.y);
+                break;
+            default:
+                throw new IllegalArgumentException("Fill strategy provided is invalid");
+        }
+
+        final PPaintContext pc = new PPaintContext(g2);
+        pc.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
+        fullPaint(pc);        
         return image;
     }
 
@@ -3642,5 +3718,5 @@ public class PNode implements Cloneable, Serializable, Printable {
          * @param node node needing repaint
          */
         void nodeFullBoundsInvalidated(PNode node);
-    } 
+    }
 }
