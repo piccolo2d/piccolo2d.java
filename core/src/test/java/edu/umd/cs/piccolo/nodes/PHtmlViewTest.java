@@ -30,9 +30,16 @@ package edu.umd.cs.piccolo.nodes;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.MockPropertyChangeListener;
+import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.util.PBounds;
 
 /**
@@ -219,4 +226,28 @@ public class PHtmlViewTest extends TestCase {
         html.setFont(font);
         assertSame(font, html.getFont());       
     }       
+    
+    public void testPaintFillsBounds() throws IOException {
+        PHtmlView html = new PHtmlView("<html><body>30. Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere.</body></html>");
+        html.setBounds(0, 0, 400, 30);
+        html.setPaint(Color.RED);
+        
+        PCanvas canvas = new PCanvas();
+        canvas.setBackground(Color.WHITE);
+        canvas.setBounds(0, 0, 500, 30);
+        canvas.getLayer().addChild(html);
+        
+        BufferedImage image = new BufferedImage(600, 30, BufferedImage.TYPE_INT_RGB);        
+        Graphics2D g2 = image.createGraphics();
+        canvas.paint(g2);
+        
+        ImageIO.write(image, "JPEG", new File("C:\\html.jpg"));
+        assertEquals(Color.red.getRGB(), image.getRGB(0, 0));
+        assertEquals(Color.red.getRGB(), image.getRGB(0, 15));
+        assertEquals(Color.red.getRGB(), image.getRGB(0, 29));
+        assertEquals(Color.red.getRGB(), image.getRGB(399, 0));
+        assertEquals(Color.white.getRGB(), image.getRGB(400, 0));
+        
+        
+    }
 }
