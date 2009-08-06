@@ -40,11 +40,11 @@ public class PSwingCanvasTest extends TestCase {
 
     public void setUp() {
         finalizerCallCount = 0;
-    }  
-    
+    }
+
     public void testRemovePSwingDoesNothingWithForeignPSwing() {
-        PSwingCanvas canvas = new PSwingCanvas();
-        PSwing orphanPSwing = new PSwing(new JLabel());
+        final PSwingCanvas canvas = new PSwingCanvas();
+        final PSwing orphanPSwing = new PSwing(new JLabel());
         canvas.removePSwing(orphanPSwing);
     }
 }

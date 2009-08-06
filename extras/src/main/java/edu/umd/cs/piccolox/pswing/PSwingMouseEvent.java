@@ -31,7 +31,7 @@ package edu.umd.cs.piccolox.pswing;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
@@ -74,7 +74,7 @@ import edu.umd.cs.piccolo.util.PPickPath;
  * @author Sam R. Reid
  * @author Lance E. Good
  */
-public class PSwingMouseEvent extends MouseEvent implements Serializable {
+public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwingEvent {
     /**
      * 
      */
@@ -104,9 +104,12 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * @param e The original Java mouse event when in MOUSE_DRAGGED and
      *            MOUSE_RELEASED events.
      */
-    public static PSwingMouseEvent createMouseEvent(final int id, final MouseEvent e, final PInputEvent pEvent) {
+    public static PSwingEvent createMouseEvent(final int id, final MouseEvent e, final PInputEvent pEvent) {
         if (id == MouseEvent.MOUSE_MOVED || id == MouseEvent.MOUSE_DRAGGED) {
             return new PSwingMouseMotionEvent(id, e, pEvent);
+        }
+        else if (id == MouseEvent.MOUSE_WHEEL) {
+            return new PSwingMouseWheelEvent(id, (MouseWheelEvent) e, pEvent);
         }
         else {
             return new PSwingMouseEvent(id, e, pEvent);
@@ -228,40 +231,25 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * @param listener the MouseListener or MouseMotionListener to dispatch to.
      */
     public void dispatchTo(final Object listener) {
-        if (listener instanceof MouseListener) {
-            final MouseListener mouseListener = (MouseListener) listener;
-            switch (getID()) {
-                case MouseEvent.MOUSE_CLICKED:
-                    mouseListener.mouseClicked(this);
-                    break;
-                case MouseEvent.MOUSE_ENTERED:
-                    mouseListener.mouseEntered(this);
-                    break;
-                case MouseEvent.MOUSE_EXITED:
-                    mouseListener.mouseExited(this);
-                    break;
-                case MouseEvent.MOUSE_PRESSED:
-                    mouseListener.mousePressed(this);
-                    break;
-                case MouseEvent.MOUSE_RELEASED:
-                    mouseListener.mouseReleased(this);
-                    break;
-                default:
-                    throw new RuntimeException("PMouseEvent with bad ID");
-            }
-        }
-        else {
-            final MouseMotionListener mouseMotionListener = (MouseMotionListener) listener;
-            switch (getID()) {
-                case MouseEvent.MOUSE_DRAGGED:
-                    mouseMotionListener.mouseDragged(this);
-                    break;
-                case MouseEvent.MOUSE_MOVED:
-                    mouseMotionListener.mouseMoved(this);
-                    break;
-                default:
-                    throw new RuntimeException("PMouseMotionEvent with bad ID");
-            }
+        final MouseListener mouseListener = (MouseListener) listener;
+        switch (getID()) {
+            case MouseEvent.MOUSE_CLICKED:
+                mouseListener.mouseClicked(this);
+                break;
+            case MouseEvent.MOUSE_ENTERED:
+                mouseListener.mouseEntered(this);
+                break;
+            case MouseEvent.MOUSE_EXITED:
+                mouseListener.mouseExited(this);
+                break;
+            case MouseEvent.MOUSE_PRESSED:
+                mouseListener.mousePressed(this);
+                break;
+            case MouseEvent.MOUSE_RELEASED:
+                mouseListener.mouseReleased(this);
+                break;
+            default:
+                throw new RuntimeException("PMouseEvent with bad ID");
         }
     }
 
@@ -274,5 +262,9 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      */
     public void setSource(final Object aSource) {
         source = aSource;
+    }
+
+    public MouseEvent asMouseEvent() {
+        return this;
     }
 }

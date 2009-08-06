@@ -38,9 +38,8 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
-import edu.umd.cs.piccolo.util.PPaintContext;
-
 import junit.framework.TestCase;
+import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
  * JUnit test class to exercise PSwing bugfixes.
@@ -102,7 +101,8 @@ public class PSwingTest extends TestCase {
 
         final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         final Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
-        final PPaintContext paintContext = new PPaintContext(graphics);;
+        final PPaintContext paintContext = new PPaintContext(graphics);
+        ;
         pSwing.paintComponent(paintContext);
         assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
     }

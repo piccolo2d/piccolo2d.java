@@ -59,8 +59,8 @@ public class PSwingCanvas extends PCanvas {
     }
 
     private void initRepaintManager() {
-        final RepaintManager repaintManager = RepaintManager.currentManager(this);        
-        if (!(repaintManager instanceof PSwingRepaintManager)) {            
+        final RepaintManager repaintManager = RepaintManager.currentManager(this);
+        if (!(repaintManager instanceof PSwingRepaintManager)) {
             RepaintManager.setCurrentManager(new PSwingRepaintManager());
         }
     }

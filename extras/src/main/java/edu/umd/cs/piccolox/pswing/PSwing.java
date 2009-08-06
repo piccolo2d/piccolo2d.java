@@ -220,11 +220,18 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /** Minimum font size. */
     private double minFontSize = Double.MAX_VALUE;
 
-    /** Default stroke, <code>new BasicStroke()</code>.   Cannot be made static because BasicStroke is not serializable. */
+    /**
+     * Default stroke, <code>new BasicStroke()</code>. Cannot be made static
+     * because BasicStroke is not serializable.
+     */
     private transient Stroke defaultStroke = new BasicStroke();
 
-    /** Default font, 12 point <code>"SansSerif"</code>. Will be made final in version 2.0. */
-    // public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 12); jdk 1.6+
+    /**
+     * Default font, 12 point <code>"SansSerif"</code>. Will be made final in
+     * version 2.0.
+     */
+    // public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF,
+    // Font.PLAIN, 12); jdk 1.6+
     public static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
 
     /** Greek threshold in scale. */
@@ -294,7 +301,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         this(component);
     }
 
-
     /**
      * Ensures the bounds of the underlying component are accurate, and sets the
      * bounds of this PNode.
@@ -347,8 +353,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * Workaround to prevent text-rendering Swing components from drawing an ellipsis incorrectly.
-     *
+     * Workaround to prevent text-rendering Swing components from drawing an
+     * ellipsis incorrectly.
+     * 
      * @param text text
      * @param icon icon
      * @param iconGap icon gap
@@ -407,8 +414,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      *         specified paint context
      */
     protected boolean shouldRenderGreek(final PPaintContext paintContext) {
-        return paintContext.getScale() < greekThreshold
-                || minFontSize * paintContext.getScale() < 0.5;
+        return paintContext.getScale() < greekThreshold || minFontSize * paintContext.getScale() < 0.5;
     }
 
     /**
@@ -419,7 +425,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param paintContext paint context
      */
-    protected void paintGreek(PPaintContext paintContext) {
+    protected void paintGreek(final PPaintContext paintContext) {
         final Graphics2D graphics = paintContext.getGraphics();
         final Color background = component.getBackground();
         final Color foreground = component.getForeground();
@@ -448,7 +454,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     /**
      * Paint the Swing component with the specified paint context.
-     *
+     * 
      * @param paintContext paint context
      */
     protected void paintComponent(final PPaintContext paintContext) {
