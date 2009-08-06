@@ -227,9 +227,8 @@ public class PHtmlViewTest extends TestCase {
         assertSame(font, html.getFont());       
     }       
     
-    public void testPaintFillsBounds() throws IOException {
+    public void testPaintFillsBounds() {
         PHtmlView html = new PHtmlView("<html><body>30. Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere.</body></html>");
-        html.setBounds(0, 0, 400, 30);
         html.setPaint(Color.RED);
         
         PCanvas canvas = new PCanvas();
@@ -242,9 +241,8 @@ public class PHtmlViewTest extends TestCase {
         canvas.paint(g2);
               
         assertEquals(Color.red.getRGB(), image.getRGB(0, 0));
-        assertEquals(Color.red.getRGB(), image.getRGB(0, 15));
-        assertEquals(Color.red.getRGB(), image.getRGB(0, 29));
-        assertEquals(Color.red.getRGB(), image.getRGB(399, 0));
+        assertEquals(Color.red.getRGB(), image.getRGB(0, 15));        
+        assertEquals(Color.red.getRGB(), image.getRGB(300, 0));
         assertEquals(Color.white.getRGB(), image.getRGB(400, 0));
     }
 }
