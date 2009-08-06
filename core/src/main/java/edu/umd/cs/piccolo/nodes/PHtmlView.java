@@ -36,7 +36,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.Position;
 import javax.swing.text.View;
@@ -45,8 +44,8 @@ import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
- * PHtml is a Piccolo node for rendering HTML text. It uses a JLabel under the
- * hood so you have the same restrictions regarding html as you have when using
+ * PHtmlView is a Piccolo node for rendering HTML text. It uses a JLabel under the
+ * hood so you have the same restrictions regarding HTML as you have when using
  * standard Swing components (HTML 3.2 + subset of CSS 1.0).
  * 
  * @author Chris Malley (cmal...@pixelzoom.com)
@@ -55,13 +54,15 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PHtmlView extends PNode {
 
+    /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    /** Default font to use if not overridden in the HTML markup. */
-    private static final Font DEFAULT_FONT = new JTextField().getFont();
+    /** Default font if not otherwise specified in the HTML text, 12 point <code>"SansSerif"</code>. */
+    // public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 12); jdk 1.6+
+    public static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
 
-    /** Default font color to use if not overridden in the HTML markup. */
-    private static final Color DEFAULT_HTML_COLOR = Color.BLACK;
+    /** Default text color if not otherwise specified in the HTML text, <code>Color.BLACK</code>. */
+    public static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
 
     /**
      * The property name that identifies a change of this node's font (see
@@ -78,35 +79,35 @@ public class PHtmlView extends PNode {
     public static final int PROPERTY_CODE_FONT = 1 << 20;
 
     /**
-     * The property name that identifies a change of this node's HTML (see
+     * The property name that identifies a change of this node's HTML text (see
      * {@link #getHTML getHTML}). Both old and new value will be set in any
      * property change event.
      */
-    public static final String PROPERTY_HTML = "html";
+    public static final String PROPERTY_TEXT = "text";
 
     /**
-     * The property code that identifies a change of this node's HTML (see
+     * The property code that identifies a change of this node's HTML text (see
      * {@link #getHTML getHTML}). Both old and new value will be set in any
      * property change event.
      */
-    public static final int PROPERTY_CODE_HTML = 1 << 21;
+    public static final int PROPERTY_CODE_TEXT = 1 << 21;
 
     /**
-     * The property name that identifies a change of this node's HTML color (see
+     * The property name that identifies a change of this node's HTML text color (see
      * {@link #getHtml getHTMLColor}). Both old and new value will be set in any
      * property change event.
      */
-    public static final String PROPERTY_HTML_COLOR = "html color";
+    public static final String PROPERTY_TEXT_COLOR = "text color";
 
     /**
-     * The property code that identifies a change of this node's HTML color (see
+     * The property code that identifies a change of this node's HTML text color (see
      * {@link #getHtml getHTMLColor}). Both old and new value will be set in any
      * property change event.
      */
-    public static final int PROPERTY_CODE_HTML_COLOR = 1 << 22;
+    public static final int PROPERTY_CODE_TEXT_COLOR = 1 << 22;
 
     /** Underlying JLabel used to handle the rendering logic. */
-    private final JLabel htmlLabel;
+    private final JLabel label;
 
     /** Object that encapsulates the HTML rendering logic. */
     private View htmlView;
@@ -115,124 +116,114 @@ public class PHtmlView extends PNode {
     private final Rectangle htmlBounds;
 
     /**
-     * Creates an empty PHtml node with default font and color.
+     * Create an empty HTML text node with the default font and text color.
      */
     public PHtmlView() {
-        this(null, DEFAULT_FONT, DEFAULT_HTML_COLOR);
+        this(null, DEFAULT_FONT, DEFAULT_TEXT_COLOR);
     }
 
     /**
-     * Creates a PHtml node that contains the provided HTML. It will have
-     * default font and color.
+     * Create a HTML text node with the specified HTML text and the default font and text color.
      * 
-     * @param html markup label should contain
+     * @param text HTML text for this HTML text node
      */
-    public PHtmlView(final String html) {
-        this(html, DEFAULT_FONT, DEFAULT_HTML_COLOR);
+    public PHtmlView(final String text) {
+        this(text, DEFAULT_FONT, DEFAULT_TEXT_COLOR);
     }
 
     /**
-     * Creates a PHtml node with the given markup and default html color.
+     * Create a HTML text node with the specified HTML text, font, and text color.  The font
+     * and text color are used to render the HTML text if not otherwise specified via CSS.
      * 
-     * @param html markup label should contain
-     * @param htmlColor color that will be used unless overridden by the markup
+     * @param text HTML text for this HTML text node
+     * @param font font for this HTML text node
+     * @param textColor text color for this HTML text node
      */
-    public PHtmlView(final String html, final Color htmlColor) {
-        this(html, DEFAULT_FONT, htmlColor);
-    }
-
-    /**
-     * Creates a PHtml node with the given markup and default HTML color.
-     * 
-     * @param html markup label should contain
-     * @param font font that will be used unless overriden by the markup
-     * @param htmlColor color that will be used unless overridden by the markup
-     */
-    public PHtmlView(final String html, final Font font, final Color htmlColor) {
-        htmlLabel = new JLabel(html);
-        htmlLabel.setFont(font);
-        htmlLabel.setForeground(htmlColor);
+    public PHtmlView(final String text, final Font font, final Color textColor) {
+        label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(textColor);
         htmlBounds = new Rectangle();
         update();
     }
 
     /**
-     * @return HTML being rendered by this node
+     * Return the HTML text for this HTML text node.
+     * 
+     * @return the HTML text for this HTML text node
      */
-    public String getHtml() {
-        return htmlLabel.getText();
+    public String getText() {
+        return label.getText();
     }
 
     /**
-     * Changes the HTML being rendered by this node.
+     * Set the HTML text for this HTML text node to <code>text</code>.
      * 
-     * @param newHtml markup to swap with existing HTML
+     * <p>
+     * This is a <b>bound</b> property.
+     * </p>
+     * 
+     * @param text HTML text for this HTML text node
      */
-    public void setHtml(final String newHtml) {
-        if (isNewHtml(newHtml)) {
-            final String oldHtml = htmlLabel.getText();
-            htmlLabel.setText(newHtml);
-            update();
-            firePropertyChange(PROPERTY_CODE_HTML, PROPERTY_HTML, oldHtml, newHtml);
-        }
-    }
-
-    private boolean isNewHtml(final String html) {
-        if (html == null && getHtml() == null) {
-            return false;
-        }
-        else if (html == null || getHtml() == null) {
-            return true;
-        }
-        else {
-            return !htmlLabel.getText().equals(html);
-        }
+    public void setText(final String text) {
+        final String oldText = label.getText();
+        label.setText(text);
+        update();
+        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, oldText, label.getText());
     }
 
     /**
-     * Returns the default font being used when not overridden in the markup.
+     * Return the font for this HTML text node. This font is used to render the
+     * HTML text if not otherwise specified via CSS. Defaults to {@link #DEFAULT_FONT}.
      * 
-     * @return font being used when not overridden by the markup
+     * @return the font for this HTML text node
      */
     public Font getFont() {
-        return htmlLabel.getFont();
+        return label.getFont();
     }
 
     /**
-     * Set the font of this PHtml. This may be overridden by the markup using
-     * either styles or the font tag.
+     * Set the font for this HTML text node to <code>font</code>. This font is
+     * used to render the HTML text if not otherwise specified via CSS.
      * 
-     * @param newFont font to set as the default
+     * <p>
+     * This is a <b>bound</b> property.
+     * </p>
+     * 
+     * @param font font for this HTML text node
      */
-    public void setFont(final Font newFont) {
-        final Font oldFont = htmlLabel.getFont();
-        htmlLabel.setFont(newFont);
+    public void setFont(final Font font) {
+        final Font oldFont = label.getFont();
+        label.setFont(font);
         update();
-
-        firePropertyChange(PROPERTY_CODE_FONT, PROPERTY_FONT, oldFont, newFont);
+        firePropertyChange(PROPERTY_CODE_FONT, PROPERTY_FONT, oldFont, label.getFont());
     }
 
     /**
-     * Gets the color used to render the HTML. If you want to get the paint used
-     * for the node, use getPaint.
-     * 
-     * @return the color used to render the HTML.
-     */
-    public Color getHtmlColor() {
-        return htmlLabel.getForeground();
+    * Return the text color for this HTML text node. This text color is used to render the
+    * HTML text if not otherwise specified via CSS. Defaults to {@link #DEFAULT_TEXT_COLOR}.
+    * 
+    * @return the text color for this HTML text node
+    */
+    public Color getTextColor() {
+        return label.getForeground();
     }
 
     /**
-     * Sets the color used to render the HTML. If you want to set the paint used
-     * for the node, use setPaint.
+     * Set the text color for this HTML text node to <code>textColor</code>. This text color is
+     * used to render the HTML text if not otherwise specified via CSS.
      * 
-     * @param newColor new color to use when rendering HTML
+     * <p>
+     * This is a <b>bound</b> property.
+     * </p>
+     * 
+     * @param textColor text color for this HTML text node
      */
-    public void setHtmlColor(final Color newColor) {
-        final Color oldColor = htmlLabel.getForeground();
-        htmlLabel.setForeground(newColor);
+    public void setTextColor(final Color color) {
+        final Color oldColor = label.getForeground();
+        label.setForeground(color);
         repaint();
-        firePropertyChange(PROPERTY_CODE_HTML_COLOR, PROPERTY_HTML_COLOR, oldColor, newColor);
+        firePropertyChange(PROPERTY_CODE_TEXT_COLOR, PROPERTY_TEXT_COLOR, oldColor, label.getForeground());
     }
 
     /**
@@ -240,14 +231,14 @@ public class PHtmlView extends PNode {
      * updates bounds.
      */
     private void update() {
-        htmlLabel.setSize(htmlLabel.getPreferredSize());
+        label.setSize(label.getPreferredSize());
 
-        String htmlContent = htmlLabel.getText();
+        String htmlContent = label.getText();
         if (htmlContent == null) {
             htmlContent = "";
         }
 
-        htmlView = BasicHTML.createHTMLView(htmlLabel, htmlContent);
+        htmlView = BasicHTML.createHTMLView(label, htmlContent);
 
         final Rectangle2D bounds = getBounds();
         htmlBounds.setRect(0, 0, bounds.getWidth(), bounds.getHeight());
@@ -269,15 +260,16 @@ public class PHtmlView extends PNode {
     }
 
     /**
-     * Paints the node. The HTML string is painted last, so it appears on top of
-     * any child nodes.
+     * {@inheritDoc}
      * 
-     * @param paintContext the context in which painting is occurring
+     * <p>
+     * The HTML text is painted last, so it will appear on top of any child nodes.
+     * </p>
      */
     protected void paint(final PPaintContext paintContext) {
         super.paint(paintContext);
 
-        if (htmlLabel.getWidth() != 0 && htmlLabel.getHeight() != 0) {
+        if (label.getWidth() != 0 && label.getHeight() != 0) {
             final Graphics2D g2 = paintContext.getGraphics();
 
             htmlView.paint(g2, htmlBounds);
@@ -285,40 +277,44 @@ public class PHtmlView extends PNode {
     }
 
     /**
-     * Returns the address specified in the link under the given point.
+     * Return the address specified in the HTML link at the specified point in
+     * this node's local coordinate system, if any.
      * 
-     * @param clickedPoint point under which a link might be
-     * @return String containing value of href for clicked link, or null if no
-     *         link clicked
+     * @param point point in this node's local coordinate system
+     * @return the address specified in the HTML link at the specified point in
+     *    this node's local coordinate system, or <code>null</code> if no such
+     *    HTML link exists
      */
-    public String getClickedAddress(final Point2D clickedPoint) {
-        return getClickedAddress(clickedPoint.getX(), clickedPoint.getY());
+    public String getLinkAddressAt(final Point2D point) {
+        return getLinkAddressAt(point.getX(), point.getY());
     }
 
     /**
-     * Returns the address specified in the link under the given point.
+     * Return the address specified in the HTML link at the specified x and y coordinates in
+     * this node's local coordinate system, if any.
      * 
-     * @param x x component of point under which link may be
-     * @param y y component of point under which link may be
-     * @return String containing value of href for clicked link, or null if no
-     *         link clicked
+     * @param x x coordinate in this node's local coordinate system
+     * @param y y coordinate in this node's local coordinate system
+     * @return the address specified in the HTML link at the specified x and y coordinates in
+     *    this node's local coordinate system, or <code>null</code> if no such
+     *    HTML link exists
      */
-    public String getClickedAddress(final double x, final double y) {
+    public String getLinkAddressAt(final double x, final double y) {
         int position = pointToModelIndex(x, y);
 
-        final String html = htmlLabel.getText();
+        final String text = label.getText();
 
         String address = null;
 
         int currentPos = 0;
-        while (currentPos < html.length()) {
-            currentPos = html.indexOf('<', currentPos);
+        while (currentPos < text.length()) {
+            currentPos = text.indexOf('<', currentPos);
             if (currentPos == -1 || position < currentPos) {
                 break;
             }
 
             final int tagStart = currentPos;
-            final int tagEnd = findTagEnd(html, currentPos);
+            final int tagEnd = findTagEnd(text, currentPos);
 
             if (tagEnd == -1) {
                 return null;
@@ -326,7 +322,7 @@ public class PHtmlView extends PNode {
 
             currentPos = tagEnd + 1;
 
-            final String tag = html.substring(tagStart, currentPos);
+            final String tag = text.substring(tagStart, currentPos);
 
             position += tag.length();
 
@@ -342,12 +338,13 @@ public class PHtmlView extends PNode {
     }
 
     /**
-     * Returns the index into the raw text (without HTML) that the click
-     * occurred.
+     * Return the index into the raw text at the specified x and y coordinates in
+     * this node's local coordinate system.
      * 
-     * @param x x component of the point clicked
-     * @param y y component of the point clicked
-     * @return index into the raw text (without HTML) that the click occurred
+     * @param x x coordinate in this node's local coordinate system
+     * @param y y coordinate in this node's local coordinate system
+     * @return the index into the raw text at the specified x and y coordinates in
+     *    this node's local coordinate system
      */
     private int pointToModelIndex(final double x, final double y) {
         final Position.Bias[] biasReturn = new Position.Bias[1];
@@ -355,30 +352,30 @@ public class PHtmlView extends PNode {
     }
 
     /**
-     * Starting from the startPos, it finds the position at which the given tag
-     * ends. Returns -1 if the end of the string was encountered before the end
-     * of the tag was encountered.
+     * Starting from the startPos, find the position at which the given tag
+     * ends. Returns <code>-1</code> if the end of the string was encountered
+     * before the end of the tag was encountered.
      * 
-     * @param html raw HTML string being searched
+     * @param text HTML text being searched
      * @param startPos where in the string to start searching for ">"
      * @return index after the ">" character
      */
-    private int findTagEnd(final String html, final int startPos) {
+    private int findTagEnd(final String text, final int startPos) {
         int currentPos = startPos;
 
         currentPos++;
 
-        while (currentPos > 0 && currentPos < html.length() && html.charAt(currentPos) != '>') {
-            if (html.charAt(currentPos) == '\"') {
-                currentPos = html.indexOf('\"', currentPos + 1);
+        while (currentPos > 0 && currentPos < text.length() && text.charAt(currentPos) != '>') {
+            if (text.charAt(currentPos) == '\"') {
+                currentPos = text.indexOf('\"', currentPos + 1);
             }
-            else if (html.charAt(currentPos) == '\'') {
-                currentPos = html.indexOf('\'', currentPos + 1);
+            else if (text.charAt(currentPos) == '\'') {
+                currentPos = text.indexOf('\'', currentPos + 1);
             }
             currentPos++;
         }
 
-        if (currentPos == 0 || currentPos >= html.length()) {
+        if (currentPos == 0 || currentPos >= text.length()) {
             return -1;
         }
 
@@ -386,11 +383,11 @@ public class PHtmlView extends PNode {
     }
 
     /**
-     * Given a tag, extracts the value of the href attribute, returns null if
+     * Given a tag, extracts the value of the href attribute or returns null if
      * none was found.
      * 
      * @param tag from which to extract the href value
-     * @return href value without quotes or null if not found
+     * @return href value without quotes or <code>null</code> if not found
      */
     private String extractHref(final String tag) {
         int currentPos = 0;
@@ -410,8 +407,8 @@ public class PHtmlView extends PNode {
      * Starting at the character after the equal sign of an href=..., it extract
      * the value. Handles single, double, and no quotes.
      * 
-     * @param tag
-     * @param startPos
+     * @param tag tag
+     * @param startPos start position
      * @return value of href or null if not found.
      */
     private String extractHrefValue(final String tag, final int startPos) {
@@ -451,7 +448,6 @@ public class PHtmlView extends PNode {
      * 
      * @param tag html code of the tag
      * @param equalPos the index of the assignment
-     * 
      * @return true if to left of assignment is href
      */
     private boolean isHrefAttributeAssignment(final String tag, final int equalPos) {

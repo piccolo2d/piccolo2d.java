@@ -73,7 +73,7 @@ public class HtmlViewExample extends PFrame {
                 final Point2D clickPoint = event.getPositionRelativeTo(clickedNode);
                 final PHtmlView htmlNode = (PHtmlView) clickedNode;
 
-                final String url = htmlNode.getClickedAddress(clickPoint.getX(), clickPoint.getY());
+                final String url = htmlNode.getLinkAddressAt(clickPoint.getX(), clickPoint.getY());
                 JOptionPane.showMessageDialog(null, url);
             }
         });
