@@ -240,14 +240,11 @@ public class PHtmlViewTest extends TestCase {
         BufferedImage image = new BufferedImage(600, 30, BufferedImage.TYPE_INT_RGB);        
         Graphics2D g2 = image.createGraphics();
         canvas.paint(g2);
-        
-        ImageIO.write(image, "JPEG", new File("C:\\html.jpg"));
+              
         assertEquals(Color.red.getRGB(), image.getRGB(0, 0));
         assertEquals(Color.red.getRGB(), image.getRGB(0, 15));
         assertEquals(Color.red.getRGB(), image.getRGB(0, 29));
         assertEquals(Color.red.getRGB(), image.getRGB(399, 0));
         assertEquals(Color.white.getRGB(), image.getRGB(400, 0));
-        
-        
     }
 }
