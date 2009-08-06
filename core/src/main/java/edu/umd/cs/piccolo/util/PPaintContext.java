@@ -244,7 +244,6 @@ public class PPaintContext {
      * Pops the topmost Transform from the top of the transform if the passed in
      * transform is not null.
      * 
-     * @deprecated in favor of popTransform()
      * @param aTransform transform that should be at the top of the stack
      */
     public void popTransform(final PAffineTransform aTransform) {
@@ -252,17 +251,7 @@ public class PPaintContext {
             graphics.setTransform((AffineTransform) transformStack.pop());
             localClipStack.pop();
         }
-    }
-
-    /**
-     * Pops the topmost Transform from the top of the transform stack, or does nothing if it's empty.
-     */
-    public void popTransform() {
-        if (!transformStack.isEmpty()) {
-            graphics.setTransform((AffineTransform) transformStack.pop());
-            localClipStack.pop();
-        }
-    }
+    }   
 
     /**
      * Return the render quality used by this paint context.

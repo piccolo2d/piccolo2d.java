@@ -356,7 +356,7 @@ public class PCamera extends PNode {
         paintCameraView(paintContext);
         paintDebugInfo(paintContext);
 
-        paintContext.popTransform();
+        paintContext.popTransform(viewTransform);
         paintContext.popClip(getBoundsReference());
     }
 

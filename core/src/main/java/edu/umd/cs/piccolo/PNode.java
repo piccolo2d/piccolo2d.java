@@ -2818,7 +2818,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             paintAfterChildren(paintContext);
 
             paintContext.popTransparency(transparency);
-            paintContext.popTransform();
+            paintContext.popTransform(transform);
         }
     }
 
