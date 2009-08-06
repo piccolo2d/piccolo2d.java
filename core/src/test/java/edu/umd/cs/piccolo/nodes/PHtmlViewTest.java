@@ -53,67 +53,65 @@ public class PHtmlViewTest extends TestCase {
         mockListener = new MockPropertyChangeListener();
     }
     
-    public void testConstructor() {
-        PHtmlView html0 = new PHtmlView();
-        assertNotNull(html0);
-        assertEquals(null, html0.getText());
-        assertEquals(PHtmlView.DEFAULT_FONT, html0.getFont());
-        assertEquals(PHtmlView.DEFAULT_TEXT_COLOR, html0.getTextColor());
+    public void testConstructorRetainsHtmlWithCSSStyling() {   
+        PHtmlView html = new PHtmlView("<html><body><p style=\"font-family: sans-serif; font-color: blue\">html text</p></body></html>");        
+        assertEquals("<html><body><p style=\"font-family: sans-serif; font-color: blue\">html text</p></body></html>", html.getText());
+    }
 
-        PHtmlView html1 = new PHtmlView(null);
-        assertNotNull(html1);
-        assertEquals(null, html1.getText());
-        assertEquals(PHtmlView.DEFAULT_FONT, html1.getFont());
-        assertEquals(PHtmlView.DEFAULT_TEXT_COLOR, html1.getTextColor());
+    public void testConstructorRetainsAllParametersWhenRealHtml() {        
+        PHtmlView html = new PHtmlView("<html><body><p>html text</p></body></html>");        
+        assertEquals("<html><body><p>html text</p></body></html>", html.getText());               
+    }
 
-        PHtmlView html2 = new PHtmlView("not html");
-        assertNotNull(html2);
-        assertEquals("not html", html2.getText());
-        assertEquals(PHtmlView.DEFAULT_FONT, html2.getFont());
-        assertEquals(PHtmlView.DEFAULT_TEXT_COLOR, html2.getTextColor());
-
-        PHtmlView html3 = new PHtmlView("<html><body><p>html text</p></body></html>");
-        assertNotNull(html3);
-        assertEquals("<html><body><p>html text</p></body></html>", html3.getText());
-        assertEquals(PHtmlView.DEFAULT_FONT, html3.getFont());
-        assertEquals(PHtmlView.DEFAULT_TEXT_COLOR, html3.getTextColor());
-
+    public void testConstructorRetainsAllParameters() {
         Font font = new Font("Serif", Font.PLAIN, 12);
-        PHtmlView html4 = new PHtmlView("not html", font, Color.RED);
-        assertNotNull(html4);
-        assertEquals("not html", html4.getText());
-        assertEquals(font, html4.getFont());
-        assertEquals(Color.RED, html4.getTextColor());
+        PHtmlView html = new PHtmlView("not html", font, Color.RED);        
+        assertEquals("not html", html.getText());
+        assertEquals(font, html.getFont());
+        assertEquals(Color.RED, html.getTextColor());        
+    }
 
-        PHtmlView html5 = new PHtmlView("<html><body><p>html text</p></body></html>", font, Color.RED);
-        assertNotNull(html5);
-        assertEquals("<html><body><p>html text</p></body></html>", html5.getText());
-        assertEquals(font, html5.getFont());
-        assertEquals(Color.RED, html5.getTextColor());
+    public void testConstructorAcceptsRealisticHtml() {
+        PHtmlView html = new PHtmlView("<html><body><p>html text</p></body></html>");
+        assertNotNull(html);
+        assertEquals("<html><body><p>html text</p></body></html>", html.getText());
+    }
 
-        PHtmlView html6 = new PHtmlView("<html><body><p style=\"font-family: sans-serif; font-color: blue\">html text</p></body></html>", font, Color.RED);
-        assertNotNull(html6);
-        assertEquals("<html><body><p style=\"font-family: sans-serif; font-color: blue\">html text</p></body></html>", html6.getText());
-        assertEquals(font, html6.getFont());
-        assertEquals(Color.RED, html6.getTextColor());
+    public void testConstructorAcceptsNonHtmlText() {
+        PHtmlView html = new PHtmlView("not html");
+        assertNotNull(html);
+        assertEquals("not html", html.getText());
+        assertEquals(PHtmlView.DEFAULT_FONT, html.getFont());
+        assertEquals(PHtmlView.DEFAULT_TEXT_COLOR, html.getTextColor());
+    }
 
-        PHtmlView html7 = new PHtmlView("not html", null, Color.RED);
-        assertNotNull(html7);
-        assertEquals("not html", html7.getText());
-        assertEquals(null, html7.getFont());
-        assertEquals(Color.RED, html7.getTextColor());
+    public void testConstructorAcceptsNullHtml() {
+        PHtmlView html = new PHtmlView(null);
+        assertEquals(null, html.getText());
+    }
 
-        PHtmlView html8 = new PHtmlView("not html", font, null);
-        assertNotNull(html8);
-        assertEquals("not html", html8.getText());
-        assertEquals(font, html8.getFont());
-        assertEquals(null, html8.getTextColor());
+    public void testDefaultConstructorHasExpectedDefaults() {
+        PHtmlView html = new PHtmlView();
+        assertEquals(null, html.getText());
+        assertEquals(PHtmlView.DEFAULT_FONT, html.getFont());
+        assertEquals(PHtmlView.DEFAULT_TEXT_COLOR, html.getTextColor());
+    }
 
+    public void testConstructorAcceptsNullFontAndColor() {
         PHtmlView html9 = new PHtmlView("not html", null, null);
-        assertNotNull(html9);
-        assertEquals("not html", html9.getText());
         assertEquals(null, html9.getFont());
         assertEquals(null, html9.getTextColor());
+    }
+
+    public void testConstructorAcceptsNullColor() {
+        Font font = new Font("Serif", Font.PLAIN, 12);
+        PHtmlView html = new PHtmlView("not html", font, null);                        
+        assertEquals(null, html.getTextColor());
+    }
+
+    public void testConstructorAcceptsNullFont() {
+        PHtmlView html = new PHtmlView("not html", null, Color.RED);                
+        assertEquals(null, html.getFont());        
     }
 
     public void testGetClickedAddressReturnsSingleQuotedAddress() {
@@ -206,7 +204,7 @@ public class PHtmlViewTest extends TestCase {
     
     public void testSetHtmlFiresEventOnChangeOnly() {
         PHtmlView html = new PHtmlView();
-        html.addPropertyChangeListener(mockListener);
+        html.addPropertyChangeListener(PHtmlView.PROPERTY_TEXT, mockListener);
         html.setText("testing");
         assertEquals(1, mockListener.getPropertyChangeCount());
         assertEquals(PHtmlView.PROPERTY_TEXT, mockListener.getPropertyChange(0).getPropertyName());

@@ -148,7 +148,7 @@ public class PHtmlView extends PNode {
      */
     public PHtmlView(final String text, final Font font, final Color textColor) {
         label = new JLabel(text);
-        label.setFont(font);
+        label.setFont(font);     
         label.setForeground(textColor);
         super.setBounds(0, 0, label.getPreferredSize().getWidth(), label.getPreferredSize().getHeight());
         update();
@@ -175,10 +175,16 @@ public class PHtmlView extends PNode {
     public void setText(final String text) {
         final String oldText = label.getText();
 
-        label.setText(text);
+        if (oldText == null && text == null) {
+            return;
+        }
 
-        update();
-        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, oldText, label.getText());
+        if (oldText == null || !oldText.equals(text)) {
+            label.setText(text);
+
+            update();
+            firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, oldText, label.getText());
+        }
     }
 
     /**
@@ -263,13 +269,15 @@ public class PHtmlView extends PNode {
      */
     private void fitHeightToHtmlContent() {
         htmlView.setSize((float) getWidth(), 0f);
-        // float preferredWrapWidth = htmlView.getPreferredSpan(View.X_AXIS);
+        
         float preferredWrapHeight = htmlView.getPreferredSpan(View.Y_AXIS);
         label.setPreferredSize(new Dimension((int) getWidth(), (int) preferredWrapHeight));
 
+        Font oldFont = label.getFont();
         JFrame frame = new JFrame();
         frame.getContentPane().add(label);
         frame.pack();
+        label.setFont(oldFont);
 
         if (getHeight() != label.getHeight()) {
             super.setBounds(getX(), getY(), getWidth(), label.getHeight());
@@ -302,9 +310,10 @@ public class PHtmlView extends PNode {
         super.paint(paintContext);
 
         if (label.getWidth() != 0 && label.getHeight() != 0) {
-            final Graphics2D g2 = paintContext.getGraphics();
-
+            paintContext.pushClip(getBounds());
+            final Graphics2D g2 = paintContext.getGraphics();                        
             htmlView.paint(g2, getBounds().getBounds());
+            paintContext.popClip(getBounds());
         }
     }
 
