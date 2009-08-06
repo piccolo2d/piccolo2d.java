@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2008-2009, Piccolo2D project, http://piccolo2d.org
  * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
