@@ -144,6 +144,7 @@ public class PHtmlView extends PNode {
         label.setFont(font);
         label.setForeground(textColor);
         htmlBounds = new Rectangle();
+        super.setBounds(0, 0, label.getPreferredSize().getWidth(), label.getPreferredSize().getHeight());
         update();
     }
 
@@ -241,7 +242,7 @@ public class PHtmlView extends PNode {
         htmlView = BasicHTML.createHTMLView(label, htmlContent);
 
         final Rectangle2D bounds = getBounds();
-        htmlBounds.setRect(0, 0, bounds.getWidth(), bounds.getHeight());
+        htmlBounds.setRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
         repaint();
     }
 
