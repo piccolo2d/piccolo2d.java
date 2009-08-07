@@ -147,7 +147,7 @@ public class PHtmlView extends PNode {
      */
     public PHtmlView(final String text, final Font font, final Color textColor) {
         label = new JLabel(text);
-        label.setFont(font);     
+        label.setFont(font);
         label.setForeground(textColor);
         super.setBounds(0, 0, label.getPreferredSize().getWidth(), label.getPreferredSize().getHeight());
         update();
@@ -262,18 +262,19 @@ public class PHtmlView extends PNode {
     /**
      * Resizes the height to be as tall as its rendered html. Takes wrapping
      * into account.
-     * 
-     * TODO: Reuse the JFrame, or find something better. At least it delegates
-     * to the html renderer.
      */
     private void fitHeightToHtmlContent() {
-        htmlView.setSize((float) getWidth(), 0f);
-        
-        float wrapHeight = htmlView.getPreferredSpan(View.Y_AXIS);
-        label.setSize(new Dimension((int) getWidth(), (int) wrapHeight)); 
-        
-        if (getHeight() != label.getHeight()) {            
-            super.setBounds(getX(), getY(), getWidth(), wrapHeight);            
+        if (getWidth() > 0) {
+            htmlView.setSize((float) getWidth(), 0f);
+
+            float wrapHeight = htmlView.getPreferredSpan(View.Y_AXIS);
+            label.setSize(new Dimension((int) getWidth(), (int) wrapHeight));
+
+            if (getHeight() < wrapHeight) {
+                System.out.println(getHeight());
+                System.out.println(wrapHeight);
+                super.setBounds(getX(), getY(), getWidth(), wrapHeight);
+            }
         }
     }
 
@@ -302,7 +303,7 @@ public class PHtmlView extends PNode {
     protected void paint(final PPaintContext paintContext) {
         super.paint(paintContext);
         paintContext.pushClip(getBounds());
-        final Graphics2D g2 = paintContext.getGraphics();                    
+        final Graphics2D g2 = paintContext.getGraphics();
         htmlView.paint(g2, getBounds().getBounds());
         paintContext.popClip(getBounds());
     }
