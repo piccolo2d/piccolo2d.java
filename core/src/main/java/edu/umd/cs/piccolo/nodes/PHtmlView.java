@@ -35,7 +35,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.Position;
@@ -270,17 +269,11 @@ public class PHtmlView extends PNode {
     private void fitHeightToHtmlContent() {
         htmlView.setSize((float) getWidth(), 0f);
         
-        float preferredWrapHeight = htmlView.getPreferredSpan(View.Y_AXIS);
-        label.setPreferredSize(new Dimension((int) getWidth(), (int) preferredWrapHeight));
-
-        Font oldFont = label.getFont();
-        JFrame frame = new JFrame();
-        frame.getContentPane().add(label);
-        frame.pack();
-        label.setFont(oldFont);
-
-        if (getHeight() != label.getHeight()) {
-            super.setBounds(getX(), getY(), getWidth(), label.getHeight());
+        float wrapHeight = htmlView.getPreferredSpan(View.Y_AXIS);
+        label.setSize(new Dimension((int) getWidth(), (int) wrapHeight)); 
+        
+        if (getHeight() != label.getHeight()) {            
+            super.setBounds(getX(), getY(), getWidth(), wrapHeight);            
         }
     }
 
@@ -308,13 +301,10 @@ public class PHtmlView extends PNode {
      */
     protected void paint(final PPaintContext paintContext) {
         super.paint(paintContext);
-
-        if (label.getWidth() != 0 && label.getHeight() != 0) {
-            paintContext.pushClip(getBounds());
-            final Graphics2D g2 = paintContext.getGraphics();                        
-            htmlView.paint(g2, getBounds().getBounds());
-            paintContext.popClip(getBounds());
-        }
+        paintContext.pushClip(getBounds());
+        final Graphics2D g2 = paintContext.getGraphics();                    
+        htmlView.paint(g2, getBounds().getBounds());
+        paintContext.popClip(getBounds());
     }
 
     /**
