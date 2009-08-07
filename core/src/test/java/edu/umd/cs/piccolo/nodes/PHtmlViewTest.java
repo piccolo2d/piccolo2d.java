@@ -239,7 +239,7 @@ public class PHtmlViewTest extends TestCase {
         canvas.paint(g2);
               
         assertEquals(Color.red.getRGB(), image.getRGB(0, 0));
-        assertEquals(Color.red.getRGB(), image.getRGB(0, 15));        
+        assertEquals(Color.red.getRGB(), image.getRGB(0, (int)(html.getHeight()-1)));        
         assertEquals(Color.red.getRGB(), image.getRGB(300, 0));
         assertEquals(Color.white.getRGB(), image.getRGB(400, 0));
     }
