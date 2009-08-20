@@ -111,9 +111,9 @@ public class ExampleRunner extends JFrame {
                 KeyEventFocusExample.class, LayoutExample.class, LensExample.class, NavigationExample.class,
                 NodeCacheExample.class, NodeEventExample.class, NodeExample.class, NodeLinkExample.class,
                 PanToExample.class, PathExample.class, PositionExample.class, PositionPathActivityExample.class,
-                PulseExample.class, ScrollingExample.class, SelectionExample.class, SquiggleExample.class,
-                StickyExample.class, StickyHandleLayerExample.class, StrokeExample.class, TextExample.class,
-                TooltipExample.class, TwoCanvasExample.class, WaitForActivitiesExample.class });
+                PulseExample.class, ScrollingExample.class, SelectionExample.class, ShadowExample.class,
+                SquiggleExample.class, StickyExample.class, StickyHandleLayerExample.class, StrokeExample.class,
+                TextExample.class, TooltipExample.class, TwoCanvasExample.class, WaitForActivitiesExample.class });
     }
 
     private void addExampleButtons(final JPanel panel, final Class[] exampleClasses) {
