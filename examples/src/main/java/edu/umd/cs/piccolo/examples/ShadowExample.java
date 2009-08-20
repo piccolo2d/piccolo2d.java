@@ -28,10 +28,8 @@
  */
 package edu.umd.cs.piccolo.examples;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Paint;
 
 import java.awt.image.BufferedImage;
@@ -50,6 +48,10 @@ import edu.umd.cs.piccolox.nodes.PShadow;
  * Shadow example.
  */
 public final class ShadowExample extends PFrame {
+
+    /** Default serial version UID. */
+    private static final long serialVersionUID = 1L;
+
 
     /**
      * Create a new shadow example.

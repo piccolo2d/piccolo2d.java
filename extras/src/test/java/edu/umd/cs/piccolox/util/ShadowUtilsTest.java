@@ -30,7 +30,6 @@ package edu.umd.cs.piccolox.util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Paint;
 
 import java.awt.image.BufferedImage;

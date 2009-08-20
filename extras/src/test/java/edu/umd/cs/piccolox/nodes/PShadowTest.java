@@ -30,7 +30,6 @@ package edu.umd.cs.piccolox.nodes;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Paint;
 
 import java.awt.image.BufferedImage;
@@ -59,21 +58,21 @@ public final class PShadowTest extends TestCase {
         }
 
         try {
-            PShadow shadowNode = new PShadow(null, shadowPaint, 4);
+            new PShadow(null, shadowPaint, 4);
             fail("ctr(null, ...) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
             // expected
         }
         try {
-            PShadow shadowNode = new PShadow(src, shadowPaint, 0);
+            new PShadow(src, shadowPaint, 0);
             fail("ctr(..., -1) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
             // expected
         }
         try {
-            PShadow shadowNode = new PShadow(src, shadowPaint, -1);
+            new PShadow(src, shadowPaint, -1);
             fail("ctr(..., -1) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {

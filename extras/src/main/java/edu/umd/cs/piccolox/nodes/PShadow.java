@@ -31,8 +31,6 @@ package edu.umd.cs.piccolox.nodes;
 import java.awt.Image;
 import java.awt.Paint;
 
-import java.awt.image.BufferedImage;
-
 import edu.umd.cs.piccolo.nodes.PImage;
 
 import edu.umd.cs.piccolox.util.ShadowUtils;
@@ -41,6 +39,10 @@ import edu.umd.cs.piccolox.util.ShadowUtils;
  * Shadow node.
  */
 public final class PShadow extends PImage {
+
+    /** Default serial version UID. */
+    private static final long serialVersionUID = 1L;
+
 
     /**
      * Create a new shadow node containing a shadow of the specified source image using the
