@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolox;
+package edu.umd.cs.piccolo;
 
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -51,11 +51,9 @@ public final class POffscreenCanvas implements PComponent {
     /** Render quality. */
     private int renderQuality = DEFAULT_RENDER_QUALITY;
 
-    /**
-     * Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>
-     * .
-     */
+    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
     static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
+
 
     /**
      * Create a new offscreen canvas the specified width and height.

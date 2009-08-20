@@ -38,10 +38,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 
+import edu.umd.cs.piccolo.POffscreenCanvas;
 import edu.umd.cs.piccolo.activities.PActivity;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.nodes.PText;
-import edu.umd.cs.piccolox.POffscreenCanvas;
 
 /**
  * Offscreen canvas example.
