@@ -273,7 +273,7 @@ public class SWTGraphics2D extends Graphics2D {
                     style = style | SWT.ITALIC;
                 }
 
-                return new Font(fd[0].getName(), style, fd[0].height);
+                return new Font(fd[0].getName(), style, fd[0].getHeight());
             }
             return null;
         }
