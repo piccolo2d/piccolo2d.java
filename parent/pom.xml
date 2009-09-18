@@ -158,6 +158,19 @@
       <timezone>-8</timezone>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Alexander Kurtakov</name>
+      <email>akurtakov@gmail.com</email>
+      <url>http://akurtakov.blogspot.com/url>
+      <organization>Red Hat Inc.</organization>
+      <organizationUrl>http://redhat.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+2</timezone>
+    </contributor>
+  </contributors>
   <build>
     <!--
       extensions> <extension> <groupId>org.apache.maven.wagon</groupId>
