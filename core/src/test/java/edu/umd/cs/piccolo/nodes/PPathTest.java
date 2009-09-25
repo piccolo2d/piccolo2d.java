@@ -105,7 +105,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreateEllipseReturnsValidPPath() {
@@ -113,7 +113,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreateRoundedRectReturnsValidPPath() {
@@ -121,7 +121,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreateLineReturnsValidPPath() {
@@ -129,7 +129,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 0), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 0), path.getBounds(), 2.0d);
     }
 
     public void testCreatePolyLinePoint2DReturnsValidPPath() {
@@ -138,7 +138,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreatePolyLineFloatsReturnsValidPPath() {
@@ -146,7 +146,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testSetStrokePaintPersists() {
