@@ -62,10 +62,11 @@ public class PActivityScheduler {
     private final ArrayList processingActivities;
 
     /**
-     * Constructs an instance of PActivityScheduler. All activities it will schedule will 
-     * take place on children of the rootNode provided.
+     * Constructs an instance of PActivityScheduler. All activities it will
+     * schedule will take place on children of the rootNode provided.
      * 
-     * @param rootNode
+     * @param rootNode root node of all activities to be performed. All nodes
+     *            being animated should have this node as an ancestor.
      */
     public PActivityScheduler(final PRoot rootNode) {
         root = rootNode;
@@ -75,7 +76,7 @@ public class PActivityScheduler {
 
     /**
      * Returns the node from which all activities will be attached.
-     *  
+     * 
      * @return this scheduler's associated root node
      */
     public PRoot getRoot() {
@@ -97,7 +98,8 @@ public class PActivityScheduler {
      * this set processLast to true when adding the activity.
      * 
      * @param activity activity to be scheduled
-     * @param processLast whether or not this activity should be performed after all other scheduled activities
+     * @param processLast whether or not this activity should be performed after
+     *            all other scheduled activities
      */
     public void addActivity(final PActivity activity, final boolean processLast) {
         if (activities.contains(activity)) {
@@ -121,7 +123,8 @@ public class PActivityScheduler {
     }
 
     /**
-     * Removes the given activity from the scheduled activities. Does nothing if it's not found.
+     * Removes the given activity from the scheduled activities. Does nothing if
+     * it's not found.
      * 
      * @param activity the activity to be removed
      */
@@ -149,6 +152,7 @@ public class PActivityScheduler {
 
     /**
      * Returns a reference to the current activities list. Handle with care.
+     * 
      * @return reference to the current activities list.
      */
     public List getActivitiesReference() {
@@ -159,7 +163,7 @@ public class PActivityScheduler {
      * Process all scheduled activities for the given time. Each activity is
      * given one "step", equivalent to one frame of animation.
      * 
-     * @param currentTime the current unix time in milliseconds. 
+     * @param currentTime the current unix time in milliseconds.
      */
     public void processActivities(final long currentTime) {
         final int size = activities.size();
@@ -174,8 +178,9 @@ public class PActivityScheduler {
     }
 
     /**
-     * Return true if any of the scheduled activities return true to the message
-     * isAnimation();
+     * Return true if any of the scheduled activities are animations.
+     * 
+     * @return true if any of the scheduled activities are animations.
      */
     public boolean getAnimating() {
         if (activitiesChanged) {
@@ -190,7 +195,8 @@ public class PActivityScheduler {
     }
 
     /**
-     * Starts the current activity timer. Multiple calls to this method are ignored.
+     * Starts the current activity timer. Multiple calls to this method are
+     * ignored.
      */
     protected void startActivityTimer() {
         getActivityTimer().start();

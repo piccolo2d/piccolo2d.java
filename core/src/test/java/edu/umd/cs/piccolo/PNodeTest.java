@@ -1381,4 +1381,8 @@ public class PNodeTest extends TestCase {
         final PPickPath path = canvas.getCamera().pick(5, 5, 5);
         assertSame(node1, path.getPickedNode());
     }
+    
+    public void testToImageDoesNotClip() {
+    
+    }
 }

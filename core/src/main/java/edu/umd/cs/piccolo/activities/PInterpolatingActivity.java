@@ -199,10 +199,21 @@ public class PInterpolatingActivity extends PActivity {
     // final step). See PTransformActivity for an example.
     // ****************************************************************
 
+    /**
+     * Called when activity is started. Makes sure target value is set properly
+     * for start of activity.
+     */
     protected void activityStarted() {
         super.activityStarted();
         setRelativeTargetValueAdjustingForMode(0);
     }
+
+    /**
+     * Called at each step of the activity. Sets the current position taking
+     * mode into account.
+     * 
+     * @param elapsedTime number of milliseconds since the activity began
+     */
 
     protected void activityStep(final long elapsedTime) {
         super.activityStep(elapsedTime);
@@ -219,6 +230,10 @@ public class PInterpolatingActivity extends PActivity {
         setRelativeTargetValueAdjustingForMode(t);
     }
 
+    /**
+     * Called whenever the activity finishes. Reschedules it if the
+     * value of loopCount is > 0.
+     */
     protected void activityFinished() {
         setRelativeTargetValueAdjustingForMode(1);
         super.activityFinished();
@@ -251,6 +266,13 @@ public class PInterpolatingActivity extends PActivity {
     public void setRelativeTargetValue(final float zeroToOne) {
     }
 
+    /**
+     * Computes percent or linear interpolation to apply when taking
+     * acceleration into account.
+     * 
+     * @param zeroToOne Percentage of activity completed
+     * @return strength of acceleration
+     */
     public float computeSlowInSlowOut(final float zeroToOne) {
         if (zeroToOne < 0.5) {
             return 2.0f * zeroToOne * zeroToOne;
@@ -262,8 +284,8 @@ public class PInterpolatingActivity extends PActivity {
     }
 
     /**
-     * Computes relative target value taking the mode into account.
-     *  
+     * Assigns relative target value taking the mode into account.
+     * 
      * @param zeroToOne Percentage of activity completed
      */
     protected void setRelativeTargetValueAdjustingForMode(float zeroToOne) {

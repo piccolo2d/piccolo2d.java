@@ -60,12 +60,16 @@ public class PTransformActivity extends PInterpolatingActivity {
         /**
          * This will be called by the transform activity for each new transform
          * that it computes while it is stepping.
+         * 
+         * @param aTransform the transform to be applied to the target.
          */
         public void setTransform(AffineTransform aTransform);
 
         /**
          * This method is called right before the transform activity starts.
          * That way an object is always animated from its current position.
+         * 
+         * @param aSource array to be populated with the target's gurrent matrix
          */
         public void getSourceMatrix(double[] aSource);
     }
