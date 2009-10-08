@@ -191,8 +191,9 @@ public class SWTBenchTest extends Canvas {
     }
 
     Image loadImage(final Display display, final String name) {
+        InputStream stream = null;
         try {
-            final InputStream stream = SWTBenchTest.class.getResourceAsStream(name);
+            stream = SWTBenchTest.class.getResourceAsStream(name);
             if (stream != null) {
                 final ImageData imageData = new ImageData(stream);
                 return new Image(display, imageData);
@@ -204,6 +205,7 @@ public class SWTBenchTest extends Canvas {
             }
         }
         catch (final Exception e) {
+            throw new RuntimeException(e);
         }
         return null;
     }

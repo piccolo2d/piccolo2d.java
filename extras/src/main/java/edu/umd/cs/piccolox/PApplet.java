@@ -43,7 +43,7 @@ import edu.umd.cs.piccolo.PCanvas;
 public class PApplet extends JApplet {
     /** Used to allow versioned binary streams for serializations. */
     private static final long serialVersionUID = 1L;
-    
+
     /** Canvas being displayed by this applet. */
     private PCanvas canvas;
 
@@ -91,7 +91,7 @@ public class PApplet extends JApplet {
         return new PCanvas();
     }
 
-     /**
+    /**
      * This method will be called before the initialize() method and will be
      * called on the thread that is constructing this object.
      */
