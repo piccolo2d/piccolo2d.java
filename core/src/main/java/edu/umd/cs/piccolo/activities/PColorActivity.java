@@ -74,8 +74,7 @@ public class PColorActivity extends PInterpolatingActivity {
     }
 
     /**
-     * Create a new PColorActivity.
-     * <P>
+     * Create a new PColorActivity.     
      * 
      * @param duration the length of one loop of the activity
      * @param stepRate the amount of time between steps of the activity
@@ -112,6 +111,10 @@ public class PColorActivity extends PInterpolatingActivity {
         destination = newDestination;
     }
 
+    /**
+     * Overrides it's parent to ensure that the source color is the color of the
+     * node being animated.
+     */
     protected void activityStarted() {
         if (getFirstLoop()) {
             source = target.getColor();
@@ -119,6 +122,11 @@ public class PColorActivity extends PInterpolatingActivity {
         super.activityStarted();
     }
 
+    /**
+     * Interpolates the target node's color by mixing the source color and the destination color.
+     * 
+     * @param zeroToOne 0 = all source color, 1 = all destination color
+     */
     public void setRelativeTargetValue(final float zeroToOne) {
         super.setRelativeTargetValue(zeroToOne);
         final float red = source.getRed() + zeroToOne * (destination.getRed() - source.getRed());

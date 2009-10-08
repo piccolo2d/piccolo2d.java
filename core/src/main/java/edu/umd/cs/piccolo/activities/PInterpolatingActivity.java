@@ -46,8 +46,22 @@ package edu.umd.cs.piccolo.activities;
  */
 public class PInterpolatingActivity extends PActivity {
 
+    /**
+     * Specifies that interpolation will be from the source value to the
+     * destination value.
+     */
     public static final int SOURCE_TO_DESTINATION = 1;
+
+    /**
+     * Specifies that interpolation will be from the destination value to the
+     * source value.
+     */
     public static final int DESTINATION_TO_SOURCE = 2;
+
+    /**
+     * Specifies that interpolation proceed from the source to the destination
+     * then back to the source. Can be used to perform flashes. source value.
+     */
     public static final int SOURCE_TO_DESTINATION_TO_SOURCE = 3;
 
     private int mode;
@@ -118,6 +132,8 @@ public class PInterpolatingActivity extends PActivity {
     /**
      * Return the number of times the activity should automatically reschedule
      * itself after it has finished.
+     * 
+     * @return number of times to repeat this activity
      */
     public int getLoopCount() {
         return loopCount;
@@ -126,6 +142,8 @@ public class PInterpolatingActivity extends PActivity {
     /**
      * Set the number of times the activity should automatically reschedule
      * itself after it has finished.
+     * 
+     * @param loopCount number of times to repeat this activity
      */
     public void setLoopCount(final int loopCount) {
         this.loopCount = loopCount;
@@ -134,6 +152,8 @@ public class PInterpolatingActivity extends PActivity {
     /**
      * Return true if the activity is executing its first loop. Subclasses
      * normally initialize their source state on the first loop.
+     * 
+     * @return true if executing first loop
      */
     public boolean getFirstLoop() {
         return firstLoop;
@@ -143,15 +163,30 @@ public class PInterpolatingActivity extends PActivity {
      * Set if the activity is executing its first loop. Subclasses normally
      * initialize their source state on the first loop. This method will rarely
      * need to be called, unless your are reusing activities.
+     * 
+     * @param firstLoop true if executing first loop
      */
     public void setFirstLoop(final boolean firstLoop) {
         this.firstLoop = firstLoop;
     }
 
+    /**
+     * Returns whether this interpolation accelerates and then decelerates as it
+     * interpolates.
+     * 
+     * @return true if accelerations are being applied apply
+     */
     public boolean getSlowInSlowOut() {
         return slowInSlowOut;
     }
 
+    /**
+     * Sets whether this interpolation accelerates and then decelerates as it
+     * interpolates.
+     * 
+     * @param isSlowInSlowOut true if this interpolation inovolves some
+     *            accelerations
+     */
     public void setSlowInSlowOut(final boolean isSlowInSlowOut) {
         slowInSlowOut = isSlowInSlowOut;
     }
@@ -226,6 +261,11 @@ public class PInterpolatingActivity extends PActivity {
         }
     }
 
+    /**
+     * Computes relative target value taking the mode into account.
+     *  
+     * @param zeroToOne Percentage of activity completed
+     */
     protected void setRelativeTargetValueAdjustingForMode(float zeroToOne) {
         switch (mode) {
             case SOURCE_TO_DESTINATION:
