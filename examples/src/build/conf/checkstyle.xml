@@ -45,10 +45,12 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
+        <!-- Piccolo2D Examples don't really need these
         <module name="JavadocMethod"/>
         <module name="JavadocType"/>
         <module name="JavadocVariable"/>
         <module name="JavadocStyle"/>
+        -->
 
 
         <!-- Checks for Naming Conventions.                  -->
@@ -159,7 +161,7 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+        <!-- Piccolo2D Examples: <module name="FinalParameters"/> -->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
