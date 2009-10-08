@@ -1,0 +1,11 @@
+<FindBugsFilter>
+	<!-- filter out test classes with medium (2) or low (3) warnings -->
+	<Match>
+		<Or>
+			<Class name="~.*Test" />
+		</Or>
+		<Or>
+			<Class name="*.examples.*" />
+		</Or>
+	</Match>
+</FindBugsFilter>
