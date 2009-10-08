@@ -148,11 +148,11 @@
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
+        <!-- For P2d 2.0: <module name="DesignForExtension"/> -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <!-- For P2d 2.0: <module name="VisibilityModifier"/> -->
 
 
         <!-- Miscellaneous other checks.                   -->
