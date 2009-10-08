@@ -31,8 +31,6 @@ package edu.umd.cs.piccolo;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PComponent;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PUtil;
