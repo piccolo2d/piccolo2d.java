@@ -59,7 +59,7 @@ import java.io.Serializable;
  * @author Jesse Grosjean
  * @author Marcus Rohrmoser
  */
-public class PFixedWidthStroke extends PSemanticStroke implements Serializable {   
+public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

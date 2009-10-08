@@ -326,7 +326,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
 
         final double scaleFactor = d.getWidth() / aCamera.getViewScale();
         final Point2D scalePoint = focusNode.getGlobalFullBounds().getCenter2D();
-        if (Math.abs(1f-scaleFactor) < 0.0001) {
+        if (Math.abs(1f - scaleFactor) < 0.0001) {
             aCamera.scaleViewAboutPoint(scaleFactor, scalePoint.getX(), scalePoint.getY());
         }
 

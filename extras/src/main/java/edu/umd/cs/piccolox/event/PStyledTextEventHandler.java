@@ -187,7 +187,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         }
         else if (pickedNode instanceof PCamera) {
             final PStyledText newText = createText();
-            final Insets pInsets = newText.getInsets();            
+            final Insets pInsets = newText.getInsets();
             newText.translate(inputEvent.getPosition().getX() - pInsets.left, inputEvent.getPosition().getY()
                     - pInsets.top);
             startEditing(inputEvent, newText);
@@ -231,8 +231,8 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         else {
             editedText.syncWithDocument();
         }
-        
-        if (editedText.getParent() == null) {        
+
+        if (editedText.getParent() == null) {
             editedText.setScale(1.0 / event.getCamera().getViewScale());
             canvas.getLayer().addChild(editedText);
         }

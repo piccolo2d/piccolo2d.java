@@ -86,10 +86,10 @@ public class PStyledText extends PNode {
 
     /** Insets represent how far away from the bounding box text will be drawn. */
     protected Insets insets = new Insets(0, 0, 0, 0);
-    
+
     /** Whether width will be forced to match containing text's height. */
     protected boolean constrainHeightToTextHeight = true;
-    
+
     /** Whether width will be forced to match containing text's width. */
     protected boolean constrainWidthToTextWidth = true;
 
@@ -152,7 +152,8 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Ensures that the current display matches the styling of the underlying document as closely as possible.
+     * Ensures that the current display matches the styling of the underlying
+     * document as closely as possible.
      */
     public void syncWithDocument() {
         // First get the actual text and stick it in an Attributed String
@@ -252,12 +253,14 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Returns the first leaf encountered by drilling into the document for the given position.
+     * Returns the first leaf encountered by drilling into the document for the
+     * given position.
      * 
      * @param pos position under which we're trying to find a leaf
      * @param rootElement top most element in the document tree
      * 
-     * @return Leaf element that corresponds to the position provided in the document
+     * @return Leaf element that corresponds to the position provided in the
+     *         document
      */
     private Element drillDownFromRoot(final int pos, final Element rootElement) {
         Element curElement;
@@ -531,7 +534,7 @@ public class PStyledText extends PNode {
         // Small assumption here that there is one root element - can fix
         // for more general support later
         final Element rootElement = document.getDefaultRootElement();
-        final Element curElement = drillDownFromRoot(0, rootElement);      
+        final Element curElement = drillDownFromRoot(0, rootElement);
         final StyleContext context = StyleContext.getDefaultStyleContext();
         final Font font = context.getFont(curElement.getAttributes());
 
@@ -670,7 +673,7 @@ public class PStyledText extends PNode {
      */
     protected static class RunInfo {
         public int startIndex;
-        public int endIndex;       
+        public int endIndex;
 
         public RunInfo(final int runStart, final int runLimit) {
             startIndex = runStart;
@@ -694,7 +697,7 @@ public class PStyledText extends PNode {
         public int length() {
             return endIndex - startIndex;
         }
-    }    
+    }
 
     /**
      * The info for rendering and computing the bounds of a line.
@@ -713,7 +716,7 @@ public class PStyledText extends PNode {
             segments = new ArrayList();
         }
     }
-    
+
     protected static class SegmentInfo {
         public TextLayout layout;
         public Font font;

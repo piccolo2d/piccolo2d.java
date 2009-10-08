@@ -78,7 +78,7 @@ public class PCacheCamera extends PCamera {
     private BufferedImage buildPaintBuffer(final PBounds fRef) {
         final int newBufferWidth = (int) Math.ceil(fRef.getWidth());
         final int newBufferHeight = (int) Math.ceil(fRef.getHeight());
-        
+
         if (GraphicsEnvironment.isHeadless()) {
             return new BufferedImage(newBufferWidth, newBufferHeight, BufferedImage.TYPE_4BYTE_ABGR);
         }

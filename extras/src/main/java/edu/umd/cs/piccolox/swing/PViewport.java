@@ -65,7 +65,7 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * Subclassers can override this to install a different layout manager (or
+     * Subclasses can override this to install a different layout manager (or
      * <code>null</code>) in the constructor. Returns a new
      * <code>ViewportLayout</code> object.
      * 
@@ -76,7 +76,7 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * Subclassers can override this to install a different scroll director in
+     * Subclasses can override this to install a different scroll director in
      * the constructor. Returns a new <code>PScrollDirector</code> object.
      * 
      * @return a <code>PScrollDirector
@@ -86,7 +86,7 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * Set the scroll director on this viewport
+     * Set the scroll director on this viewport.
      * 
      * @param scrollDirector The new scroll director
      */
@@ -101,7 +101,7 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * @return The scroll director on this viewport
+     * @return The scroll director on this viewport.
      */
     public PScrollDirector getScrollDirector() {
         return scrollDirector;
@@ -126,7 +126,7 @@ public class PViewport extends JViewport {
 
     /**
      * Notifies all <code>ChangeListeners</code> when the views size, position,
-     * or the viewports extent size has changed. 
+     * or the viewports extent size has changed.
      * 
      * PDefaultScrollDirector calls this so it needs to be public.
      */

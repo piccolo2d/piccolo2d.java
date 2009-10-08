@@ -402,7 +402,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // The overridden methods from PDragSequenceEventHandler
     // //////////////////////////////////////////////////////
 
-     protected void startDrag(final PInputEvent e) {
+    protected void startDrag(final PInputEvent e) {
         super.startDrag(e);
 
         initializeSelection(e);
@@ -463,7 +463,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     /**
      * Used to test whether the event is one that changes the selection.
      * 
-     * @param pie The event under test      
+     * @param pie The event under test
      * @return true if event changes the selection
      */
     public boolean isOptionSelection(final PInputEvent pie) {

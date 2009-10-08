@@ -262,13 +262,9 @@ public class PNotificationCenter {
                     listener.getMethod().invoke(listener.get(), new Object[] { aNotification });
                 }
                 catch (final IllegalAccessException e) {
-                    // it's impossible add listeners that are not public
+                    throw new RuntimeException("Impossible Situation: invoking inaccessible method on listener", e);
                 }
-                catch (final InvocationTargetException e) {
-                    // Since this is how Swing handles Exceptions that get
-                    // thrown on listeners, it's probably ok to do it here.
-                    // mro: disagree. Now matter how Swing does it, either
-                    // handle or rethrow.
+                catch (final InvocationTargetException e) {         
                     throw new RuntimeException(e);
                 }
             }
