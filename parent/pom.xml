@@ -86,12 +86,8 @@
     </license>
   </licenses>
   <scm>
-    <connection>
-      scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk
-    </connection>
-    <developerConnection>
-      scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk
-    </developerConnection>
+    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk</connection>
+    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk</developerConnection>
     <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk</url>
   </scm>
   <organization>
@@ -294,6 +290,7 @@
           <xmlOutput>true</xmlOutput>
           <xmlOutputDirectory>target/site</xmlOutputDirectory>
           <includeTests>false</includeTests>
+          <excludeFilterFile>${basedir}/src/build/conf/findbugs-exclude.xml</excludeFilterFile>
           <!--
             <xmlOutput>true|false</xmlOutput> <xmlOutputDirectory>directory
             location of xml findbugs report</xmlOutputDirectory>
