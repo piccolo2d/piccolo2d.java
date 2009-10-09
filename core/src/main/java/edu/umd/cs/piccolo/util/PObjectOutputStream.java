@@ -75,7 +75,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
      * 
      * @param object
      * @return array of bytes representing the given object
-     * @throws IOException
+     * @throws IOException when serialization system throws one
      */
     public static byte[] toByteArray(final Object object) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -90,7 +90,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
      * @param out underlying outputstream that will receive the serialized
      *            objects
      * 
-     * @throws IOException
+     * @throws IOException when underlying subsystem throws one
      */
     public PObjectOutputStream(final OutputStream out) throws IOException {
         super(out);
@@ -103,7 +103,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
      * 
      * @param object object to be serialized
      * 
-     * @throws IOException
+     * @throws IOException when underlying subsystem throws one
      */
     public void writeObjectTree(final Object object) throws IOException {
         writingRoot = true;
@@ -117,7 +117,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
      * multiple times.
      * 
      * @param object object to write to the stream.
-     * @throws IOException
+     * @throws IOException when underlying subsystem throws one
      */
     public void writeConditionalObject(final Object object) throws IOException {
         if (!writingRoot) {
@@ -137,13 +137,19 @@ public class PObjectOutputStream extends ObjectOutputStream {
      * Resets the ObjectOutputStream clearing any memory about objects already
      * being written while it's at it.
      * 
-     * @throws IOException
+     * @throws IOException when underlying subsystem throws one
      */
     public void reset() throws IOException {
         super.reset();
         unconditionallyWritten.clear();
     }
 
+    /**
+     * Performs a scan of objects that can be serialized once.
+     * 
+     * @param aRoot Object from which to start the scan
+     * @throws IOException when serialization fails
+     */
     protected void recordUnconditionallyWritten(final Object aRoot) throws IOException {
         class ZMarkObjectOutputStream extends PObjectOutputStream {
             public ZMarkObjectOutputStream() throws IOException {
