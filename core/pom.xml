@@ -10,6 +10,7 @@
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>piccolo2d-core</artifactId>
+	<packaging>bundle</packaging>
 	<name>Piccolo2D Core</name>
 	<url>http://code.google.com/p/piccolo2d/</url>
 	<description>
