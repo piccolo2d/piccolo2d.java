@@ -45,9 +45,15 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+         <module name="JavadocMethod">
+        	<property name="scope" value="protected"/>        
+        </module>
+        <module name="JavadocType">
+        	<property name="scope" value="public"/>        
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="protected" />
+        </module>
         <module name="JavadocStyle"/>
 
 
