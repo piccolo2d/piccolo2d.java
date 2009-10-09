@@ -51,7 +51,7 @@ public class PPositionPathActivity extends PPathActivity {
     }
 
     public PPositionPathActivity(final long duration, final long stepRate, final Target aTarget) {
-        this(duration, stepRate, aTarget, null, null);
+        this(duration, stepRate, aTarget, null, new Point2D[0]);
     }
 
     public PPositionPathActivity(final long duration, final long stepRate, final Target aTarget, final float[] knots,
