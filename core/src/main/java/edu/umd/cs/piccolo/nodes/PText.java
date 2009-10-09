@@ -351,19 +351,19 @@ public class PText extends PNode {
      * This is a <b>bound</b> property.
      * </p>
      * 
-     * @param text text for this text node
+     * @param newText text for this text node
      */
-    public void setText(final String text) {
-        if ((text == null && this.text == null) || (text != null && text.equals(this.text))) {
+    public void setText(final String newText) {
+        if (newText == null && text == null || newText != null && newText.equals(text)) {
             return;
         }
 
-        final String oldText = this.text;
-        this.text = text == null ? DEFAULT_TEXT : text;
+        final String oldText = text;
+        text = newText == null ? DEFAULT_TEXT : newText;
         lines = null;
         recomputeLayout();
         invalidatePaint();
-        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, oldText, this.text);
+        firePropertyChange(PROPERTY_CODE_TEXT, PROPERTY_TEXT, oldText, text);
     }
 
     /**
