@@ -86,11 +86,27 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         isEmpty = aBounds.isEmpty();
     }
 
+    /**
+     * Constructs a PBounds object with the given center point and the specified
+     * insets.
+     * 
+     * @param aCenterPoint resulting center point of the PBounds object
+     * @param insetX distance from left and right the center should be
+     * @param insetY distance from top and bottom the center should be
+     */
     public PBounds(final Point2D aCenterPoint, final double insetX, final double insetY) {
         this(aCenterPoint.getX(), aCenterPoint.getY(), 0, 0);
         inset(insetX, insetY);
     }
 
+    /**
+     * Constructs a PBounds object at the given coordinates with the given dimensions.
+     * 
+     * @param x left of bounds
+     * @param y top of bounds
+     * @param width width of bounds
+     * @param height height of bounds
+     */
     public PBounds(final double x, final double y, final double width, final double height) {
         super(x, y, width, height);
         isEmpty = false;
@@ -251,8 +267,8 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
      * Changes the origin of these bounds. And flags it as non-empty.
      * 
      * @param x new x component of bounds
-     * @param y new y componet of the bounds
-     * @return
+     * @param y new y component of the bounds
+     * @return the modified PBounds with its new origin
      */
     public PBounds setOrigin(final double x, final double y) {
         this.x = x;

@@ -96,26 +96,46 @@ public class PPickPath implements PInputEventListener {
         CURRENT_PICK_PATH = this;
     }
 
+    /**
+     * Returns the bounds of the entire PickPath taken as a whole.
+     * 
+     * @return bounds of the entire PickPath
+     */
     public PBounds getPickBounds() {
         return (PBounds) pickBoundsStack.peek();
     }
 
+    /**
+     * Determines if the passed node has been excluded from being a member of
+     * the pickpath.
+     * 
+     * @param node node being tested
+     * @return true if node is acceptable to the path
+     */
     public boolean acceptsNode(final PNode node) {
-        if (excludedNodes != null) {
-            return !excludedNodes.containsKey(node);
-        }
-        return true;
+        return excludedNodes == null || !excludedNodes.containsKey(node);
     }
 
     // ****************************************************************
     // Picked Nodes
     // ****************************************************************
 
-    public void pushNode(final PNode aNode) {
-        nodeStack.push(aNode);
+    /**
+     * Pushes the provided node to the top of the pick path.
+     * 
+     * @param node node to be added to the pick path
+     */
+    public void pushNode(final PNode node) {
+        nodeStack.push(node);
     }
 
-    public void popNode(final PNode aNode) {
+    /**
+     * Removes the topmost node from the node stack.
+     * 
+     * @param node completely unused in this method, but is passed in so that
+     *            subclasses may be informed of it.
+     */
+    public void popNode(final PNode node) {
         nodeStack.pop();
     }
 
@@ -197,6 +217,11 @@ public class PPickPath implements PInputEventListener {
         return bottomCamera;
     }
 
+    /**
+     * Returns a reference to the node stack. Be Careful!
+     * 
+     * @return the node stack
+     */
     public PStack getNodeStackReference() {
         return nodeStack;
     }
@@ -205,6 +230,13 @@ public class PPickPath implements PInputEventListener {
     // Path Transform
     // ****************************************************************
 
+    /**
+     * Returns the resulting scale of applying the transforms of the entire pick
+     * path. In essence it gives you the scale at which interaction is
+     * occurring.
+     * 
+     * @return scale at which interaction is occurring.
+     */
     public double getScale() {
         PTS[0] = 0;// x1
         PTS[1] = 0;// y1
@@ -222,22 +254,41 @@ public class PPickPath implements PInputEventListener {
         return Point2D.distance(PTS[0], PTS[1], PTS[2], PTS[3]);
     }
 
-    public void pushTransform(final PAffineTransform aTransform) {
-        transformStack.push(new PTuple(getPickedNode(), aTransform));
-        if (aTransform != null) {
+    /**
+     * Adds the transform to the pick path's transform. This is used when
+     * determining the context of the current interaction.
+     * 
+     * @param transform transform to be added to applied to the pickpath.
+     */
+    public void pushTransform(final PAffineTransform transform) {
+        transformStack.push(new PTuple(getPickedNode(), transform));
+        if (transform != null) {
             final Rectangle2D newPickBounds = (Rectangle2D) getPickBounds().clone();
-            aTransform.inverseTransform(newPickBounds, newPickBounds);
+            transform.inverseTransform(newPickBounds, newPickBounds);
             pickBoundsStack.push(newPickBounds);
         }
     }
 
-    public void popTransform(final PAffineTransform aTransform) {
+    /**
+     * Pops the top most transform from the pick path.
+     * 
+     * @param transform unused in this method
+     */
+    public void popTransform(final PAffineTransform transform) {
         transformStack.pop();
-        if (aTransform != null) {
+        if (transform != null) {
             pickBoundsStack.pop();
         }
     }
 
+    /**
+     * Calculates the context at which the given node is being interacted with.
+     * 
+     * @param nodeOnPath a node currently on the pick path. An exception will be
+     *            thrown if the node cannot be found.
+     * 
+     * @return Transform at which the given node is being interacted with.
+     */
     public PAffineTransform getPathTransformTo(final PNode nodeOnPath) {
         final PAffineTransform aTransform = new PAffineTransform();
 
@@ -255,13 +306,15 @@ public class PPickPath implements PInputEventListener {
         throw new RuntimeException("Node could not be found on pick path");
     }
 
-    // ****************************************************************
-    // Process Events - Give each node in the pick path, starting at
-    // the bottom most one, a chance to handle the event.
-    // ****************************************************************
-
-    public void processEvent(final PInputEvent aEvent, final int type) {
-        aEvent.setPath(this);
+    /**
+     * Process Events - Give each node in the pick path, starting at the bottom
+     * most one, a chance to handle the event.
+     * 
+     * @param event event to be processed
+     * @param eventType the type of event being processed
+     */
+    public void processEvent(final PInputEvent event, final int eventType) {
+        event.setPath(this);
 
         for (int i = nodeStack.size() - 1; i >= 0; i--) {
             final PNode each = (PNode) nodeStack.get(i);
@@ -273,8 +326,8 @@ public class PPickPath implements PInputEventListener {
 
                 for (int j = 0; j < listeners.length; j++) {
                     final PInputEventListener listener = (PInputEventListener) listeners[j];
-                    listener.processEvent(aEvent, type);
-                    if (aEvent.isHandled()) {
+                    listener.processEvent(event, eventType);
+                    if (event.isHandled()) {
                         return;
                     }
                 }
@@ -299,6 +352,9 @@ public class PPickPath implements PInputEventListener {
      * Convert the given point from the canvas coordinates, down through the
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
+     * 
+     * @param canvasPoint point to be transformed
+     * @param nodeOnPath node into which the point is to be transformed iteratively through the pickpath
      */
     public Point2D canvasToLocal(final Point2D canvasPoint, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasPoint, canvasPoint);
@@ -308,6 +364,9 @@ public class PPickPath implements PInputEventListener {
      * Convert the given dimension from the canvas coordinates, down through the
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
+     * 
+     * @param canvasDimension dimension to be transformed
+     * @param nodeOnPath node into which the dimension is to be transformed iteratively through the stack
      */
     public Dimension2D canvasToLocal(final Dimension2D canvasDimension, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasDimension, canvasDimension);
@@ -317,6 +376,9 @@ public class PPickPath implements PInputEventListener {
      * Convert the given rectangle from the canvas coordinates, down through the
      * pick path (and through any camera view transforms applied to the path) to
      * the local coordinates of the given node.
+     * 
+     * @param canvasRectangle rectangle to be transformed
+     * @param nodeOnPath node into which the rectangle is to be transformed iteratively through the stack
      */
     public Rectangle2D canvasToLocal(final Rectangle2D canvasRectangle, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasRectangle, canvasRectangle);

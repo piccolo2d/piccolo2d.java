@@ -70,25 +70,55 @@ public class PObjectOutputStream extends ObjectOutputStream {
     private boolean writingRoot;
     private final HashMap unconditionallyWritten;
 
-    public static byte[] toByteArray(final Object aRoot) throws IOException {
+    /**
+     * Transform the given object into an array of bytes.
+     * 
+     * @param object
+     * @return array of bytes representing the given object
+     * @throws IOException
+     */
+    public static byte[] toByteArray(final Object object) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final PObjectOutputStream zout = new PObjectOutputStream(out);
-        zout.writeObjectTree(aRoot);
+        zout.writeObjectTree(object);
         return out.toByteArray();
     }
 
+    /**
+     * Constructs a PObjectOutputStream that wraps the provided OutputStream.
+     * 
+     * @param out underlying outputstream that will receive the serialized
+     *            objects
+     * 
+     * @throws IOException
+     */
     public PObjectOutputStream(final OutputStream out) throws IOException {
         super(out);
         unconditionallyWritten = new HashMap();
     }
 
-    public void writeObjectTree(final Object aRoot) throws IOException {
+    /**
+     * Writes the provided object to the underlying stream like an ordination
+     * ObjectOutputStream except that it does not record duplicates at all.
+     * 
+     * @param object object to be serialized
+     * 
+     * @throws IOException
+     */
+    public void writeObjectTree(final Object object) throws IOException {
         writingRoot = true;
-        recordUnconditionallyWritten(aRoot); // record pass
-        writeObject(aRoot); // write pass
+        recordUnconditionallyWritten(object); // record pass
+        writeObject(object); // write pass
         writingRoot = false;
     }
 
+    /**
+     * Writes the given object, but only if it was not in the object tree
+     * multiple times.
+     * 
+     * @param object object to write to the stream.
+     * @throws IOException
+     */
     public void writeConditionalObject(final Object object) throws IOException {
         if (!writingRoot) {
             throw new RuntimeException(
@@ -103,6 +133,12 @@ public class PObjectOutputStream extends ObjectOutputStream {
         }
     }
 
+    /**
+     * Resets the ObjectOutputStream clearing any memory about objects already
+     * being written while it's at it.
+     * 
+     * @throws IOException
+     */
     public void reset() throws IOException {
         super.reset();
         unconditionallyWritten.clear();

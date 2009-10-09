@@ -33,6 +33,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
+import java.awt.RenderingHints;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
@@ -505,6 +506,9 @@ public class PText extends PNode {
             }
 
             final float offset = (float) (getWidth() - tl.getAdvance()) * horizontalAlignment;
+            
+            System.out.println(g2.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
+            System.out.println(g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING));
             tl.draw(g2, x + offset, y);
 
             y += tl.getDescent() + tl.getLeading();

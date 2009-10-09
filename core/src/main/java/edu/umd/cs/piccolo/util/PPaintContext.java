@@ -180,32 +180,51 @@ public class PPaintContext {
 
     /**
      * Removes the camera at the top of the camera stack.
-     * 
-     * @param aCamera absolute not used in any way
      */
     public void popCamera() {
         cameraStack.pop();
     }
 
+    /**
+     * Returns the camera at the top of the camera stack.
+     * 
+     * @return
+     */
     public PCamera getCamera() {
         return (PCamera) cameraStack.peek();
     }
 
-    public void pushClip(final Shape aClip) {
+    /**
+     * Pushes the given clip to the pain context.
+     * 
+     * @param clip clip to be pushed
+     */
+    public void pushClip(final Shape clip) {
         final Shape currentClip = graphics.getClip();
         clipStack.push(currentClip);
-        graphics.clip(aClip);
-        final Rectangle2D newLocalClip = aClip.getBounds2D();
+        graphics.clip(clip);
+        final Rectangle2D newLocalClip = clip.getBounds2D();
         Rectangle2D.intersect(getLocalClip(), newLocalClip, newLocalClip);
         localClipStack.push(newLocalClip);
     }
 
-    public void popClip(final Shape aClip) {
+    /**
+     * Removes the topmost clipping region from the clipping stack.
+     * 
+     * @param clip not used in this method
+     */
+    public void popClip(final Shape clip) {
         final Shape newClip = (Shape) clipStack.pop();
         graphics.setClip(newClip);
         localClipStack.pop();
     }
 
+    /**
+     * Pushes the provided transparency onto the transparency stack if
+     * necessary. If the transparency is fully opaque, then it does nothing.
+     * 
+     * @param transparency transparency to be pushed onto the transparency stack
+     */
     public void pushTransparency(final float transparency) {
         if (transparency == 1.0f) {
             return;
@@ -222,6 +241,11 @@ public class PPaintContext {
         graphics.setComposite(newComposite);
     }
 
+    /**
+     * Removes the topmost transparency if the given transparency is not opaque (1f).
+     * 
+     * @param transparency transparency to be popped
+     */
     public void popTransparency(final float transparency) {
         if (transparency == 1.0f) {
             return;
@@ -230,28 +254,35 @@ public class PPaintContext {
         graphics.setComposite(c);
     }
 
-    public void pushTransform(final PAffineTransform aTransform) {
-        if (aTransform != null) {
-            final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
-            aTransform.inverseTransform(newLocalClip, newLocalClip);
-            transformStack.push(graphics.getTransform());
-            localClipStack.push(newLocalClip);
-            graphics.transform(aTransform);
+    /**
+     * Pushed the provided transform onto the transform stack.
+     * 
+     * @param transform
+     */
+    public void pushTransform(final PAffineTransform transform) {
+        if (transform == null) {
+            return;
         }
+        
+        final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
+        transform.inverseTransform(newLocalClip, newLocalClip);
+        transformStack.push(graphics.getTransform());
+        localClipStack.push(newLocalClip);
+        graphics.transform(transform);        
     }
 
     /**
      * Pops the topmost Transform from the top of the transform if the passed in
      * transform is not null.
      * 
-     * @param aTransform transform that should be at the top of the stack
+     * @param transform transform that should be at the top of the stack
      */
-    public void popTransform(final PAffineTransform aTransform) {
-        if (aTransform != null) {
+    public void popTransform(final PAffineTransform transform) {
+        if (transform != null) {
             graphics.setTransform((AffineTransform) transformStack.pop());
             localClipStack.pop();
         }
-    }   
+    }
 
     /**
      * Return the render quality used by this paint context.
