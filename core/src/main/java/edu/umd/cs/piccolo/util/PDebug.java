@@ -157,7 +157,7 @@ public class PDebug {
 
         if (PDebug.debugRegionManagement) {
             final Graphics2D g2 = (Graphics2D) g;
-            g.setColor(PDebug.getDebugPaintColor());
+            g2.setColor(PDebug.getDebugPaintColor());
             g2.fill(g.getClipBounds().getBounds2D());
         }
 

@@ -49,6 +49,7 @@ import edu.umd.cs.piccolox.nodes.PShadow;
  */
 public final class ShadowExample extends PFrame {
 
+    private static final Color SHADOW_PAINT = new Color(20, 20, 20, 200);
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
 
@@ -72,22 +73,16 @@ public final class ShadowExample extends PFrame {
 
     /** {@inheritDoc} */
     public void initialize() {
-        BufferedImage src = new BufferedImage(75, 75, BufferedImage.TYPE_INT_ARGB);
-        Paint shadowPaint = new Color(20, 20, 20, 200);
-        Graphics2D g = src.createGraphics();
-        g.setPaint(Color.RED);
-        g.fillRect(0, 0, 75, 75);
-        g.dispose();
-
-        PText header1 = new PText("Shadow nodes drawn from an image, with increasing blur radius:");
-        getCanvas().getLayer().addChild(header1);
+        BufferedImage src = buildRedRectangleImage();    
+        
+        addHeaderAt("Shadow nodes drawn from an image, with increasing blur radius:", 0, 0);        
 
         double x = 25.0d;
         double y = 25.0d;
 
         for (int blurRadius = 4; blurRadius < 28; blurRadius += 4) {
             PImage node = new PImage(src);
-            PShadow shadowNode = new PShadow(src, shadowPaint, blurRadius);
+            PShadow shadowNode = new PShadow(src, SHADOW_PAINT, blurRadius);
 
             node.setOffset(x, y);
             // offset the shadow to account for blur radius offset and light direction
@@ -104,16 +99,11 @@ public final class ShadowExample extends PFrame {
             }
         }
 
-        PText header2 = new PText("Shadow nodes drawn from node.toImage():");
-        header2.setOffset(0.0d, 300.0d);
-        getCanvas().getLayer().addChild(header2);
+        addHeaderAt("Shadow nodes drawn from node.toImage():", 0, 300);
 
-        PPath rectNode = PPath.createRectangle(0.0f, 0.0f, 75.0f, 75.0f);
-        rectNode.setPaint(Color.RED);
-        rectNode.setStroke(null);
-        rectNode.setOffset(25.0d, 325.0d);
+        PPath rectNode = buildRedRectangleNode();
 
-        PShadow rectShadow = new PShadow(rectNode.toImage(), shadowPaint, 8);
+        PShadow rectShadow = new PShadow(rectNode.toImage(), SHADOW_PAINT, 8);
         rectShadow.setOffset(25.0d - (2 * 8) + 5.0d, 325.0d - (2 * 8) + 5.0d);
 
         getCanvas().getLayer().addChild(rectShadow);
@@ -124,11 +114,37 @@ public final class ShadowExample extends PFrame {
         textNode.setFont(textNode.getFont().deriveFont(36.0f));
         textNode.setOffset(125.0d, 325.0d);
 
-        PShadow textShadow = new PShadow(textNode.toImage(), shadowPaint, 8);
+        PShadow textShadow = new PShadow(textNode.toImage(), SHADOW_PAINT, 8);
         textShadow.setOffset(125.0d - (2 * 8) + 2.5d, 325.0d - (2 * 8) + 2.5d);
 
         getCanvas().getLayer().addChild(textShadow);
         getCanvas().getLayer().addChild(textNode);
+    }
+
+    private PText addHeaderAt(String labelText, double x, double y) {
+        PText labelNode = new PText(labelText);
+        labelNode.setOffset(x, y);
+        getCanvas().getLayer().addChild(labelNode);
+        return labelNode;
+    }
+
+   
+
+    private BufferedImage buildRedRectangleImage() {
+        BufferedImage src = new BufferedImage(75, 75, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = src.createGraphics();
+        g.setPaint(Color.RED);
+        g.fillRect(0, 0, 75, 75);
+        g.dispose();
+        return src;
+    }
+    
+    private PPath buildRedRectangleNode() {
+        PPath rectNode = PPath.createRectangle(0.0f, 0.0f, 75.0f, 75.0f);
+        rectNode.setPaint(Color.RED);
+        rectNode.setStroke(null);
+        rectNode.setOffset(25.0d, 325.0d);
+        return rectNode;
     }
 
     /**

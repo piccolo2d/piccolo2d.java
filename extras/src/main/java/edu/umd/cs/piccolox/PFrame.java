@@ -83,8 +83,8 @@ public class PFrame extends JFrame {
      * @param fullScreenMode whether to display a full screen frame or not
      * @param canvas to embed in the frame
      */
-    public PFrame(final String title, final boolean fullScreenMode, final PCanvas aCanvas) {
-        this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, aCanvas);
+    public PFrame(final String title, final boolean fullScreenMode, final PCanvas canvas) {
+        this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, canvas);
     }
 
     /**
@@ -97,7 +97,7 @@ public class PFrame extends JFrame {
      * @param canvas to embed in the frame, may be null. If so, it'll create a
      *            default PCanvas
      */
-    public PFrame(final String title, final GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
+    public PFrame(final String title, final GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas canvas) {
         super(title, aDevice.getDefaultConfiguration());
 
         graphicsDevice = aDevice;
@@ -113,11 +113,11 @@ public class PFrame extends JFrame {
             System.out.println("Ignoring security exception. Assuming Applet Context.");
         }
 
-        if (aCanvas == null) {
-            canvas = new PCanvas();
+        if (canvas == null) {
+            this.canvas = new PCanvas();
         }
         else {
-            canvas = aCanvas;
+            this.canvas = canvas;
         }
 
         setContentPane(canvas);
@@ -214,6 +214,13 @@ public class PFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Sets the display mode to the best device mode that can be determined.
+     * 
+     * Used in full screen mode.
+     * 
+     * @param device The graphics device being controlled.
+     */
     protected void chooseBestDisplayMode(final GraphicsDevice device) {
         final DisplayMode best = getBestDisplayMode(device);
         if (best != null) {
@@ -221,6 +228,14 @@ public class PFrame extends JFrame {
         }
     }
 
+    /**
+     * Finds the best display mode the graphics device supports. Based on the
+     * preferred modes.
+     * 
+     * @param device the device being inspected
+     * 
+     * @return best display mode the given device supports
+     */
     protected DisplayMode getBestDisplayMode(final GraphicsDevice device) {
         final Iterator itr = getPreferredDisplayModes(device).iterator();
         while (itr.hasNext()) {
@@ -240,6 +255,9 @@ public class PFrame extends JFrame {
     /**
      * By default return the current display mode. Subclasses may override this
      * method to return other modes in the collection.
+     * 
+     * @param device the device being inspected
+     * @return preferred display mode
      */
     protected Collection getPreferredDisplayModes(final GraphicsDevice device) {
         final ArrayList result = new ArrayList();

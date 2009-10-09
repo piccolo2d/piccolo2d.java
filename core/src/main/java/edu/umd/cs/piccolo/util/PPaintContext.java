@@ -242,7 +242,8 @@ public class PPaintContext {
     }
 
     /**
-     * Removes the topmost transparency if the given transparency is not opaque (1f).
+     * Removes the topmost transparency if the given transparency is not opaque
+     * (1f).
      * 
      * @param transparency transparency to be popped
      */
@@ -263,12 +264,12 @@ public class PPaintContext {
         if (transform == null) {
             return;
         }
-        
+
         final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
         transform.inverseTransform(newLocalClip, newLocalClip);
         transformStack.push(graphics.getTransform());
         localClipStack.push(newLocalClip);
-        graphics.transform(transform);        
+        graphics.transform(transform);
     }
 
     /**
@@ -321,6 +322,9 @@ public class PPaintContext {
                 graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
                         RenderingHints.VALUE_FRACTIONALMETRICS_ON);
                 break;
+            default:
+                throw new RuntimeException(
+                        "Render Quality must be either PPaintContext.HIGH_QUALITY_RENDERING or PPaintContext.LOW_QUALITY_RENDERING");
         }
     }
 }
