@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.piccolo2d</groupId>
@@ -8,9 +9,7 @@
   <packaging>pom</packaging>
   <name>Piccolo2D Parent Pom</name>
   <description>
-    A revolutionary way to create robust, full-featured graphical
-    applications in Java and C#, with striking visual effects such
-    as zooming, animation and multiple representations.
+    A revolutionary way to create robust, full-featured graphical applications in Java and C#, with striking visual effects such as zooming, animation and multiple representations.
   </description>
   <properties>
     <!--
