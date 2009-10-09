@@ -33,7 +33,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.RenderingHints;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
@@ -136,21 +135,29 @@ public class PText extends PNode {
     /** Font for this text node. */
     private Font font = DEFAULT_FONT;
 
-    /** Greek threshold in screen font size for this text node.  Will be made private in version 2.0. */
+    /**
+     * Greek threshold in screen font size for this text node. Will be made
+     * private in version 2.0.
+     */
     protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
 
     /** Horizontal alignment for this text node. */
     private float horizontalAlignment = DEFAULT_HORIZONTAL_ALIGNMENT;
 
-    /** True if this text node should constrain its height to the height of its text. */
+    /**
+     * True if this text node should constrain its height to the height of its
+     * text.
+     */
     private boolean constrainHeightToTextHeight = true;
 
-    /** True if this text node should constrain its height to the height of its text. */
+    /**
+     * True if this text node should constrain its height to the height of its
+     * text.
+     */
     private boolean constrainWidthToTextWidth = true;
 
-    /** One or more lines of text layout. */ 
+    /** One or more lines of text layout. */
     private transient TextLayout[] lines;
-
 
     /**
      * Create a new text node with no text (<code>""</code>).
@@ -266,8 +273,8 @@ public class PText extends PNode {
     }
 
     /**
-     * Set to <code>true</code> if this text node should constrain its width to the
-     * width of its text.
+     * Set to <code>true</code> if this text node should constrain its width to
+     * the width of its text.
      * 
      * @param constrainWidthToTextWidth true if this text node should constrain
      *            its width to the width of its text
@@ -506,9 +513,7 @@ public class PText extends PNode {
             }
 
             final float offset = (float) (getWidth() - tl.getAdvance()) * horizontalAlignment;
-            
-            System.out.println(g2.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
-            System.out.println(g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING));
+
             tl.draw(g2, x + offset, y);
 
             y += tl.getDescent() + tl.getLeading();
