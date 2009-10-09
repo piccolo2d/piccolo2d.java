@@ -66,7 +66,7 @@ public class PFrame extends JFrame {
     private final GraphicsDevice graphicsDevice;
 
     /** Listener that listens for escape key. */
-    private EventListener escapeFullScreenModeListener;
+    private transient EventListener escapeFullScreenModeListener;
 
     /**
      * Creates a PFrame with no title, not full screen, and with the default

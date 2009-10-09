@@ -80,7 +80,7 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwing
      */
     private static final long serialVersionUID = 1L;
     private final int id;
-    private final PInputEvent event;
+    private transient final PInputEvent event;
 
     /**
      * Constructs a new PMouse event from a Java MouseEvent.

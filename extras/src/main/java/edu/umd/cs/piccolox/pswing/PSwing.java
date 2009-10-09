@@ -247,7 +247,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     private final List listeningTo = new ArrayList();
 
     /* The parent listener for camera/canvas changes. */
-    private final PropertyChangeListener parentListener = new PropertyChangeListener() {
+    private transient final PropertyChangeListener parentListener = new PropertyChangeListener() {
         /** {@inheritDoc} */
         public void propertyChange(final PropertyChangeEvent evt) {
             final PNode parent = (PNode) evt.getNewValue();

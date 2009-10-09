@@ -51,17 +51,14 @@ import edu.umd.cs.piccolox.PFrame;
  * @author Ben Bederson
  */
 public class P3DRect extends PNode {
-
-    /**
-     * 
-     */
+   
     private static final long serialVersionUID = 1L;
     private Color topLeftOuterColor;
     private Color topLeftInnerColor;
     private Color bottomRightInnerColor;
     private Color bottomRightOuterColor;
     private final GeneralPath path;
-    private final Stroke stroke;
+    private transient final Stroke stroke;
     private boolean raised;
 
     public P3DRect() {
@@ -161,6 +158,7 @@ public class P3DRect extends PNode {
         }
     }
 
+    //TODO: Move this into an example (if not already)
     public static void main(final String[] args) {
         new PFrame() {
             /**

@@ -63,9 +63,6 @@ import edu.umd.cs.piccolo.nodes.PPath;
  */
 public class PLens extends PNode {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     public static double LENS_DRAGBAR_HEIGHT = 20;
     public static Paint DEFAULT_DRAGBAR_PAINT = Color.DARK_GRAY;
@@ -73,7 +70,7 @@ public class PLens extends PNode {
 
     private final PPath dragBar;
     private final PCamera camera;
-    private final PDragEventHandler lensDragger;
+    private transient final PDragEventHandler lensDragger;
 
     public PLens() {
         // Drag bar gets resized to fit the available space, so any rectangle
