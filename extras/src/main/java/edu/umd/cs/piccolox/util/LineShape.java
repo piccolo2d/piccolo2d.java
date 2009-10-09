@@ -40,10 +40,20 @@ public class LineShape implements Shape, MutablePoints {
     private MutablePoints points;
     private final Rectangle2D bounds = new Rectangle2D.Double();
 
+    /**
+     * Constructs a LineShape from a list of mutable points.
+     * 
+     * @param points points to use when constructing LineShape
+     */
     public LineShape(final MutablePoints points) {
         setPoints(points);
     }
 
+    /**
+     * Changes the LineShape so that it's composed of the given points.
+     * 
+     * @param points new Points to use as this shape's path
+     */
     public void setPoints(MutablePoints points) {
         if (points == null) {
             points = new XYArray();
@@ -51,95 +61,189 @@ public class LineShape implements Shape, MutablePoints {
         this.points = points;
     }
 
-    // from Points
-
+    /**
+     * Returns the number points in this LineShape.
+     * 
+     * @return # of points in this line shape
+     */
     public int getPointCount() {
         return points.getPointCount();
     }
 
-    public double getX(final int i) {
-        return points.getX(i);
+    /**
+     * Returns the x component of the point at the given index.
+     * 
+     * @return x component of indexed point
+     */
+    public double getX(final int pointIndex) {
+        return points.getX(pointIndex);
     }
 
-    public double getY(final int i) {
-        return points.getY(i);
+    /**
+     * Returns the y component of the point at the given index.
+     * 
+     * @return y component of indexed point
+     */
+    public double getY(final int pointIndex) {
+        return points.getY(pointIndex);
     }
 
-    public Point2D getPoint(final int i, final Point2D dst) {
-        return points.getPoint(i, dst);
+    /**
+     * Copies the point at the given index into the destination point.
+     * 
+     * @param pointIndex the index of the desired point
+     * @param destinationPoint the point into which to load the values, or null
+     *            if a new point is desired
+     * 
+     * @return destinationPoint or new one if null was provided
+     */
+    public Point2D getPoint(final int pointIndex, final Point2D destinationPoint) {
+        return points.getPoint(pointIndex, destinationPoint);
     }
 
+    /**
+     * Computes the bounds of this LineShape and stores them in the provided
+     * rectangle.
+     * 
+     * @param dst rectangle to populate with this LineShape's bounds
+     * @return the bounds
+     */
     public Rectangle2D getBounds(final Rectangle2D dst) {
         points.getBounds(dst);
         return dst;
     }
 
-    // from MutablePoints
-
+    /**
+     * Recalculates the bounds of this LineShape.
+     */
     public void updateBounds() {
         bounds.setRect(0.0d, 0.0d, 0.0d, 0.0d);
         points.getBounds(bounds);
     }
 
-    public void setPoint(final int i, final double x, final double y) {
-        points.setPoint(i, x, y);
+    /**
+     * Sets the coordinate of the point at the given index.
+     * 
+     * @param pointIndex index of the point to change
+     * @param x x component to assign to the point
+     * @param y y component to assign to the point
+     */
+    public void setPoint(final int pointIndex, final double x, final double y) {
+        points.setPoint(pointIndex, x, y);
         updateBounds();
     }
 
-    public void addPoint(final int pos, final double x, final double y) {
-        points.addPoint(pos, x, y);
+    /**
+     * Adds a point with the given coordinates at the desired index.
+     * 
+     * @param pointIndex Index at which to add the point
+     * @param x x component of the new point
+     * @param y y component of the new point
+     */
+    public void addPoint(final int pointIndex, final double x, final double y) {
+        points.addPoint(pointIndex, x, y);
         updateBounds();
     }
 
-    public void removePoints(final int pos, final int num) {
-        points.removePoints(pos, num);
+    /**
+     * Removes n points from the LineShape starting at the provided index.
+     * 
+     * @param pointIndex Starting index from which points are being removed
+     * @param num The number of sequential points to remove
+     */
+    public void removePoints(final int pointIndex, final int num) {
+        points.removePoints(pointIndex, num);
         updateBounds();
     }
 
-    public void transformPoints(final AffineTransform trans) {
+    /**
+     * Applies the given transform to all points in this LineShape.
+     * 
+     * @param transform Transform to apply
+     */
+    public void transformPoints(final AffineTransform transform) {
         final XYArray newPoints = new XYArray(points.getPointCount());
         newPoints.appendPoints(points);
-        newPoints.transformPoints(trans);
+        newPoints.transformPoints(transform);
         points = newPoints;
     }
 
-    //
-
+    /**
+     * Returns the current points of this LineShape as a simple Rectangle.
+     * 
+     * @return bounds of this LineShape
+     */
     public Rectangle getBounds() {
         return new Rectangle((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds
                 .getHeight());
     }
 
+    /**
+     * Returns the current bounds in Rectangle2D format.
+     * 
+     * @return bounds of LineShape as a Rectangle2D
+     */
     public Rectangle2D getBounds2D() {
         return bounds;
     }
 
+    /**
+     * Returns whether the given coordinates are on the line defined by (x1,y1)
+     * and (x2,y2) within the given distance.
+     * 
+     * @param x x component of point being tested
+     * @param y y component of point being tested
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param min
+     * @param max
+     * @param distance distance from line acceptable as "touching"
+     * @return whether the poing (x,y) is near enough to the given line
+     */
     public static boolean contains(final double x, final double y, final double x1, final double y1, final double x2,
-            final double y2, final boolean min, final boolean max, final double d) {
-        double dx = x2 - x1, dy = y2 - y1;
-        final double dx2 = dx * dx, dy2 = dy * dy;
-        double p;
+            final double y2, final boolean min, final boolean max, final double distance) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+
+        // If line is a point then bail out
+        if (dx == 0 && dy == 0)
+            return false;
+
+        final double dx2 = dx * dx;
+        final double dy2 = dy * dy;
+
+        // distance along segment as a ratio or the (x1,y1)->(x2,y2) vector
+        final double p;
         if (dx != 0) {
             p = ((x - x1) / dx + dy * (y - y1) / dx2) / (1 + dy2 / dx2);
         }
-        else if (dy != 0) {
+        else {
             p = ((y - y1) / dy + dx * (x - x1) / dy2) / (1 + dx2 / dy2);
         }
-        else {
+
+        // Point is not "beside" the segment and it's been disallowed, bail.
+        if (min && p < 0 || max && p > 1.0) {
             return false;
         }
-        if (max && p > 1.0) {
-            return false;
-        }
-        else if (min && p < 0.0) {
-            return false;
-        }
+
         dx = p * dx + x1 - x;
         dy = p * dy + y1 - y;
+
         final double len = dx * dx + dy * dy;
-        return len < d;
+        return len < distance;
     }
 
+    /**
+     * Returns true if the given coordinates are within d units from any segment
+     * of the LineShape.
+     * 
+     * @param x x component of point being tested
+     * @param y y component of point being tested
+     * @param d
+     * @return true if point is close enough to the LineShape
+     */
     public boolean contains(final double x, final double y, final double d) {
         double x1, y1, x2, y2;
         if (points.getPointCount() == 0) {
@@ -159,14 +263,50 @@ public class LineShape implements Shape, MutablePoints {
         return false;
     }
 
+    /**
+     * Returns true if point is within 2 pixels of any line segment of this
+     * LineShape.
+     * 
+     * @param x x component of point being tested
+     * @param y y component of point being tested
+     * @return true if point is within 2 pixels of any of this LineShape's
+     *         segments
+     */
     public boolean contains(final double x, final double y) {
         return contains(x, y, 2.0d);
     }
 
+    /**
+     * Returns true if point is within 2 pixels of any line segment of this
+     * LineShape.
+     * 
+     * @param p point being tested
+     * @return true if point is within 2 pixels of any of this LineShape's
+     *         segments
+     */
     public boolean contains(final Point2D p) {
         return contains(p.getX(), p.getY());
     }
 
+    /**
+     * Returns true if the two segments defined by (x1,y1)->(x2,y2) and
+     * (x3,y3)->(x4,y4) intersect. Optional fields allow for consideration of
+     * extending the segments to infinity at either end.
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     * @param x4
+     * @param y4
+     * @param min1
+     * @param max1
+     * @param min2
+     * @param max2
+     * @return true if line segments intersect
+     */
     public static boolean intersects(final double x1, final double y1, final double x2, final double y2,
             final double x3, final double y3, final double x4, final double y4, final boolean min1, final boolean max1,
             final boolean min2, final boolean max2) {
@@ -199,6 +339,16 @@ public class LineShape implements Shape, MutablePoints {
         return (!min1 || p1 >= 0.0) && (!max1 || p1 <= 1.0) && (!min2 || p2 >= 0.0) && (!max2 || p2 <= 1.0);
     }
 
+    /**
+     * Returns true if any segment crosses an edge of the rectangle.
+     * 
+     * @param x left of rectangle to be tested
+     * @param y top of rectangle to be tested
+     * @param w width of rectangle to be tested
+     * @param h height of rectangle to be tested
+     * 
+     * @return true if rectangle intersects
+     */
     public boolean intersects(final double x, final double y, final double w, final double h) {
         double x1, y1, x2, y2;
         if (points.getPointCount() == 0) {
@@ -221,6 +371,12 @@ public class LineShape implements Shape, MutablePoints {
         return false;
     }
 
+    /**
+     * Returns true if any segment crosses an edge of the rectangle.
+     * 
+     * @param r rectangle to be tested
+     * @return true if rectangle intersects
+     */
     public boolean intersects(final Rectangle2D r) {
         return intersects(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
@@ -233,14 +389,27 @@ public class LineShape implements Shape, MutablePoints {
         return contains(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
 
-    //
-
-    //
-
+    /**
+     * Returns an iterator that can be used to iterate of the segments of this
+     * LineShape. Optionally applying the given transform before returning it.
+     * 
+     * @param at optional transform to apply to segment before returning it. May
+     *            be null
+     * @param iterator for iterating over Line Paths
+     */
     public PathIterator getPathIterator(final AffineTransform at) {
         return new LinePathIterator(points, at);
     }
 
+    /**
+     * Returns an iterator that can be used to iterate of the segments of this
+     * LineShape. Optionally applying the given transform before returning it.
+     * 
+     * @param at optional transform to apply to segment before returning it. May
+     *            be null
+     * @param iterator for iterating over Line Paths
+     * @param flatness ignored completely
+     */
     public PathIterator getPathIterator(final AffineTransform at, final double flatness) {
         return new LinePathIterator(points, at);
     }
@@ -251,19 +420,37 @@ public class LineShape implements Shape, MutablePoints {
         private final AffineTransform trans;
         private int i = 0;
 
+        /**
+         * Constructs a LinePathIterator for the given points and with an
+         * optional transform.
+         * 
+         * @param points points to be iterated
+         * @param trans optional iterator to apply to paths before returning them
+         */
         public LinePathIterator(final Points points, final AffineTransform trans) {
             this.points = points;
             this.trans = trans;
         }
 
+        /**
+         * Returns the winding rule being applied when selecting next paths.
+         */
         public int getWindingRule() {
             return GeneralPath.WIND_EVEN_ODD;
         }
 
+        /**
+         * Returns true if there are no more paths to iterate over.
+         * 
+         * @return true if iteration is done
+         */
         public boolean isDone() {
             return i >= points.getPointCount();
         }
 
+        /**
+         * Moves to the next path.
+         */
         public void next() {
             i++;
         }
@@ -277,6 +464,13 @@ public class LineShape implements Shape, MutablePoints {
             }
         }
 
+        /**
+         * Populates the given array with the current segment and returns the type of segment.
+         * 
+         * @param coords array to be populated
+         * 
+         * @return type of segment SEG_MOVETO or SEG_LINETO
+         */
         public int currentSegment(final float[] coords) {
             currentSegment();
             coords[0] = (float) tempPoint.getX();
@@ -284,6 +478,13 @@ public class LineShape implements Shape, MutablePoints {
             return i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO;
         }
 
+        /**
+         * Populates the given array with the current segment and returns the type of segment.
+         * 
+         * @param coords array to be populated
+         * 
+         * @return type of segment SEG_MOVETO or SEG_LINETO
+         */
         public int currentSegment(final double[] coords) {
             currentSegment();
             coords[0] = tempPoint.getX();
