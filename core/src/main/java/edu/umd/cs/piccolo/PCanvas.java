@@ -879,13 +879,13 @@ public class PCanvas extends JComponent implements PComponent {
 
         final PBounds clippingRect = new PBounds(g.getClipBounds());
         clippingRect.expandNearestIntegerDimensions();
-        
+
         final PBounds originalCameraBounds = getCamera().getBounds();
         final PBounds layerBounds = getCamera().getUnionOfLayerFullBounds();
         getCamera().setBounds(layerBounds);
 
         final double clipRatio = clippingRect.getWidth() / clippingRect.getHeight();
-        final double nodeRatio = getWidth() / getHeight();
+        final double nodeRatio = ((double)getWidth()) / ((double)getHeight());
         final double scale;
         if (nodeRatio <= clipRatio) {
             scale = clippingRect.getHeight() / getCamera().getHeight();

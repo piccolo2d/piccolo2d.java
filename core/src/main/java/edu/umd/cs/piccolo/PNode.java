@@ -875,7 +875,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             final byte[] ser = PObjectOutputStream.toByteArray(this);
             return new ObjectInputStream(new ByteArrayInputStream(ser)).readObject();
         }
-        catch (final IOException e) {
+        catch (final IOException e) {            
             return null;
         }
         catch (final ClassNotFoundException e) {

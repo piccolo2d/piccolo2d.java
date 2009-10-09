@@ -354,9 +354,10 @@ public class PText extends PNode {
      * @param text text for this text node
      */
     public void setText(final String text) {
-        if (text == this.text) {
+        if ((text == null && this.text == null) || (text != null && text.equals(this.text))) {
             return;
         }
+
         final String oldText = this.text;
         this.text = text == null ? DEFAULT_TEXT : text;
         lines = null;

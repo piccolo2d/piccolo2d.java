@@ -30,6 +30,7 @@ package edu.umd.cs.piccolo.activities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +53,11 @@ import edu.umd.cs.piccolo.util.PUtil;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PActivityScheduler {
-
+public class PActivityScheduler implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final PRoot root;
     private final List activities;
-    private Timer activityTimer;
+    private transient Timer activityTimer;
     private boolean activitiesChanged;
     private boolean animating;
     private final ArrayList processingActivities;

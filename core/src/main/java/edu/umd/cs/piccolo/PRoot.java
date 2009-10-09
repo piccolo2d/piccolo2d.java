@@ -98,7 +98,7 @@ public class PRoot extends PNode {
     /**
      * The singleton instance of the default input manager.
      */
-    private PInputManager defaultInputManager;
+    private transient PInputManager defaultInputManager;
 
     /** The Input Sources that are registered to this node. */
     private final transient List inputSources;

@@ -222,7 +222,7 @@ public class PerformanceTests extends TestCase {
         }
         log.endTest("Do fullIntersects test for " + NUMBER_NODES + " nodes");
     }
-
+    
     public void memorySizeOfNodes() {
         final PNode[] nodes = new PNode[NUMBER_NODES];
         Runtime.getRuntime().gc();

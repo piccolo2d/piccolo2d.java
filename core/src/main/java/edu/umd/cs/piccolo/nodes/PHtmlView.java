@@ -117,7 +117,7 @@ public class PHtmlView extends PNode {
     private final JLabel label;
 
     /** Object that encapsulates the HTML rendering logic. */
-    private View htmlView;
+    private transient View htmlView;
 
     /**
      * Create an empty HTML text node with the default font and text color.
