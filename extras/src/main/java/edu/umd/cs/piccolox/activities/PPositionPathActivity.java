@@ -42,54 +42,134 @@ import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
  * @author Jesse Grosjean
  */
 public class PPositionPathActivity extends PPathActivity {
-
+    /** Points that define the animation's path. */
     protected Point2D[] positions;
+
+    /** An abstract representation of the thing being positioned. */
     protected Target target;
 
+    /**
+     * Interface that objects must conform to in order to have their position
+     * animated.
+     */
     public interface Target {
-        public void setPosition(double x, double y);
+        /**
+         * Set's the target's position to the coordinate provided.
+         * 
+         * @param x the x component of the new position
+         * @param y the y component of the new position
+         */
+        void setPosition(double x, double y);
     }
 
-    public PPositionPathActivity(final long duration, final long stepRate, final Target aTarget) {
-        this(duration, stepRate, aTarget, null, new Point2D[0]);
+    /**
+     * Constructs a position activity that acts on the given target for the
+     * duration provided and will update it's position at the given stepRate.
+     * 
+     * @param duration milliseconds of animation
+     * @param stepRate milliseconds between successive position updates
+     * @param target abstract representation of thing being animated
+     */
+    public PPositionPathActivity(final long duration, final long stepRate, final Target target) {
+        this(duration, stepRate, target, null, new Point2D[0]);
     }
 
-    public PPositionPathActivity(final long duration, final long stepRate, final Target aTarget, final float[] knots,
+    /**
+     * Constructs a position activity that acts on the given target for the
+     * duration provided and will update it's position at the given stepRate. It
+     * will follow the path defined by the knots and positions arguments.
+     * 
+     * @param duration milliseconds of animation
+     * @param stepRate milliseconds between successive position updates
+     * @param target abstract representation of thing being animated
+     * @param knots timing to use when animating
+     * @param positions points along the path
+     */
+    public PPositionPathActivity(final long duration, final long stepRate, final Target target, final float[] knots,
             final Point2D[] positions) {
-        this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, aTarget, knots, positions);
+        this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, target, knots, positions);
     }
 
+    /**
+     * Constructs a position activity that will repeat the number of times
+     * specified. It will act on the given target for the duration provided and
+     * will update it's position at the given stepRate. It will follow the path
+     * defined by the knots and positions arguments.
+     * 
+     * @param duration milliseconds of animation
+     * @param stepRate milliseconds between successive position updates
+     * @param loopCount number of times this activity should repeat
+     * @param mode how easing is handled on this activity
+     * @param target abstract representation of thing being animated
+     * @param knots timing to use when animating
+     * @param positions points along the path
+     */
     public PPositionPathActivity(final long duration, final long stepRate, final int loopCount, final int mode,
-            final Target aTarget, final float[] knots, final Point2D[] positions) {
+            final Target target, final float[] knots, final Point2D[] positions) {
         super(duration, stepRate, loopCount, mode, knots);
-        target = aTarget;
+        this.target = target;
         this.positions = (Point2D[]) positions.clone();
     }
 
+    /**
+     * Returns true since this activity modifies the view and so cause a
+     * repaint.
+     * 
+     * @return always true
+     */
     protected boolean isAnimation() {
         return true;
     }
 
+    /**
+     * Returns a copy of the path's points.
+     * 
+     * @return array of points on the path
+     */
     public Point2D[] getPositions() {
         return (Point2D[]) positions.clone();
     }
 
+    /**
+     * Returns the point at the given index.
+     * 
+     * @param index desired position index
+     * @return point at the given index
+     */
     public Point2D getPosition(final int index) {
         return positions[index];
     }
 
+    /**
+     * Changes all positions that define where along the target is being
+     * positioned during the animation.
+     * 
+     * @param positions new animation positions
+     */
     public void setPositions(final Point2D[] positions) {
         this.positions = (Point2D[]) positions.clone();
     }
 
+    /**
+     * Sets the position of the point at the given index.
+     * 
+     * @param index index of the point to change
+     * @param position point defining the new position
+     */
     public void setPosition(final int index, final Point2D position) {
         positions[index] = position;
     }
 
+    /**
+     * Extracts positions from a GeneralPath and uses them to define this
+     * activity's animation points.
+     * 
+     * @param path source of points
+     */
     public void setPositions(final GeneralPath path) {
         final PathIterator pi = path.getPathIterator(null, 1);
         final ArrayList points = new ArrayList();
-        final float point[] = new float[6];
+        final float[] point = new float[6];
         float distanceSum = 0;
         float lastMoveToX = 0;
         float lastMoveToY = 0;
@@ -115,6 +195,8 @@ public class PPositionPathActivity extends PPathActivity {
                 case PathIterator.SEG_QUADTO:
                 case PathIterator.SEG_CUBICTO:
                     throw new RuntimeException();
+                default:
+                    // ok to do nothing it'll just be skipped
             }
 
             if (points.size() > 1) {
@@ -127,8 +209,8 @@ public class PPositionPathActivity extends PPathActivity {
         }
 
         final int size = points.size();
-        final Point2D newPositions[] = new Point2D[size];
-        final float newKnots[] = new float[size];
+        final Point2D[] newPositions = new Point2D[size];
+        final float[] newKnots = new float[size];
 
         for (int i = 0; i < size; i++) {
             newPositions[i] = (Point2D) points.get(i);
@@ -142,6 +224,15 @@ public class PPositionPathActivity extends PPathActivity {
         setKnots(newKnots);
     }
 
+    /**
+     * Overridden to interpret position at correct point along animation.
+     * 
+     * TODO: improve these comments
+     * 
+     * @param zeroToOne how far along the activity we are
+     * @param startKnot the index of the startKnot
+     * @param endKnot the index of the endKnot
+     */
     public void setRelativeTargetValue(final float zeroToOne, final int startKnot, final int endKnot) {
         final Point2D start = getPosition(startKnot);
         final Point2D end = getPosition(endKnot);

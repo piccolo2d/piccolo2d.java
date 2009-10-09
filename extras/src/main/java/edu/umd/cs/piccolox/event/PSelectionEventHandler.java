@@ -91,7 +91,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     /** Used within drag handler temporarily. */
     private HashMap allItems = null;
 
-    /** Used within drag handler temporarily */
+    /** Used within drag handler temporarily. */
     private ArrayList unselectList = null;
     private HashMap marqueeMap = null;
 
@@ -136,8 +136,14 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         init();
     }
 
+    /**
+     * Initializes the PSelectionEventHandler with a marquee stroke.
+     */
     protected void init() {
-        final float[] dash = { DASH_WIDTH, DASH_WIDTH };
+        final float[] dash = new float[2];
+        dash[0] = DASH_WIDTH;
+        dash[1] = DASH_WIDTH;
+
         strokes = new Stroke[NUM_STROKES];
         for (int i = 0; i < NUM_STROKES; i++) {
             strokes[i] = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, dash, i);
@@ -289,12 +295,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * @return true if succeeded
      */
     public boolean isSelected(final PNode node) {
-        if (node != null && selection.containsKey(node)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (node != null && selection.containsKey(node));
     }
 
     /**
@@ -303,8 +304,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * @return copy of selection
      */
     public Collection getSelection() {
-        final ArrayList sel = new ArrayList(selection.keySet());
-        return sel;
+        return new ArrayList(selection.keySet());
     }
 
     /**
@@ -402,6 +402,12 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     // The overridden methods from PDragSequenceEventHandler
     // //////////////////////////////////////////////////////
 
+    /**
+     * Overrides method in PDragSequenceEventHandler so that, selections have
+     * marquees.
+     * 
+     * @param e the event that started the drag
+     */
     protected void startDrag(final PInputEvent e) {
         super.startDrag(e);
 
@@ -427,32 +433,42 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void drag(final PInputEvent e) {
-        super.drag(e);
+    /**
+     * Updates the marquee to the new bounds caused by the drag.
+     * 
+     * @param event drag event
+     */
+    protected void drag(final PInputEvent event) {
+        super.drag(event);
 
-        if (isMarqueeSelection(e)) {
-            updateMarquee(e);
+        if (isMarqueeSelection(event)) {
+            updateMarquee(event);
 
-            if (!isOptionSelection(e)) {
-                computeMarqueeSelection(e);
+            if (!isOptionSelection(event)) {
+                computeMarqueeSelection(event);
             }
             else {
-                computeOptionMarqueeSelection(e);
+                computeOptionMarqueeSelection(event);
             }
         }
         else {
-            dragStandardSelection(e);
+            dragStandardSelection(event);
         }
     }
 
-    protected void endDrag(final PInputEvent e) {
-        super.endDrag(e);
+    /**
+     * Ends the selection marquee when the drag is ended.
+     * 
+     * @param event the event responsible for ending the drag
+     */
+    protected void endDrag(final PInputEvent event) {
+        super.endDrag(event);
 
-        if (isMarqueeSelection(e)) {
-            endMarqueeSelection(e);
+        if (isMarqueeSelection(event)) {
+            endMarqueeSelection(event);
         }
         else {
-            endStandardSelection(e);
+            endStandardSelection(event);
         }
     }
 
@@ -512,19 +528,32 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         unselectAll();
     }
 
+    /**
+     * If the pressed node is not selected unselect all nodes and select the
+     * pressed node if it allows it.
+     * 
+     * @param pie event that started the selection
+     */
     protected void startStandardSelection(final PInputEvent pie) {
         // Option indicator not down - clear selection, and start fresh
-        if (!isSelected(pressNode)) {
-            unselectAll();
+        if (isSelected(pressNode)) {
+            return;
+        }
 
-            if (isSelectable(pressNode)) {
-                select(pressNode);
-            }
+        unselectAll();
+
+        if (isSelectable(pressNode)) {
+            select(pressNode);
         }
     }
 
+    /**
+     * Toggle the current selection on the node that was just pressed, but leave
+     * the rest of the selected nodes unchanged.
+     * 
+     * @param pie event responsible for the change in selection
+     */
     protected void startStandardOptionSelection(final PInputEvent pie) {
-        // Option indicator is down, toggle selection
         if (isSelectable(pressNode)) {
             if (isSelected(pressNode)) {
                 unselect(pressNode);
@@ -535,6 +564,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
+    /**
+     * Updates the marquee rectangle as the result of a drag.
+     * 
+     * @param pie event responsible for the change in the marquee
+     */
     protected void updateMarquee(final PInputEvent pie) {
         final PBounds b = new PBounds();
 
@@ -577,6 +611,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
+    /**
+     * Sets the selection to be all nodes under the marquee.
+     * 
+     * @param pie event responsible for the new selection
+     */
     protected void computeMarqueeSelection(final PInputEvent pie) {
         unselectList.clear();
         // Make just the items in the list selected
@@ -605,6 +644,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         select(allItems);
     }
 
+    /**
+     * Extends the selection to include all nodes under the marquee.
+     * 
+     * @param pie event responsible for the change in selection
+     */
     protected void computeOptionMarqueeSelection(final PInputEvent pie) {
         unselectList.clear();
         Iterator selectionEn = selection.keySet().iterator();
@@ -632,10 +676,23 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         select(allItems);
     }
 
+    /**
+     * Creates a node filter that will filter all nodes not touching the bounds
+     * provided.
+     * 
+     * @param bounds will be used to filter matches
+     * 
+     * @return newly created filter
+     */
     protected PNodeFilter createNodeFilter(final PBounds bounds) {
         return new BoundsFilter(bounds);
     }
 
+    /**
+     * Returns the bounds of the current selection marquee.
+     * 
+     * @return bounds of current selection marquee
+     */
     protected PBounds getMarqueeBounds() {
         if (marquee != null) {
             return marquee.getBounds();
@@ -643,6 +700,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         return new PBounds();
     }
 
+    /**
+     * Drag selected nodes.
+     * 
+     * @param e event responsible for the drag
+     */
     protected void dragStandardSelection(final PInputEvent e) {
         // There was a press node, so drag selection
         final PDimension d = e.getCanvasDelta();
@@ -659,6 +721,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
+    /**
+     * Removes marquee and clears selection.
+     * 
+     * @param e event responsible for the end of the selection
+     */
     protected void endMarqueeSelection(final PInputEvent e) {
         // Remove marquee
         allItems.clear();
@@ -667,6 +734,11 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         marquee = null;
     }
 
+    /**
+     * Ends the "pressed" state of the previously pressed node (if any)
+     * 
+     * @param e event responsible for the end in the selection
+     */
     protected void endStandardSelection(final PInputEvent e) {
         pressNode = null;
     }
@@ -674,6 +746,8 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     /**
      * This gets called continuously during the drag, and is used to animate the
      * marquee
+     * 
+     * @param aEvent event responsible for this step in the drag sequence
      */
     protected void dragActivityStep(final PInputEvent aEvent) {
         if (marquee != null) {
@@ -689,6 +763,8 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
 
     /**
      * Delete selection when delete key is pressed (if enabled)
+     * 
+     * @param e the key press event
      */
     public void keyPressed(final PInputEvent e) {
         switch (e.getKeyCode()) {
@@ -704,33 +780,54 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
+    /**
+     * Returns whether the delete key is a supported action.
+     * 
+     * @return true if delete is allowed
+     */
     public boolean getSupportDeleteKey() {
         return deleteKeyActive;
     }
 
+    /**
+     * Returns whether the delete key is a supported action.
+     * 
+     * @return true if delete is allowed
+     */
     public boolean isDeleteKeyActive() {
         return deleteKeyActive;
     }
 
     /**
      * Specifies if the DELETE key should delete the selection
+     * 
+     * @param deleteKeyActive state to set for the delete action true = enabled
      */
     public void setDeleteKeyActive(final boolean deleteKeyActive) {
         this.deleteKeyActive = deleteKeyActive;
     }
 
-    // ////////////////////
-    // Inner classes
-    // ////////////////////
-
+    /**
+     * Class used to filter nodes that intersect with the marquee's bounds.
+     */
     protected class BoundsFilter implements PNodeFilter {
-        PBounds localBounds = new PBounds();
-        PBounds bounds;
+        private final PBounds localBounds = new PBounds();
+        private final PBounds bounds;
 
+        /**
+         * Constructs a BoundsFilter for the given bounds.
+         * 
+         * @param bounds bounds to be used when testing nodes for intersection
+         */
         protected BoundsFilter(final PBounds bounds) {
             this.bounds = bounds;
         }
 
+        /**
+         * Returns true if the node intersects with this Filter's configured bounds.
+         * 
+         * @param node node being tested
+         */
         public boolean accept(final PNode node) {
             localBounds.setRect(bounds);
             node.globalToLocal(localBounds);
@@ -741,10 +838,19 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
                     && !isCameraLayer(node);
         }
 
+        /**
+         * Returns whether this filter should accept all children of a node.
+         */
         public boolean acceptChildrenOf(final PNode node) {
             return selectableParents.contains(node) || isCameraLayer(node);
         }
 
+        /**
+         * Tests a node to see if it's a layer that has an attached camera.
+         * 
+         * @param node node being tested
+         * @return true if node is a layer with a camera attached
+         */
         public boolean isCameraLayer(final PNode node) {
             if (node instanceof PLayer) {
                 for (final Iterator i = selectableParents.iterator(); i.hasNext();) {

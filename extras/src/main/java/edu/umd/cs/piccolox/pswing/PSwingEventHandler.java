@@ -57,8 +57,8 @@ import edu.umd.cs.piccolo.util.PAffineTransformException;
  * @author Sam Reid
  */
 public class PSwingEventHandler implements PInputEventListener {
-
-    private PNode listenNode = null; // used to listen to for events
+    /** Used to listen for events */
+    private PNode listenNode = null; 
 
     /** Tracks whether this event handler is active. */
     private boolean active = false;

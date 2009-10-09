@@ -70,6 +70,11 @@ public class PNotificationCenter {
     protected HashMap listenersMap;
     protected ReferenceQueue keyQueue;
 
+    /**
+     * Singleton accessor for the PNotificationCenter.
+     * 
+     * @return singleton instance of PNotificationCenter
+     */
     public static PNotificationCenter defaultCenter() {
         if (DEFAULT_CENTER == null) {
             DEFAULT_CENTER = new PNotificationCenter();
@@ -95,44 +100,33 @@ public class PNotificationCenter {
      * matching 'object'. If 'object' is null the listener will receive all
      * notifications with the name 'notificationName'.
      * 
-     * @return whether or not the listener has been added
-     * @throws SecurityException
+     * @param listener object to be notified of notifications
+     * @param callbackMethodName method to be invoked on the listener
+     * @param notificationName name of notifications to filter on
+     * @param object source of notification messages that this listener is
+     *            interested in
+     * @return true if listener has been added
+     * @throws SecurityException when attempting to register method as listener
+     *             that is not accessible
      */
     public boolean addListener(final Object listener, final String callbackMethodName, final String notificationName,
-            Object object) throws SecurityException {
+            final Object object) throws SecurityException {
         processKeyQueue();
 
-        Object name = notificationName;
-        Method method = null;
+        Object name = nullify(notificationName);
+        Object sanitizedObject = nullify(object);
 
-        try {
-            method = listener.getClass().getMethod(callbackMethodName, new Class[] { PNotification.class });
-        }
-        catch (final NoSuchMethodException e) {
+        Method method = extractCallbackMethod(listener, callbackMethodName);
+        if (method == null)
             return false;
-        }
 
-        final int modifiers = method.getModifiers();
-
-        if (!Modifier.isPublic(modifiers)) {
-            return false;
-        }
-
-        if (name == null) {
-            name = NULL_MARKER;
-        }
-
-        if (object == null) {
-            object = NULL_MARKER;
-        }
-
-        final Object key = new NotificationKey(name, object);
-        final Object notificationTarget = new NotificationTarget(listener, method);
+        final NotificationKey key = new NotificationKey(name, sanitizedObject);
+        final NotificationTarget notificationTarget = new NotificationTarget(listener, method);
 
         List list = (List) listenersMap.get(key);
         if (list == null) {
             list = new ArrayList();
-            listenersMap.put(new NotificationKey(name, object, keyQueue), list);
+            listenersMap.put(new NotificationKey(name, sanitizedObject, keyQueue), list);
         }
 
         if (!list.contains(notificationTarget)) {
@@ -142,13 +136,40 @@ public class PNotificationCenter {
         return true;
     }
 
+    private Method extractCallbackMethod(final Object listener, final String methodName) {
+        Method method = null;
+        try {
+            method = listener.getClass().getMethod(methodName, new Class[] { PNotification.class });
+        }
+        catch (final NoSuchMethodException e) {
+            return null;
+        }
+
+        final int modifiers = method.getModifiers();
+        if (!Modifier.isPublic(modifiers)) {
+            return null;
+        }
+
+        return method;
+    }
+
+    private Object nullify(final Object object) {
+        if (object == null) {
+            return NULL_MARKER;
+        }
+
+        return object;
+    }
+
     // ****************************************************************
     // Remove Listener Methods
     // ****************************************************************
 
     /**
-     * Removes the listener so that it no longer recives notfications from this
-     * notfication center.
+     * Removes the listener so that it no longer receives notfications from this
+     * notification center.
+     * 
+     * @param listener listener to be removed from this notification center
      */
     public void removeListener(final Object listener) {
         processKeyQueue();
@@ -160,12 +181,21 @@ public class PNotificationCenter {
     }
 
     /**
-     * Removes the listeners as the listener of notifications matching
-     * notificationName and object. If listener is null all listeners matching
-     * notificationName and object are removed. If notificationName is null the
-     * listener will be removed from all notifications containing the object. If
-     * the object is null then the listener will be removed from all
+     * Unregisters the listener as a listener for the specified kind of
+     * notification.
+     * 
+     * If listener is null all listeners matching notificationName and object
+     * are removed.
+     * 
+     * If notificationName is null the listener will be removed from all
+     * notifications containing the object.
+     * 
+     * If the object is null then the listener will be removed from all
      * notifications matching notficationName.
+     * 
+     * @param listener listener to be removed
+     * @param notificationName name of notifications or null for all
+     * @param object notification source or null for all
      */
     public void removeListener(final Object listener, final String notificationName, final Object object) {
         processKeyQueue();
@@ -182,8 +212,11 @@ public class PNotificationCenter {
     // ****************************************************************
 
     /**
-     * Post a new notfication with notificationName and object. The object is
+     * Post a new notification with notificationName and object. The object is
      * typically the object posting the notification. The object may be null.
+     * 
+     * @param notificationName name of notification to post
+     * @param object source of the notification, null signifies unknown
      */
     public void postNotification(final String notificationName, final Object object) {
         postNotification(notificationName, object, null);
@@ -192,89 +225,98 @@ public class PNotificationCenter {
     /**
      * Creates a notification with the name notificationName, associates it with
      * the object, and posts it to this notification center. The object is
-     * typically the object posting the notification. It may be nil.
+     * typically the object posting the notification. It may be null.
+     * 
+     * @param notificationName name of notification being posted
+     * @param object source of the notification, may be null
+     * @param properties properties associated with the notification
      */
-    public void postNotification(final String notificationName, final Object object, final Map userInfo) {
-        postNotification(new PNotification(notificationName, object, userInfo));
+    public void postNotification(final String notificationName, final Object object, final Map properties) {
+        postNotification(new PNotification(notificationName, object, properties));
     }
 
     /**
      * Post the notification to this notification center. Most often clients
      * will instead use one of this classes convenience postNotifcations
      * methods.
+     * 
+     * @param notification notification to be dispatched to appropriate
+     *            listeners
      */
-    public void postNotification(final PNotification aNotification) {
+    public void postNotification(final PNotification notification) {
         final List mergedListeners = new LinkedList();
-        List listenersList;
 
-        final Object name = aNotification.getName();
-        final Object object = aNotification.getObject();
+        final Object name = notification.getName();
+        final Object object = notification.getObject();
 
-        if (name != null) {
-            if (object == null) {// object is null
-                listenersList = (List) listenersMap.get(new NotificationKey(name, NULL_MARKER));
-                if (listenersList != null) {
-                    mergedListeners.addAll(listenersList);
-                }
-            }
-            else { // both are specified
-                listenersList = (List) listenersMap.get(new NotificationKey(name, object));
-                if (listenersList != null) {
-                    mergedListeners.addAll(listenersList);
-                }
-                listenersList = (List) listenersMap.get(new NotificationKey(name, NULL_MARKER));
-                if (listenersList != null) {
-                    mergedListeners.addAll(listenersList);
-                }
-                listenersList = (List) listenersMap.get(new NotificationKey(NULL_MARKER, object));
-                if (listenersList != null) {
-                    mergedListeners.addAll(listenersList);
-                }
-            }
+        if (name != null && object != null) {
+            fillWithMatchingListeners(name, object, mergedListeners);
+            fillWithMatchingListeners(null, object, mergedListeners);
+            fillWithMatchingListeners(name, null, mergedListeners);
         }
-        else if (object != null) { // name is null
-            listenersList = (List) listenersMap.get(new NotificationKey(NULL_MARKER, object));
-            if (listenersList != null) {
-                mergedListeners.addAll(listenersList);
-            }
+        else if (name != null) {
+            fillWithMatchingListeners(name, null, mergedListeners);
+        }
+        else if (object != null) {
+            fillWithMatchingListeners(null, object, mergedListeners);
         }
 
-        final Object key = new NotificationKey(NULL_MARKER, NULL_MARKER);
-        listenersList = (List) listenersMap.get(key);
-        if (listenersList != null) {
-            mergedListeners.addAll(listenersList);
-        }
+        fillWithMatchingListeners(null, null, mergedListeners);
 
-        dispatchNotifications(aNotification, mergedListeners);
+        dispatchNotifications(notification, mergedListeners);
     }
 
-    private void dispatchNotifications(final PNotification aNotification, final List listeners) {
-        NotificationTarget listener;
-        final Iterator it = listeners.iterator();
+    /**
+     * Adds all listeners that are registered to receive notifications to the
+     * end of the list provided.
+     * 
+     * @param notificationName name of the notification being emitted
+     * @param object source of the notification
+     * @param listeners list to append listeners to
+     */
+    private void fillWithMatchingListeners(final Object notificationName, final Object object, final List listeners) {
+        final Object key = new NotificationKey(nullify(notificationName), nullify(object));
+        final List globalListeners = (List) listenersMap.get(key);
+        if (globalListeners != null) {
+            listeners.addAll(globalListeners);
+        }
+    }
 
-        while (it.hasNext()) {
-            listener = (NotificationTarget) it.next();
+    private void dispatchNotifications(final PNotification notification, final List listeners) {
+        NotificationTarget listener;
+        final Iterator listenerIterator = listeners.iterator();
+
+        while (listenerIterator.hasNext()) {
+            listener = (NotificationTarget) listenerIterator.next();
             if (listener.get() == null) {
-                it.remove();
+                listenerIterator.remove();
             }
             else {
-                try {
-                    listener.getMethod().invoke(listener.get(), new Object[] { aNotification });
-                }
-                catch (final IllegalAccessException e) {
-                    throw new RuntimeException("Impossible Situation: invoking inaccessible method on listener", e);
-                }
-                catch (final InvocationTargetException e) {         
-                    throw new RuntimeException(e);
-                }
+                notifyListener(notification, listener);
             }
         }
     }
 
-    // ****************************************************************
-    // Implementation classes and methods
-    // ****************************************************************
+    private void notifyListener(final PNotification notification, NotificationTarget listener) {
+        try {
+            listener.getMethod().invoke(listener.get(), new Object[] { notification });
+        }
+        catch (final IllegalAccessException e) {
+            throw new RuntimeException("Impossible Situation: invoking inaccessible method on listener", e);
+        }
+        catch (final InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /**
+     * Returns a list of keys with the given name and object.
+     * 
+     * @param name name of key
+     * @param object key associated with the object
+     * 
+     * @return list of matching keys
+     */
     protected List matchingKeys(final String name, final Object object) {
         final List result = new LinkedList();
 
@@ -290,6 +332,13 @@ public class PNotificationCenter {
         return result;
     }
 
+    /**
+     * Removes the given listener from receiving notifications with the given
+     * key.
+     * 
+     * @param listener the listener being unregistered
+     * @param key the key that identifies the listener
+     */
     protected void removeListener(final Object listener, final Object key) {
         if (listener == null) {
             listenersMap.remove(key);
@@ -322,7 +371,6 @@ public class PNotificationCenter {
     }
 
     protected static class NotificationKey extends WeakReference {
-
         private final Object name;
         private final int hashCode;
 
@@ -378,18 +426,34 @@ public class PNotificationCenter {
 
         public NotificationTarget(final Object object, final Method method) {
             super(object);
-            hashCode = object.hashCode();
+            hashCode = object.hashCode() + method.hashCode();
             this.method = method;
         }
 
+        /**
+         * Returns the method that will be invoked on the listener object.
+         * 
+         * @return method to be invoked with notification is to be dispatched
+         */
         public Method getMethod() {
             return method;
         }
 
+        /**
+         * Returns hash code for this notification target.
+         * 
+         * @return hash code
+         */
         public int hashCode() {
             return hashCode;
         }
 
+        /**
+         * Returns true if this object is logically equivalent to the one passed
+         * in. For this to happen they must have the same method and object.
+         * 
+         * @return true if logically equivalent
+         */
         public boolean equals(final Object object) {
             if (this == object) {
                 return true;
@@ -409,6 +473,12 @@ public class PNotificationCenter {
             return o != null && o == target.get();
         }
 
+        /**
+         * Returns a string representation of this NotificationTarget for
+         * debugging purposes.
+         * 
+         * @return string representation
+         */
         public String toString() {
             return "[CompoundValue:" + get() + ":" + getMethod().getName() + "]";
         }

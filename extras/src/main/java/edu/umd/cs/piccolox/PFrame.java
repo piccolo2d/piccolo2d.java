@@ -28,9 +28,11 @@
  */
 package edu.umd.cs.piccolox;
 
+import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -56,6 +58,10 @@ import edu.umd.cs.piccolo.PCanvas;
  * @author Jesse Grosjean
  */
 public class PFrame extends JFrame {
+    private static final Dimension DEFAULT_FRAME_DIMENSION = new Dimension(400,400);
+
+    private static final Point DEFAULT_FRAME_POSITION = new Point(100, 100);
+
     /** Used to allow versioned binary streams for serializations. */
     private static final long serialVersionUID = 1L;
 
@@ -92,15 +98,15 @@ public class PFrame extends JFrame {
      * displayed on the provided device.
      * 
      * @param title title to display at the top of the frame
-     * @param aDevice device onto which PFrame is to be displayed
-     * @param fullScreenMode whether to display a full screen frame or not
+     * @param device device onto which PFrame is to be displayed
+     * @param fullScreen whether to display a full screen frame or not
      * @param canvas to embed in the frame, may be null. If so, it'll create a
      *            default PCanvas
      */
-    public PFrame(final String title, final GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas canvas) {
-        super(title, aDevice.getDefaultConfiguration());
+    public PFrame(final String title, final GraphicsDevice device, final boolean fullScreen, final PCanvas canvas) {
+        super(title, device.getDefaultConfiguration());
 
-        graphicsDevice = aDevice;
+        graphicsDevice = device;
 
         setBackground(null);
         setBounds(getDefaultFrameBounds());
@@ -122,7 +128,7 @@ public class PFrame extends JFrame {
 
         setContentPane(canvas);
         validate();
-        setFullScreenMode(fullScreenMode);
+        setFullScreenMode(fullScreen);
         canvas.requestFocus();
         beforeInitialize();
 
@@ -154,7 +160,7 @@ public class PFrame extends JFrame {
      * @return default frame bounds
      */
     public Rectangle getDefaultFrameBounds() {
-        return new Rectangle(100, 100, 400, 400);
+        return new Rectangle(DEFAULT_FRAME_POSITION, DEFAULT_FRAME_DIMENSION); 
     }
 
     /**
@@ -324,6 +330,13 @@ public class PFrame extends JFrame {
     public void initialize() {
     }
 
+    /**
+     * Method for testing the creating of PFrame.
+     * 
+     * @deprecated since it's not terribly useful
+     *  
+     * @param argv command line arguments
+     */
     public static void main(final String[] argv) {
         new PFrame();
     }
