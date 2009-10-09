@@ -73,6 +73,8 @@ public class LineShape implements Shape, MutablePoints {
     /**
      * Returns the x component of the point at the given index.
      * 
+     * @param pointIndex index of desired point
+     * 
      * @return x component of indexed point
      */
     public double getX(final int pointIndex) {
@@ -81,6 +83,8 @@ public class LineShape implements Shape, MutablePoints {
 
     /**
      * Returns the y component of the point at the given index.
+     * 
+     * @param pointIndex index of desired point
      * 
      * @return y component of indexed point
      */
@@ -193,14 +197,16 @@ public class LineShape implements Shape, MutablePoints {
      * 
      * @param x x component of point being tested
      * @param y y component of point being tested
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param min
-     * @param max
+     * @param x1 x component of start point of line segment
+     * @param y1 y component of start point of line segment
+     * @param x2 x component of end point of line segment
+     * @param y2 y component of end point of line segment
+     * @param min whether the point should be constrained to "after" the start
+     *            of the segment
+     * @param max whether the point should be constrained to "before" the end of
+     *            the segment
      * @param distance distance from line acceptable as "touching"
-     * @return whether the poing (x,y) is near enough to the given line
+     * @return whether the point (x,y) is near enough to the given line
      */
     public static boolean contains(final double x, final double y, final double x1, final double y1, final double x2,
             final double y2, final boolean min, final boolean max, final double distance) {
@@ -241,7 +247,7 @@ public class LineShape implements Shape, MutablePoints {
      * 
      * @param x x component of point being tested
      * @param y y component of point being tested
-     * @param d
+     * @param d acceptable distance
      * @return true if point is close enough to the LineShape
      */
     public boolean contains(final double x, final double y, final double d) {
@@ -293,18 +299,22 @@ public class LineShape implements Shape, MutablePoints {
      * (x3,y3)->(x4,y4) intersect. Optional fields allow for consideration of
      * extending the segments to infinity at either end.
      * 
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param x3
-     * @param y3
-     * @param x4
-     * @param y4
-     * @param min1
-     * @param max1
-     * @param min2
-     * @param max2
+     * @param x1 segment 1's start x component
+     * @param y1 segment 1's start y component
+     * @param x2 segment 1's end x component
+     * @param y2 segment 1's end y component
+     * @param x3 segment 2's start x component
+     * @param y3 segment 2's start y component
+     * @param x4 segment 2's end x component
+     * @param y4 segment 2's end y component
+     * @param min1 whether the second segment is acceptable if it passes
+     *            "before the start of the first segment"
+     * @param max1 whether the second segment is acceptable if it passes
+     *            "after the end of the first segment"
+     * @param min2 whether the first segment is acceptable if it passes
+     *            "before the start of the second segment"
+     * @param max2 whether the first segment is acceptable if it passes
+     *            "after the start of the second segment"
      * @return true if line segments intersect
      */
     public static boolean intersects(final double x1, final double y1, final double x2, final double y2,
@@ -381,10 +391,25 @@ public class LineShape implements Shape, MutablePoints {
         return intersects(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
 
+    /**
+     * Whether the LineShape contains the rectangle defined.
+     * 
+     * @param x left of defined rectangle
+     * @param y top of defined rectangle
+     * @param width width of defined rectangle
+     * @param height height of defined rectangle
+     * @return true if rectangle is contained
+     */
     public boolean contains(final double x, final double y, final double w, final double h) {
         return contains(x, y) && contains(x + w, y) && contains(x, y + h) && contains(x + w, y + h);
     }
 
+    /**
+     * Whether the LineShape contains the rectangle.
+     * 
+     * @param r rectangle being tested
+     * @return true if rectangle is contained
+     */
     public boolean contains(final Rectangle2D r) {
         return contains(r.getX(), r.getY(), r.getWidth(), r.getHeight());
     }
@@ -396,6 +421,7 @@ public class LineShape implements Shape, MutablePoints {
      * @param at optional transform to apply to segment before returning it. May
      *            be null
      * @param iterator for iterating over Line Paths
+     * @return iterator for iterating segments of this LineShape
      */
     public PathIterator getPathIterator(final AffineTransform at) {
         return new LinePathIterator(points, at);
@@ -409,6 +435,7 @@ public class LineShape implements Shape, MutablePoints {
      *            be null
      * @param iterator for iterating over Line Paths
      * @param flatness ignored completely
+     * @return iterator for iterating segments of this LineShape
      */
     public PathIterator getPathIterator(final AffineTransform at, final double flatness) {
         return new LinePathIterator(points, at);
@@ -425,7 +452,8 @@ public class LineShape implements Shape, MutablePoints {
          * optional transform.
          * 
          * @param points points to be iterated
-         * @param trans optional iterator to apply to paths before returning them
+         * @param trans optional iterator to apply to paths before returning
+         *            them
          */
         public LinePathIterator(final Points points, final AffineTransform trans) {
             this.points = points;
@@ -434,6 +462,8 @@ public class LineShape implements Shape, MutablePoints {
 
         /**
          * Returns the winding rule being applied when selecting next paths.
+         * 
+         * @return GeneralPath.WIND_EVEN_ODD since that's the only policy supported
          */
         public int getWindingRule() {
             return GeneralPath.WIND_EVEN_ODD;
@@ -465,7 +495,8 @@ public class LineShape implements Shape, MutablePoints {
         }
 
         /**
-         * Populates the given array with the current segment and returns the type of segment.
+         * Populates the given array with the current segment and returns the
+         * type of segment.
          * 
          * @param coords array to be populated
          * 
@@ -479,7 +510,8 @@ public class LineShape implements Shape, MutablePoints {
         }
 
         /**
-         * Populates the given array with the current segment and returns the type of segment.
+         * Populates the given array with the current segment and returns the
+         * type of segment.
          * 
          * @param coords array to be populated
          * 
