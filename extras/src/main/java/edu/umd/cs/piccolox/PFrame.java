@@ -126,10 +126,10 @@ public class PFrame extends JFrame {
             this.canvas = canvas;
         }
 
-        setContentPane(canvas);
+        setContentPane(this.canvas);
         validate();
         setFullScreenMode(fullScreen);
-        canvas.requestFocus();
+        this.canvas.requestFocus();
         beforeInitialize();
 
         // Manipulation of Piccolo's scene graph should be done from Swings
