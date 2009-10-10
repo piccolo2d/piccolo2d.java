@@ -875,7 +875,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             final byte[] ser = PObjectOutputStream.toByteArray(this);
             return new ObjectInputStream(new ByteArrayInputStream(ser)).readObject();
         }
-        catch (final IOException e) {            
+        catch (final IOException e) {
             return null;
         }
         catch (final ClassNotFoundException e) {
@@ -2766,14 +2766,16 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Set the transparency used to paint this node. Note that this transparency
      * applies to this node and all of its descendants.
      * 
-     * @param zeroToOne transparency value for this node. 0f = fully
+     * @param newTransparency transparency value for this node. 0f = fully
      *            transparent, 1f = fully opaque
      */
-    public void setTransparency(final float zeroToOne) {
-        if (transparency != zeroToOne) {
-            transparency = zeroToOne;
+    public void setTransparency(final float newTransparency) {
+        if (Math.abs(transparency - newTransparency) > 0.01f) {
+            final float oldTransparency = transparency;
+            transparency = newTransparency;
             invalidatePaint();
-            firePropertyChange(PROPERTY_CODE_TRANSPARENCY, PROPERTY_TRANSPARENCY, null, null);
+            firePropertyChange(PROPERTY_CODE_TRANSPARENCY, PROPERTY_TRANSPARENCY, new Float(oldTransparency),
+                    new Float(newTransparency));
         }
     }
 
@@ -2913,7 +2915,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
         imageBounds.expandNearestIntegerDimensions();
 
-        g2.setClip(0, 0, imageWidth, imageHeight);        
+        g2.setClip(0, 0, imageWidth, imageHeight);
 
         double imageRatio = imageWidth / (imageHeight * 1.0);
         double nodeRatio = getWidth() / getHeight();
@@ -2922,7 +2924,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             case FILL_STRATEGY_ASPECT_FIT:
                 // scale the graphics so node's full bounds fit in the imageable
                 // bounds but aspect ration is retained
-                
+
                 if (nodeRatio <= imageRatio) {
                     scale = image.getHeight() / getHeight();
                 }
@@ -2933,15 +2935,16 @@ public class PNode implements Cloneable, Serializable, Printable {
                 g2.translate(-imageBounds.x, -imageBounds.y);
                 break;
             case FILL_STRATEGY_ASPECT_COVER:
-                // scale the graphics so node completely covers the imageable area, but retains its aspect ratio. 
+                // scale the graphics so node completely covers the imageable
+                // area, but retains its aspect ratio.
                 if (nodeRatio <= imageRatio) {
                     scale = image.getWidth() / getWidth();
                 }
                 else {
-                    scale = image.getHeight() / getHeight();                    
+                    scale = image.getHeight() / getHeight();
                 }
                 g2.scale(scale, scale);
-                g2.translate(-getWidth()*scale, -getHeight()*scale);
+                g2.translate(-getWidth() * scale, -getHeight() * scale);
                 break;
             case FILL_STRATEGY_EXACT_FIT:
                 // scale the node so that it
@@ -2955,7 +2958,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
         final PPaintContext pc = new PPaintContext(g2);
         pc.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
-        fullPaint(pc);        
+        fullPaint(pc);
         return image;
     }
 
