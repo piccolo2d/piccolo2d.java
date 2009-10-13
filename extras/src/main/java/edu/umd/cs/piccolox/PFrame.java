@@ -58,7 +58,7 @@ import edu.umd.cs.piccolo.PCanvas;
  * @author Jesse Grosjean
  */
 public class PFrame extends JFrame {
-    private static final Dimension DEFAULT_FRAME_DIMENSION = new Dimension(400,400);
+    private static final Dimension DEFAULT_FRAME_DIMENSION = new Dimension(400, 400);
 
     private static final Point DEFAULT_FRAME_POSITION = new Point(100, 100);
 
@@ -160,7 +160,7 @@ public class PFrame extends JFrame {
      * @return default frame bounds
      */
     public Rectangle getDefaultFrameBounds() {
-        return new Rectangle(DEFAULT_FRAME_POSITION, DEFAULT_FRAME_DIMENSION); 
+        return new Rectangle(DEFAULT_FRAME_POSITION, DEFAULT_FRAME_DIMENSION);
     }
 
     /**
@@ -334,7 +334,7 @@ public class PFrame extends JFrame {
      * Method for testing the creating of PFrame.
      * 
      * @deprecated since it's not terribly useful
-     *  
+     * 
      * @param argv command line arguments
      */
     public static void main(final String[] argv) {

@@ -64,6 +64,7 @@ public class PStyledText extends PNode {
 
     private static final long serialVersionUID = 1L;
 
+    /** Font rendering context used for all PStyledText instances. */
     protected static FontRenderContext SWING_FRC = new FontRenderContext(null, true, false);
 
     /** Used while painting underlines. */
@@ -97,12 +98,14 @@ public class PStyledText extends PNode {
      * Constructs an empty PStyledText element.
      */
     public PStyledText() {
-        super();
     }
 
     /**
      * Controls whether this node changes its width to fit the width of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @param constrainWidthToTextWidth whether node's width should be
+     *            constrained to the width of its text
      */
     public void setConstrainWidthToTextWidth(final boolean constrainWidthToTextWidth) {
         this.constrainWidthToTextWidth = constrainWidthToTextWidth;
@@ -112,6 +115,9 @@ public class PStyledText extends PNode {
     /**
      * Controls whether this node changes its height to fit the height of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @param constrainHeightToTextHeight whether node's height should be
+     *            constrained to the height of its text
      */
     public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
         this.constrainHeightToTextHeight = constrainHeightToTextHeight;
@@ -121,6 +127,8 @@ public class PStyledText extends PNode {
     /**
      * Controls whether this node changes its width to fit the width of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @return true if node is constrained to the width of its text
      */
     public boolean getConstrainWidthToTextWidth() {
         return constrainWidthToTextWidth;
@@ -129,20 +137,28 @@ public class PStyledText extends PNode {
     /**
      * Controls whether this node changes its height to fit the height of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @return true if node is constrained to the height of its text
      */
     public boolean getConstrainHeightToTextHeight() {
         return constrainHeightToTextHeight;
     }
 
     /**
-     * Get the document for this PStyledText
+     * Get the document for this PStyledText. Document is used as the node's
+     * model.
+     * 
+     * @return internal document used as a model of this PStyledText
      */
     public Document getDocument() {
         return document;
     }
 
     /**
-     * Set the document on this PStyledText
+     * Set the document on this PStyledText. Document is used as the node's
+     * model.
+     * 
+     * @param document to be used as the model for this PStyledText
      */
     public void setDocument(final Document document) {
         // Save the document
@@ -152,7 +168,7 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Ensures that the current display matches the styling of the underlying
+     * Enforce that the current display matches the styling of the underlying
      * document as closely as possible.
      */
     public void syncWithDocument() {
@@ -263,14 +279,14 @@ public class PStyledText extends PNode {
      *         document
      */
     private Element drillDownFromRoot(final int pos, final Element rootElement) {
-        Element curElement;
         // Before each pass, start at the root
-        curElement = rootElement;
+        Element curElement = rootElement;
 
         // Now we descend the hierarchy until we get to a leaf
         while (!curElement.isLeaf()) {
             curElement = curElement.getElement(curElement.getElementIndex(pos));
         }
+
         return curElement;
     }
 
@@ -307,9 +323,8 @@ public class PStyledText extends PNode {
 
     private void applyBackgroundAttribute(final StyleContext style, final RunInfo paragraphRange,
             final AttributedString attributedString, final Element curElement, final AttributeSet attributes) {
-        final Color background = attributes.isDefined(StyleConstants.Background) ? style.getBackground(attributes)
-                : null;
-        if (background != null) {
+        if (attributes.isDefined(StyleConstants.Background)) {
+            final Color background = style.getBackground(attributes);
             attributedString.addAttribute(TextAttribute.BACKGROUND, background, Math.max(0, curElement.getStartOffset()
                     - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
                     curElement.getEndOffset() - paragraphRange.startIndex));
@@ -318,9 +333,14 @@ public class PStyledText extends PNode {
 
     private Font extractFont(final StyleContext style, final int pos, final Element rootElement,
             final AttributeSet attributes) {
-        Font font = attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily) ? style
-                .getFont(attributes)
-                : null;
+        Font font;
+        if (attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily)) {
+            font = style.getFont(attributes);
+        }
+        else {
+            font = null;
+        }
+
         if (font == null) {
             if (document instanceof DefaultStyledDocument) {
                 font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos).getAttributes());
@@ -440,9 +460,8 @@ public class PStyledText extends PNode {
                 if (newLine) {
                     newLine = false;
 
-                    // Add in the old line dimensions
-                    final double lineHeight = lineInfo == null ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
-                            + lineInfo.leading;
+                    final double lineHeight = calculateLineHeightFromLineInfo(lineInfo);
+
                     textHeight = textHeight + lineHeight;
                     textWidth = Math.max(textWidth, lineWidth);
 
@@ -478,8 +497,7 @@ public class PStyledText extends PNode {
                 lineWidth = lineWidth + aTextLayout.getAdvance();
             }
 
-            final double lineHeight = lineInfo == null ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
-                    + lineInfo.leading;
+            final double lineHeight = calculateLineHeightFromLineInfo(lineInfo);
             textHeight = textHeight + lineHeight;
             textWidth = Math.max(textWidth, lineWidth);
         }
@@ -487,6 +505,21 @@ public class PStyledText extends PNode {
         lines = (LineInfo[]) linesList.toArray(new LineInfo[0]);
 
         constrainDimensionsIfNeeded(textWidth, textHeight);
+    }
+
+    /**
+     * @param lineInfo
+     * @return
+     */
+    private double calculateLineHeightFromLineInfo(final LineInfo lineInfo) {
+        final double lineHeight;
+        if (lineInfo == null) {
+            lineHeight = 0;
+        }
+        else {
+            lineHeight = lineInfo.maxAscent + lineInfo.maxDescent + lineInfo.leading;
+        }
+        return lineHeight;
     }
 
     private void constrainDimensionsIfNeeded(final double textWidth, final double textHeight) {
@@ -528,6 +561,8 @@ public class PStyledText extends PNode {
 
     /**
      * Get the height of the font at the beginning of the document.
+     * 
+     * @return height of font at the start of the document.
      */
     public double getInitialFontHeight() {
 
@@ -614,7 +649,7 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Set whether this text is editing.
+     * Set whether this node is current in editing mode.
      * 
      * @param editing value to set editing flag
      */
@@ -656,9 +691,7 @@ public class PStyledText extends PNode {
         return (Insets) insets.clone();
     }
 
-    /**
-     * Add a call to recompute the layout after each bounds change.
-     */
+    /** {@inheritDoc} */
     public boolean setBounds(final double x, final double y, final double width, final double height) {
         if (document == null || !super.setBounds(x, y, width, height)) {
             return false;
@@ -672,9 +705,16 @@ public class PStyledText extends PNode {
      * Simple class to represent an range within the document.
      */
     protected static class RunInfo {
-        public int startIndex;
-        public int endIndex;
+        private int startIndex;
+        private int endIndex;
 
+        /**
+         * Constructs a RunInfo representing the range within the document from
+         * runStart to runLimit.
+         * 
+         * @param runStart starting index of the range
+         * @param runLimit ending index of the range
+         */
         public RunInfo(final int runStart, final int runLimit) {
             startIndex = runStart;
             endIndex = runLimit;
@@ -705,8 +745,14 @@ public class PStyledText extends PNode {
     protected static class LineInfo {
         /** Segments which make up this line's formatting segments. */
         public List segments;
+
+        /** Maximum of the line segments' ascents. */
         public double maxAscent;
+
+        /** Maximum of the line segments' descents. */
         public double maxDescent;
+
+        /** Leading space at front of line segment. */
         public double leading;
 
         /**
@@ -717,16 +763,35 @@ public class PStyledText extends PNode {
         }
     }
 
+    /**
+     * Encapsulates information about a particular LineSegment.
+     */
     protected static class SegmentInfo {
+        /** Text Layout applied to the segment. */
         public TextLayout layout;
+
+        /** Font being used to render the segment. */
         public Font font;
+
+        /** Foreground (text) color of the segment. */
         public Color foreground;
+
+        /** Background color of the segment. */
         public Color background;
+
+        /** Whether the segment is underlined. */
         public Boolean underline;
 
+        /** Construct a segment with null properties. */
         public SegmentInfo() {
         }
 
+        /**
+         * Applies this particular SegmentInfo's font to the graphics object
+         * passed in.
+         * 
+         * @param g2 will have the font of this segment applied
+         */
         public void applyFont(final Graphics2D g2) {
             if (font != null) {
                 g2.setFont(font);

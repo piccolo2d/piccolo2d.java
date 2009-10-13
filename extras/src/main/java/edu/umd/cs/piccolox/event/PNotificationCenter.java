@@ -54,20 +54,23 @@ import java.util.Map;
  * listeners don't need to know about the event source, and the event source
  * doesn't need to maintain the list of listeners.
  * <p>
- * Listeners of the notfications center are held by weak references. So the
- * notfication center will not create garbage collection problems as standard
+ * Listeners of the notifications center are held by weak references. So the
+ * notification center will not create garbage collection problems as standard
  * java event listeners do.
  * </p>
  * 
  * @author Jesse Grosjean
  */
 public class PNotificationCenter {
-
+    /** Used as a place holder for null names or objects. */
     public static final Object NULL_MARKER = new Object();
 
+    /** Singleton instance of the notification center. */
     protected static PNotificationCenter DEFAULT_CENTER;
 
+    /** A map of listeners keyed by NotificationKey objects. */
     protected HashMap listenersMap;
+
     protected ReferenceQueue keyQueue;
 
     /**
@@ -87,10 +90,6 @@ public class PNotificationCenter {
         keyQueue = new ReferenceQueue();
     }
 
-    // ****************************************************************
-    // Add Listener Methods
-    // ****************************************************************
-
     /**
      * Registers the 'listener' to receive notifications with the name
      * 'notificationName' and/or containing 'object'. When a matching
@@ -106,19 +105,18 @@ public class PNotificationCenter {
      * @param object source of notification messages that this listener is
      *            interested in
      * @return true if listener has been added
-     * @throws SecurityException when attempting to register method as listener
-     *             that is not accessible
      */
     public boolean addListener(final Object listener, final String callbackMethodName, final String notificationName,
-            final Object object) throws SecurityException {
+            final Object object) {
         processKeyQueue();
 
-        Object name = nullify(notificationName);
-        Object sanitizedObject = nullify(object);
+        final Object name = nullify(notificationName);
+        final Object sanitizedObject = nullify(object);
 
-        Method method = extractCallbackMethod(listener, callbackMethodName);
-        if (method == null)
+        final Method method = extractCallbackMethod(listener, callbackMethodName);
+        if (method == null) {
             return false;
+        }
 
         final NotificationKey key = new NotificationKey(name, sanitizedObject);
         final NotificationTarget notificationTarget = new NotificationTarget(listener, method);
@@ -139,7 +137,9 @@ public class PNotificationCenter {
     private Method extractCallbackMethod(final Object listener, final String methodName) {
         Method method = null;
         try {
-            method = listener.getClass().getMethod(methodName, new Class[] { PNotification.class });
+            Class[] classes = new Class[1];
+            classes[0] = PNotification.class;
+            method = listener.getClass().getMethod(methodName, classes);
         }
         catch (final NoSuchMethodException e) {
             return null;
@@ -153,6 +153,14 @@ public class PNotificationCenter {
         return method;
     }
 
+    /**
+     * Sanitizes the object reference by returning NULL_MARKER if the object is
+     * null.
+     * 
+     * @param object object to sanitize
+     * 
+     * @return NULL_MARKER is object is null, otherwise object
+     */
     private Object nullify(final Object object) {
         if (object == null) {
             return NULL_MARKER;
@@ -297,9 +305,11 @@ public class PNotificationCenter {
         }
     }
 
-    private void notifyListener(final PNotification notification, NotificationTarget listener) {
+    private void notifyListener(final PNotification notification, final NotificationTarget listener) {
         try {
-            listener.getMethod().invoke(listener.get(), new Object[] { notification });
+            Object[] objects = new Object[1];
+            objects[0] = notification;
+            listener.getMethod().invoke(listener.get(), objects);
         }
         catch (final IllegalAccessException e) {
             throw new RuntimeException("Impossible Situation: invoking inaccessible method on listener", e);
@@ -363,6 +373,10 @@ public class PNotificationCenter {
         }
     }
 
+    /**
+     * Iterates over available keys in the key queue and removes the queue from
+     * the listener map.
+     */
     protected void processKeyQueue() {
         NotificationKey key;
         while ((key = (NotificationKey) keyQueue.poll()) != null) {
@@ -370,30 +384,64 @@ public class PNotificationCenter {
         }
     }
 
+    /**
+     * Represents a notification type from a particular object.
+     */
     protected static class NotificationKey extends WeakReference {
         private final Object name;
         private final int hashCode;
 
-        public NotificationKey(final Object aName, final Object anObject) {
-            super(anObject);
-            name = aName;
-            hashCode = aName.hashCode() + anObject.hashCode();
+        /**
+         * Creates a notification key with the provided name associated to the
+         * object given.
+         * 
+         * @param name name of notification
+         * @param object associated object
+         */
+        public NotificationKey(final Object name, final Object object) {
+            super(object);
+            this.name = name;
+            hashCode = name.hashCode() + object.hashCode();
         }
 
-        public NotificationKey(final Object aName, final Object anObject, final ReferenceQueue aQueue) {
-            super(anObject, aQueue);
-            name = aName;
-            hashCode = aName.hashCode() + anObject.hashCode();
+        /**
+         * Creates a notification key with the provided name associated with the
+         * provided object.
+         * 
+         * @param name name of notification
+         * @param object associated object
+         * @param queue
+         */
+        public NotificationKey(final Object name, final Object object, final ReferenceQueue queue) {
+            super(object, queue);
+            this.name = name;
+            hashCode = name.hashCode() + object.hashCode();
         }
 
+        /**
+         * Returns name of notification this key represents.
+         * 
+         * @return name of notification
+         */
         public Object name() {
             return name;
         }
 
+        /** {@inheritDoc} */
         public int hashCode() {
             return hashCode;
         }
 
+        /**
+         * Two keys are equal if they have the same name and are associated with
+         * the same object and conform to all other equals rules.
+         * 
+         * @param anObject object being tested for equivalence to this
+         *            NotificationKey
+         * 
+         * @return true if this object is logically equivalent to the one passed
+         *         in
+         */
         public boolean equals(final Object anObject) {
             if (this == anObject) {
                 return true;
@@ -414,16 +462,34 @@ public class PNotificationCenter {
             return object != null && object == key.get();
         }
 
+        /**
+         * Returns a nice string representation of this notification key.
+         * 
+         * @return string representation of this notification key
+         */
         public String toString() {
             return "[CompoundKey:" + name() + ":" + get() + "]";
         }
     }
 
+    /**
+     * A NotificationTarget is a method on a particular object that can be
+     * invoked.
+     */
     protected static class NotificationTarget extends WeakReference {
-
+        /** Cached hashcode value computed at construction time. */
         protected int hashCode;
+
+        /** Method to be invoked on the object. */
         protected Method method;
 
+        /**
+         * Creates a notification target representing the method on the
+         * particular object provided.
+         * 
+         * @param object object on which method can be invoked
+         * @param method method to be invoked
+         */
         public NotificationTarget(final Object object, final Method method) {
             super(object);
             hashCode = object.hashCode() + method.hashCode();
@@ -451,6 +517,8 @@ public class PNotificationCenter {
         /**
          * Returns true if this object is logically equivalent to the one passed
          * in. For this to happen they must have the same method and object.
+         * 
+         * @param object object being tested for logical equivalency to this one
          * 
          * @return true if logically equivalent
          */

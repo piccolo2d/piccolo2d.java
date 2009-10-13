@@ -47,120 +47,158 @@ import edu.umd.cs.piccolo.util.PUtil;
 import edu.umd.cs.piccolox.util.LineShape;
 
 /**
- * <b>PLine</b> a class for drawing multisegment lines. Submitted by Hallvard
- * Traetteberg.
+ * <b>PLine</b> a class for drawing multisegment lines.
+ * 
+ * @author Hallvard Traetteberg.
  */
 public class PLine extends PNode {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private static final PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
     private static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
     private static final Color DEFAULT_STROKE_PAINT = Color.black;
 
-    private transient final LineShape line;
+    private final transient LineShape lineShape;
     private transient Stroke stroke;
     private Paint strokePaint;
 
-    public PLine(LineShape line) {
-        strokePaint = DEFAULT_STROKE_PAINT;
-        stroke = DEFAULT_STROKE;
-        if (line == null) {
-            line = new LineShape(null);
-        }
-        this.line = line;
-    }
-
+    /**
+     * Constructs a new PLine with an empty LineShape.
+     */
     public PLine() {
         this(null);
     }
 
+    /**
+     * Constructs a PLine object for displaying the provided line.
+     * 
+     * @param lineShape will be displayed by this PLine
+     */
+    public PLine(final LineShape lineShape) {
+        strokePaint = DEFAULT_STROKE_PAINT;
+        stroke = DEFAULT_STROKE;
+
+        if (lineShape == null) {
+            this.lineShape = new LineShape(null);
+        }
+        else {
+            this.lineShape = lineShape;
+        }
+    }
+
+    /**
+     * Constructs a PLine for the given lineShape and the given stroke.
+     * 
+     * @param line line to be wrapped by this PLine
+     * @param aStroke stroke to use when drawling the line
+     */
     public PLine(final LineShape line, final Stroke aStroke) {
         this(line);
         stroke = aStroke;
     }
 
-    // ****************************************************************
-    // Stroke
-    // ****************************************************************
-
+    /**
+     * Returns the paint to be used while drawing the line.
+     * 
+     * @return paint used when drawing the line
+     */
     public Paint getStrokePaint() {
         return strokePaint;
     }
 
-    public void setStrokePaint(final Paint aPaint) {
-        final Paint old = strokePaint;
-        strokePaint = aPaint;
+    /**
+     * Changes the paint to be used while drawing the line.
+     * 
+     * @param newStrokePaint paint to use when drawing the line
+     */
+    public void setStrokePaint(final Paint newStrokePaint) {
+        final Paint oldPaint = strokePaint;
+        strokePaint = newStrokePaint;
         invalidatePaint();
-        firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, old, strokePaint);
+        firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, oldPaint, strokePaint);
     }
 
+    /**
+     * Returns the stroke that will be used when drawing the line.
+     * 
+     * @return stroke used to draw the line
+     */
     public Stroke getStroke() {
         return stroke;
     }
 
-    public void setStroke(final Stroke aStroke) {
-        final Stroke old = stroke;
-        stroke = aStroke;
+    /**
+     * Sets stroke to use when drawing the line.
+     * 
+     * @param newStroke stroke to use when drawing the line
+     */
+    public void setStroke(final Stroke newStroke) {
+        final Stroke oldStroke = stroke;
+        stroke = newStroke;
         updateBoundsFromLine();
         invalidatePaint();
-        firePropertyChange(PPath.PROPERTY_CODE_STROKE, PPath.PROPERTY_STROKE, old, stroke);
+        firePropertyChange(PPath.PROPERTY_CODE_STROKE, PPath.PROPERTY_STROKE, oldStroke, stroke);
     }
 
-    // ****************************************************************
-    // Bounds
-    // ****************************************************************
-
-    public boolean setBounds(double x, double y, double width, double height) {
-        if (line == null || !super.setBounds(x, y, width, height)) {
+    /** {@inheritDoc} */
+    public boolean setBounds(final double x, final double y, final double width, final double height) {
+        if (lineShape == null || !super.setBounds(x, y, width, height)) {
             return false;
         }
 
-        final Rectangle2D lineBounds = line.getBounds2D();
+        final Rectangle2D lineBounds = lineShape.getBounds2D();
         final Rectangle2D lineStrokeBounds = getLineBoundsWithStroke();
         final double strokeOutset = Math.max(lineStrokeBounds.getWidth() - lineBounds.getWidth(), lineStrokeBounds
                 .getHeight()
                 - lineBounds.getHeight());
 
-        x += strokeOutset / 2;
-        y += strokeOutset / 2;
-        width -= strokeOutset;
-        height -= strokeOutset;
+        double adjustedX = x + strokeOutset / 2;
+        double adjustedY = y + strokeOutset / 2;
+        double adjustedWidth = width - strokeOutset;
+        double adjustedHeight = height - strokeOutset;
 
         TEMP_TRANSFORM.setToIdentity();
-        TEMP_TRANSFORM.translate(x, y);
-        TEMP_TRANSFORM.scale(width / lineBounds.getWidth(), height / lineBounds.getHeight());
+        TEMP_TRANSFORM.translate(adjustedX, adjustedY);
+        TEMP_TRANSFORM.scale(adjustedWidth / lineBounds.getWidth(), adjustedHeight / lineBounds.getHeight());
         TEMP_TRANSFORM.translate(-lineBounds.getX(), -lineBounds.getY());
-        line.transformPoints(TEMP_TRANSFORM);
+        lineShape.transformPoints(TEMP_TRANSFORM);
 
         return true;
     }
 
+    /** {@inheritDoc} */
     public boolean intersects(final Rectangle2D aBounds) {
         if (super.intersects(aBounds)) {
-            if (line.intersects(aBounds)) {
+            if (lineShape.intersects(aBounds)) {
                 return true;
             }
             else if (stroke != null && strokePaint != null) {
-                return stroke.createStrokedShape(line).intersects(aBounds);
+                return stroke.createStrokedShape(lineShape).intersects(aBounds);
             }
         }
         return false;
     }
 
+    /**
+     * Calculates the bounds of the line taking stroke width into account.
+     * 
+     * @return rectangle representing the bounds of the line taking stroke width
+     *         into account
+     */
     public Rectangle2D getLineBoundsWithStroke() {
         if (stroke != null) {
-            return stroke.createStrokedShape(line).getBounds2D();
+            return stroke.createStrokedShape(lineShape).getBounds2D();
         }
         else {
-            return line.getBounds2D();
+            return lineShape.getBounds2D();
         }
     }
 
+    /**
+     * Recalculates the bounds when a change to the underlying line occurs.
+     */
     public void updateBoundsFromLine() {
-        if (line.getPointCount() == 0) {
+        if (lineShape.getPointCount() == 0) {
             resetBounds();
         }
         else {
@@ -169,64 +207,111 @@ public class PLine extends PNode {
         }
     }
 
-    // ****************************************************************
-    // Painting
-    // ****************************************************************
-
+    /**
+     * Paints the PLine in the provided context if it has both a stroke and a
+     * stroke paint assigned.
+     * 
+     * @param paintContext the context into which the line should be drawn
+     */
     protected void paint(final PPaintContext paintContext) {
         final Graphics2D g2 = paintContext.getGraphics();
 
         if (stroke != null && strokePaint != null) {
             g2.setPaint(strokePaint);
             g2.setStroke(stroke);
-            g2.draw(line);
+            g2.draw(lineShape);
         }
     }
 
+    /**
+     * Returns a reference to the underlying line shape. Be careful!
+     * 
+     * @return direct reference to the underlying line shape
+     */
     public LineShape getLineReference() {
-        return line;
+        return lineShape;
     }
 
+    /**
+     * Returns the number of points in the line.
+     * 
+     * @return number of points in the line
+     */
     public int getPointCount() {
-        return line.getPointCount();
+        return lineShape.getPointCount();
     }
 
-    public Point2D getPoint(final int i, Point2D dst) {
+    /**
+     * Returns the point at the provided index. If dst is not null, it will
+     * populate it with the point's coordinates rather than create a new point.
+     * 
+     * @param pointIndex index of desired point in line
+     * @param dst point to populate, may be null
+     * @return the desired point, or dst populate with its coordinates
+     */
+    public Point2D getPoint(final int pointIndex, final Point2D dst) {
+        final Point2D result;
         if (dst == null) {
-            dst = new Point2D.Double();
+            result = new Point2D.Double();
+        } 
+        else {
+            result = dst;
         }
-        return line.getPoint(i, dst);
+        return lineShape.getPoint(pointIndex, result);
     }
 
+    /**
+     * Fires appropriate change events, updates line bounds and flags the PLine
+     * as requiring a repaint.
+     */
     protected void lineChanged() {
-        firePropertyChange(PPath.PROPERTY_CODE_PATH, PPath.PROPERTY_PATH, null, line);
+        firePropertyChange(PPath.PROPERTY_CODE_PATH, PPath.PROPERTY_PATH, null, lineShape);
         updateBoundsFromLine();
         invalidatePaint();
     }
 
-    public void setPoint(final int i, final double x, final double y) {
-        line.setPoint(i, x, y);
+    /**
+     * Changes the point at the provided index.
+     * 
+     * @param pointIndex index of point to change
+     * @param x x component to assign to the point
+     * @param y y component to assign to the point
+     */
+    public void setPoint(final int pointIndex, final double x, final double y) {
+        lineShape.setPoint(pointIndex, x, y);
         lineChanged();
     }
 
-    public void addPoint(final int i, final double x, final double y) {
-        line.addPoint(i, x, y);
+    /**
+     * Inserts a point at the provided index.
+     * 
+     * @param pointIndex index at which to add the point
+     * @param x x component of new point
+     * @param y y component of new point
+     */
+    public void addPoint(final int pointIndex, final double x, final double y) {
+        lineShape.addPoint(pointIndex, x, y);
         lineChanged();
     }
 
-    public void removePoints(final int i, final int n) {
-        line.removePoints(i, n);
+    /**
+     * Removes points from the line.
+     * 
+     * @param startIndex index from which to remove the points
+     * @param numberOfPoints number of points to remove
+     */
+    public void removePoints(final int startIndex, final int numberOfPoints) {
+        lineShape.removePoints(startIndex, numberOfPoints);
         lineChanged();
     }
 
+    /**
+     * Removes all points from the underlying line.
+     */
     public void removeAllPoints() {
-        line.removePoints(0, line.getPointCount());
+        lineShape.removePoints(0, lineShape.getPointCount());
         lineChanged();
     }
-
-    // ****************************************************************
-    // Serialization
-    // ****************************************************************
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();

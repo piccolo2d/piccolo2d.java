@@ -510,7 +510,13 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected void initializeMarquee(final PInputEvent e) {
+    /**
+     * Creates an empty marquee child for use in displaying the marquee around
+     * the selection.
+     * 
+     * @param event event responsible for the initialization
+     */
+    protected void initializeMarquee(final PInputEvent event) {
         marquee = PPath.createRectangle((float) presspt.getX(), (float) presspt.getY(), 0, 0);
         marquee.setPaint(marqueePaint);
         marquee.setTransparency(marqueePaintTransparency);
@@ -521,10 +527,20 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         marqueeMap.clear();
     }
 
-    protected void startOptionMarqueeSelection(final PInputEvent e) {
+    /**
+     * Invoked when the marquee is being used to extend the selection.
+     * 
+     * @param event event causing the option selection
+     */
+    protected void startOptionMarqueeSelection(final PInputEvent event) {
     }
 
-    protected void startMarqueeSelection(final PInputEvent e) {
+    /**
+     * Invoked at the start of the selection. Removes any selections.
+     * 
+     * @param event event causing a new marquee selection
+     */
+    protected void startMarqueeSelection(final PInputEvent event) {
         unselectAll();
     }
 
@@ -735,7 +751,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     }
 
     /**
-     * Ends the "pressed" state of the previously pressed node (if any)
+     * Ends the "pressed" state of the previously pressed node (if any).
      * 
      * @param e event responsible for the end in the selection
      */
@@ -745,7 +761,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
 
     /**
      * This gets called continuously during the drag, and is used to animate the
-     * marquee
+     * marquee.
      * 
      * @param aEvent event responsible for this step in the drag sequence
      */
@@ -762,21 +778,18 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     }
 
     /**
-     * Delete selection when delete key is pressed (if enabled)
+     * Delete selection when delete key is pressed (if enabled).
      * 
      * @param e the key press event
      */
     public void keyPressed(final PInputEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_DELETE:
-                if (deleteKeyActive) {
-                    final Iterator selectionEn = selection.keySet().iterator();
-                    while (selectionEn.hasNext()) {
-                        final PNode node = (PNode) selectionEn.next();
-                        node.removeFromParent();
-                    }
-                    selection.clear();
-                }
+        if (e.getKeyCode() == KeyEvent.VK_DELETE && deleteKeyActive) {
+            final Iterator selectionEn = selection.keySet().iterator();
+            while (selectionEn.hasNext()) {
+                final PNode node = (PNode) selectionEn.next();
+                node.removeFromParent();
+            }
+            selection.clear();
         }
     }
 
@@ -799,7 +812,7 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     }
 
     /**
-     * Specifies if the DELETE key should delete the selection
+     * Specifies if the DELETE key should delete the selection.
      * 
      * @param deleteKeyActive state to set for the delete action true = enabled
      */
@@ -824,9 +837,10 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
 
         /**
-         * Returns true if the node intersects with this Filter's configured bounds.
+         * Returns true if the node is an acceptable selection.
          * 
          * @param node node being tested
+         * @return true if node is an acceptable selection
          */
         public boolean accept(final PNode node) {
             localBounds.setRect(bounds);
@@ -840,6 +854,9 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
 
         /**
          * Returns whether this filter should accept all children of a node.
+         * 
+         * @param node node being tested
+         * @return true if selection should accept children children of the node
          */
         public boolean acceptChildrenOf(final PNode node) {
             return selectableParents.contains(node) || isCameraLayer(node);

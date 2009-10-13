@@ -29,7 +29,6 @@
 package edu.umd.cs.piccolox.util;
 
 import java.awt.BasicStroke;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -61,30 +60,51 @@ import java.io.Serializable;
  */
 public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
+    private static final float DEFAULT_MITER_LIMIT = 10.0f;
+
     private static final long serialVersionUID = 1L;
 
     // avoid repeated cloning:
-    private transient final float dash[];
-    // avoid repeated instantiations:
-    private transient final float tmpDash[];
+    private final transient float[] dash;
 
+    // avoid repeated instantiations:
+    private final transient float[] tmpDash;
+
+    /**
+     * Constructs a simple PFixedWidthStroke with thickness 1, square caps, join
+     * meter, and no dashing.
+     */
     public PFixedWidthStroke() {
-        this(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
+        this(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, DEFAULT_MITER_LIMIT, null, 0.0f);
     }
 
-    /** This should be "public" and the "main" constructor. */
+    /**
+     * This should be "public" and the "main" constructor.
+     * 
+     * @param stroke stroke being used by this PFixedWithStroke
+     */
     private PFixedWidthStroke(final BasicStroke stroke) {
         super(stroke);
         dash = stroke.getDashArray();
-        tmpDash = dash == null ? null : new float[dash.length];
+        if (dash == null) {
+            tmpDash = null;
+        }
+        else {
+            tmpDash = new float[dash.length];
+        }
     }
 
+    /**
+     * Constructs a simple PFixedWidthStroke with the width provided.
+     * 
+     * @param width desired width of the stroke
+     */
     public PFixedWidthStroke(final float width) {
-        this(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
+        this(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, DEFAULT_MITER_LIMIT, null, 0.0f);
     }
 
     public PFixedWidthStroke(final float width, final int cap, final int join) {
-        this(width, cap, join, 10.0f, null, 0.0f);
+        this(width, cap, join, DEFAULT_MITER_LIMIT, null, 0.0f);
     }
 
     public PFixedWidthStroke(final float width, final int cap, final int join, final float miterlimit) {
@@ -92,7 +112,7 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     }
 
     public PFixedWidthStroke(final float width, final int cap, final int join, final float miterlimit,
-            final float dash[], final float dash_phase) {
+            final float[] dash, final float dash_phase) {
         this(new BasicStroke(width, cap, join, miterlimit, dash, dash_phase));
     }
 
@@ -100,14 +120,29 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
+    /**
+     * Returns the array used for specifying dash style.
+     * 
+     * @return array used to specify dash style
+     */
     public float[] getDashArray() {
         return ((BasicStroke) stroke).getDashArray();
     }
 
+    /**
+     * Returns the dash phase of the current stroke.
+     * 
+     * @return dash phase of stroke
+     */
     public float getDashPhase() {
         return ((BasicStroke) stroke).getDashPhase();
     }
 
+    /**
+     * Returns the cap to be used at the end of open segments.
+     * 
+     * @return cap style to use at end of segments
+     */
     public int getEndCap() {
         return ((BasicStroke) stroke).getEndCap();
     }
@@ -116,6 +151,11 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
         return ((BasicStroke) stroke).getLineJoin();
     }
 
+    /**
+     * Returns the width of the line.
+     * 
+     * @return stroke width
+     */
     public float getLineWidth() {
         return ((BasicStroke) stroke).getLineWidth();
     }
@@ -131,11 +171,24 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
             }
         }
         final float ml = getMiterLimit() / activeScale;
-        return new BasicStroke(getLineWidth() / activeScale, getEndCap(), getLineJoin(), ml < 1.0f ? 1.0f : ml,
-                tmpDash, getDashPhase() / activeScale);
+        final float sanitizedMiterLimit;
+        if (ml < 1.0f) {
+            sanitizedMiterLimit = 1f;
+        }
+        else {
+            sanitizedMiterLimit = ml;
+        }
+
+        return new BasicStroke(getLineWidth() / activeScale, getEndCap(), getLineJoin(), sanitizedMiterLimit, tmpDash,
+                getDashPhase() / activeScale);
     }
 
-    /** Is it really necessary to implement {@link Serializable}? */
+    /**
+     * Is it really necessary to implement {@link Serializable}?
+     * 
+     * @throws ObjectStreamException doesn't actually throw this at all, why's
+     *             this here?
+     */
     protected Object readResolve() throws ObjectStreamException {
         return new PFixedWidthStroke((BasicStroke) stroke);
     }
