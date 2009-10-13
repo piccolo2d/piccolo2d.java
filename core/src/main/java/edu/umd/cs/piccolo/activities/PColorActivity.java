@@ -57,7 +57,7 @@ public class PColorActivity extends PInterpolatingActivity {
          * 
          * @param color the color to assign to the target
          */
-        public void setColor(Color color);
+        void setColor(Color color);
 
         /**
          * This method is called right before the color activity starts. That
@@ -65,7 +65,7 @@ public class PColorActivity extends PInterpolatingActivity {
          * 
          * @return the target's current color.
          */
-        public Color getColor();
+        Color getColor();
     }
 
     /**
@@ -84,8 +84,9 @@ public class PColorActivity extends PInterpolatingActivity {
 
     /**
      * Constructs a color activity for the given target that will animate for
-     * the duration provided at an interval of stepRate from the target's starting color to the destination color.
-     *  
+     * the duration provided at an interval of stepRate from the target's
+     * starting color to the destination color.
+     * 
      * @param duration duration in milliseconds that the animation should last
      * @param stepRate the time between interpolations
      * @param aTarget the target onto which the animation is being performed
@@ -136,7 +137,7 @@ public class PColorActivity extends PInterpolatingActivity {
      * Set the final color that will be set on the color activities target when
      * the activity stops stepping.
      * 
-     * @param changes this activity's destination color
+     * @param newDestination  to animate towards
      */
     public void setDestinationColor(final Color newDestination) {
         destination = newDestination;

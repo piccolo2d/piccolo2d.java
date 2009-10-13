@@ -194,18 +194,55 @@ public class PNodeTest extends TestCase {
         assertEquals(node, parent.getChild(2));
     }
 
-    public void testCopy() {
+    public void testCloneCopiesAllProperties() {
+        node.setBounds(1, 2, 3, 4);
+        node.setChildPaintInvalid(true);
+        node.setChildrenPickable(false);
         node.setPaint(Color.yellow);
+        node.setPaintInvalid(true);
+        node.setPickable(false);
+        node.setPropertyChangeParentMask(PNode.PROPERTY_CODE_PAINT);
+        node.setVisible(false);        
+        
+        final PNode clonedNode = (PNode) node.clone();
 
+        assertEquals(1, clonedNode.getX(), Double.MIN_VALUE);
+        assertEquals(2, clonedNode.getY(), Double.MIN_VALUE);
+        assertEquals(3, clonedNode.getWidth(), Double.MIN_VALUE);
+        assertEquals(4, clonedNode.getHeight(), Double.MIN_VALUE);        
+        assertTrue(clonedNode.getChildPaintInvalid());
+        assertFalse(clonedNode.getChildrenPickable());
+        assertEquals(Color.YELLOW, clonedNode.getPaint());
+        
+        assertFalse(clonedNode.getPickable());
+        assertEquals(PNode.PROPERTY_CODE_PAINT, node.getPropertyChangeParentMask());
+        assertFalse(clonedNode.getVisible());     
+    }    
+    
+    public void testCloneCopiesTransforms() { 
+        node.setScale(0.5);
+        node.setRotation(Math.PI/8d);
+        node.setOffset(5,6);
+        
+        final PNode clonedNode = (PNode) node.clone();
+       
+        assertEquals(0.5, clonedNode.getScale(), 0.00001);
+        assertEquals(Math.PI/8d, clonedNode.getRotation(), 0.00001);
+        assertEquals(5, clonedNode.getXOffset(), Double.MIN_VALUE);
+        assertEquals(6, clonedNode.getYOffset(), Double.MIN_VALUE);
+    }    
+
+    public void testCloneClonesChildrenAswell() {        
         final PNode child = new PNode();
         node.addChild(child);
 
         final PNode clonedNode = (PNode) node.clone();
-
-        assertEquals(clonedNode.getPaint(), Color.yellow);
+        
         assertEquals(clonedNode.getChildrenCount(), 1);
+        assertNotSame(child, clonedNode.getChild(0));
     }
 
+    
     public void testLocalToGlobal() {
         final PNode aParent = new PNode();
         final PNode aChild = new PNode();
@@ -1043,10 +1080,10 @@ public class PNodeTest extends TestCase {
 
     }
 
-    public void testToImageScalesAccordingToAspectCoverStrategy() throws IOException {        
+    public void testToImageScalesAccordingToAspectCoverStrategy() throws IOException {
         node.setBounds(0, 0, 10, 10);
         node.setPaint(Color.RED);
-        
+
         PNode blueSquare = new PNode();
         blueSquare.setPaint(Color.BLUE);
         blueSquare.setBounds(0, 0, 5, 5);
@@ -1057,7 +1094,6 @@ public class PNodeTest extends TestCase {
         greenSquare.setBounds(5, 5, 5, 5);
         node.addChild(greenSquare);
 
-        
         final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
                 Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
 
@@ -1065,18 +1101,18 @@ public class PNodeTest extends TestCase {
         assertEquals(Color.RED.getRGB(), img.getRGB(9, 20));
         assertEquals(Color.RED.getRGB(), img.getRGB(0, 20));
         assertEquals(Color.RED.getRGB(), img.getRGB(9, 39));
-        
+
         assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 19));
         assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 0));
         assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 19));
         assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 0));
-        
-        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 20));        
+
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 20));
         assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 20));
         assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 39));
         assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 39));
     }
-    
+
     public void testGetPickableShouldDefaultToTrue() {
         assertTrue(node.getPickable());
     }
@@ -1381,8 +1417,8 @@ public class PNodeTest extends TestCase {
         final PPickPath path = canvas.getCamera().pick(5, 5, 5);
         assertSame(node1, path.getPickedNode());
     }
-    
+
     public void testToImageDoesNotClip() {
-    
+
     }
 }

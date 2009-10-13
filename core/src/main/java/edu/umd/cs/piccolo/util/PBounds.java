@@ -115,7 +115,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
     /**
      * Returns a clone of this node.
      */
-    public Object clone() {
+    public Object clone() {        
         return new PBounds(this);
     }
 

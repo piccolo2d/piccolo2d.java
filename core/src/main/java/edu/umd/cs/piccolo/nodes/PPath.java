@@ -244,10 +244,10 @@ public class PPath extends PNode {
     }
 
     /**
-    * Creates an PPath in the given shape with the default paint and stroke.
-    * 
-    * @param aShape the desired shape
-    */
+     * Creates an PPath in the given shape with the default paint and stroke.
+     * 
+     * @param aShape the desired shape
+     */
     public PPath(final Shape aShape) {
         this(aShape, DEFAULT_STROKE);
     }
@@ -272,10 +272,6 @@ public class PPath extends PNode {
         }
     }
 
-    // ****************************************************************
-    // Stroke
-    // ****************************************************************
-
     /**
      * Returns the stroke paint of the PPath.
      * 
@@ -285,17 +281,32 @@ public class PPath extends PNode {
         return strokePaint;
     }
 
-    public void setStrokePaint(final Paint aPaint) {
-        final Paint old = strokePaint;
-        strokePaint = aPaint;
+    /**
+     * Sets the stroke paint of the path.
+     * 
+     * @param newStrokePaint the paint to use as this path's stroke paint
+     */
+    public void setStrokePaint(final Paint newStrokePaint) {
+        final Paint oldStrokePaint = strokePaint;
+        strokePaint = newStrokePaint;
         invalidatePaint();
-        firePropertyChange(PROPERTY_CODE_STROKE_PAINT, PROPERTY_STROKE_PAINT, old, strokePaint);
+        firePropertyChange(PROPERTY_CODE_STROKE_PAINT, PROPERTY_STROKE_PAINT, oldStrokePaint, strokePaint);
     }
 
+    /**
+     * Returns the stroke to use when drawing the path.
+     * 
+     * @return current stroke of path
+     */
     public Stroke getStroke() {
         return stroke;
     }
 
+    /**
+     * Sets the stroke to use when drawing the path.
+     * 
+     * @param aStroke stroke to use when drawing the path
+     */
     public void setStroke(final Stroke aStroke) {
         final Stroke old = stroke;
         stroke = aStroke;
@@ -304,14 +315,12 @@ public class PPath extends PNode {
         firePropertyChange(PROPERTY_CODE_STROKE, PROPERTY_STROKE, old, stroke);
     }
 
-    // ****************************************************************
-    // Bounds
-    // ****************************************************************
-
+    /** Stores the original size of the path before resizing started. */
     public void startResizeBounds() {
         resizePath = new GeneralPath(path);
     }
 
+    /** Clears the size of the path before resizing. */
     public void endResizeBounds() {
         resizePath = null;
     }
@@ -322,8 +331,13 @@ public class PPath extends PNode {
      * base bounds get too small then it is impossible to expand the path shape
      * again since all its numbers have tended to zero, so application code may
      * need to take this into consideration.
+     * 
+     * @param x new left position of bounds
+     * @param y new top position of bounds
+     * @param width the new width of the bounds
+     * @param height the new height of the bounds
      */
-    protected void internalUpdateBounds(double x, double y, double width, double height) {
+    protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
         if (updatingBoundsFromPath || path == null) {
             return;
         }
@@ -339,22 +353,42 @@ public class PPath extends PNode {
                 .getHeight()
                 - pathBounds.getHeight());
 
-        x += strokeOutset / 2;
-        y += strokeOutset / 2;
-        width -= strokeOutset;
-        height -= strokeOutset;
+        double adjustedX = x + strokeOutset / 2;
+        double adjustedY = y + strokeOutset / 2;
+        double adjustedWidth = width - strokeOutset;
+        double adjustedHeight = height - strokeOutset;
 
-        final double scaleX = width == 0 || pathBounds.getWidth() == 0 ? 1 : width / pathBounds.getWidth();
-        final double scaleY = height == 0 || pathBounds.getHeight() == 0 ? 1 : height / pathBounds.getHeight();
+        final double scaleX;
+        if (adjustedWidth == 0 || pathBounds.getWidth() == 0) {
+            scaleX = 1;
+        }
+        else {
+            scaleX = adjustedWidth / pathBounds.getWidth();
+        }
+
+        final double scaleY;
+        if (adjustedHeight == 0 || pathBounds.getHeight() == 0) {
+            scaleY = 1;
+        }
+        else {
+            scaleY = adjustedHeight / pathBounds.getHeight();
+        }
 
         TEMP_TRANSFORM.setToIdentity();
-        TEMP_TRANSFORM.translate(x, y);
+        TEMP_TRANSFORM.translate(adjustedX, adjustedY);
         TEMP_TRANSFORM.scale(scaleX, scaleY);
         TEMP_TRANSFORM.translate(-pathBounds.getX(), -pathBounds.getY());
 
         path.transform(TEMP_TRANSFORM);
     }
 
+    /**
+     * Returns true if path crosses the provided bounds. Takes visibility of
+     * path into account.
+     * 
+     * @param aBounds bounds being tested for intersection
+     * @return true if path visibly crosses bounds
+     */
     public boolean intersects(final Rectangle2D aBounds) {
         if (super.intersects(aBounds)) {
             if (getPaint() != null && path.intersects(aBounds)) {
@@ -367,6 +401,11 @@ public class PPath extends PNode {
         return false;
     }
 
+    /**
+     * Calculates the path's bounds taking stroke into account.
+     * 
+     * @return bounds of the path taking stroke width into account
+     */
     public Rectangle2D getPathBoundsWithStroke() {
         if (stroke != null) {
             return stroke.createStrokedShape(path).getBounds2D();
@@ -376,6 +415,9 @@ public class PPath extends PNode {
         }
     }
 
+    /**
+     * Recomputes the bounds taking stroke into account.
+     */
     public void updateBoundsFromPath() {
         updatingBoundsFromPath = true;
         if (path == null) {
@@ -388,10 +430,15 @@ public class PPath extends PNode {
         updatingBoundsFromPath = false;
     }
 
-    // ****************************************************************
-    // Painting
-    // ****************************************************************
-
+    /**
+     * Paints the path in the provided paintContext. Can perform very
+     * differently depending on whether the path is being drawn using its stroke
+     * or its paint.
+     * 
+     * It both are provided to the path, fun ensues.
+     * 
+     * @param paintContext context in which painting is occurring
+     */
     protected void paint(final PPaintContext paintContext) {
         final Paint p = getPaint();
         final Graphics2D g2 = paintContext.getGraphics();
@@ -408,15 +455,21 @@ public class PPath extends PNode {
         }
     }
 
-    // ****************************************************************
-    // Path Support set java.awt.GeneralPath documentation for more
-    // information on using these methods.
-    // ****************************************************************
-
+    /**
+     * Provides direct access to the underlying GeneralPath object.
+     * 
+     * @return underlying GeneralPath
+     */
     public GeneralPath getPathReference() {
         return path;
     }
 
+    /**
+     * Appends a "move" operation to the end of the path.
+     * 
+     * @param x the x component of the point to move to
+     * @param y the y component of the point to move to
+     */
     public void moveTo(final float x, final float y) {
         path.moveTo(x, y);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -424,6 +477,12 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Draws a line from the last point in the path to point provided.
+     * 
+     * @param x the x component of the point
+     * @param y the y component of the point
+     */
     public void lineTo(final float x, final float y) {
         path.lineTo(x, y);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -431,6 +490,14 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Appends a quad line to the end of the path.
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     public void quadTo(final float x1, final float y1, final float x2, final float y2) {
         path.quadTo(x1, y1, x2, y2);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -438,6 +505,16 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Appends a curve to the end of the path.
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     */
     public void curveTo(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         path.curveTo(x1, y1, x2, y2, x3, y3);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -445,6 +522,14 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Appends the provided shape to the end of this path, it may conditionally
+     * connect them together if they are disjoint.
+     * 
+     * @param aShape shape to append
+     * @param connect whether to perform a lineTo operation to the beginning of
+     *            the shape before appending
+     */
     public void append(final Shape aShape, final boolean connect) {
         path.append(aShape, connect);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -452,21 +537,48 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Replaces this PPath's path with the one provided.
+     * 
+     * @param aShape shape to replace the current one with
+     */
     public void setPathTo(final Shape aShape) {
         path.reset();
         append(aShape, false);
     }
 
+    /**
+     * Resets the path to a rectangle with the dimensions and position provided.
+     * 
+     * @param x left of the rectangle
+     * @param y top of te rectangle
+     * @param width width of the rectangle
+     * @param height height of the rectangle
+     */
     public void setPathToRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
         setPathTo(TEMP_RECTANGLE);
     }
 
+    /**
+     * Resets the path to an ellipse positioned at the coordinate provided with
+     * the dimensions provided.
+     * 
+     * @param x left of the ellipse
+     * @param y top of the ellipse
+     * @param width width of the ellipse
+     * @param height height of the ellipse
+     */
     public void setPathToEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
         setPathTo(TEMP_ELLIPSE);
     }
 
+    /**
+     * Sets the path to a sequence of segments described by the points.
+     * 
+     * @param points points to that lie along the generated path
+     */
     public void setPathToPolyline(final Point2D[] points) {
         path.reset();
         path.moveTo((float) points[0].getX(), (float) points[0].getY());
@@ -478,6 +590,13 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Sets the path to a sequence of segments described by the point components
+     * provided.
+     * 
+     * @param xp the x components of the points along the path
+     * @param yp the y components of the points along the path
+     */
     public void setPathToPolyline(final float[] xp, final float[] yp) {
         path.reset();
         path.moveTo(xp[0], yp[0]);
@@ -489,6 +608,9 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Marks the path as closed. Making changes to it impossible.
+     */
     public void closePath() {
         path.closePath();
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -496,6 +618,9 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Empties the path.
+     */
     public void reset() {
         path.reset();
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
@@ -503,16 +628,28 @@ public class PPath extends PNode {
         invalidatePaint();
     }
 
-    // ****************************************************************
-    // Serialization
-    // ****************************************************************
-
+    /**
+     * Writes this PPath object to the output stream provided. Necessary since
+     * stroke and path are not serializable by default.
+     * 
+     * @param out output stream into which objects are to be serialized
+     * @throws IOException if serialiazing to output stream fails
+     */
     private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         PUtil.writeStroke(stroke, out);
         PUtil.writePath(path, out);
     }
 
+    /**
+     * Deserializes a PPath object from the provided input stream. This method
+     * is required since Strokes and GeneralPaths are not serializable by
+     * default.
+     * 
+     * @param in stream from which to read this PPath's state
+     * @throws IOException when exception occurs reading from input stream
+     * @throws ClassNotFoundException
+     */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         stroke = PUtil.readStroke(in);

@@ -79,8 +79,7 @@ public class PInputEvent {
      * @param inputManager source of PInputEvent
      * @param event underlying swing event
      */
-    public PInputEvent(final PInputManager inputManager, final InputEvent event) {
-        super();
+    public PInputEvent(final PInputManager inputManager, final InputEvent event) {        
         inputEvent = event;
         this.inputManager = inputManager;
     }
@@ -184,6 +183,9 @@ public class PInputEvent {
      * @return the currently picked node of this mouse event
      */
     public PNode getPickedNode() {
+        if (pickPath == null) {
+            return null;
+        }
         return pickPath.getPickedNode();
     }
 
@@ -499,7 +501,6 @@ public class PInputEvent {
      * 
      * @return boolean, true if this event triggers a popup menu for this
      *         platform
-     * @throws IllegalStateException if this event is not a mouse event
      */
     public boolean isPopupTrigger() {
         if (isMouseEvent()) {
@@ -544,6 +545,9 @@ public class PInputEvent {
      * @return mouse position relative to the provided node on pick path
      */
     public Point2D getPositionRelativeTo(final PNode nodeOnPath) {
+        if (pickPath == null) {
+            throw new RuntimeException("Attempting to use pickPath for a non-mouse event.");
+        }
         final Point2D r = getCanvasPosition();
         return pickPath.canvasToLocal(r, nodeOnPath);
     }
@@ -557,6 +561,9 @@ public class PInputEvent {
      *         path
      */
     public PDimension getDeltaRelativeTo(final PNode nodeOnPath) {
+        if (pickPath == null) {
+            throw new RuntimeException("Attempting to use pickPath for a non-mouse event.");
+        }
         final PDimension r = getCanvasDelta();
         return (PDimension) pickPath.canvasToLocal(r, nodeOnPath);
     }
@@ -568,6 +575,9 @@ public class PInputEvent {
      * @return mouse position as measured by the bottom camera
      */
     public Point2D getPosition() {
+        if (pickPath == null) {
+            throw new RuntimeException("Attempting to use pickPath for a non-mouse event.");
+        }
         final Point2D r = getCanvasPosition();
         pickPath.canvasToLocal(r, getCamera());
         return getCamera().localToView(r);
@@ -581,6 +591,9 @@ public class PInputEvent {
      *         bottom camera
      */
     public PDimension getDelta() {
+        if (pickPath == null) {
+            throw new RuntimeException("Attempting to use pickPath for a non-mouse event.");
+        }
         final PDimension r = getCanvasDelta();
         pickPath.canvasToLocal(r, getCamera());
         return (PDimension) getCamera().localToView(r);

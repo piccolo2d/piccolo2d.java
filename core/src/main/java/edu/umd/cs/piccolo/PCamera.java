@@ -111,7 +111,9 @@ public class PCamera extends PNode {
 
     /** Denotes that the view has no constraints. */
     public static final int VIEW_CONSTRAINT_NONE = 0;
+    /** Enforces that the view be able to see all nodes in the scene. */
     public static final int VIEW_CONSTRAINT_ALL = 1;
+    /** Constrains the the view to be centered on the scene's full bounds. */
     public static final int VIEW_CONSTRAINT_CENTER = 2;
 
     /**

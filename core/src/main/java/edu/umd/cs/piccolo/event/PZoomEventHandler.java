@@ -59,6 +59,11 @@ import edu.umd.cs.piccolo.PCamera;
  */
 public class PZoomEventHandler extends PDragSequenceEventHandler {
 
+    /**
+     * A constant used to adjust how sensitive the zooming will be to mouse
+     * movement. The larger the number, the more each delta pixel will affect zooming.
+     */
+    private static final double ZOOM_SENSITIVITY = 0.001;
     private double minScale = 0;
     private double maxScale = Double.MAX_VALUE;
     private Point2D viewZoomPoint;
@@ -118,15 +123,27 @@ public class PZoomEventHandler extends PDragSequenceEventHandler {
         this.maxScale = maxScale;
     }
 
-    protected void dragActivityFirstStep(final PInputEvent aEvent) {
-        viewZoomPoint = aEvent.getPosition();
-        super.dragActivityFirstStep(aEvent);
+    /**
+     * Records the start point of the zoom. Used when calculating the delta for
+     * zoom speed.
+     * 
+     * @param event event responsible for starting the zoom interaction
+     */
+    protected void dragActivityFirstStep(final PInputEvent event) {
+        viewZoomPoint = event.getPosition();
+        super.dragActivityFirstStep(event);
     }
 
-    protected void dragActivityStep(final PInputEvent aEvent) {
-        final PCamera camera = aEvent.getCamera();
-        final double dx = aEvent.getCanvasPosition().getX() - getMousePressedCanvasPoint().getX();
-        double scaleDelta = 1.0 + 0.001 * dx;
+    /**
+     * Updates the current zoom periodically, regardless of whether the mouse
+     * has moved recently.
+     * 
+     * @param event contains information about the current state of the mouse
+     */
+    protected void dragActivityStep(final PInputEvent event) {
+        final PCamera camera = event.getCamera();
+        final double dx = event.getCanvasPosition().getX() - getMousePressedCanvasPoint().getX();
+        double scaleDelta = 1.0 + ZOOM_SENSITIVITY * dx;
 
         final double currentScale = camera.getViewScale();
         final double newScale = currentScale * scaleDelta;

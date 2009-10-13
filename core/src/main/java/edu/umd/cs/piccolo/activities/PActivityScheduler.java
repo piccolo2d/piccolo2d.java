@@ -69,7 +69,7 @@ public class PActivityScheduler implements Serializable {
      * @param rootNode root node of all activities to be performed. All nodes
      *            being animated should have this node as an ancestor.
      */
-    public PActivityScheduler(final PRoot rootNode) {
+    public PActivityScheduler(final PRoot rootNode) {        
         root = rootNode;
         activities = new ArrayList();
         processingActivities = new ArrayList();

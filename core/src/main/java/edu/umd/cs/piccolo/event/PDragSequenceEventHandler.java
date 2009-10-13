@@ -56,28 +56,45 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
     private transient PInputEvent dragEvent;
     private transient int sequenceInitiatedButton = MouseEvent.NOBUTTON;
 
+    /** Constructs a drag sequence event handler instance. */
     public PDragSequenceEventHandler() {
     }
 
-    // ****************************************************************
-    // Basics
-    // ****************************************************************
-
+    /**
+     * Returns true if this event handler is in the process of handling a drag.
+     * 
+     * @return true if handling a drag
+     */
     public boolean isDragging() {
         return isDragging;
     }
 
+    /**
+     * Used to inform this handler that it is in the process of handling a drag.
+     * 
+     * @param isDragging true if handler is processing a drag
+     */
     public void setIsDragging(final boolean isDragging) {
         this.isDragging = isDragging;
     }
 
+    /**
+     * Returns the minimum distance (in screen coordinates) before a pressed
+     * mouse movement is registered as a drag event. The smaller this value the
+     * more clicks will be incorrectly recognized as drag events.
+     * 
+     * @return minimum distance a pressed mouse must move before it is
+     *         registered as a drag
+     */
     public double getMinDragStartDistance() {
         return minDragStartDistance;
     }
 
     /**
      * Set the minimum distance that the mouse should be dragged (in screen
-     * coords) before a new drag sequence is initiate.
+     * coordinates) before a new drag sequence is initiate.
+     * 
+     * @param minDistance in screen coordinates
      */
     public void setMinDragStartDistance(final double minDistance) {
         minDragStartDistance = minDistance;
@@ -85,6 +102,8 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
 
     /**
      * Return the point in canvas coordinates where the mouse was last pressed.
+     * 
+     * @return point in canvas coordinates of last mouse press
      */
     public Point2D getMousePressedCanvasPoint() {
         if (mousePressedCanvasPoint == null) {
@@ -101,37 +120,54 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
      * Subclasses should override this method to get notified of the start of a
      * new drag sequence. Note that that overriding methods must still call
      * super.startDrag() for correct behavior.
+     * 
+     * @param event event that started the drag sequence
      */
-    protected void startDrag(final PInputEvent e) {
-        dragEvent = e;
-        startDragActivity(e);
+    protected void startDrag(final PInputEvent event) {
+        dragEvent = event;
+        startDragActivity(event);
         setIsDragging(true);
-        e.getComponent().setInteracting(true);
+        event.getComponent().setInteracting(true);
     }
 
     /**
      * Subclasses should override this method to get notified of the drag events
      * in a drag sequence. Note that that overriding methods must still call
      * super.startDrag() for correct behavior.
+     * 
+     * @param event event that caused the drag
      */
-    protected void drag(final PInputEvent e) {
-        dragEvent = e;
+    protected void drag(final PInputEvent event) {
+        dragEvent = event;
     }
 
     /**
      * Subclasses should override this method to get notified of the end event
      * in a drag sequence. Note that that overriding methods must still call
      * super.startDrag() for correct behavior.
+     * 
+     * @param event event that ended the drag sequence
      */
-    protected void endDrag(final PInputEvent e) {
-        stopDragActivity(e);
+    protected void endDrag(final PInputEvent event) {
+        stopDragActivity(event);
         dragEvent = null;
-        e.getComponent().setInteracting(false);
+        event.getComponent().setInteracting(false);
         setIsDragging(false);
     }
 
-    protected boolean shouldStartDragInteraction(final PInputEvent e) {
-        return getMousePressedCanvasPoint().distance(e.getCanvasPosition()) >= getMinDragStartDistance();
+    /**
+     * Returns true if the provided event represents a valid start for a drag
+     * sequence.
+     * 
+     * Subclasses should override this method to add criteria for the start of a
+     * drag sequence. Subclasses are still responsible for calling
+     * super.shouldStartDragInteraction()
+     * 
+     * @param event event being tested
+     * @return true if provided event is a good start to a drag sequence
+     */
+    protected boolean shouldStartDragInteraction(final PInputEvent event) {
+        return getMousePressedCanvasPoint().distance(event.getCanvasPosition()) >= getMinDragStartDistance();
     }
 
     // ****************************************************************
@@ -140,11 +176,27 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
     // using this.
     // ****************************************************************
 
+    /**
+     * Returns the scheduled activity that's updating the scene as a result to
+     * the current drag activity (if any).
+     * 
+     * @return scheduled activity that's updating the scene as a result to the
+     *         drag activity
+     */
     protected PActivity getDragActivity() {
         return dragActivity;
     }
 
-    protected void startDragActivity(final PInputEvent aEvent) {
+    /**
+     * Schedules the "infinite" drag activity so that auto-panning and zooming
+     * will continue to update the scene even if there are no further drag
+     * events fired. For example, if the mouse is dragged to the right while
+     * pressing the right mouse button and then paused for a while, the scene
+     * should continue to zoom in.
+     * 
+     * @param event the event that's responsible for the start of the activity
+     */
+    protected void startDragActivity(final PInputEvent event) {
         dragActivity = new PActivity(-1, PUtil.DEFAULT_ACTIVITY_STEP_RATE);
         dragActivity.setDelegate(new PActivity.PActivityDelegate() {
             public void activityStarted(final PActivity activity) {
@@ -160,19 +212,27 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
             }
         });
 
-        aEvent.getCamera().getRoot().addActivity(dragActivity);
+        event.getCamera().getRoot().addActivity(dragActivity);
     }
 
-    protected void stopDragActivity(final PInputEvent aEvent) {
+    /**
+     * Stops the activity responsible for updating the scene.
+     * 
+     * @param event The event responsible for stopping the drag activity
+     */
+    protected void stopDragActivity(final PInputEvent event) {
         dragActivity.terminate();
         dragActivity = null;
     }
 
     /**
-     * Override this method to get notified when the drag activity starts
-     * stepping.
+     * Subclasses override this method to get notified when the drag activity
+     * starts stepping.
+     * 
+     * @param event the event responsible for the first step in the drag
+     *            activity
      */
-    protected void dragActivityFirstStep(final PInputEvent aEvent) {
+    protected void dragActivityFirstStep(final PInputEvent event) {
     }
 
     /**
@@ -181,57 +241,72 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
      * additional behavior that is not driven directly by mouse events. For
      * example PZoomEventHandler uses it for zooming and PPanEventHandler uses
      * it for auto panning.
+     * 
+     * @param event the event encapsulating the callback context for the
+     *            activity step
      */
-    protected void dragActivityStep(final PInputEvent aEvent) {
+    protected void dragActivityStep(final PInputEvent event) {
     }
 
     /**
-     * Override this method to get notified when the drag activity stops
-     * stepping.
+     * Subclasses should override this method to get notified when the drag
+     * activity stops stepping.
+     * 
+     * @param aEvent the event responsible for ending the activity
      */
     protected void dragActivityFinalStep(final PInputEvent aEvent) {
     }
 
-    // ****************************************************************
-    // Events - subclasses should not override these methods, instead
-    // override the appropriate drag method.
-    // ****************************************************************
-
-    public void mousePressed(final PInputEvent e) {
-        super.mousePressed(e);
+    /**
+     * Subclasses should not override this method, instead they should
+     * override the appropriate drag callbacks.
+     * 
+     * @param event The event to be queried about the details of the mouse press
+     */
+    public void mousePressed(final PInputEvent event) {
+        super.mousePressed(event);
 
         if (sequenceInitiatedButton == MouseEvent.NOBUTTON) {
-            sequenceInitiatedButton = e.getButton();
-        }
-        else {
-            return;
-        }
-
-        getMousePressedCanvasPoint().setLocation(e.getCanvasPosition());
-        if (!isDragging() && shouldStartDragInteraction(e)) {
-            startDrag(e);
+            sequenceInitiatedButton = event.getButton();
+            
+            getMousePressedCanvasPoint().setLocation(event.getCanvasPosition());
+            if (!isDragging() && shouldStartDragInteraction(event)) {
+                startDrag(event);
+            }
         }
     }
 
-    public void mouseDragged(final PInputEvent e) {
-        super.mouseDragged(e);
+    /**
+     * Subclasses should not override this method, instead they should
+     * override the appropriate drag method.
+     * 
+     * @param event The event to be queried about the details of the mouse press
+     */
+    public void mouseDragged(final PInputEvent event) {
+        super.mouseDragged(event);
 
         if (sequenceInitiatedButton != MouseEvent.NOBUTTON) {
             if (!isDragging()) {
-                if (shouldStartDragInteraction(e)) {
-                    startDrag(e);
+                if (shouldStartDragInteraction(event)) {
+                    startDrag(event);
                 }
                 return;
             }
-            drag(e);
+            drag(event);
         }
     }
 
-    public void mouseReleased(final PInputEvent e) {
-        super.mouseReleased(e);
-        if (sequenceInitiatedButton == e.getButton()) {
+    /**
+     * Subclasses should not override this method, instead they should
+     * override the appropriate drag method.
+     * 
+     * @param event The event to be queried about the details of the mouse release
+     */
+    public void mouseReleased(final PInputEvent event) {
+        super.mouseReleased(event);
+        if (sequenceInitiatedButton == event.getButton()) {
             if (isDragging()) {
-                endDrag(e);
+                endDrag(event);
             }
             sequenceInitiatedButton = MouseEvent.NOBUTTON;
         }

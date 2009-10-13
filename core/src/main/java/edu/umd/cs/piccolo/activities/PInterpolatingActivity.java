@@ -69,10 +69,28 @@ public class PInterpolatingActivity extends PActivity {
     private int loopCount;
     private boolean firstLoop;
 
+    /**
+     * Constructs an interpolating activity that will last the duration given
+     * and will update its target at the given rate.
+     * 
+     * @param duration duration in milliseconds of the entire activity
+     * @param stepRate interval in milliseconds between updates to target
+     */
     public PInterpolatingActivity(final long duration, final long stepRate) {
         this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION);
     }
 
+    /**
+     * Constructs an interpolating activity that will last the duration given
+     * and will update its target at the given rate. Once done, it will repeat
+     * the loopCount times.
+     * 
+     * @param duration duration in milliseconds of the entire activity
+     * @param stepRate interval in milliseconds between updates to target
+     * @param loopCount # of times to repeat this activity.
+     * @param mode controls the direction of the interpolation (source to destination,
+     *            destination to source, or source to destination back to source)
+     */
     public PInterpolatingActivity(final long duration, final long stepRate, final int loopCount, final int mode) {
         this(duration, stepRate, System.currentTimeMillis(), loopCount, mode);
     }
@@ -84,7 +102,7 @@ public class PInterpolatingActivity extends PActivity {
      * @param duration the length of one loop of the activity
      * @param stepRate the amount of time between steps of the activity
      * @param startTime the time (relative to System.currentTimeMillis()) that
-     *            this activity should start.
+     *            this activity should start. This value can be in the future.
      * @param loopCount number of times the activity should reschedule itself
      * @param mode defines how the activity interpolates between states
      */
@@ -101,13 +119,15 @@ public class PInterpolatingActivity extends PActivity {
      * Set the amount of time that this activity should take to complete, after
      * the startStepping method is called. The duration must be greater then
      * zero so that the interpolation value can be computed.
+     * 
+     * @param duration new duration of this activity
      */
-    public void setDuration(final long aDuration) {
-        if (aDuration <= 0) {
+    public void setDuration(final long duration) {
+        if (duration <= 0) {
             throw new IllegalArgumentException("Duration for PInterpolatingActivity must be greater then 0");
         }
 
-        super.setDuration(aDuration);
+        super.setDuration(duration);
     }
 
     // ****************************************************************
@@ -115,15 +135,24 @@ public class PInterpolatingActivity extends PActivity {
     // ****************************************************************
 
     /**
-     * Return the mode that defines how the activity interpolates between
-     * states.
+     * Return the mode used for interpolation.
+     * 
+     * Acceptable values are: SOURCE_TO_DESTINATION, DESTINATION_TO_SOURCE and
+     * SOURCE_TO_DESTINATION_TO_SOURCE
+     * 
+     * @return current mode of this activity
      */
     public int getMode() {
         return mode;
     }
 
     /**
-     * Set the mode that defines how the activity interpolates between states.
+     * Set the direction in which interpolation is going to occur.
+     * 
+     * Acceptable values are: SOURCE_TO_DESTINATION, DESTINATION_TO_SOURCE and
+     * SOURCE_TO_DESTINATION_TO_SOURCE
+     * 
+     * @param mode the new mode to use when interpolating
      */
     public void setMode(final int mode) {
         this.mode = mode;
@@ -231,8 +260,8 @@ public class PInterpolatingActivity extends PActivity {
     }
 
     /**
-     * Called whenever the activity finishes. Reschedules it if the
-     * value of loopCount is > 0.
+     * Called whenever the activity finishes. Reschedules it if the value of
+     * loopCount is > 0.
      */
     protected void activityFinished() {
         setRelativeTargetValueAdjustingForMode(1);
@@ -262,6 +291,8 @@ public class PInterpolatingActivity extends PActivity {
     /**
      * Subclasses should override this method and set the value on their target
      * (the object that they are modifying) accordingly.
+     * 
+     * @param zeroToOne relative completion of task.
      */
     public void setRelativeTargetValue(final float zeroToOne) {
     }
@@ -288,25 +319,28 @@ public class PInterpolatingActivity extends PActivity {
      * 
      * @param zeroToOne Percentage of activity completed
      */
-    protected void setRelativeTargetValueAdjustingForMode(float zeroToOne) {
+    protected void setRelativeTargetValueAdjustingForMode(final float zeroToOne) {
+        final float adjustedZeroToOne;
         switch (mode) {
-            case SOURCE_TO_DESTINATION:
-                break;
-
             case DESTINATION_TO_SOURCE:
-                zeroToOne = 1 - zeroToOne;
+                adjustedZeroToOne = 1 - zeroToOne;
                 break;
 
             case SOURCE_TO_DESTINATION_TO_SOURCE:
                 if (zeroToOne <= 0.5) {
-                    zeroToOne *= 2;
+                    adjustedZeroToOne = zeroToOne * 2;
                 }
                 else {
-                    zeroToOne = 1 - (zeroToOne - 0.5f) * 2;
+                    adjustedZeroToOne = 1 - (zeroToOne - 0.5f) * 2;
                 }
                 break;
+            case SOURCE_TO_DESTINATION:
+            default:
+                // Just treat the zeroToOne as how far along the interpolation
+                // we are.
+                adjustedZeroToOne = zeroToOne;
         }
 
-        setRelativeTargetValue(zeroToOne);
+        setRelativeTargetValue(adjustedZeroToOne);
     }
 }

@@ -96,6 +96,14 @@ import edu.umd.cs.piccolo.util.PUtil;
  */
 public class PNode implements Cloneable, Serializable, Printable {
     /**
+     * The minimum difference in transparency required before the transparency
+     * is allowed to change. Done for efficiency reasons. I doubt very much that
+     * the human eye could tell the difference between 0.01 and 0.02
+     * transparency.
+     */
+    private static final float TRANSPARENCY_RESOLUTION = 0.01f;
+
+    /**
      * Allows for future serialization code to understand versioned binary
      * formats.
      */
@@ -843,19 +851,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public Iterator getClientPropertyKeysIterator() {
         final Enumeration enumeration = getClientPropertyKeysEnumeration();
-        return new Iterator() {
-            public boolean hasNext() {
-                return enumeration.hasMoreElements();
-            }
 
-            public Object next() {
-                return enumeration.nextElement();
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return new ClientPropertyKeyIterator(enumeration);
     }
 
     // ****************************************************************
@@ -2770,7 +2767,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transparent, 1f = fully opaque
      */
     public void setTransparency(final float newTransparency) {
-        if (Math.abs(transparency - newTransparency) > 0.01f) {
+        if (Math.abs(transparency - newTransparency) > TRANSPARENCY_RESOLUTION) {
             final float oldTransparency = transparency;
             transparency = newTransparency;
             invalidatePaint();
@@ -2901,7 +2898,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return a rendering of this image and its descendants onto the specified
      *         image
      */
-    public Image toImage(final BufferedImage image, final Paint backGroundPaint, int fillStrategy) {
+    public Image toImage(final BufferedImage image, final Paint backGroundPaint, final int fillStrategy) {
         final int imageWidth = image.getWidth();
         final int imageHeight = image.getHeight();
         final Graphics2D g2 = image.createGraphics();
@@ -3696,6 +3693,26 @@ public class PNode implements Cloneable, Serializable, Printable {
             result[i] = (PInputEventListener) listeners[i];
         }
         return result;
+    }
+
+    private static final class ClientPropertyKeyIterator implements Iterator {
+        private final Enumeration enumeration;
+
+        private ClientPropertyKeyIterator(final Enumeration enumeration) {
+            this.enumeration = enumeration;
+        }
+
+        public boolean hasNext() {
+            return enumeration.hasMoreElements();
+        }
+
+        public Object next() {
+            return enumeration.nextElement();
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     /**

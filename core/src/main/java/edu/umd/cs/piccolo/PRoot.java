@@ -164,15 +164,7 @@ public class PRoot extends PNode {
      * activities instead of using this method.
      */
     public void waitForActivities() {
-        final PNodeFilter cameraWithCanvas = new PNodeFilter() {
-            public boolean accept(final PNode aNode) {
-                return aNode instanceof PCamera && ((PCamera) aNode).getComponent() != null;
-            }
-
-            public boolean acceptChildrenOf(final PNode aNode) {
-                return true;
-            }
-        };
+        final PNodeFilter cameraWithCanvas = new CameraWithCanvasFilter();
 
         while (activityScheduler.getActivitiesReference().size() > 0) {
             processInputs();
@@ -392,6 +384,16 @@ public class PRoot extends PNode {
                     processInputsScheduled = false;
                 }
             });
+        }
+    }
+
+    private static final class CameraWithCanvasFilter implements PNodeFilter {
+        public boolean accept(final PNode aNode) {
+            return aNode instanceof PCamera && ((PCamera) aNode).getComponent() != null;
+        }
+
+        public boolean acceptChildrenOf(final PNode aNode) {
+            return true;
         }
     }
 

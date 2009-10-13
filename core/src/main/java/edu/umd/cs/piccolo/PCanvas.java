@@ -130,10 +130,10 @@ public class PCanvas extends JComponent implements PComponent {
     private int interactingRenderQuality;
 
     /** The one and only pan handler. */
-    private PPanEventHandler panEventHandler;
+    private transient PPanEventHandler panEventHandler;
 
     /** The one and only ZoomEventHandler. */
-    private PZoomEventHandler zoomEventHandler;
+    private transient PZoomEventHandler zoomEventHandler;
 
     private boolean paintingImmediately;
 
@@ -388,11 +388,11 @@ public class PCanvas extends JComponent implements PComponent {
      * when it is not interacting or animating. The default value is
      * PPaintContext. HIGH_QUALITY_RENDERING.
      * 
-     * @param normalRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING
+     * @param defaultRenderQuality supports PPaintContext.HIGH_QUALITY_RENDERING
      *            or PPaintContext.LOW_QUALITY_RENDERING
      */
-    public void setDefaultRenderQuality(final int normalRenderQuality) {
-        this.normalRenderQuality = normalRenderQuality;
+    public void setDefaultRenderQuality(final int defaultRenderQuality) {
+        this.normalRenderQuality = defaultRenderQuality;
         repaint();
     }
 
@@ -490,209 +490,22 @@ public class PCanvas extends JComponent implements PComponent {
      */
     protected void installInputSources() {
         if (mouseListener == null) {
-            mouseListener = new MouseListener() {
-                /** {@inheritDoc} */
-                public void mouseClicked(final MouseEvent e) {
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_CLICKED);
-                }
-
-                /** {@inheritDoc} */
-                public void mouseEntered(final MouseEvent e) {
-                    MouseEvent simulated = null;
-
-                    if (isAnyButtonDown(e)) {
-                        simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_DRAGGED);
-                    }
-                    else {
-                        simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_MOVED);
-                    }
-
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_ENTERED);
-                    sendInputEventToInputManager(simulated, simulated.getID());
-                }
-
-                /** {@inheritDoc} */
-                public void mouseExited(final MouseEvent e) {
-                    MouseEvent simulated = null;
-
-                    if (isAnyButtonDown(e)) {
-                        simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_DRAGGED);
-                    }
-                    else {
-                        simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_MOVED);
-                    }
-
-                    sendInputEventToInputManager(simulated, simulated.getID());
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_EXITED);
-                }
-
-                /** {@inheritDoc} */
-                public void mousePressed(final MouseEvent rawEvent) {
-                    requestFocus();
-
-                    boolean shouldBalanceEvent = false;
-
-                    final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_PRESSED);
-
-                    switch (event.getButton()) {
-                        case MouseEvent.BUTTON1:
-                            if (isButton1Pressed) {
-                                shouldBalanceEvent = true;
-                            }
-                            isButton1Pressed = true;
-                            break;
-
-                        case MouseEvent.BUTTON2:
-                            if (isButton2Pressed) {
-                                shouldBalanceEvent = true;
-                            }
-                            isButton2Pressed = true;
-                            break;
-
-                        case MouseEvent.BUTTON3:
-                            if (isButton3Pressed) {
-                                shouldBalanceEvent = true;
-                            }
-                            isButton3Pressed = true;
-                            break;
-                        default:
-                            throw new RuntimeException("mousePressed without buttons specified");
-
-                    }
-
-                    if (shouldBalanceEvent) {
-                        sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
-                    }
-
-                    sendInputEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
-                }
-
-                /** {@inheritDoc} */
-                public void mouseReleased(final MouseEvent rawEvent) {
-                    boolean shouldBalanceEvent = false;
-
-                    final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_RELEASED);
-
-                    switch (event.getButton()) {
-                        case MouseEvent.BUTTON1:
-                            if (!isButton1Pressed) {
-                                shouldBalanceEvent = true;
-                            }
-                            isButton1Pressed = false;
-                            break;
-
-                        case MouseEvent.BUTTON2:
-                            if (!isButton2Pressed) {
-                                shouldBalanceEvent = true;
-                            }
-                            isButton2Pressed = false;
-                            break;
-
-                        case MouseEvent.BUTTON3:
-                            if (!isButton3Pressed) {
-                                shouldBalanceEvent = true;
-                            }
-                            isButton3Pressed = false;
-                            break;
-                        default:
-                            throw new RuntimeException("mouseReleased without buttons specified");
-                    }
-
-                    if (shouldBalanceEvent) {
-                        sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
-                    }
-
-                    sendInputEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
-                }
-
-                private boolean isAnyButtonDown(final MouseEvent e) {
-                    return (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) != 0;
-                }
-
-                private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, final int eventType) {
-                    if (rawEvent.getButton() != MouseEvent.NOBUTTON) {
-                        return rawEvent;
-                    }
-
-                    int newButton = 0;
-
-                    if (hasButtonModifier(rawEvent, InputEvent.BUTTON1_MASK)) {
-                        newButton = MouseEvent.BUTTON1;
-                    }
-                    else if (hasButtonModifier(rawEvent, InputEvent.BUTTON2_MASK)) {
-                        newButton = MouseEvent.BUTTON2;
-                    }
-                    else if (hasButtonModifier(rawEvent, InputEvent.BUTTON3_MASK)) {
-                        newButton = MouseEvent.BUTTON3;
-                    }
-
-                    return buildModifiedMouseEvent(rawEvent, eventType, newButton);
-                }
-
-                private boolean hasButtonModifier(final MouseEvent event, final int buttonMask) {
-                    return (event.getModifiers() & buttonMask) == buttonMask;
-                }
-
-                public MouseEvent buildRetypedMouseEvent(final MouseEvent e, final int newType) {
-                    return buildModifiedMouseEvent(e, newType, e.getButton());
-                }
-
-                public MouseEvent buildModifiedMouseEvent(final MouseEvent e, final int newType, final int newButton) {
-                    return new MouseEvent((Component) e.getSource(), newType, e.getWhen(), e.getModifiers(), e.getX(),
-                            e.getY(), e.getClickCount(), e.isPopupTrigger(), newButton);
-                }
-
-                private void sendRetypedMouseEventToInputManager(final MouseEvent e, final int newType) {
-                    final MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
-                    sendInputEventToInputManager(retypedEvent, newType);
-                }
-            };
+            mouseListener = new MouseEventInputSource();
             addMouseListener(mouseListener);
         }
 
         if (mouseMotionListener == null) {
-            mouseMotionListener = new MouseMotionListener() {
-                /** {@inheritDoc} */
-                public void mouseDragged(final MouseEvent e) {
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_DRAGGED);
-                }
-
-                /** {@inheritDoc} */
-                public void mouseMoved(final MouseEvent e) {
-                    sendInputEventToInputManager(e, MouseEvent.MOUSE_MOVED);
-                }
-            };
+            mouseMotionListener = new MouseMotionInputSourceListener();
             addMouseMotionListener(mouseMotionListener);
         }
 
         if (mouseWheelListener == null) {
-            mouseWheelListener = new MouseWheelListener() {
-                /** {@inheritDoc} */
-                public void mouseWheelMoved(final MouseWheelEvent e) {
-                    sendInputEventToInputManager(e, e.getScrollType());
-                    if (!e.isConsumed() && getParent() != null) {
-                        getParent().dispatchEvent(e);
-                    }
-                }
-            };
+            mouseWheelListener = new MouseWheelInputSourceListener();
             addMouseWheelListener(mouseWheelListener);
         }
 
         if (keyEventPostProcessor == null) {
-            keyEventPostProcessor = new KeyEventPostProcessor() {
-                /** {@inheritDoc} */
-                public boolean postProcessKeyEvent(final KeyEvent keyEvent) {
-                    Component owner = FocusManager.getCurrentManager().getFocusOwner();
-                    while (owner != null) {
-                        if (owner == PCanvas.this) {
-                            sendInputEventToInputManager(keyEvent, keyEvent.getID());
-                            return true;
-                        }
-                        owner = owner.getParent();
-                    }
-                    return false;
-                }
-            };
+            keyEventPostProcessor = new KeyEventInputSourceListener();
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(keyEventPostProcessor);
         }
     }
@@ -885,7 +698,7 @@ public class PCanvas extends JComponent implements PComponent {
         getCamera().setBounds(layerBounds);
 
         final double clipRatio = clippingRect.getWidth() / clippingRect.getHeight();
-        final double nodeRatio = ((double)getWidth()) / ((double)getHeight());
+        final double nodeRatio = ((double) getWidth()) / ((double) getHeight());
         final double scale;
         if (nodeRatio <= clipRatio) {
             scale = clippingRect.getHeight() / getCamera().getHeight();
@@ -902,4 +715,203 @@ public class PCanvas extends JComponent implements PComponent {
 
         getCamera().setBounds(originalCameraBounds);
     }
+
+    private final class MouseMotionInputSourceListener implements MouseMotionListener {
+        /** {@inheritDoc} */
+        public void mouseDragged(final MouseEvent e) {
+            sendInputEventToInputManager(e, MouseEvent.MOUSE_DRAGGED);
+        }
+
+        /** {@inheritDoc} */
+        public void mouseMoved(final MouseEvent e) {
+            sendInputEventToInputManager(e, MouseEvent.MOUSE_MOVED);
+        }
+    }
+
+    private final class MouseEventInputSource implements MouseListener {
+        /** {@inheritDoc} */
+        public void mouseClicked(final MouseEvent e) {
+            sendInputEventToInputManager(e, MouseEvent.MOUSE_CLICKED);
+        }
+
+        /** {@inheritDoc} */
+        public void mouseEntered(final MouseEvent e) {
+            MouseEvent simulated = null;
+
+            if (isAnyButtonDown(e)) {
+                simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_DRAGGED);
+            }
+            else {
+                simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_MOVED);
+            }
+
+            sendInputEventToInputManager(e, MouseEvent.MOUSE_ENTERED);
+            sendInputEventToInputManager(simulated, simulated.getID());
+        }
+
+        /** {@inheritDoc} */
+        public void mouseExited(final MouseEvent e) {
+            MouseEvent simulated = null;
+
+            if (isAnyButtonDown(e)) {
+                simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_DRAGGED);
+            }
+            else {
+                simulated = buildRetypedMouseEvent(e, MouseEvent.MOUSE_MOVED);
+            }
+
+            sendInputEventToInputManager(simulated, simulated.getID());
+            sendInputEventToInputManager(e, MouseEvent.MOUSE_EXITED);
+        }
+
+        /** {@inheritDoc} */
+        public void mousePressed(final MouseEvent rawEvent) {
+            requestFocus();
+
+            boolean shouldBalanceEvent = false;
+
+            final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_PRESSED);
+
+            switch (event.getButton()) {
+                case MouseEvent.BUTTON1:
+                    if (isButton1Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton1Pressed = true;
+                    break;
+
+                case MouseEvent.BUTTON2:
+                    if (isButton2Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton2Pressed = true;
+                    break;
+
+                case MouseEvent.BUTTON3:
+                    if (isButton3Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton3Pressed = true;
+                    break;
+                default:
+                    throw new RuntimeException("mousePressed without buttons specified");
+
+            }
+
+            if (shouldBalanceEvent) {
+                sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
+            }
+
+            sendInputEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
+        }
+
+        /** {@inheritDoc} */
+        public void mouseReleased(final MouseEvent rawEvent) {
+            boolean shouldBalanceEvent = false;
+
+            final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_RELEASED);
+
+            switch (event.getButton()) {
+                case MouseEvent.BUTTON1:
+                    if (!isButton1Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton1Pressed = false;
+                    break;
+
+                case MouseEvent.BUTTON2:
+                    if (!isButton2Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton2Pressed = false;
+                    break;
+
+                case MouseEvent.BUTTON3:
+                    if (!isButton3Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton3Pressed = false;
+                    break;
+                default:
+                    throw new RuntimeException("mouseReleased without buttons specified");
+            }
+
+            if (shouldBalanceEvent) {
+                sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
+            }
+
+            sendInputEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
+        }
+
+        private boolean isAnyButtonDown(final MouseEvent e) { 
+            return (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) != 0;
+        }
+
+        private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, final int eventType) {
+            if (rawEvent.getButton() != MouseEvent.NOBUTTON) {
+                return rawEvent;
+            }
+
+            int newButton = 0;
+
+            if (hasButtonModifier(rawEvent, InputEvent.BUTTON1_MASK)) {
+                newButton = MouseEvent.BUTTON1;
+            }
+            else if (hasButtonModifier(rawEvent, InputEvent.BUTTON2_MASK)) {
+                newButton = MouseEvent.BUTTON2;
+            }
+            else if (hasButtonModifier(rawEvent, InputEvent.BUTTON3_MASK)) {
+                newButton = MouseEvent.BUTTON3;
+            }
+
+            return buildModifiedMouseEvent(rawEvent, eventType, newButton);
+        }
+
+        private boolean hasButtonModifier(final MouseEvent event, final int buttonMask) {
+            return (event.getModifiers() & buttonMask) == buttonMask;
+        }
+
+        public MouseEvent buildRetypedMouseEvent(final MouseEvent e, final int newType) {
+            return buildModifiedMouseEvent(e, newType, e.getButton());
+        }
+
+        public MouseEvent buildModifiedMouseEvent(final MouseEvent e, final int newType, final int newButton) {
+            return new MouseEvent((Component) e.getSource(), newType, e.getWhen(), e.getModifiers(), e.getX(),
+                    e.getY(), e.getClickCount(), e.isPopupTrigger(), newButton);
+        }
+
+        private void sendRetypedMouseEventToInputManager(final MouseEvent e, final int newType) {
+            final MouseEvent retypedEvent = buildRetypedMouseEvent(e, newType);
+            sendInputEventToInputManager(retypedEvent, newType);
+        }
+    }
+
+    /**
+     * Class responsible for sending key events to the the InputManager.
+     */
+    private final class KeyEventInputSourceListener implements KeyEventPostProcessor {
+        /** {@inheritDoc} */
+        public boolean postProcessKeyEvent(final KeyEvent keyEvent) {
+            Component owner = FocusManager.getCurrentManager().getFocusOwner();
+            while (owner != null) {
+                if (owner == PCanvas.this) {
+                    sendInputEventToInputManager(keyEvent, keyEvent.getID());
+                    return true;
+                }
+                owner = owner.getParent();
+            }
+            return false;
+        }
+    }
+
+    private final class MouseWheelInputSourceListener implements MouseWheelListener {
+        /** {@inheritDoc} */
+        public void mouseWheelMoved(final MouseWheelEvent e) {
+            sendInputEventToInputManager(e, e.getScrollType());
+            if (!e.isConsumed() && getParent() != null) {
+                getParent().dispatchEvent(e);
+            }
+        }
+    }
+
 }

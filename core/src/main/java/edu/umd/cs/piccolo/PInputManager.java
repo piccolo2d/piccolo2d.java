@@ -89,8 +89,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
      * Creates a PInputManager and sets positions (last, current) to the origin
      * (0,0).
      */
-    public PInputManager() {
-        super();
+    public PInputManager() {        
         lastCanvasPosition = new Point2D.Double();
         currentCanvasPosition = new Point2D.Double();
     }

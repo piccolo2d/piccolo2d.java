@@ -230,15 +230,13 @@ public class PHtmlView extends PNode {
      * This text color is used to render the HTML text if not otherwise
      * specified via CSS.
      * 
-     * <p>
      * This is a <b>bound</b> property.
-     * </p>
      * 
      * @param textColor text color for this HTML text node
      */
-    public void setTextColor(final Color color) {
+    public void setTextColor(final Color textColor) {
         final Color oldColor = label.getForeground();
-        label.setForeground(color);
+        label.setForeground(textColor);
         repaint();
         firePropertyChange(PROPERTY_CODE_TEXT_COLOR, PROPERTY_TEXT_COLOR, oldColor, label.getForeground());
     }

@@ -63,7 +63,7 @@ public class PTransformActivity extends PInterpolatingActivity {
          * 
          * @param aTransform the transform to be applied to the target.
          */
-        public void setTransform(AffineTransform aTransform);
+        void setTransform(AffineTransform aTransform);
 
         /**
          * This method is called right before the transform activity starts.
@@ -71,16 +71,42 @@ public class PTransformActivity extends PInterpolatingActivity {
          * 
          * @param aSource array to be populated with the target's gurrent matrix
          */
-        public void getSourceMatrix(double[] aSource);
+        void getSourceMatrix(double[] aSource);
     }
 
-    public PTransformActivity(final long duration, final long stepRate, final Target aTarget) {
-        this(duration, stepRate, aTarget, null);
+    /**
+     * Constructs a transform activity that will last for the specified
+     * duration, will update at the given step rate and will be applied to the
+     * target.
+     * 
+     * TODO: document what the destination transform is set to when not
+     * specified. (Looks like the Zero vector, but that can't be right, can it?)
+     * 
+     * @param duration duration in milliseconds of the entire activity
+     * @param stepRate interval in milliseconds between successive animation
+     *            steps
+     * @param target the target of the activity
+     */
+    public PTransformActivity(final long duration, final long stepRate, final Target target) {
+        this(duration, stepRate, target, null);
     }
 
-    public PTransformActivity(final long duration, final long stepRate, final Target aTarget,
-            final AffineTransform aDestination) {
-        this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, aTarget, aDestination);
+    /**
+     * Constructs a activity that will change the target's transform in the
+     * destination transform. It will last for the specified duration, will
+     * update at the given step rate.
+     * 
+     * @param duration duration in milliseconds of the entire activity
+     * @param stepRate interval in milliseconds between successive animation
+     *            steps
+     * @param target the target of the activity
+     * @param destination transform that the target will be after the ativity is
+     *            finished
+     */
+
+    public PTransformActivity(final long duration, final long stepRate, final Target target,
+            final AffineTransform destination) {
+        this(duration, stepRate, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION, target, destination);
     }
 
     /**
@@ -91,21 +117,26 @@ public class PTransformActivity extends PInterpolatingActivity {
      * @param stepRate the amount of time between steps of the activity
      * @param loopCount number of times the activity should reschedule itself
      * @param mode defines how the activity interpolates between states
-     * @param aTarget the object that the activity will be applied to and where
+     * @param target the object that the activity will be applied to and where
      *            the source state will be taken from.
-     * @param aDestination the destination color state
+     * @param destination the destination color state
      */
     public PTransformActivity(final long duration, final long stepRate, final int loopCount, final int mode,
-            final Target aTarget, final AffineTransform aDestination) {
+            final Target target, final AffineTransform destination) {
         super(duration, stepRate, loopCount, mode);
         source = new double[6];
-        destination = new double[6];
-        target = aTarget;
-        if (aDestination != null) {
-            aDestination.getMatrix(destination);
+        this.destination = new double[6];
+        this.target = target;
+        if (destination != null) {
+            destination.getMatrix(this.destination);
         }
     }
 
+    /**
+     * Whether each step invalidates paint.
+     * 
+     * @return true since a node transform affects it's node's display
+     */
     protected boolean isAnimation() {
         return true;
     }
@@ -113,6 +144,8 @@ public class PTransformActivity extends PInterpolatingActivity {
     /**
      * Return the final transform that will be set on the transform activities
      * target when the transform activity stops stepping.
+     * 
+     * @return returns the final transform as an array of doubles
      */
     public double[] getDestinationTransform() {
         if (destination == null) {
@@ -126,6 +159,9 @@ public class PTransformActivity extends PInterpolatingActivity {
     /**
      * Set the final transform that will be set on the transform activities
      * target when the transform activity stops stepping.
+     * 
+     * @param newDestination an array of doubles representing the destination
+     *            transform
      */
     public void setDestinationTransform(final double[] newDestination) {
         if (newDestination == null) {
@@ -136,6 +172,10 @@ public class PTransformActivity extends PInterpolatingActivity {
         }
     }
 
+    /**
+     * Is invoked when the activity is started. Ensures that setTransform is
+     * called on the target even before the first step.
+     */
     protected void activityStarted() {
         if (getFirstLoop()) {
             target.getSourceMatrix(source);
@@ -143,6 +183,17 @@ public class PTransformActivity extends PInterpolatingActivity {
         super.activityStarted();
     }
 
+    /**
+     * Set's the target value to be the interpolation between the source and
+     * destination transforms.
+     * 
+     * A value of 0 for zeroToOne means that the target should have the source
+     * transform. A value of 1 for zeroToOne means that the target should have
+     * the destination transform.
+     * 
+     * @param zeroToOne how far along the activity has progressed. 0 = not at
+     *            all, 1 = completed
+     */
     public void setRelativeTargetValue(final float zeroToOne) {
         super.setRelativeTargetValue(zeroToOne);
 
