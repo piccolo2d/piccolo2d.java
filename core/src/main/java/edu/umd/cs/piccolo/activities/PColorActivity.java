@@ -137,7 +137,7 @@ public class PColorActivity extends PInterpolatingActivity {
      * Set the final color that will be set on the color activities target when
      * the activity stops stepping.
      * 
-     * @param newDestination  to animate towards
+     * @param newDestination to animate towards
      */
     public void setDestinationColor(final Color newDestination) {
         destination = newDestination;
@@ -166,6 +166,6 @@ public class PColorActivity extends PInterpolatingActivity {
         final float green = source.getGreen() + zeroToOne * (destination.getGreen() - source.getGreen());
         final float blue = source.getBlue() + zeroToOne * (destination.getBlue() - source.getBlue());
         final float alpha = source.getAlpha() + zeroToOne * (destination.getAlpha() - source.getAlpha());
-        target.setColor(new Color(red / 255, green / 255, blue / 255, alpha / 255));
+        target.setColor(new Color((int) red, (int) green, (int) blue, (int) alpha));
     }
 }

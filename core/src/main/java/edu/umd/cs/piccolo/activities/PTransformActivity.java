@@ -79,8 +79,8 @@ public class PTransformActivity extends PInterpolatingActivity {
      * duration, will update at the given step rate and will be applied to the
      * target.
      * 
-     * TODO: document what the destination transform is set to when not
-     * specified. (Looks like the Zero vector, but that can't be right, can it?)
+     * Requires that the developer follow up with a setDestinationTransform
+     * call, otherwise the transition is undefined.
      * 
      * @param duration duration in milliseconds of the entire activity
      * @param stepRate interval in milliseconds between successive animation

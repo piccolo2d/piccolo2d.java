@@ -73,7 +73,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
     /**
      * Transform the given object into an array of bytes.
      * 
-     * @param object
+     * @param object the object to be transformed
      * @return array of bytes representing the given object
      * @throws IOException when serialization system throws one
      */

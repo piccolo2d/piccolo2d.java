@@ -70,7 +70,7 @@ public class PPaintContext {
     /** Used while calculating scale at which rendering is occurring. */
     private static double[] PTS = new double[4];
 
-    /** PaintContext is associated with this graphics context */
+    /** PaintContext is associated with this graphics context. */
     private final Graphics2D graphics;
 
     /** Used while computing transparency. */
@@ -82,8 +82,10 @@ public class PPaintContext {
     /** Tracks clipping region in local coordinate system. */
     protected PStack localClipStack;
 
+    /** Stack of cameras through which the node being painted is being viewed. */
     protected PStack cameraStack;
 
+    /** Stack of transforms being applied to the drawing context. */
     protected PStack transformStack;
 
     /** The current render quality that all rendering should be done in. */
@@ -95,7 +97,6 @@ public class PPaintContext {
      * @param graphics graphics context to associate with this paint context
      */
     public PPaintContext(final Graphics2D graphics) {
-        super();
         this.graphics = graphics;
         compositeStack = new PStack();
         clipStack = new PStack();
@@ -124,13 +125,9 @@ public class PPaintContext {
         return graphics;
     }
 
-    // ****************************************************************
-    // Context Attributes.
-    // ****************************************************************
-
     /**
      * Returns the clipping region in the local coordinate system applied by
-     * graphics
+     * graphics.
      * 
      * @return clipping region in the local coordinate system applied by
      *         graphics
@@ -147,18 +144,14 @@ public class PPaintContext {
      * @return scale of the current graphics context's transformation
      */
     public double getScale() {
-        PTS[0] = 0;// x1
-        PTS[1] = 0;// y1
-        PTS[2] = 1;// x2
-        PTS[3] = 0;// y2
+        // x1, y1, x2, y2
+        PTS[0] = 0;
+        PTS[1] = 0;
+        PTS[2] = 1;
+        PTS[3] = 0;
         graphics.getTransform().transform(PTS, 0, PTS, 0, 2);
         return Point2D.distance(PTS[0], PTS[1], PTS[2], PTS[3]);
     }
-
-    // ****************************************************************
-    // Context Attribute Stacks. attributes that can be pushed and
-    // popped.
-    // ****************************************************************
 
     /**
      * Pushes the camera onto the camera stack.
@@ -186,9 +179,10 @@ public class PPaintContext {
     }
 
     /**
-     * Returns the camera at the top of the camera stack.
+     * Returns the camera at the top of the camera stack, or null if stack is
+     * empty.
      * 
-     * @return
+     * @return topmost camera on camera stack or null if stack is empty
      */
     public PCamera getCamera() {
         return (PCamera) cameraStack.peek();
@@ -256,20 +250,18 @@ public class PPaintContext {
     }
 
     /**
-     * Pushed the provided transform onto the transform stack.
+     * Pushed the provided transform onto the transform stack if it is not null.
      * 
-     * @param transform
+     * @param transform will be pushed onto the transform stack if not null
      */
     public void pushTransform(final PAffineTransform transform) {
-        if (transform == null) {
-            return;
+        if (transform != null) {
+            final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
+            transform.inverseTransform(newLocalClip, newLocalClip);
+            transformStack.push(graphics.getTransform());
+            localClipStack.push(newLocalClip);
+            graphics.transform(transform);
         }
-
-        final Rectangle2D newLocalClip = (Rectangle2D) getLocalClip().clone();
-        transform.inverseTransform(newLocalClip, newLocalClip);
-        transformStack.push(graphics.getTransform());
-        localClipStack.push(newLocalClip);
-        graphics.transform(transform);
     }
 
     /**
@@ -307,24 +299,29 @@ public class PPaintContext {
 
         switch (renderQuality) {
             case HIGH_QUALITY_RENDERING:
-                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-                        RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+                setRenderQualityToHigh();
                 break;
 
             case LOW_QUALITY_RENDERING:
-                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-                graphics
-                        .setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-                graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-                graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-                        RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+                setRenderQualityToLow();
                 break;
+
             default:
-                throw new RuntimeException(
-                        "Render Quality must be either PPaintContext.HIGH_QUALITY_RENDERING or PPaintContext.LOW_QUALITY_RENDERING");
+                throw new RuntimeException("Quality must be either HIGH_QUALITY_RENDERING or LOW_QUALITY_RENDERING");
         }
+    }
+
+    private void setRenderQualityToLow() {
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+    }
+
+    private void setRenderQualityToHigh() {
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
 }

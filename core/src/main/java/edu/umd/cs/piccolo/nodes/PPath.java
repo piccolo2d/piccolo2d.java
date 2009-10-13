@@ -491,12 +491,15 @@ public class PPath extends PNode {
     }
 
     /**
-     * Appends a quad line to the end of the path.
+     * Adds a curved segment, defined by two new points, to the path by drawing
+     * a Quadratic curve that intersects both the current coordinates and the
+     * coordinates (x2, y2), using the specified point (x1, y1) as a quadratic
+     * parametric control point.
      * 
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * @param x1 x component of quadratic parametric control point
+     * @param y1 y component of quadratic parametric control point
+     * @param x2 x component of point through which quad curve will pass
+     * @param y2 y component of point through which quad curve will pass
      */
     public void quadTo(final float x1, final float y1, final float x2, final float y2) {
         path.quadTo(x1, y1, x2, y2);
@@ -506,14 +509,17 @@ public class PPath extends PNode {
     }
 
     /**
-     * Appends a curve to the end of the path.
+     * Adds a curved segment, defined by three new points, to the path by
+     * drawing a Bézier curve that intersects both the current coordinates and
+     * the coordinates (x3, y3), using the specified points (x1, y1) and (x2,
+     * y2) as Bézier control points.
      * 
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param x3
-     * @param y3
+     * @param x1 x component of first Bézier control point
+     * @param y1 y component of first Bézier control point
+     * @param x2 x component of second Bézier control point
+     * @param y2 y component of second Bézier control point
+     * @param x3 x component of point through which curve must pass
+     * @param y3 y component of point through which curve must pass
      */
     public void curveTo(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         path.curveTo(x1, y1, x2, y2, x3, y3);

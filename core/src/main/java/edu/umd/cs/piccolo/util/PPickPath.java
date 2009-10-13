@@ -142,6 +142,8 @@ public class PPickPath implements PInputEventListener {
     /**
      * Get the bottom node on the pick path node stack. That is the last node to
      * be picked.
+     * 
+     * @return the bottom node on the pick path
      */
     public PNode getPickedNode() {
         return (PNode) nodeStack.peek();
@@ -153,9 +155,11 @@ public class PPickPath implements PInputEventListener {
 
     /**
      * Return the next node that will be picked after the current picked node.
-     * For instance of you have two overlaping children nodes then the topmost
+     * For instance of you have two overlapping children nodes then the topmost
      * child will always be picked first, use this method to find the covered
      * child. Return the camera when no more visual will be picked.
+     * 
+     * @return next node to picked after the picked node
      */
     public PNode nextPickedNode() {
         final PNode picked = getPickedNode();
@@ -195,6 +199,8 @@ public class PPickPath implements PInputEventListener {
     /**
      * Get the top camera on the pick path. This is the camera that originated
      * the pick action.
+     * 
+     * @return the topmost camera of this pick pack
      */
     public PCamera getTopCamera() {
         return topCamera;
@@ -203,18 +209,24 @@ public class PPickPath implements PInputEventListener {
     /**
      * Get the bottom camera on the pick path. This may be different then the
      * top camera if internal cameras are in use.
+     * 
+     * @return the camera closest to the picked node
      */
     public PCamera getBottomCamera() {
         if (bottomCamera == null) {
-            for (int i = nodeStack.size() - 1; i >= 0; i--) {
-                final PNode each = (PNode) nodeStack.get(i);
-                if (each instanceof PCamera) {
-                    bottomCamera = (PCamera) each;
-                    return bottomCamera;
-                }
-            }
+            bottomCamera = calculateBottomCamera();
         }
         return bottomCamera;
+    }
+
+    private PCamera calculateBottomCamera() {
+        for (int i = nodeStack.size() - 1; i >= 0; i--) {
+            final PNode each = (PNode) nodeStack.get(i);
+            if (each instanceof PCamera) {
+                return (PCamera) each;
+            }
+        }
+        return null;
     }
 
     /**
@@ -238,10 +250,11 @@ public class PPickPath implements PInputEventListener {
      * @return scale at which interaction is occurring.
      */
     public double getScale() {
-        PTS[0] = 0;// x1
-        PTS[1] = 0;// y1
-        PTS[2] = 1;// x2
-        PTS[3] = 0;// y2
+        // x1, y1, x2, y3
+        PTS[0] = 0;
+        PTS[1] = 0;
+        PTS[2] = 1;
+        PTS[3] = 0;
 
         final int count = transformStack.size();
         for (int i = 0; i < count; i++) {
@@ -354,7 +367,10 @@ public class PPickPath implements PInputEventListener {
      * the local coordinates of the given node.
      * 
      * @param canvasPoint point to be transformed
-     * @param nodeOnPath node into which the point is to be transformed iteratively through the pickpath
+     * @param nodeOnPath node into which the point is to be transformed
+     *            iteratively through the pick path
+     * 
+     * @return transformed canvasPoint in local coordinates of the picked node
      */
     public Point2D canvasToLocal(final Point2D canvasPoint, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasPoint, canvasPoint);
@@ -366,7 +382,11 @@ public class PPickPath implements PInputEventListener {
      * the local coordinates of the given node.
      * 
      * @param canvasDimension dimension to be transformed
-     * @param nodeOnPath node into which the dimension is to be transformed iteratively through the stack
+     * @param nodeOnPath node into which the dimension is to be transformed
+     *            iteratively through the stack
+     * 
+     * @return transformed canvasDimension in local coordinates of the picked
+     *         node
      */
     public Dimension2D canvasToLocal(final Dimension2D canvasDimension, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasDimension, canvasDimension);
@@ -378,7 +398,10 @@ public class PPickPath implements PInputEventListener {
      * the local coordinates of the given node.
      * 
      * @param canvasRectangle rectangle to be transformed
-     * @param nodeOnPath node into which the rectangle is to be transformed iteratively through the stack
+     * @param nodeOnPath node into which the rectangle is to be transformed
+     *            iteratively through the stack
+     * @return transformed canvasRectangle in local coordinates of the picked
+     *         node
      */
     public Rectangle2D canvasToLocal(final Rectangle2D canvasRectangle, final PNode nodeOnPath) {
         return getPathTransformTo(nodeOnPath).inverseTransform(canvasRectangle, canvasRectangle);

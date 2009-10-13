@@ -77,7 +77,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
     }
 
     /**
-     * Creates a bounds with the same shape as the rectangle provided
+     * Creates a bounds with the same shape as the rectangle provided.
      * 
      * @param aBounds rectangle to be copied
      */
@@ -100,7 +100,8 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
     }
 
     /**
-     * Constructs a PBounds object at the given coordinates with the given dimensions.
+     * Constructs a PBounds object at the given coordinates with the given
+     * dimensions.
      * 
      * @param x left of bounds
      * @param y top of bounds
@@ -114,8 +115,10 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
 
     /**
      * Returns a clone of this node.
+     * 
+     * @return cloned copy of this bounds
      */
-    public Object clone() {        
+    public Object clone() {
         return new PBounds(this);
     }
 
@@ -241,10 +244,10 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
             isEmpty = false;
         }
         else {
-            final double x1 = x <= bounds.x ? x : bounds.x;
-            final double y1 = y <= bounds.y ? y : bounds.y;
-            final double x2 = x + width >= bounds.x + bounds.width ? x + width : bounds.x + bounds.width;
-            final double y2 = y + height >= bounds.y + bounds.height ? y + height : bounds.y + bounds.height;
+            final double x1 = Math.min(x, bounds.x);
+            final double y1 = Math.min(y, bounds.y);
+            final double x2 = Math.max(x + width, bounds.x + bounds.width);
+            final double y2 = Math.max(y + height, bounds.y + bounds.height);
 
             x = x1;
             y = y1;

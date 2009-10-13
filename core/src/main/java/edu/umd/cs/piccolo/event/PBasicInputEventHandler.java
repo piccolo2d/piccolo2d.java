@@ -276,12 +276,9 @@ public class PBasicInputEventHandler implements PInputEventListener {
      * This method is invoked when the mouse wheel is rotated by a block.
      * Subclasses should override this method to implement their own behavior.
      * 
-     * TODO: check that this means 1 tick of the wheel.
-     * 
      * @param event an object that can be queries to discover the event's
      *            details
      */
-
     public void mouseWheelRotatedByBlock(final PInputEvent event) {
     }
 

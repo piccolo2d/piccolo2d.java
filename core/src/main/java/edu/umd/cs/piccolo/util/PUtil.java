@@ -58,10 +58,20 @@ public class PUtil {
      * pass between steps.
      */
     public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
+
+    /** Rate in milliseconds at which the activity timer will get invoked. */
     public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
+
+    /** An iterator that iterates over an empty collection. */
     public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
 
+    /**
+     * Used when persisting paths to an object stream. Used to mark the end of
+     * the path.
+     */
     private static final int PATH_TERMINATOR = -1;
+
+    /** A utility enumeration with no elements. */
     public static Enumeration NULL_ENUMERATION = new Enumeration() {
         public boolean hasMoreElements() {
             return false;
@@ -114,9 +124,10 @@ public class PUtil {
      * Serializes the given stroke object to the object output stream provided.
      * By default strokes are not serializable. This method solves that problem.
      * 
-     * @param stroke stroke to be serialized
-     * @param out stream to which the stroke is to be serialized.
-     * @throws IOException
+     * @param stroke stroke to be serialize
+     * @param out stream to which the stroke is to be serialized
+     * @throws IOException can occur if exception occurs with underlying output
+     *             stream
      */
     public static void writeStroke(final Stroke stroke, final ObjectOutputStream out) throws IOException {
         if (stroke instanceof Serializable) {
@@ -162,8 +173,9 @@ public class PUtil {
      * 
      * @param in stream from which Stroke is to be read
      * @return a stroke object
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException occurs if an exception occurs reading from in stream
+     * @throws ClassNotFoundException should never happen, but can if somehow
+     *             the stroke class is not on the classpath
      */
     public static Stroke readStroke(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         final boolean wroteStroke = in.readBoolean();
@@ -205,8 +217,9 @@ public class PUtil {
      * 
      * @param in stream from which to read the path.
      * @return reconstituted path
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException if an unknown path type is read from the stream
+     * @throws ClassNotFoundException should never happen, but can if somehow
+     *             the classpath is seriously messed up
      */
     public static GeneralPath readPath(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         final GeneralPath path = new GeneralPath();
@@ -240,7 +253,7 @@ public class PUtil {
                     return path;
 
                 default:
-                    throw new IOException();
+                    throw new IOException("Unknown path type encountered while deserializing path.");
             }
         }
     }
@@ -250,7 +263,8 @@ public class PUtil {
      * 
      * @param path path to be serialized
      * @param out stream to which the path should be serialized
-     * @throws IOException
+     * @throws IOException if unknown path segment type is encountered, or an
+     *             exception occurs writing to the output stream
      */
     public static void writePath(final GeneralPath path, final ObjectOutputStream out) throws IOException {
         final PathIterator i = path.getPathIterator(null);
@@ -293,7 +307,7 @@ public class PUtil {
                     break;
 
                 default:
-                    throw new IOException();
+                    throw new IOException("Unknown path type encountered while serializing path.");
             }
 
             i.next();

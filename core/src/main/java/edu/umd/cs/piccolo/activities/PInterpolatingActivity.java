@@ -88,8 +88,9 @@ public class PInterpolatingActivity extends PActivity {
      * @param duration duration in milliseconds of the entire activity
      * @param stepRate interval in milliseconds between updates to target
      * @param loopCount # of times to repeat this activity.
-     * @param mode controls the direction of the interpolation (source to destination,
-     *            destination to source, or source to destination back to source)
+     * @param mode controls the direction of the interpolation (source to
+     *            destination, destination to source, or source to destination
+     *            back to source)
      */
     public PInterpolatingActivity(final long duration, final long stepRate, final int loopCount, final int mode) {
         this(duration, stepRate, System.currentTimeMillis(), loopCount, mode);
@@ -305,7 +306,7 @@ public class PInterpolatingActivity extends PActivity {
      * @return strength of acceleration
      */
     public float computeSlowInSlowOut(final float zeroToOne) {
-        if (zeroToOne < 0.5) {
+        if (zeroToOne < 0.5f) {
             return 2.0f * zeroToOne * zeroToOne;
         }
         else {
@@ -327,11 +328,11 @@ public class PInterpolatingActivity extends PActivity {
                 break;
 
             case SOURCE_TO_DESTINATION_TO_SOURCE:
-                if (zeroToOne <= 0.5) {
+                if (zeroToOne <= 0.5f) {
                     adjustedZeroToOne = zeroToOne * 2;
                 }
                 else {
-                    adjustedZeroToOne = 1 - (zeroToOne - 0.5f) * 2;
+                    adjustedZeroToOne = 2 * (1 - zeroToOne);
                 }
                 break;
             case SOURCE_TO_DESTINATION:

@@ -176,12 +176,20 @@ public class PText extends PNode {
         setText(text);
     }
 
-    /** @deprecated by {@link #getHorizontalAlignment()} */
+    /**
+     * @deprecated by {@link #getHorizontalAlignment()}
+     * 
+     * @return the horizontal alignment value of this node
+     */
     public float getJustification() {
         return getHorizontalAlignment();
     }
 
-    /** @deprecated by {@link #setHorizontalAlignment(float)} */
+    /**
+     * @deprecated by {@link #setHorizontalAlignment(float)}
+     * 
+     * @param justification horizontal alignment value to assign to this node
+     */
     public void setJustification(final float justification) {
         setHorizontalAlignment(justification);
     }
@@ -359,7 +367,12 @@ public class PText extends PNode {
         }
 
         final String oldText = text;
-        text = newText == null ? DEFAULT_TEXT : newText;
+        if (newText == null) {
+            text = DEFAULT_TEXT;
+        }
+        else {
+            text = newText;
+        }
         lines = null;
         recomputeLayout();
         invalidatePaint();
@@ -392,7 +405,13 @@ public class PText extends PNode {
             return;
         }
         final Font oldFont = this.font;
-        this.font = font == null ? DEFAULT_FONT : font;
+        if (font == null) {
+            this.font = DEFAULT_FONT;
+        }
+        else {
+            this.font = font;
+        }
+
         lines = null;
         recomputeLayout();
         invalidatePaint();
@@ -413,7 +432,13 @@ public class PText extends PNode {
             atString.addAttribute(TextAttribute.FONT, getFont());
             final AttributedCharacterIterator itr = atString.getIterator();
             final LineBreakMeasurer measurer = new LineBreakMeasurer(itr, PPaintContext.RENDER_QUALITY_HIGH_FRC);
-            final float availableWidth = constrainWidthToTextWidth ? Float.MAX_VALUE : (float) getWidth();
+            final float availableWidth;
+            if (constrainWidthToTextWidth) {
+                availableWidth = Float.MAX_VALUE;
+            }
+            else {
+                availableWidth = (float) getWidth();
+            }
 
             int nextLineBreakOffset = text.indexOf('\n');
             if (nextLineBreakOffset == -1) {
