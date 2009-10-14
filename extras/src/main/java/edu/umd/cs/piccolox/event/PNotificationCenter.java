@@ -71,6 +71,7 @@ public class PNotificationCenter {
     /** A map of listeners keyed by NotificationKey objects. */
     protected HashMap listenersMap;
 
+    /** A queue of NotificationKeys that are available to be garbage collected. */
     protected ReferenceQueue keyQueue;
 
     /**
@@ -410,7 +411,8 @@ public class PNotificationCenter {
          * 
          * @param name name of notification
          * @param object associated object
-         * @param queue
+         * @param queue ReferenceQueue in which this NotificationKey will be
+         *            appended once it has been cleared to be garbage collected
          */
         public NotificationKey(final Object name, final Object object, final ReferenceQueue queue) {
             super(object, queue);

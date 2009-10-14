@@ -39,7 +39,6 @@ import java.awt.geom.Rectangle2D;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This is a simple node that draws a "3D" rectangle within the bounds of the
@@ -51,40 +50,73 @@ import edu.umd.cs.piccolox.PFrame;
  * @author Ben Bederson
  */
 public class P3DRect extends PNode {
-   
     private static final long serialVersionUID = 1L;
     private Color topLeftOuterColor;
     private Color topLeftInnerColor;
     private Color bottomRightInnerColor;
     private Color bottomRightOuterColor;
     private final GeneralPath path;
-    private transient final Stroke stroke;
+    private final transient Stroke stroke;
     private boolean raised;
 
+    /**
+     * Constructs a simple P3DRect with empty bounds and a black stroke.
+     */
     public P3DRect() {
         raised = true;
         stroke = new BasicStroke(0);
         path = new GeneralPath();
     }
 
+    /**
+     * Constructs a P3DRect with the provided bounds.
+     * 
+     * @param bounds bounds to assigned to the P3DRect
+     */
     public P3DRect(final Rectangle2D bounds) {
         this(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
     }
 
+    /**
+     * Constructs a P3DRect with the bounds provided.
+     * 
+     * @param x left of bounds
+     * @param y top of bounds
+     * @param width width of bounds
+     * @param height height of bounds
+     */
     public P3DRect(final double x, final double y, final double width, final double height) {
         this();
         setBounds(x, y, width, height);
     }
 
+    /**
+     * Sets whether this rectangle is raised off the canvas. If set to false,
+     * this rectangle will appear recessed into the canvas.
+     * 
+     * @param raised whether the rectangle should be painted as raised or
+     *            recessed
+     */
     public void setRaised(final boolean raised) {
         this.raised = raised;
         setPaint(getPaint());
     }
 
+    /**
+     * Returns whether this P3DRect is drawn as raised.
+     * 
+     * @return true if raised
+     */
     public boolean getRaised() {
         return raised;
     }
 
+    /**
+     * Paints this rectangle with shaded edges. Making it appear to stand out of
+     * the page as normal 3D buttons do.
+     * 
+     * @param paintContext context in which the paiting should occur
+     */
     protected void paint(final PPaintContext paintContext) {
         final Graphics2D g2 = paintContext.getGraphics();
 
@@ -92,10 +124,10 @@ public class P3DRect extends PNode {
         final double y = getY();
         final double width = getWidth();
         final double height = getHeight();
-        final double magX = g2.getTransform().getScaleX();
-        final double magY = g2.getTransform().getScaleY();
-        final double dx = (float) (1.0 / magX);
-        final double dy = (float) (1.0 / magY);
+        final double scaleX = g2.getTransform().getScaleX();
+        final double scaleY = g2.getTransform().getScaleY();
+        final double dx = (float) (1.0 / scaleX);
+        final double dy = (float) (1.0 / scaleY);
         final PBounds bounds = getBounds();
 
         g2.setPaint(getPaint());
@@ -131,55 +163,55 @@ public class P3DRect extends PNode {
         g2.draw(path);
     }
 
+    /**
+     * Changes the paint that will be used to draw this rectangle. This paint is
+     * used to shade the edges of the rectangle.
+     * 
+     * @param newPaint the color to use for painting this rectangle
+     */
     public void setPaint(final Paint newPaint) {
         super.setPaint(newPaint);
 
         if (newPaint instanceof Color) {
             final Color color = (Color) newPaint;
-
             if (raised) {
-                topLeftOuterColor = color.brighter();
-                topLeftInnerColor = topLeftOuterColor.brighter();
-                bottomRightInnerColor = color.darker();
-                bottomRightOuterColor = bottomRightInnerColor.darker();
+                setRaisedEdges(color);
             }
             else {
-                topLeftOuterColor = color.darker();
-                topLeftInnerColor = topLeftOuterColor.darker();
-                bottomRightInnerColor = color.brighter();
-                bottomRightOuterColor = bottomRightInnerColor.brighter();
+                setRecessedEdges(color);
             }
         }
         else {
-            topLeftOuterColor = null;
-            topLeftInnerColor = null;
-            bottomRightInnerColor = null;
-            bottomRightOuterColor = null;
+            setNoEdges();
         }
     }
 
-    //TODO: Move this into an example (if not already)
+    private void setRaisedEdges(final Color color) {
+        topLeftOuterColor = color.brighter();
+        topLeftInnerColor = topLeftOuterColor.brighter();
+        bottomRightInnerColor = color.darker();
+        bottomRightOuterColor = bottomRightInnerColor.darker();
+    }
+
+    private void setNoEdges() {
+        topLeftOuterColor = null;
+        topLeftInnerColor = null;
+        bottomRightInnerColor = null;
+        bottomRightOuterColor = null;
+    }
+
+    private void setRecessedEdges(final Color color) {
+        topLeftOuterColor = color.darker();
+        topLeftInnerColor = topLeftOuterColor.darker();
+        bottomRightInnerColor = color.brighter();
+        bottomRightOuterColor = bottomRightInnerColor.brighter();
+    }
+
+    /**
+     * @Deprecated since it has been moved to P3DRectExample.
+     * 
+     * @param args Command line arguments
+     */
     public static void main(final String[] args) {
-        new PFrame() {
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1L;
-
-            public void initialize() {
-                getCanvas().setDefaultRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
-
-                final P3DRect rect1 = new P3DRect(50, 50, 100, 100);
-                rect1.setPaint(new Color(239, 235, 222));
-
-                final P3DRect rect2 = new P3DRect(50, 50, 100, 100);
-                rect2.setPaint(new Color(239, 235, 222));
-                rect2.translate(110, 0);
-                rect2.setRaised(false);
-
-                getCanvas().getLayer().addChild(rect1);
-                getCanvas().getLayer().addChild(rect2);
-            }
-        };
     }
 }

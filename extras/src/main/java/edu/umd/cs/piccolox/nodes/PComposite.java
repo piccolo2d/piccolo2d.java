@@ -66,10 +66,13 @@ public class PComposite extends PNode {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Return true if this node or any pickable descendends are picked. If a
+     * Return true if this node or any pickable descendants are picked. If a
      * pick occurs the pickPath is modified so that this node is always returned
-     * as the picked node, event if it was a decendent node that initialy
+     * as the picked node, event if it was a descendant node that initially
      * reported the pick.
+     * 
+     * @param pickPath the pick path to add the nodes to if they are picked
+     * @return true if this node or one of its descendants was picked
      */
     public boolean fullPick(final PPickPath pickPath) {
         if (super.fullPick(pickPath)) {

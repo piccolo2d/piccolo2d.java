@@ -40,12 +40,12 @@ import edu.umd.cs.piccolo.event.PDragEventHandler;
 import edu.umd.cs.piccolo.nodes.PPath;
 
 /**
- * <b>PLens</b> is a simple default lens implementation for Piccolo. See
- * piccolo/examples LensExample for one possible use of this lens. Lens's are
+ * <b>PLens</b> is a simple default lens implementation for Piccolo2D. See
+ * piccolo2d/examples LensExample for one possible use of this lens. Lens's are
  * often application specific, it may be easiest to study this code, and then
  * implement your own custom lens using the general principles illustrated here.
  * <p>
- * The basic design here is to add a PCamera as the child of a Pnode (the lens
+ * The basic design here is to add a PCamera as the child of a PNode (the lens
  * node). The camera is the viewing part of the lens, and the node is the title
  * bar that can be used to move the lens around. Users of this lens will
  * probably want to set up some lens specific event handler and attach it to the
@@ -64,18 +64,26 @@ import edu.umd.cs.piccolo.nodes.PPath;
 public class PLens extends PNode {
 
     private static final long serialVersionUID = 1L;
-    public static double LENS_DRAGBAR_HEIGHT = 20;
-    public static Paint DEFAULT_DRAGBAR_PAINT = Color.DARK_GRAY;
-    public static Paint DEFAULT_LENS_PAINT = Color.LIGHT_GRAY;
-
     private final PPath dragBar;
     private final PCamera camera;
-    private transient final PDragEventHandler lensDragger;
+    private final transient PDragEventHandler lensDragger;
 
+    /** The height of the drag bar. */
+    public static double LENS_DRAGBAR_HEIGHT = 20;
+
+    /** Default paint to use for the drag bar. */
+    public static Paint DEFAULT_DRAGBAR_PAINT = Color.DARK_GRAY;
+
+    /** Default paint to use when drawing the background of the lens. */
+    public static Paint DEFAULT_LENS_PAINT = Color.LIGHT_GRAY;
+
+    /**
+     * Constructs the default PLens.
+     */
     public PLens() {
         // Drag bar gets resized to fit the available space, so any rectangle
         // will do here
-        dragBar = PPath.createRectangle(0, 0, 100, 100);
+        dragBar = PPath.createRectangle(0, 0, 1, 1);
         dragBar.setPaint(DEFAULT_DRAGBAR_PAINT);
         // This forces drag events to percolate up to PLens object
         dragBar.setPickable(false);
@@ -100,33 +108,66 @@ public class PLens extends PNode {
         });
     }
 
+    /**
+     * Creates the default PLens and attaches the given layer to it.
+     * 
+     * @param layer layer to attach to this PLens
+     */
     public PLens(final PLayer layer) {
         this();
         addLayer(0, layer);
     }
 
+    /**
+     * Returns the camera on which this lens is appearing.
+     * 
+     * @return camera on which lens is appearing
+     */
     public PCamera getCamera() {
         return camera;
     }
 
+    /**
+     * Returns the drag bar for this lens.
+     * 
+     * @return this lens' drag bar
+     */
     public PPath getDragBar() {
         return dragBar;
     }
 
+    /**
+     * Returns the event handler that this lens uses for its drag bar.
+     * 
+     * @return drag bar's drag event handler
+     */
     public PDragEventHandler getLensDraggerHandler() {
         return lensDragger;
     }
 
+    /**
+     * Adds the layer to the camera.
+     * 
+     * @param index index at which to add the layer to the camera
+     * @param layer layer to add to the camera
+     */
     public void addLayer(final int index, final PLayer layer) {
         camera.addLayer(index, layer);
     }
 
+    /**
+     * Removes the provided layer from the camera.
+     * 
+     * @param layer layer to be removed
+     */
     public void removeLayer(final PLayer layer) {
         camera.removeLayer(layer);
     }
 
-    // when the lens is resized this method gives us a chance to layout the
-    // lenses camera child appropriately.
+    /**
+     * When the lens is resized this method gives us a chance to layout the
+     * lenses camera child appropriately.
+     */
     protected void layoutChildren() {
         dragBar.setPathToRectangle((float) getX(), (float) getY(), (float) getWidth(), (float) LENS_DRAGBAR_HEIGHT);
         camera.setBounds(getX(), getY() + LENS_DRAGBAR_HEIGHT, getWidth(), getHeight() - LENS_DRAGBAR_HEIGHT);

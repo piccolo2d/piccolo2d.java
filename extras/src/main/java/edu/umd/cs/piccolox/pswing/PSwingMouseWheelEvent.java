@@ -58,13 +58,16 @@ public class PSwingMouseWheelEvent extends MouseWheelEvent implements PSwingEven
      * Constructs a new PMouseWheel event from a Java MouseWheelEvent.
      * 
      * @param id The event type (MOUSE_WHEEL)
-     * @param e The original Java mouse wheel event.
+     * @param swingEvent The original swing mouse wheel event.
+     * @param piccoloEvent Piccolo2D event for use when querying about the
+     *            event's piccolo2d context
      */
-    protected PSwingMouseWheelEvent(final int id, final MouseWheelEvent e, final PInputEvent event) {
-        super((Component) e.getSource(), e.getID(), e.getWhen(), e.getModifiers(), e.getX(), e.getY(), e
-                .getClickCount(), e.isPopupTrigger(), e.getScrollType(), e.getScrollAmount(), e.getWheelRotation());
+    protected PSwingMouseWheelEvent(final int id, final MouseWheelEvent swingEvent, final PInputEvent piccoloEvent) {
+        super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiers(),
+                swingEvent.getX(), swingEvent.getY(), swingEvent.getClickCount(), swingEvent.isPopupTrigger(),
+                swingEvent.getScrollType(), swingEvent.getScrollAmount(), swingEvent.getWheelRotation());
         this.id = id;
-        this.event = event;
+        this.event = piccoloEvent;
     }
 
     /**
@@ -197,10 +200,10 @@ public class PSwingMouseWheelEvent extends MouseWheelEvent implements PSwingEven
      * of the event will keep changing to reflect the scenegraph object that is
      * firing the event.
      * 
-     * @param aSource
+     * @param newSource the current source of the event to report
      */
-    public void setSource(final Object aSource) {
-        source = aSource;
+    public void setSource(final Object newSource) {
+        source = newSource;
     }
 
     /**

@@ -57,8 +57,8 @@ import edu.umd.cs.piccolo.util.PAffineTransformException;
  * @author Sam Reid
  */
 public class PSwingEventHandler implements PInputEventListener {
-    /** Used to listen for events */
-    private PNode listenNode = null; 
+    /** Used to listen for events. */
+    private PNode listenNode = null;
 
     /** Tracks whether this event handler is active. */
     private boolean active = false;
@@ -75,7 +75,8 @@ public class PSwingEventHandler implements PInputEventListener {
     /** Previous offset used for mouseEntered and exited events. */
     private Point2D previousOffset = null;
 
-    private boolean recursing = false;// to avoid accidental recursive handling
+    /** Used to avoid accidental recursive handling. */
+    private boolean recursing = false;
 
     /** Used for tracking the left button's state. */
     private final ButtonData leftButtonData = new ButtonData();
@@ -94,7 +95,7 @@ public class PSwingEventHandler implements PInputEventListener {
      * will receive the mouse events.
      * 
      * @param canvas the canvas associated with this PSwingEventHandler.
-     * @param node the node the mouse listeners will be attached to.
+     * @param listenNode the node the mouse listeners will be attached to.
      */
     public PSwingEventHandler(final PSwingCanvas canvas, final PNode listenNode) {
         this.canvas = canvas;
@@ -103,6 +104,8 @@ public class PSwingEventHandler implements PInputEventListener {
 
     /**
      * Constructs a new PSwingEventHandler for the given canvas.
+     * 
+     * @param canvas to associate this event handler to
      */
     public PSwingEventHandler(final PSwingCanvas canvas) {
         this.canvas = canvas;
@@ -111,7 +114,7 @@ public class PSwingEventHandler implements PInputEventListener {
     /**
      * Sets whether this event handler can fire events.
      * 
-     * @param active
+     * @param active true if thie event handler can fire events
      */
     void setActive(final boolean active) {
         if (this.active && !active) {
@@ -129,19 +132,20 @@ public class PSwingEventHandler implements PInputEventListener {
     /**
      * Returns if this event handler is active.
      * 
-     * @return True if active
+     * @return true if can fire events
      */
     public boolean isActive() {
         return active;
     }
 
     /**
-     * Finds the component at the specified location (must be showing).
+     * Finds the best visible component or subcomponent at the specified
+     * location.
      * 
-     * @param component
-     * @param x
-     * @param y
-     * @return the component at the specified location.
+     * @param component component to test children or self for
+     * @param x x component of location
+     * @param y y component of location
+     * @return the component or subcomponent at the specified location.
      */
     private Component findShowingComponentAt(final Component component, final int x, final int y) {
         if (!component.contains(x, y)) {
@@ -176,17 +180,18 @@ public class PSwingEventHandler implements PInputEventListener {
                 }
             }
         }
+
         return null;
     }
 
     /**
-     * Determines if any Swing components in Piccolo should receive the given
+     * Determines if any Swing components in Piccolo2D should receive the given
      * MouseEvent and forwards the event to that component. However,
      * mouseEntered and mouseExited are independent of the buttons. Also, notice
      * the notes on mouseEntered and mouseExited.
      * 
-     * @param pSwingMouseEvent
-     * @param aEvent
+     * @param pSwingMouseEvent event being dispatched
+     * @param aEvent Piccolo2D event translation of the pSwingMouseEvent
      */
     void dispatchEvent(final PSwingEvent pSwingMouseEvent, final PInputEvent aEvent) {
         final MouseEvent mEvent = pSwingMouseEvent.asMouseEvent();
@@ -365,8 +370,7 @@ public class PSwingEventHandler implements PInputEventListener {
     private void handleButton(final PSwingEvent e1, final PInputEvent aEvent, final ButtonData buttonData) {
         final MouseEvent m1 = e1.asMouseEvent();
         if (involvesSceneNode(buttonData)) {
-            // TODO: this probably won't handle viewing through multiple
-            // cameras.
+            // TODO: this probably won't handle viewing through multiple cameras.
 
             final Point2D pt = new Point2D.Double(m1.getX(), m1.getY());
             cameraToLocal(e1.getPath().getTopCamera(), pt, buttonData.getPNode());
@@ -455,11 +459,11 @@ public class PSwingEventHandler implements PInputEventListener {
     }
 
     /**
-     * Process a piccolo event and (if active) dispatch the corresponding Swing
+     * Process a Piccolo2D event and (if active) dispatch the corresponding Swing
      * event.
      * 
-     * @param aEvent
-     * @param type
+     * @param aEvent Piccolo2D event being testing for dispatch to swing
+     * @param type is not used in this method
      */
     public void processEvent(final PInputEvent aEvent, final int type) {
         if (aEvent.isMouseEvent()) {

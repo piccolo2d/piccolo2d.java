@@ -64,6 +64,8 @@ import edu.umd.cs.piccolox.nodes.PStyledText;
  * @author Lance Good
  */
 public class PStyledTextEventHandler extends PBasicInputEventHandler {
+    private static final int TEXT_EDIT_PADDING = 3;
+
     /** Canvas onto which this event handler is attached. */
     protected PCanvas canvas;
 
@@ -313,7 +315,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             }
             else {
                 width = (int) (editedText.getWidth() - textInsets.left - textInsets.right + editorInsets.left
-                        + editorInsets.right + 3.0);
+                        + editorInsets.right + TEXT_EDIT_PADDING);
             }
             prefSize.setSize(width, prefSize.getHeight());
             editor.setSize(prefSize);
@@ -325,7 +327,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             }
             else {
                 height = (int) (editedText.getHeight() - textInsets.top - textInsets.bottom + editorInsets.top
-                        + editorInsets.bottom + 3.0);
+                        + editorInsets.bottom + TEXT_EDIT_PADDING);
             }
             prefSize.setSize(width, height);
             editor.setSize(prefSize);
@@ -348,7 +350,9 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         private static final long serialVersionUID = 1L;
 
         public DefaultTextEditor() {
-            setBorder(new CompoundBorder(new LineBorder(Color.black), new EmptyBorder(3, 3, 3, 3)));
+            EmptyBorder padding = new EmptyBorder(TEXT_EDIT_PADDING,
+                    TEXT_EDIT_PADDING, TEXT_EDIT_PADDING, TEXT_EDIT_PADDING);
+            setBorder(new CompoundBorder(new LineBorder(Color.black), padding));
         }
 
         /**

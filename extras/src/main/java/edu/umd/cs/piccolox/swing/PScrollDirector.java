@@ -44,40 +44,40 @@ import edu.umd.cs.piccolo.PCanvas;
 public interface PScrollDirector {
 
     /**
-     * Installs the scroll director
+     * Installs the scroll director.
      * 
      * @param viewport The viewport on which this director directs
      * @param view The ZCanvas that the viewport looks at
      */
-    public void install(PViewport viewport, PCanvas view);
+    void install(PViewport viewport, PCanvas view);
 
     /**
-     * Uninstall the scroll director
+     * Uninstall the scroll director.
      */
-    public void unInstall();
+    void unInstall();
 
     /**
-     * Get the View position given the specified camera bounds
+     * Get the View position given the specified camera bounds.
      * 
      * @param viewBounds The bounds for which the view position will be computed
      * @return The view position
      */
-    public Point getViewPosition(Rectangle2D viewBounds);
+    Point getViewPosition(Rectangle2D viewBounds);
 
     /**
-     * Set the view position
+     * Set the view position.
      * 
      * @param x The new x position
      * @param y The new y position
      */
-    public void setViewPosition(double x, double y);
+    void setViewPosition(double x, double y);
 
     /**
-     * Get the size of the view based on the specified camera bounds
+     * Get the size of the view based on the specified camera bounds.
      * 
      * @param viewBounds The view bounds for which the view size will be
      *            computed
      * @return The view size
      */
-    public Dimension getViewSize(Rectangle2D viewBounds);
+    Dimension getViewSize(Rectangle2D viewBounds);
 }

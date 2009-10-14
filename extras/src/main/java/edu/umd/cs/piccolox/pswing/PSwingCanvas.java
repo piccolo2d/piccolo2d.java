@@ -45,6 +45,7 @@ import edu.umd.cs.piccolo.PCanvas;
  */
 public class PSwingCanvas extends PCanvas {
     private static final long serialVersionUID = 1L;
+    /** Key used to store the "Swing Wrapper" as an attribute of the PSwing node. */
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
     private final ChildWrapper swingWrapper;
 

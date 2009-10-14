@@ -11,6 +11,10 @@ import java.awt.geom.Point2D;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.util.PPickPath;
 
+/**
+ * Interface allowing PSwing events that originated from swing and are destined
+ * for PSwing nodes must conform to.
+ */
 public interface PSwingEvent {
     /**
      * Returns the x,y position of the event in the local coordinate system of
@@ -109,11 +113,11 @@ public interface PSwingEvent {
     void dispatchTo(Object listener);
 
     /**
-     * Set the souce of this event. As the event is fired up the tree the source
-     * of the event will keep changing to reflect the scenegraph object that is
-     * firing the event.
+     * Set the source of this event. As the event is fired up the tree the
+     * source of the event will keep changing to reflect the scenegraph object
+     * that is firing the event.
      * 
-     * @param aSource
+     * @param aSource the source of the event
      */
     void setSource(Object aSource);
 

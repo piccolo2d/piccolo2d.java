@@ -59,6 +59,9 @@ import edu.umd.cs.piccolo.util.PDimension;
  * @author Jesse Grosjean
  */
 public class PNavigationEventHandler extends PBasicInputEventHandler {
+    /** Minum size under which two scales are considered the same. */
+    private static final double SCALING_THRESHOLD = 0.0001;
+    /** Amount of time it takes to animation view from one location to another. */
     private static final int NAVIGATION_DURATION = 500;
     /** The UP direction on the screen. */
     public static final int NORTH = 0;
@@ -312,19 +315,16 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
      */
     public boolean nodeIsNeighborInDirection(final PNode node, final int direction) {
         switch (direction) {
-            case IN: {
+            case IN:
                 return node.isDescendentOf(focusNode);
-            }
 
-            case OUT: {
+            case OUT:
                 return node.isAncestorOf(focusNode);
-            }
 
-            default: {
+            default:
                 if (node.isAncestorOf(focusNode) || node.isDescendentOf(focusNode)) {
                     return false;
                 }
-            }
         }
 
         final Point2D highlightCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(focusNode);
@@ -334,24 +334,22 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         final double ytest2 = -nodeCenter.getX() + highlightCenter.getX() + highlightCenter.getY();
 
         switch (direction) {
-            case NORTH: {
+            case NORTH:
                 return nodeCenter.getY() < highlightCenter.getY() && nodeCenter.getY() < ytest1
                         && nodeCenter.getY() < ytest2;
-            }
 
-            case EAST: {
+            case EAST:
                 return nodeCenter.getX() > highlightCenter.getX() && nodeCenter.getY() < ytest1
                         && nodeCenter.getY() > ytest2;
-            }
 
-            case SOUTH: {
+            case SOUTH:
                 return nodeCenter.getY() > highlightCenter.getY() && nodeCenter.getY() > ytest1
                         && nodeCenter.getY() > ytest2;
-            }
-            case WEST: {
+
+            case WEST:
                 return nodeCenter.getX() < highlightCenter.getX() && nodeCenter.getY() > ytest1
                         && nodeCenter.getY() < ytest2;
-            }
+
             default:
                 return false;
         }
@@ -437,13 +435,12 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         focusNode = newFocus;
         final AffineTransform originalViewTransform = camera.getViewTransform();
 
-        // Scale the canvas to include
         final PDimension d = new PDimension(1, 0);
         focusNode.globalToLocal(d);
 
         final double scaleFactor = d.getWidth() / camera.getViewScale();
         final Point2D scalePoint = focusNode.getGlobalFullBounds().getCenter2D();
-        if (Math.abs(1f - scaleFactor) < 0.0001) {
+        if (Math.abs(1f - scaleFactor) < SCALING_THRESHOLD) {
             camera.scaleViewAboutPoint(scaleFactor, scalePoint.getX(), scalePoint.getY());
         }
 

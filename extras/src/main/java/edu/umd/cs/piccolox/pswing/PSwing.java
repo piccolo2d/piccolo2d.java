@@ -150,7 +150,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 
 /**
- * <b>PSwing</b> is used to add Swing Components to a Piccolo canvas.
+ * <b>PSwing</b> is used to add Swing Components to a Piccolo2D canvas.
  * <p>
  * Example: adding a swing JButton to a PCanvas:
  * 
@@ -159,8 +159,8 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * JButton button = new JButton(&quot;Button&quot;);
  * swing = new PSwing(canvas, button);
  * canvas.getLayer().addChild(swing);
+ * </pre>
  * 
- * <pre>
  * </p>
  * <p>
  * NOTE: PSwing has the current limitation that it does not listen for Container
@@ -190,10 +190,10 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * </p>
  * <p>
  * <b>Warning:</b> Serialized objects of this class will not be compatible with
- * future Piccolo releases. The current serialization support is appropriate for
- * short term storage or RMI between applications running the same version of
- * Piccolo. A future release of Piccolo will provide support for long term
- * persistence.
+ * future Piccolo2D releases. The current serialization support is appropriate
+ * for short term storage or RMI between applications running the same version
+ * of Piccolo2D. A future release of Piccolo2D will provide support for long
+ * term persistence.
  * </p>
  * 
  * @author Sam R. Reid
@@ -247,7 +247,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     private final List listeningTo = new ArrayList();
 
     /* The parent listener for camera/canvas changes. */
-    private transient final PropertyChangeListener parentListener = new PropertyChangeListener() {
+    private final transient PropertyChangeListener parentListener = new PropertyChangeListener() {
         /** {@inheritDoc} */
         public void propertyChange(final PropertyChangeEvent evt) {
             final PNode parent = (PNode) evt.getNewValue();
@@ -296,7 +296,12 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         listenForCanvas(this);
     }
 
-    /** @deprecated by {@link PSwing(JComponent)} */
+    /**
+     * @deprecated by {@link PSwing(JComponent)}
+     * 
+     * @param swingCanvas canvas on which the PSwing node will be embedded
+     * @param component not used
+     */
     public PSwing(final PSwingCanvas swingCanvas, final JComponent component) {
         this(component);
     }
@@ -480,7 +485,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * Repaints the specified portion of this visual component. Note that the
      * input parameter may be modified as a result of this call.
      * 
-     * @param repaintBounds
+     * @param repaintBounds bounds needing repainting
      */
     public void repaint(final PBounds repaintBounds) {
         final Shape sh = getTransform().createTransformedShape(repaintBounds);
@@ -634,7 +639,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     /**
      * Clear out all the listeners registered to make sure there are no stray
-     * references
+     * references.
      * 
      * @param fromParent Parent to start with for clearing listeners
      */
