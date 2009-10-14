@@ -56,100 +56,142 @@ import edu.umd.cs.piccolox.util.PBoundsLocator;
  * @author Jesse Grosjean
  */
 public class PSWTBoundsHandle extends PSWTHandle {
+    private final class HandleCursorEventHandler extends PBasicInputEventHandler {
+        boolean cursorPushed = false;
 
-    /**
-     * 
-     */
+        public void mouseEntered(final PInputEvent aEvent) {
+            if (!cursorPushed) {
+                aEvent.pushCursor(getCursorFor(((PBoundsLocator) getLocator()).getSide()));
+                cursorPushed = true;
+            }
+        }
+
+        public void mouseExited(final PInputEvent aEvent) {
+            final PPickPath focus = aEvent.getInputManager().getMouseFocus();
+
+            if (cursorPushed && isNewFocus(focus)) {
+                aEvent.popCursor();
+                cursorPushed = false;
+            }
+        }
+
+        private boolean isNewFocus(final PPickPath focus) {
+            return (focus == null || focus.getPickedNode() != PSWTBoundsHandle.this);
+        }
+
+        public void mouseReleased(final PInputEvent event) {
+            if (cursorPushed) {
+                event.popCursor();
+                cursorPushed = false;
+            }
+        }
+    }
+
     private static final long serialVersionUID = 1L;
     private PBasicInputEventHandler handleCursorHandler;
 
-    public static void addBoundsHandlesTo(final PNode aNode) {
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createEastLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createWestLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthEastLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthWestLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthEastLocator(aNode)));
-        aNode.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthWestLocator(aNode)));
+    /**
+     * Adds bounds handles to all corners and edges of the provided node.
+     * 
+     * @param node to decorate with bounds handles.
+     */
+    public static void addBoundsHandlesTo(final PNode node) {
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createEastLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createWestLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthEastLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthWestLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthEastLocator(node)));
+        node.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthWestLocator(node)));
     }
 
-    public static void addStickyBoundsHandlesTo(final PNode aNode, final PCamera camera) {
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createEastLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createWestLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthEastLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthWestLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthEastLocator(aNode)));
-        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthWestLocator(aNode)));
+    /**
+     * Adds sticky bounds handles to all corners and edges of the provided node
+     * and for display on the provided camera.
+     * 
+     * @param node to decorate with bounds handles.
+     * @param camera camera onto which the handles should be stuck
+     */
+    public static void addStickyBoundsHandlesTo(final PNode node, final PCamera camera) {
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createEastLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createWestLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthEastLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createNorthWestLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthEastLocator(node)));
+        camera.addChild(new PSWTBoundsHandle(PBoundsLocator.createSouthWestLocator(node)));
     }
 
-    public static void removeBoundsHandlesFrom(final PNode aNode) {
+    /**
+     * Removes all bounds handles from the specified node.
+     * 
+     * @param node node from which to remove bounds handles
+     */
+    public static void removeBoundsHandlesFrom(final PNode node) {
         final ArrayList handles = new ArrayList();
 
-        final Iterator i = aNode.getChildrenIterator();
+        final Iterator i = node.getChildrenIterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             if (each instanceof PSWTBoundsHandle) {
                 handles.add(each);
             }
         }
-        aNode.removeChildren(handles);
+        node.removeChildren(handles);
     }
 
-    public PSWTBoundsHandle(final PBoundsLocator aLocator) {
-        super(aLocator);
+    /**
+     * Creates a bounds handle that will use the provided bounds locator to
+     * position itself.
+     * 
+     * @param locator locator to use when positioning this handle
+     */
+    public PSWTBoundsHandle(final PBoundsLocator locator) {
+        super(locator);
     }
 
+    /**
+     * Installs handlers responsible for updating the attached node's bounds and
+     * for updating the cursor when the mous enters a handle.
+     */
     protected void installHandleEventHandlers() {
         super.installHandleEventHandlers();
-        handleCursorHandler = new PBasicInputEventHandler() {
-            boolean cursorPushed = false;
-
-            public void mouseEntered(final PInputEvent aEvent) {
-                if (!cursorPushed) {
-                    aEvent.pushCursor(getCursorFor(((PBoundsLocator) getLocator()).getSide()));
-                    cursorPushed = true;
-                }
-            }
-
-            public void mouseExited(final PInputEvent aEvent) {
-                final PPickPath focus = aEvent.getInputManager().getMouseFocus();
-                
-                if (cursorPushed && isNewFocus(focus)) {
-                    aEvent.popCursor();
-                    cursorPushed = false;
-                }
-            }
-
-            private boolean isNewFocus(final PPickPath focus) {
-                return (focus == null || focus.getPickedNode() != PSWTBoundsHandle.this);
-            }
-
-            public void mouseReleased(final PInputEvent event) {
-                if (cursorPushed) {
-                    event.popCursor();
-                    cursorPushed = false;
-                }
-            }
-        };
+        handleCursorHandler = new HandleCursorEventHandler();
         addInputEventListener(handleCursorHandler);
     }
 
     /**
      * Return the event handler that is responsible for setting the mouse cursor
      * when it enters/exits this handle.
+     * 
+     * @return handler responsible for keeping the mouse cursor up to date
      */
     public PBasicInputEventHandler getHandleCursorEventHandler() {
         return handleCursorHandler;
     }
 
+    /**
+     * Callback invoked when the user has started to drag a handle.
+     * 
+     * @param aLocalPoint point in the handle's coordinate system at which the
+     *            drag was started
+     * @param aEvent Piccolo2d Event representing the start of the drag
+     */
     public void startHandleDrag(final Point2D aLocalPoint, final PInputEvent aEvent) {
         final PBoundsLocator l = (PBoundsLocator) getLocator();
         l.getNode().startResizeBounds();
     }
 
+    /**
+     * Callback invoked when the user is dragging the handle. Updates the
+     * associated node appropriately.
+     * 
+     * @param aLocalDimension magnitude of drag in the handle's coordinate
+     *            system
+     * @param aEvent Piccolo2d Event representing the start of the drag
+     */
     public void dragHandle(final PDimension aLocalDimension, final PInputEvent aEvent) {
         final PBoundsLocator l = (PBoundsLocator) getLocator();
 
@@ -199,6 +241,8 @@ public class PSWTBoundsHandle extends PSWTHandle {
             case SwingConstants.SOUTH_EAST:
                 b.setRect(b.x, b.y, b.width + dx, b.height + dy);
                 break;
+            default:
+                // Leave bounds untouched
         }
 
         boolean flipX = false;
@@ -223,6 +267,13 @@ public class PSWTBoundsHandle extends PSWTHandle {
         n.setBounds(b);
     }
 
+    /**
+     * Callback invoked when the handle stops being dragged.
+     * 
+     * @param aLocalPoint point in the handle's coordinate system at which the
+     *            drag was stopped
+     * @param aEvent Piccolo2d Event representing the stop of the drag
+     */
     public void endHandleDrag(final Point2D aLocalPoint, final PInputEvent aEvent) {
         final PBoundsLocator l = (PBoundsLocator) getLocator();
         l.getNode().endResizeBounds();
@@ -238,98 +289,107 @@ public class PSWTBoundsHandle extends PSWTHandle {
         }
     }
 
+    /**
+     * Flips the handles around if needed. this is necessary since a node can
+     * become inverted when it's width or height becomes negative.
+     * 
+     * @param flipX whether to allow flipping in the horizontal direction
+     * @param flipY whether to allow flipping in the vertical direction
+     */
     public void flipHandleIfNeeded(final boolean flipX, final boolean flipY) {
+        if (!flipX && !flipY) {
+            return;
+        }
+
         final PBoundsLocator l = (PBoundsLocator) getLocator();
-
-        if (flipX || flipY) {
-            switch (l.getSide()) {
-                case SwingConstants.NORTH: {
-                    if (flipY) {
-                        l.setSide(SwingConstants.SOUTH);
-                    }
-                    break;
+        switch (l.getSide()) {
+            case SwingConstants.NORTH:
+                if (flipY) {
+                    l.setSide(SwingConstants.SOUTH);
                 }
+                break;
 
-                case SwingConstants.SOUTH: {
-                    if (flipY) {
-                        l.setSide(SwingConstants.NORTH);
-                    }
-                    break;
+            case SwingConstants.SOUTH:
+                if (flipY) {
+                    l.setSide(SwingConstants.NORTH);
                 }
+                break;
 
-                case SwingConstants.EAST: {
-                    if (flipX) {
-                        l.setSide(SwingConstants.WEST);
-                    }
-                    break;
+            case SwingConstants.EAST:
+                if (flipX) {
+                    l.setSide(SwingConstants.WEST);
                 }
+                break;
 
-                case SwingConstants.WEST: {
-                    if (flipX) {
-                        l.setSide(SwingConstants.EAST);
-                    }
-                    break;
+            case SwingConstants.WEST:
+                if (flipX) {
+                    l.setSide(SwingConstants.EAST);
                 }
+                break;
 
-                case SwingConstants.NORTH_WEST: {
-                    if (flipX && flipY) {
-                        l.setSide(SwingConstants.SOUTH_EAST);
-                    }
-                    else if (flipX) {
-                        l.setSide(SwingConstants.NORTH_EAST);
-                    }
-                    else if (flipY) {
-                        l.setSide(SwingConstants.SOUTH_WEST);
-                    }
-
-                    break;
+            case SwingConstants.NORTH_WEST:
+                if (flipX && flipY) {
+                    l.setSide(SwingConstants.SOUTH_EAST);
                 }
-
-                case SwingConstants.SOUTH_WEST: {
-                    if (flipX && flipY) {
-                        l.setSide(SwingConstants.NORTH_EAST);
-                    }
-                    else if (flipX) {
-                        l.setSide(SwingConstants.SOUTH_EAST);
-                    }
-                    else if (flipY) {
-                        l.setSide(SwingConstants.NORTH_WEST);
-                    }
-                    break;
+                else if (flipX) {
+                    l.setSide(SwingConstants.NORTH_EAST);
                 }
-
-                case SwingConstants.NORTH_EAST: {
-                    if (flipX && flipY) {
-                        l.setSide(SwingConstants.SOUTH_WEST);
-                    }
-                    else if (flipX) {
-                        l.setSide(SwingConstants.NORTH_WEST);
-                    }
-                    else if (flipY) {
-                        l.setSide(SwingConstants.SOUTH_EAST);
-                    }
-                    break;
+                else if (flipY) {
+                    l.setSide(SwingConstants.SOUTH_WEST);
                 }
+                break;
 
-                case SwingConstants.SOUTH_EAST: {
-                    if (flipX && flipY) {
-                        l.setSide(SwingConstants.NORTH_WEST);
-                    }
-                    else if (flipX) {
-                        l.setSide(SwingConstants.SOUTH_WEST);
-                    }
-                    else if (flipY) {
-                        l.setSide(SwingConstants.NORTH_EAST);
-                    }
-                    break;
+            case SwingConstants.SOUTH_WEST:
+                if (flipX && flipY) {
+                    l.setSide(SwingConstants.NORTH_EAST);
                 }
-            }
+                else if (flipX) {
+                    l.setSide(SwingConstants.SOUTH_EAST);
+                }
+                else if (flipY) {
+                    l.setSide(SwingConstants.NORTH_WEST);
+                }
+                break;
+
+            case SwingConstants.NORTH_EAST:
+                if (flipX && flipY) {
+                    l.setSide(SwingConstants.SOUTH_WEST);
+                }
+                else if (flipX) {
+                    l.setSide(SwingConstants.NORTH_WEST);
+                }
+                else if (flipY) {
+                    l.setSide(SwingConstants.SOUTH_EAST);
+                }
+                break;
+
+            case SwingConstants.SOUTH_EAST:
+                if (flipX && flipY) {
+                    l.setSide(SwingConstants.NORTH_WEST);
+                }
+                else if (flipX) {
+                    l.setSide(SwingConstants.SOUTH_WEST);
+                }
+                else if (flipY) {
+                    l.setSide(SwingConstants.NORTH_EAST);
+                }
+                break;
+            default:
+                // Do nothing
         }
 
         // reset locator to update layout
         setLocator(l);
     }
 
+    /**
+     * Returns an appropriate cursor to display when the mouse is over a handle
+     * on the side provided.
+     * 
+     * @param side value from SwingConstants
+     * 
+     * @return Appropriate cursor, or null if no appropriate cursor can be found
+     */
     public Cursor getCursorFor(final int side) {
         switch (side) {
             case SwingConstants.NORTH:
@@ -355,7 +415,8 @@ public class PSWTBoundsHandle extends PSWTHandle {
 
             case SwingConstants.SOUTH_EAST:
                 return new Cursor(Cursor.SE_RESIZE_CURSOR);
+            default:
+                return null;
         }
-        return null;
     }
 }
