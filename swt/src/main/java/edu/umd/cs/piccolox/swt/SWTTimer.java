@@ -36,30 +36,28 @@ import javax.swing.Timer;
 import org.eclipse.swt.widgets.Display;
 
 /**
+ * 
+ * 
  * @author Lance Good
  */
 public class SWTTimer extends Timer {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     private boolean notify = false;
 
-    int initialDelay, delay;
-    boolean repeats = true, coalesce = true;
-
-    Runnable doPostEvent = null;
-
-    Display display = null;
+    private int initialDelay;
+    private int delay;
+    private boolean repeats = true;
+    private boolean coalesce = true;
+    private Runnable doPostEvent = null;
+    private Display display = null;
 
     // These fields are maintained by TimerQueue.
     // eventQueued can also be reset by the TimerQueue, but will only ever
     // happen in applet case when TimerQueues thread is destroyed.
-    long expirationTime;
-    SWTTimer nextTimer;
-    boolean running;
+    private long expirationTime;
+    private SWTTimer nextTimer;
+    private boolean running;
 
     /**
      * DoPostEvent is a runnable class that fires actionEvents to the listeners
@@ -69,7 +67,6 @@ public class SWTTimer extends Timer {
      */
     class SWTDoPostEvent implements Runnable {
         public void run() {
-
             if (notify) {
                 fireActionPerformed(new ActionEvent(SWTTimer.this, 0, null, System.currentTimeMillis(), 0));
                 if (coalesce) {
@@ -86,8 +83,9 @@ public class SWTTimer extends Timer {
     /**
      * Constructor for SWTTimer.
      * 
-     * @param delay
-     * @param listener
+     * @param display display associated with this timer
+     * @param delay time in milliseconds between firings of this timer
+     * @param listener action listener to fire when the timer fires
      */
     public SWTTimer(final Display display, final int delay, final ActionListener listener) {
         super(delay, listener);
@@ -145,6 +143,7 @@ public class SWTTimer extends Timer {
      * 
      * @see #setDelay
      * @see #getInitialDelay
+     * @return delay in milliseconds between firings of this timer
      */
     public int getDelay() {
         return delay;
@@ -171,10 +170,12 @@ public class SWTTimer extends Timer {
     }
 
     /**
-     * Returns the <code>Timer</code>'s initial delay.
+     * Returns the <code>Timer</code>'s initial delay. By default this is the
+     * same as the value returned by getDelay.
      * 
      * @see #setInitialDelay
      * @see #setDelay
+     * @return the initial delay of this timer
      */
     public int getInitialDelay() {
         return initialDelay;
@@ -196,6 +197,7 @@ public class SWTTimer extends Timer {
      * send an action event to its listeners multiple times.
      * 
      * @see #setRepeats
+     * @return true if this timer should repeat when completed
      */
     public boolean isRepeats() {
         return repeats;
@@ -229,6 +231,7 @@ public class SWTTimer extends Timer {
      * pending action events.
      * 
      * @see #setCoalesce
+     * @return true if this timer coalesces multiple pending action events
      */
     public boolean isCoalesce() {
         return coalesce;
@@ -248,6 +251,7 @@ public class SWTTimer extends Timer {
      * Returns <code>true</code> if the <code>Timer</code> is running.
      * 
      * @see #start
+     * @return true if this timer is scheduled to run
      */
     public boolean isRunning() {
         return timerQueue().containsTimer(this);
@@ -283,10 +287,45 @@ public class SWTTimer extends Timer {
     }
 
     synchronized void postOverride() {
-        if (notify == false || !coalesce) {
+        if (!notify || !coalesce) {
             notify = true;
             display.asyncExec(doPostEvent);
         }
+    }
+
+    /**
+     * @param expirationTime the expirationTime to set
+     */
+    public void setExpirationTime(final long expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
+    /**
+     * @return the expirationTime
+     */
+    public long getExpirationTime() {
+        return expirationTime;
+    }
+
+    /**
+     * @param nextTimer the nextTimer to set
+     */
+    void setNextTimer(final SWTTimer nextTimer) {
+        this.nextTimer = nextTimer;
+    }
+
+    /**
+     * @return the nextTimer
+     */
+    SWTTimer getNextTimer() {
+        return nextTimer;
+    }
+
+    /**
+     * @param running the running to set
+     */
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
 }

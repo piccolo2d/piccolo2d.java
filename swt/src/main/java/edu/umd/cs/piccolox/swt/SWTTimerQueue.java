@@ -31,28 +31,40 @@ package edu.umd.cs.piccolox.swt;
 import org.eclipse.swt.widgets.Display;
 
 /**
+ * The SWTTimerQueue is a queue of timers. It has been implemented as a linked
+ * list of SWTTimer objects.
+ * 
  * @author Lance Good
  */
 public class SWTTimerQueue implements Runnable {
-    static SWTTimerQueue instance;
+    private static SWTTimerQueue instance;
 
-    Display display = null;
+    private final Display display;
 
-    SWTTimer firstTimer;
-    boolean running;
+    private SWTTimer firstTimer;
+    private boolean running;
 
     /**
-     * Constructor for TimerQueue.
+     * Creates a timer queue that will be attached the the provided display.
+     * It's Timers are expected to modify only this display, or none.
+     * 
+     * @param display the display that will get updated by this queue's timers.
      */
     public SWTTimerQueue(final Display display) {
-        super();
-
         this.display = display;
 
         // Now start the TimerQueue thread.
         start();
     }
 
+    /**
+     * Returns the singleton instance of the SWTTimerQueue. Take note that even
+     * when called with different displays it will always return the same result
+     * as the first call.
+     * 
+     * @param display display to associate with this Timer Queue's Activities
+     * @return singleton instance of SWTTimerQueue
+     */
     public static SWTTimerQueue sharedInstance(final Display display) {
         if (instance == null) {
             instance = new SWTTimerQueue(display);
@@ -60,107 +72,148 @@ public class SWTTimerQueue implements Runnable {
         return instance;
     }
 
+    /**
+     * Starts the timer queue. If it is already running, a RuntimeException will
+     * be thrown.
+     */
     synchronized void start() {
         if (running) {
-            throw new RuntimeException("Can't start a TimerQueue " + "that is already running");
+            throw new RuntimeException("Can't start a TimerQueue that is already running");
         }
-        else {
-            Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
-                    final Thread timerThread = new Thread(SWTTimerQueue.this, "TimerQueue");
-                    timerThread.setDaemon(true);
-                    timerThread.setPriority(Thread.NORM_PRIORITY);
-                    timerThread.start();
-                }
-            });
-            running = true;
-        }
+
+        // Ensures that the Thread will be started from the display thread.
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                final Thread timerThread = new Thread(SWTTimerQueue.this, "TimerQueue");
+                timerThread.setDaemon(true);
+                timerThread.setPriority(Thread.NORM_PRIORITY);
+                timerThread.start();
+            }
+        });
+
+        running = true;
     }
 
+    /**
+     * Stops the TimerQueue Thread.
+     */
     synchronized void stop() {
         running = false;
         notify();
     }
 
+    /**
+     * Adds the provided timer to the queue of scheduled timers.
+     * 
+     * @param timer timer to add
+     * @param expirationTime time at which the timer is to be stopped and
+     *            removed from the queue. Given in unix time.
+     */
     synchronized void addTimer(final SWTTimer timer, final long expirationTime) {
-        SWTTimer previousTimer;
-        SWTTimer nextTimer;
+        // If the Timer is already in the queue, then do nothing
+        if (!timer.isRunning()) {
+            insertTimer(timer, expirationTime);
 
-        // If the Timer is already in the queue, then ignore the add.
-        if (timer.running) {
-            return;
+            timer.setExpirationTime(expirationTime);
+
+            timer.setRunning(true);
+            notify();
         }
+    }
 
-        previousTimer = null;
-        nextTimer = firstTimer;
-
-        // Insert the Timer into the linked list in the order they will
-        // expire. If two timers expire at the same time, put the newer entry
-        // later so they expire in the order they came in.
-
-        while (nextTimer != null) {
-            if (nextTimer.expirationTime > expirationTime) {
-                break;
-            }
-
-            previousTimer = nextTimer;
-            nextTimer = nextTimer.nextTimer;
-        }
-
+    /**
+     * Insert the Timer into the queue in the order they will expire. If
+     * multiple timers are set to expire at the same time, it will insert it
+     * after the last one; that way they expire in the order they came in.
+     * 
+     * @param timer timer to insert into the queue
+     * @param expirationTime time in UNIX time at which the new timer should
+     *            expire
+     */
+    private void insertTimer(final SWTTimer timer, final long expirationTime) {
+        SWTTimer previousTimer = findLastTimerExpiringBefore(expirationTime);
         if (previousTimer == null) {
             firstTimer = timer;
         }
         else {
-            previousTimer.nextTimer = timer;
+            timer.setNextTimer(previousTimer.getNextTimer());
+            previousTimer.setNextTimer(timer);
         }
-
-        timer.expirationTime = expirationTime;
-        timer.nextTimer = nextTimer;
-        timer.running = true;
-        notify();
     }
 
-    synchronized void removeTimer(final SWTTimer timer) {
-        SWTTimer previousTimer;
-        SWTTimer nextTimer;
-        boolean found;
+    /**
+     * Finds the last timer that will expire before or at the given expiration
+     * time. If there are multiple timers expiring at the same time, the last
+     * one in the queue will be returned.
+     * 
+     * @param expirationTime expiration to compare against timers in the queue
+     * @return last timer that will expire before or at the given expiration
+     *         time
+     */
+    private SWTTimer findLastTimerExpiringBefore(final long expirationTime) {
+        SWTTimer previousTimer = null;
+        SWTTimer nextTimer = firstTimer;
 
-        if (!timer.running) {
-            return;
-        }
-
-        previousTimer = null;
-        nextTimer = firstTimer;
-        found = false;
-
-        while (nextTimer != null) {
-            if (nextTimer == timer) {
-                found = true;
-                break;
-            }
-
+        while (nextTimer != null && nextTimer.getExpirationTime() > expirationTime) {
             previousTimer = nextTimer;
-            nextTimer = nextTimer.nextTimer;
+            nextTimer = nextTimer.getNextTimer();
         }
 
-        if (!found) {
+        return previousTimer;
+
+    }
+
+    /**
+     * Removes the provided timer from the Timer Queue. If it is not found, then
+     * nothing happens.
+     * 
+     * @param timer timer to remove from the queue
+     */
+    synchronized void removeTimer(final SWTTimer timer) {
+        if (!timer.isRunning()) {
             return;
         }
 
-        if (previousTimer == null) {
-            firstTimer = timer.nextTimer;
+        if (timer == firstTimer) {
+            firstTimer = timer.getNextTimer();
         }
         else {
-            previousTimer.nextTimer = timer.nextTimer;
+            SWTTimer previousTimer = findLastTimerBefore(timer);
+            if (previousTimer != null) {
+                previousTimer.setNextTimer(timer.getNextTimer());
+            }
         }
 
-        timer.expirationTime = 0;
-        timer.nextTimer = null;
-        timer.running = false;
+        timer.setExpirationTime(0);
+        timer.setNextTimer(null);
+        timer.setRunning(false);
+    }
+
+    /**
+     * Finds the timer that immediately precedes the provided timer in the
+     * queue.
+     * 
+     * @param timer to search for
+     * @return timer immediately preceding found timer, or null if not found
+     */
+    private SWTTimer findLastTimerBefore(final SWTTimer timer) {
+        SWTTimer previousTimer = null;
+        SWTTimer currentTimer = firstTimer;
+
+        while (currentTimer != null) {
+            if (currentTimer == timer) {
+                return previousTimer;
+            }
+
+            previousTimer = currentTimer;
+            currentTimer = currentTimer.getNextTimer();
+        }
+
+        return null;
     }
 
     synchronized boolean containsTimer(final SWTTimer timer) {
-        return timer.running;
+        return timer.isRunning();
     }
 
     /**
@@ -183,7 +236,7 @@ public class SWTTimerQueue implements Runnable {
             }
 
             currentTime = System.currentTimeMillis();
-            timeToWait = timer.expirationTime - currentTime;
+            timeToWait = timer.getExpirationTime() - currentTime;
 
             if (timeToWait <= 0) {
                 try {
@@ -211,13 +264,14 @@ public class SWTTimerQueue implements Runnable {
                     wait(1);
                 }
                 catch (final InterruptedException e) {
+                    
                 }
             }
         } while (timeToWait <= 0);
 
         return timeToWait;
     }
-
+    
     public synchronized void run() {
         long timeToWait;
 
@@ -237,13 +291,18 @@ public class SWTTimerQueue implements Runnable {
             SWTTimer timer = firstTimer;
             while (timer != null) {
                 timer.cancelEventOverride();
-                timer = timer.nextTimer;
+                timer = timer.getNextTimer();
             }
             display.asyncExec(new SWTTimerQueueRestart(display));
             throw td;
         }
     }
 
+    /**
+     * Generates a string handy for debugging the contents of the timer queue.
+     * 
+     * @return String representation of the queue for use in debugging
+     */
     public synchronized String toString() {
         StringBuffer buf;
         SWTTimer nextTimer;
@@ -255,7 +314,7 @@ public class SWTTimerQueue implements Runnable {
         while (nextTimer != null) {
             buf.append(nextTimer.toString());
 
-            nextTimer = nextTimer.nextTimer;
+            nextTimer = nextTimer.getNextTimer();
             if (nextTimer != null) {
                 buf.append(", ");
             }
@@ -270,26 +329,29 @@ public class SWTTimerQueue implements Runnable {
      * restart.
      */
     protected static class SWTTimerQueueRestart implements Runnable {
-        boolean attemptedStart;
+        /** Tracks whether a restart has been attempted. */
+        private boolean attemptedStart;
 
-        Display display = null;
+        private final Display display;
 
         public SWTTimerQueueRestart(final Display display) {
             this.display = display;
         }
 
-        public synchronized void run() {
-            // Only try and restart the q once.
-            if (!attemptedStart) {
-                final SWTTimerQueue q = SWTTimerQueue.sharedInstance(display);
-
-                synchronized (q) {
-                    if (!q.running) {
-                        q.start();
-                    }
-                }
-                attemptedStart = true;
+        public synchronized void run() {            
+            if (attemptedStart) {
+                return;
             }
+            
+            final SWTTimerQueue q = SWTTimerQueue.sharedInstance(display);
+
+            synchronized (q) {
+                if (!q.running) {
+                    q.start();
+                }
+            }
+
+            attemptedStart = true;
         }
     }
 
