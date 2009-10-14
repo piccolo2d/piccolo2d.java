@@ -110,7 +110,7 @@ public class ExampleRunner extends JFrame {
                 HandleExample.class, HelloWorldExample.class, HierarchyZoomExample.class, HtmlViewExample.class,
                 KeyEventFocusExample.class, LayoutExample.class, LensExample.class, NavigationExample.class,
                 NodeCacheExample.class, NodeEventExample.class, NodeExample.class, NodeLinkExample.class,
-                PanToExample.class, PathExample.class, PositionExample.class, PositionPathActivityExample.class,
+                P3DRectExample.class, PanToExample.class, PathExample.class, PositionExample.class, PositionPathActivityExample.class,
                 PulseExample.class, ScrollingExample.class, SelectionExample.class, ShadowExample.class,
                 SquiggleExample.class, StickyExample.class, StickyHandleLayerExample.class, StrokeExample.class,
                 TextExample.class, TooltipExample.class, TwoCanvasExample.class, WaitForActivitiesExample.class });
@@ -125,12 +125,7 @@ public class ExampleRunner extends JFrame {
     private JButton buildExampleButton(final Class exampleClass) {
         final String fullClassName = exampleClass.getName();
         final String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
-        return new JButton(new AbstractAction(simpleClassName) {
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1L;
-
+        return new JButton(new AbstractAction(simpleClassName) {                  
             public void actionPerformed(final ActionEvent event) {
                 try {
                     final PFrame example = (PFrame) exampleClass.newInstance();
