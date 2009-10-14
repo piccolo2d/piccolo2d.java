@@ -2907,15 +2907,16 @@ public class PNode implements Cloneable, Serializable, Printable {
             g2.setPaint(backGroundPaint);
             g2.fillRect(0, 0, imageWidth, imageHeight);
         }
-
-        final PBounds imageBounds = getFullBounds();
-
-        imageBounds.expandNearestIntegerDimensions();
-
         g2.setClip(0, 0, imageWidth, imageHeight);
 
+        final PBounds nodeBounds = getFullBounds();
+        nodeBounds.expandNearestIntegerDimensions();
+
+        final double nodeWidth = nodeBounds.getWidth();
+        final double nodeHeight = nodeBounds.getHeight();
+
         double imageRatio = imageWidth / (imageHeight * 1.0);
-        double nodeRatio = getWidth() / getHeight();
+        double nodeRatio = nodeWidth / nodeHeight;
         double scale;
         switch (fillStrategy) {
             case FILL_STRATEGY_ASPECT_FIT:
@@ -2923,31 +2924,31 @@ public class PNode implements Cloneable, Serializable, Printable {
                 // bounds but aspect ration is retained
 
                 if (nodeRatio <= imageRatio) {
-                    scale = image.getHeight() / getHeight();
+                    scale = image.getHeight() / nodeHeight;
                 }
                 else {
-                    scale = image.getWidth() / getWidth();
+                    scale = image.getWidth() / nodeWidth;
                 }
                 g2.scale(scale, scale);
-                g2.translate(-imageBounds.x, -imageBounds.y);
+                g2.translate(-nodeBounds.x, -nodeBounds.y);
                 break;
             case FILL_STRATEGY_ASPECT_COVER:
                 // scale the graphics so node completely covers the imageable
                 // area, but retains its aspect ratio.
                 if (nodeRatio <= imageRatio) {
-                    scale = image.getWidth() / getWidth();
+                    scale = image.getWidth() / nodeWidth;
                 }
                 else {
-                    scale = image.getHeight() / getHeight();
+                    scale = image.getHeight() / nodeHeight;
                 }
                 g2.scale(scale, scale);
-                g2.translate(-getWidth() * scale, -getHeight() * scale);
+                g2.translate(-nodeWidth * scale, -nodeHeight * scale);
                 break;
             case FILL_STRATEGY_EXACT_FIT:
-                // scale the node so that it
-                g2.scale(image.getWidth() / getWidth(), image.getHeight() / getHeight());
-
-                g2.translate(-imageBounds.x, -imageBounds.y);
+                // scale the node so that it covers then entire image,
+                // distorting it if necessary.
+                g2.scale(image.getWidth() / nodeWidth, image.getHeight() / nodeHeight);
+                g2.translate(-nodeBounds.x, -nodeBounds.y);
                 break;
             default:
                 throw new IllegalArgumentException("Fill strategy provided is invalid");

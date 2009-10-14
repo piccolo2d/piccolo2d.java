@@ -32,11 +32,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +47,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.text.MutableAttributeSet;
 
 import junit.framework.TestCase;
@@ -202,47 +206,46 @@ public class PNodeTest extends TestCase {
         node.setPaintInvalid(true);
         node.setPickable(false);
         node.setPropertyChangeParentMask(PNode.PROPERTY_CODE_PAINT);
-        node.setVisible(false);        
-        
+        node.setVisible(false);
+
         final PNode clonedNode = (PNode) node.clone();
 
         assertEquals(1, clonedNode.getX(), Double.MIN_VALUE);
         assertEquals(2, clonedNode.getY(), Double.MIN_VALUE);
         assertEquals(3, clonedNode.getWidth(), Double.MIN_VALUE);
-        assertEquals(4, clonedNode.getHeight(), Double.MIN_VALUE);        
+        assertEquals(4, clonedNode.getHeight(), Double.MIN_VALUE);
         assertTrue(clonedNode.getChildPaintInvalid());
         assertFalse(clonedNode.getChildrenPickable());
         assertEquals(Color.YELLOW, clonedNode.getPaint());
-        
+
         assertFalse(clonedNode.getPickable());
         assertEquals(PNode.PROPERTY_CODE_PAINT, node.getPropertyChangeParentMask());
-        assertFalse(clonedNode.getVisible());     
-    }    
-    
-    public void testCloneCopiesTransforms() { 
+        assertFalse(clonedNode.getVisible());
+    }
+
+    public void testCloneCopiesTransforms() {
         node.setScale(0.5);
-        node.setRotation(Math.PI/8d);
-        node.setOffset(5,6);
-        
+        node.setRotation(Math.PI / 8d);
+        node.setOffset(5, 6);
+
         final PNode clonedNode = (PNode) node.clone();
-       
+
         assertEquals(0.5, clonedNode.getScale(), 0.00001);
-        assertEquals(Math.PI/8d, clonedNode.getRotation(), 0.00001);
+        assertEquals(Math.PI / 8d, clonedNode.getRotation(), 0.00001);
         assertEquals(5, clonedNode.getXOffset(), Double.MIN_VALUE);
         assertEquals(6, clonedNode.getYOffset(), Double.MIN_VALUE);
-    }    
+    }
 
-    public void testCloneClonesChildrenAswell() {        
+    public void testCloneClonesChildrenAswell() {
         final PNode child = new PNode();
         node.addChild(child);
 
         final PNode clonedNode = (PNode) node.clone();
-        
+
         assertEquals(clonedNode.getChildrenCount(), 1);
         assertNotSame(child, clonedNode.getChild(0));
     }
 
-    
     public void testLocalToGlobal() {
         final PNode aParent = new PNode();
         final PNode aChild = new PNode();
@@ -1026,6 +1029,28 @@ public class PNodeTest extends TestCase {
         assertEquals(Color.RED.getRGB(), img.getRGB(9, 0));
         assertEquals(Color.RED.getRGB(), img.getRGB(0, 9));
         assertEquals(Color.RED.getRGB(), img.getRGB(9, 9));
+    }
+
+    public void testToImageUsesFullBoundsWhenConvertingImage() throws IOException {
+        node.setBounds(0, 0, 50, 50);
+        PNode child1 = new PNode();
+        child1.setBounds(0, 0, 100, 50);
+        child1.setPaint(Color.RED);
+        node.addChild(child1);
+        
+        PNode child2 = new PNode();
+        child2.setBounds(0, 0, 50, 100);
+        child2.setPaint(Color.BLUE);
+        node.addChild(child2);
+        
+        BufferedImage image = (BufferedImage) node.toImage();
+        assertNotNull(image);
+        assertEquals(100, image.getWidth());
+        assertEquals(100, image.getHeight());           
+        assertEquals(Color.RED.getRGB(), image.getRGB(99, 1));
+        
+        //This line fails if PNode.toImage uses getWidth() rather than getFullBounds().getWidth()
+        assertEquals(Color.BLUE.getRGB(), image.getRGB(1, 99));
     }
 
     public void testToImageWillAcceptBackgroundPaint() {
