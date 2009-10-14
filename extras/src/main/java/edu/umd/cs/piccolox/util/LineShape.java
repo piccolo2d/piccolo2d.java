@@ -36,6 +36,9 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * A shape that can be used to represent hand drawn lines.
+ */
 public class LineShape implements Shape, MutablePoints {
     private MutablePoints points;
     private final Rectangle2D bounds = new Rectangle2D.Double();
@@ -54,11 +57,13 @@ public class LineShape implements Shape, MutablePoints {
      * 
      * @param points new Points to use as this shape's path
      */
-    public void setPoints(MutablePoints points) {
+    public void setPoints(final MutablePoints points) {
         if (points == null) {
-            points = new XYArray();
+            this.points = new XYArray();
         }
-        this.points = points;
+        else {
+            this.points = points;
+        }
     }
 
     /**
@@ -214,8 +219,9 @@ public class LineShape implements Shape, MutablePoints {
         double dy = y2 - y1;
 
         // If line is a point then bail out
-        if (dx == 0 && dy == 0)
+        if (dx == 0 && dy == 0) {
             return false;
+        }
 
         final double dx2 = dx * dx;
         final double dy2 = dy * dy;
@@ -400,8 +406,8 @@ public class LineShape implements Shape, MutablePoints {
      * @param height height of defined rectangle
      * @return true if rectangle is contained
      */
-    public boolean contains(final double x, final double y, final double w, final double h) {
-        return contains(x, y) && contains(x + w, y) && contains(x, y + h) && contains(x + w, y + h);
+    public boolean contains(final double x, final double y, final double width, final double height) {
+        return contains(x, y) && contains(x + width, y) && contains(x, y + height) && contains(x + width, y + height);
     }
 
     /**
@@ -420,7 +426,6 @@ public class LineShape implements Shape, MutablePoints {
      * 
      * @param at optional transform to apply to segment before returning it. May
      *            be null
-     * @param iterator for iterating over Line Paths
      * @return iterator for iterating segments of this LineShape
      */
     public PathIterator getPathIterator(final AffineTransform at) {
@@ -433,7 +438,6 @@ public class LineShape implements Shape, MutablePoints {
      * 
      * @param at optional transform to apply to segment before returning it. May
      *            be null
-     * @param iterator for iterating over Line Paths
      * @param flatness ignored completely
      * @return iterator for iterating segments of this LineShape
      */
@@ -463,7 +467,8 @@ public class LineShape implements Shape, MutablePoints {
         /**
          * Returns the winding rule being applied when selecting next paths.
          * 
-         * @return GeneralPath.WIND_EVEN_ODD since that's the only policy supported
+         * @return GeneralPath.WIND_EVEN_ODD since that's the only policy
+         *         supported
          */
         public int getWindingRule() {
             return GeneralPath.WIND_EVEN_ODD;
@@ -506,7 +511,12 @@ public class LineShape implements Shape, MutablePoints {
             currentSegment();
             coords[0] = (float) tempPoint.getX();
             coords[1] = (float) tempPoint.getY();
-            return i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO;
+            if (i == 0) {
+                return PathIterator.SEG_MOVETO;
+            }
+            else {
+                return PathIterator.SEG_LINETO;
+            }
         }
 
         /**
@@ -521,7 +531,12 @@ public class LineShape implements Shape, MutablePoints {
             currentSegment();
             coords[0] = tempPoint.getX();
             coords[1] = tempPoint.getY();
-            return i == 0 ? PathIterator.SEG_MOVETO : PathIterator.SEG_LINETO;
+            if (i == 0) {
+                return PathIterator.SEG_MOVETO;
+            }
+            else {
+                return PathIterator.SEG_LINETO;
+            }
         }
     }
 }

@@ -257,20 +257,22 @@ public class PSwingEventHandler implements PInputEventListener {
             }
         }
         else if (isPressOrClickOrMove(pSwingMouseEvent) && comp != null) {
-            final MouseEvent e_temp = new MouseEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(), mEvent
+            final MouseEvent tempEvent = new MouseEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(), mEvent
                     .getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
                     .isPopupTrigger());
 
-            final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+            final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
             dispatchEvent(comp, e2);
         }
         else if (isWheelEvent(pSwingMouseEvent) && comp != null) {
             final MouseWheelEvent mWEvent = (MouseWheelEvent) mEvent;
-            final MouseWheelEvent e_temp = new MouseWheelEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(), mEvent
-                    .getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
-                    .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent.getWheelRotation());
+            
+            final MouseWheelEvent tempEvent = new MouseWheelEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(),
+                    mEvent.getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
+                            .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent
+                            .getWheelRotation());
 
-            final PSwingMouseWheelEvent e2 = new PSwingMouseWheelEvent(e_temp.getID(), e_temp, aEvent);
+            final PSwingMouseWheelEvent e2 = new PSwingMouseWheelEvent(tempEvent.getID(), tempEvent, aEvent);
             dispatchEvent(comp, e2);
         }
 
@@ -282,9 +284,9 @@ public class PSwingEventHandler implements PInputEventListener {
 
             // This shouldn't happen - since we're only getting node events
             if (comp == null || pSwingMouseEvent.getID() == MouseEvent.MOUSE_EXITED) {
-                final MouseEvent e_temp = createExitEvent(mEvent);
+                final MouseEvent tempEvent = createExitEvent(mEvent);
 
-                final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+                final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
 
                 dispatchEvent(previousComponent, e2);
                 previousComponent = null;
@@ -292,18 +294,18 @@ public class PSwingEventHandler implements PInputEventListener {
 
             // This means mouseExited prevComponent and mouseEntered comp
             else if (previousComponent != comp) {
-                MouseEvent e_temp = createExitEvent(mEvent);
-                PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+                MouseEvent tempEvent = createExitEvent(mEvent);
+                PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
                 dispatchEvent(previousComponent, e2);
 
-                e_temp = createEnterEvent(comp, mEvent, offset.x, offset.y);
-                e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+                tempEvent = createEnterEvent(comp, mEvent, offset.x, offset.y);
+                e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
                 comp.dispatchEvent(e2.asMouseEvent());
             }
         }
         else if (comp != null) { // This means mouseEntered
-            final MouseEvent e_temp = createEnterEvent(comp, mEvent, offset.x, offset.y);
-            final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(e_temp.getID(), e_temp, aEvent);
+            final MouseEvent tempEvent = createEnterEvent(comp, mEvent, offset.x, offset.y);
+            final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
             dispatchEvent(comp, e2);
         }
 
@@ -370,7 +372,8 @@ public class PSwingEventHandler implements PInputEventListener {
     private void handleButton(final PSwingEvent e1, final PInputEvent aEvent, final ButtonData buttonData) {
         final MouseEvent m1 = e1.asMouseEvent();
         if (involvesSceneNode(buttonData)) {
-            // TODO: this probably won't handle viewing through multiple cameras.
+            // TODO: this probably won't handle viewing through multiple
+            // cameras.
 
             final Point2D pt = new Point2D.Double(m1.getX(), m1.getY());
             cameraToLocal(e1.getPath().getTopCamera(), pt, buttonData.getPNode());
@@ -459,8 +462,8 @@ public class PSwingEventHandler implements PInputEventListener {
     }
 
     /**
-     * Process a Piccolo2D event and (if active) dispatch the corresponding Swing
-     * event.
+     * Process a Piccolo2D event and (if active) dispatch the corresponding
+     * Swing event.
      * 
      * @param aEvent Piccolo2D event being testing for dispatch to swing
      * @param type is not used in this method

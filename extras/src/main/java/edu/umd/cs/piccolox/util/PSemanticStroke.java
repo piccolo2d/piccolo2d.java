@@ -49,22 +49,32 @@ abstract class PSemanticStroke implements Stroke {
     protected final Stroke stroke;
 
     protected PSemanticStroke(final Stroke stroke) {
-        this.stroke = recentStroke = stroke;
+        this.stroke = stroke;
+        recentStroke = stroke;
         recentScale = 1.0F;
     }
 
     /**
      * Ask {@link #getActiveScale()}, call {@link #newStroke(float)} if
-     * necessary and delegate to {@link Stroke#createStrokedShape(Shape)}
+     * necessary and delegate to {@link Stroke#createStrokedShape(Shape)}.
+     * 
+     * @param s
      */
     public Shape createStrokedShape(final Shape s) {
         final float currentScale = getActiveScale();
         if (Math.abs(currentScale - recentScale) > THRESHOLD) {
-            recentStroke = newStroke(recentScale = currentScale);
+            recentScale = currentScale;
+            recentStroke = newStroke(recentScale);
         }
         return recentStroke.createStrokedShape(s);
     }
 
+    /**
+     * Returns true if this stroke is equivalent to the object provided.
+     * 
+     * @param obj Object being tested
+     * @return true if object is equivalent
+     */
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -110,8 +120,12 @@ abstract class PSemanticStroke implements Stroke {
 
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
-        result = prime * result + (stroke == null ? 0 : stroke.hashCode());
+        int result = prime;
+
+        if (stroke != null) {
+            result += stroke.hashCode();
+        }
+
         return result;
     }
 

@@ -116,6 +116,11 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
         this(new BasicStroke(width, cap, join, miterlimit, dash, dash_phase));
     }
 
+    /**
+     * Throws an exception since PFixedWidthStrokes are not serializable.
+     * 
+     * @return never returns anything
+     */
     public Object clone() {
         throw new UnsupportedOperationException("Not implemented.");
     }
@@ -160,10 +165,22 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
         return ((BasicStroke) stroke).getLineWidth();
     }
 
+    /**
+     * Returns the miter limit of this node.
+     * 
+     * @return miter limit of this node
+     */
     public float getMiterLimit() {
         return ((BasicStroke) stroke).getMiterLimit();
     }
 
+    /**
+     * Returns a stroke equivalent to this one, but scaled by the scale
+     * provided.
+     * 
+     * @param activeScale scale to apply to the new stoke
+     * @return scaled stroke
+     */
     protected Stroke newStroke(final float activeScale) {
         if (tmpDash != null) {
             for (int i = dash.length - 1; i >= 0; i--) {
@@ -188,6 +205,7 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
      * 
      * @throws ObjectStreamException doesn't actually throw this at all, why's
      *             this here?
+     * @return the resolved stroke
      */
     protected Object readResolve() throws ObjectStreamException {
         return new PFixedWidthStroke((BasicStroke) stroke);

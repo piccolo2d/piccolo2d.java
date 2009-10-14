@@ -42,6 +42,8 @@ import java.awt.image.Kernel;
  */
 public final class ShadowUtils {
 
+    private static final int BLUR_BOUNDS_AFFORDANCE = 4;
+
     /**
      * Private no-arg constructor.
      */
@@ -71,8 +73,8 @@ public final class ShadowUtils {
         if (blurRadius < 1) {
             throw new IllegalArgumentException("blur radius must be greater than zero, was " + blurRadius);
         }
-        int w = src.getWidth(null) + (4 * blurRadius);
-        int h = src.getHeight(null) + (4 * blurRadius);
+        int w = src.getWidth(null) + (BLUR_BOUNDS_AFFORDANCE * blurRadius);
+        int h = src.getHeight(null) + (BLUR_BOUNDS_AFFORDANCE * blurRadius);
 
         // paint src image into mask
         BufferedImage mask = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -114,7 +116,7 @@ public final class ShadowUtils {
          */
         private static float[] createKernel(final int r) {
             int w = (2 * r) + 1;
-            float kernel[] = new float[w * w];
+            float[] kernel = new float[w * w];
             double m = 2.0d * Math.pow((r / 3.0d), 2);
             double n = Math.PI * m;
 

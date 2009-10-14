@@ -50,14 +50,10 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public class PViewport extends JViewport {
     private static final long serialVersionUID = 1L;
-    /**
-     * Controls what happens when scrolling occurs
-     */
+    /** Controls what happens when scrolling occurs. */
     PScrollDirector scrollDirector;
 
-    /**
-     * Pass constructor info to super
-     */
+    /** Pass constructor info to super. */
     public PViewport() {
         super();
 
@@ -79,7 +75,7 @@ public class PViewport extends JViewport {
      * Subclasses can override this to install a different scroll director in
      * the constructor. Returns a new <code>PScrollDirector</code> object.
      * 
-     * @return a <code>PScrollDirector
+     * @return a PScrollDirector
      */
     protected PScrollDirector createScrollDirector() {
         return new PDefaultScrollDirector();
@@ -101,14 +97,16 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * @return The scroll director on this viewport.
+     * Returns the scroll director on this viewport.
+     * 
+     * @return The scroll director on this viewport
      */
     public PScrollDirector getScrollDirector() {
         return scrollDirector;
     }
 
     /**
-     * Overridden to throw an exception if the view is not a ZCanvas
+     * Overridden to throw an exception if the view is not a PCanvas.
      * 
      * @param view The new view - it better be a ZCanvas!
      */
@@ -138,7 +136,7 @@ public class PViewport extends JViewport {
      * Sets the view coordinates that appear in the upper left hand corner of
      * the viewport, does nothing if there's no view.
      * 
-     * @param p a <code>Point</code> object giving the upper left coordinates
+     * @param p a Point object giving the upper left coordinates
      */
     public void setViewPosition(final Point p) {
         if (getView() == null) {
@@ -154,10 +152,8 @@ public class PViewport extends JViewport {
             oldY = vp.getY();
         }
 
-        /**
-         * Send the scroll director the exact view position and let it interpret
-         * it as needed
-         */
+        // Send the scroll director the exact view position and let it interpret
+        // it as needed
         final double newX = x;
         final double newY = y;
 
@@ -172,23 +168,22 @@ public class PViewport extends JViewport {
 
     /**
      * Gets the view position from the scroll director based on the current
-     * extent size
+     * extent size.
      * 
-     * @return The new view position
+     * @return The new view's position
      */
     public Point getViewPosition() {
-        if (scrollDirector != null) {
-            final Dimension extent = getExtentSize();
-            return scrollDirector.getViewPosition(new PBounds(0, 0, extent.getWidth(), extent.getHeight()));
-        }
-        else {
+        if (scrollDirector == null) {
             return null;
         }
+
+        final Dimension extent = getExtentSize();
+        return scrollDirector.getViewPosition(new PBounds(0, 0, extent.getWidth(), extent.getHeight()));
     }
 
     /**
      * Gets the view size from the scroll director based on the current extent
-     * size
+     * size.
      * 
      * @return The new view size
      */
@@ -199,7 +194,7 @@ public class PViewport extends JViewport {
 
     /**
      * Gets the view size from the scroll director based on the specified extent
-     * size
+     * size.
      * 
      * @param r The extent size from which the view is computed
      * @return The new view size
@@ -209,7 +204,7 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * A simple layout manager to give the ZCanvas the same size as the Viewport
+     * A simple layout manager to give the ZCanvas the same size as the Viewport.
      */
     public static class PViewportLayout extends ViewportLayout {
         private static final long serialVersionUID = 1L;
