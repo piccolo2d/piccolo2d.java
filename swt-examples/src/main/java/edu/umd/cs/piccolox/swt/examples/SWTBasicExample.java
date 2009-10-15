@@ -85,6 +85,7 @@ public final class SWTBasicExample {
         PSWTText text = new PSWTText("Hello World");
         text.translate(350, 150);
         text.setPenColor(Color.GRAY);
+        text.setBackgroundColor(Color.BLACK);
         canvas.getLayer().addChild(text);
 
         text = new PSWTText("Goodbye World");

@@ -35,11 +35,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * same version of Jazz. A future release of Jazz will provide support for long
  * term persistence.
  */
-public class PSWTText extends PNode {
-
-    /**
-     * 
-     */
+public class PSWTText extends PNode {   
     private static final long serialVersionUID = 1L;
 
     /**
@@ -83,9 +79,19 @@ public class PSWTText extends PNode {
     static protected final String DEFAULT_TEXT = "";
 
     /**
+     * Default transparent state
+     */
+    static protected final boolean DEFAULT_IS_TRANSPARENT = false;
+
+    /**
      * Default padding
      */
     static protected final int DEFAULT_PADDING = 2;
+
+    /**
+     * Should text be drawn with transparent mode?
+     */
+    private boolean isTransparent = DEFAULT_IS_TRANSPARENT;
 
     /**
      * Below this magnification text is rendered as greek.
@@ -211,6 +217,26 @@ public class PSWTText extends PNode {
      */
     public void setBackgroundColor(final Color color) {
         super.setPaint(color);
+    }
+
+    /**
+     * Sets whether the text should be drawn in transparent mode, i.e., whether
+     * the background should be drawn or not.
+     * 
+     * @param isTransparent
+     */
+    public void setTransparent(boolean isTransparent) {
+        this.isTransparent = isTransparent;
+    }
+
+    /**
+     * Returns whether the text should be drawn using the transparent mode,
+     * i.e., whether the background should be drawn or not.
+     * 
+     * @return
+     */
+    public boolean isTransparent() {
+        return isTransparent;
     }
 
     /**
@@ -441,23 +467,18 @@ public class PSWTText extends PNode {
     public void paintAsText(final PPaintContext ppc) {
         final SWTGraphics2D sg2 = (SWTGraphics2D) ppc.getGraphics();
 
-        if (getPaint() != null) {
-            sg2.setBackground((Color) getPaint());
+        if (!isTransparent) {           
+            if (getPaint() == null) {
+                sg2.setBackground(Color.WHITE);
+            } else {
+                sg2.setBackground((Color)getPaint());
+            }
+            
             final Rectangle2D rect = new Rectangle2D.Double(0.0, 0.0, getWidth(), getHeight());
             sg2.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
         }
 
         sg2.translate(padding, padding);
-
-        final double scale = Math.min(sg2.getTransform().getScaleX(), sg2.getTransform().getScaleY());
-        final double dSize = scale * font.getSize();
-        final double fixupScale = Math.floor(dSize) / dSize;
-
-        // This moves the text size down to the next closest integer size - to
-        // help it stay in
-        // it's alloted bounds. This is because SWT only supports integer font
-        // metrics
-        sg2.scale(fixupScale, fixupScale);
 
         // Render each line of text
         // Note that the entire text gets rendered so that it's upper left
@@ -481,12 +502,10 @@ public class PSWTText extends PNode {
 
             y = lineNum * metrics.getHeight();
 
-            sg2.drawString(line, 0, y);
+            sg2.drawString(line, 0, y, isTransparent);
 
             lineNum++;
         }
-
-        sg2.scale(1 / fixupScale, 1 / fixupScale);
 
         sg2.translate(-padding, -padding);
     }

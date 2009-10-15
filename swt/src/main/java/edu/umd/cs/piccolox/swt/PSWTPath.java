@@ -273,7 +273,7 @@ public class PSWTPath extends PNode {
                         shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
             }
             else {
-                g2.fillPolygon(shapePts);
+                g2.fill(shape);
             }
         }
 
@@ -297,10 +297,8 @@ public class PSWTPath extends PNode {
                 g2.drawRoundRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
                         shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
             }
-            else {
-                // TODO The bounds may be incorrect for polylines at the moment
-                // - resulting in graphics turds at some scales
-                g2.drawPolyline(shapePts);
+            else {               
+                g2.draw(shape);
             }
         }
 
@@ -391,9 +389,7 @@ public class PSWTPath extends PNode {
             final Line2D l2 = (Line2D) aShape;
             return new Line2D.Double(l2.getP1(), l2.getP2());
         }
-        else {
-            // again: either throw or don't - but nothing in between please.
-            // new Exception().printStackTrace();
+        else {    
             final GeneralPath aPath = new GeneralPath();
             aPath.append(aShape, false);
             return aPath;
