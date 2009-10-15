@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -35,107 +34,67 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * same version of Jazz. A future release of Jazz will provide support for long
  * term persistence.
  */
-public class PSWTText extends PNode {   
+public class PSWTText extends PNode {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Below this magnification render text as 'greek'.
-     */
-    static protected final double DEFAULT_GREEK_THRESHOLD = 5.5;
+    /** Below this magnification render text as 'greek'. */
+    protected static final double DEFAULT_GREEK_THRESHOLD = 5.5;
 
-    /**
-     * Default color of text rendered as 'greek'.
-     */
-    static protected final Color DEFAULT_GREEK_COLOR = Color.gray;
+    /** Default color of text rendered as 'greek'. */
+    protected static final Color DEFAULT_GREEK_COLOR = Color.gray;
 
-    /**
-     * Default font name of text.
-     */
-    static protected final String DEFAULT_FONT_NAME = "Helvetica";
+    /** Default font name of text. */
+    protected static final String DEFAULT_FONT_NAME = "Helvetica";
 
-    /**
-     * Default font style for text.
-     */
-    static protected final int DEFAULT_FONT_STYLE = Font.PLAIN;
+    /** Default font style for text. */
+    protected static final int DEFAULT_FONT_STYLE = Font.PLAIN;
 
-    /**
-     * Default font size for text.
-     */
-    static protected final int DEFAULT_FONT_SIZE = 12;
+    /** Default font size for text. */
+    protected static final int DEFAULT_FONT_SIZE = 12;
 
-    /**
-     * Default font for text.
-     */
-    static protected final Font DEFAULT_FONT = new Font(DEFAULT_FONT_NAME, DEFAULT_FONT_STYLE, DEFAULT_FONT_SIZE);
+    /** Default font for text. */
+    protected static final Font DEFAULT_FONT = new Font(DEFAULT_FONT_NAME, DEFAULT_FONT_STYLE, DEFAULT_FONT_SIZE);
 
-    /**
-     * Default color for text.
-     */
-    static protected final Color DEFAULT_PEN_COLOR = Color.black;
+    /** Default color for text. */
+    protected static final Color DEFAULT_PEN_COLOR = Color.black;
 
-    /**
-     * Default text when new text area is created.
-     */
-    static protected final String DEFAULT_TEXT = "";
+    /** Default text when new text area is created. */
+    protected static final String DEFAULT_TEXT = "";
 
-    /**
-     * Default transparent state
-     */
-    static protected final boolean DEFAULT_IS_TRANSPARENT = false;
+    /** Default background transparency state. */
+    protected static final boolean DEFAULT_IS_TRANSPARENT = false;
 
-    /**
-     * Default padding
-     */
-    static protected final int DEFAULT_PADDING = 2;
+    /** Default padding. */
+    protected static final int DEFAULT_PADDING = 2;
 
-    /**
-     * Should text be drawn with transparent mode?
-     */
-    private boolean isTransparent = DEFAULT_IS_TRANSPARENT;
+    /** Whether the text be drawn with a transparent background. */
+    private boolean transparent = DEFAULT_IS_TRANSPARENT;
 
-    /**
-     * Below this magnification text is rendered as greek.
-     */
+    /** Below this magnification text is rendered as greek. */
     protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
 
-    /**
-     * Color for greek text.
-     */
+    /** Color for greek text. */
     protected Color greekColor = DEFAULT_GREEK_COLOR;
 
-    /**
-     * Current pen color.
-     */
+    /** Current pen color. */
     protected Color penColor = DEFAULT_PEN_COLOR;
 
-    /**
-     * Current text font.
-     */
+    /** Current text font. */
     protected Font font = DEFAULT_FONT;
 
-    /**
-     * The amount of padding on each side of the text
-     */
+    /** The amount of padding on each side of the text. */
     protected int padding = DEFAULT_PADDING;
 
-    /**
-     * Each vector element is one line of text.
-     */
+    /** Each element is one line of text. */
     protected ArrayList lines = new ArrayList();
 
-    /**
-     * Translation offset X.
-     */
+    /** Translation offset X. */
     protected double translateX = 0.0;
 
-    /**
-     * Translation offset Y.
-     */
+    /** Translation offset Y. */
     protected double translateY = 0.0;
 
-    /**
-     * Default constructor for PSWTTest.
-     */
+    /** Default constructor for PSWTTest. */
     public PSWTText() {
         this("", DEFAULT_FONT);
     }
@@ -162,16 +121,10 @@ public class PSWTText extends PNode {
         recomputeBounds();
     }
 
-    // **************************************************************************
-    // **
-    //
-    // Get/Set and pairs
-    //
-    // **************************************************************************
-    // *
-
     /**
      * Returns the current pen color.
+     * 
+     * @return current pen color
      */
     public Color getPenColor() {
         return penColor;
@@ -189,6 +142,8 @@ public class PSWTText extends PNode {
 
     /**
      * Returns the current pen paint.
+     * 
+     * @return the current pen paint
      */
     public Paint getPenPaint() {
         return penColor;
@@ -205,6 +160,8 @@ public class PSWTText extends PNode {
 
     /**
      * Returns the current background color.
+     * 
+     * @return the current background color
      */
     public Color getBackgroundColor() {
         return (Color) getPaint();
@@ -223,25 +180,28 @@ public class PSWTText extends PNode {
      * Sets whether the text should be drawn in transparent mode, i.e., whether
      * the background should be drawn or not.
      * 
-     * @param isTransparent
+     * @param transparent the new transparency of the background
      */
-    public void setTransparent(boolean isTransparent) {
-        this.isTransparent = isTransparent;
+    public void setTransparent(final boolean transparent) {
+        this.transparent = transparent;
     }
 
     /**
      * Returns whether the text should be drawn using the transparent mode,
      * i.e., whether the background should be drawn or not.
      * 
-     * @return
+     * @return true if background will not be drawn
      */
     public boolean isTransparent() {
-        return isTransparent;
+        return transparent;
     }
 
     /**
      * Returns the current greek threshold. Below this magnification text is
      * rendered as 'greek'.
+     * 
+     * @return magnification at which the text will not be drawn and a blank
+     *         rectangle will appear instead
      */
     public double getGreekThreshold() {
         return greekThreshold;
@@ -260,31 +220,34 @@ public class PSWTText extends PNode {
 
     /**
      * Returns the current font.
+     * 
+     * @return current font in node
      */
     public Font getFont() {
         return font;
     }
 
     /**
-     * Return the text within this text component. Multline text is returned as
+     * Return the text within this text component. Multiline text is returned as
      * a single string where each line is separated by a newline character.
      * Single line text does not have any newline characters.
+     * 
+     * @return string containing this node's text
      */
     public String getText() {
-        String line;
-        String result = new String();
-        int lineNum = 0;
+        StringBuffer result = new StringBuffer();
 
-        for (final Iterator i = lines.iterator(); i.hasNext();) {
-            if (lineNum > 0) {
-                result += '\n';
-            }
-            line = (String) i.next();
-            result += line;
-            lineNum++;
+        final Iterator lineIterator = lines.iterator();
+        while (lineIterator.hasNext()) {
+            result.append(lineIterator.next());
+            result.append('\n');
         }
 
-        return result;
+        if (result.length() > 0) {
+            result.deleteCharAt(result.length() - 1);
+        }
+
+        return result.toString();
     }
 
     /**
@@ -312,20 +275,20 @@ public class PSWTText extends PNode {
      * 
      * @param str use this string.
      */
-    public void setText(String str) {
-        final int pos = 0;
+    public void setText(final String str) {
+        int pos = 0;
         int index;
         boolean done = false;
-        lines = new ArrayList();
+        lines.clear();
         do {
             index = str.indexOf('\n', pos);
             if (index == -1) {
-                lines.add(str);
+                lines.add(str.substring(pos));
                 done = true;
             }
             else {
-                lines.add(str.substring(0, index));
-                str = str.substring(index + 1);
+                lines.add(str.substring(pos, index));
+                pos = index + 1;
             }
         } while (!done);
 
@@ -413,33 +376,32 @@ public class PSWTText extends PNode {
      * @param ppc Contains information about current render.
      */
     public void paint(final PPaintContext ppc) {
+        if (lines.isEmpty()) {
+            return;
+        }
+
         final Graphics2D g2 = ppc.getGraphics();
         AffineTransform at = null;
         boolean translated = false;
-        if (!lines.isEmpty()) {
 
-            if (translateX != 0.0 || translateY != 0.0) {
-                at = g2.getTransform(); // save transform
-                g2.translate(translateX, translateY);
-                translated = true;
-            }
+        if (translateX != 0.0 || translateY != 0.0) {
+            at = g2.getTransform();
+            g2.translate(translateX, translateY);
+            translated = true;
+        }
 
-            // If font too small and not antialiased, then greek
-            final double renderedFontSize = font.getSize() * ppc.getScale();
-            // BBB: HACK ALERT - July 30, 1999
-            // This is a workaround for a bug in Sun JDK 1.2.2 where
-            // fonts that are rendered at very small magnifications show up big!
-            // So, we render as greek if requested (that's normal)
-            // OR if the font is very small (that's the workaround)
-            if (renderedFontSize < 0.5 || renderedFontSize < greekThreshold) {
-                paintAsGreek(ppc);
-            }
-            else {
-                paintAsText(ppc);
-            }
-            if (translated) {
-                g2.setTransform(at); // restore transform
-            }
+        final double renderedFontSize = font.getSize() * ppc.getScale();
+
+        // If font is too small then render it as "greek"
+        if (renderedFontSize < greekThreshold) {
+            paintAsGreek(ppc);
+        }
+        else {
+            paintAsText(ppc);
+        }
+
+        if (translated) {
+            g2.setTransform(at);
         }
     }
 
@@ -467,109 +429,104 @@ public class PSWTText extends PNode {
     public void paintAsText(final PPaintContext ppc) {
         final SWTGraphics2D sg2 = (SWTGraphics2D) ppc.getGraphics();
 
-        if (!isTransparent) {           
+        if (!transparent) {
             if (getPaint() == null) {
                 sg2.setBackground(Color.WHITE);
-            } else {
-                sg2.setBackground((Color)getPaint());
             }
-            
-            final Rectangle2D rect = new Rectangle2D.Double(0.0, 0.0, getWidth(), getHeight());
-            sg2.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+            else {
+                sg2.setBackground((Color) getPaint());
+            }
+
+            sg2.fillRect(0, 0, (int) getWidth(), (int) getHeight());
         }
 
         sg2.translate(padding, padding);
 
-        // Render each line of text
-        // Note that the entire text gets rendered so that it's upper left
-        // corner
-        // appears at the origin of this local object.
         sg2.setColor(penColor);
         sg2.setFont(font);
 
-        int lineNum = 0;
         String line;
-        double y;
+        double y = 0;
 
-        final FontMetrics metrics = sg2.getSWTFontMetrics();
+        final FontMetrics fontMetrics = sg2.getSWTFontMetrics();
 
-        for (final Iterator i = lines.iterator(); i.hasNext();) {
-            line = (String) i.next();
+        final Iterator lineIterator = lines.iterator();
+        while (lineIterator.hasNext()) {
+            line = (String) lineIterator.next();
+            if (line.length() != 0) {
+                sg2.drawString(line, 0, y, true);
+            }
 
-            // ADDED BY LEG ON 2/25/03 - BUG CAUSING PROBLEMS AT CERTAIN
-            // SCALES WHEN LINE WAS EMPTY
-            line = line.equals("") ? " " : line;
-
-            y = lineNum * metrics.getHeight();
-
-            sg2.drawString(line, 0, y, isTransparent);
-
-            lineNum++;
+            y += fontMetrics.getHeight();
         }
 
         sg2.translate(-padding, -padding);
     }
 
     /**
-     * Notifies this object that it has changed and that it should update its
-     * notion of its bounding box.
+     * Recalculates this node's bounding box by examining it's text content.
      */
     protected void recomputeBounds() {
-        Point bds;
-        double lineWidth;
-        double maxWidth = 0.0;
-        double height;
-
-        height = 0.0;
-
-        boolean hasText = true;
-        if (lines.size() == 1 && ((String) lines.get(0)).equals("")) {
-            hasText = false;
-        }
-
         final GC gc = new GC(Display.getDefault());
-        final SWTGraphics2D g2 = new SWTGraphics2D(gc, Display.getDefault());
-        g2.setFont(font);
-        final FontMetrics fm = g2.getSWTFontMetrics();
 
-        if (!lines.isEmpty() && hasText) {
-            String line;
-            int lineNum = 0;
-            for (final Iterator i = lines.iterator(); i.hasNext();) {
-                line = (String) i.next();
-
-                // Find the longest line in the text
-                bds = gc.stringExtent(line);
-                lineWidth = bds.x;
-
-                if (lineWidth > maxWidth) {
-                    maxWidth = lineWidth;
-                }
-                // Find the heighest line in the text
-                if (lineNum == 0) {
-                    height += fm.getAscent() + fm.getDescent() + fm.getLeading();
-                }
-                else {
-                    height += fm.getHeight();
-                }
-
-                lineNum++;
-            }
-        }
-        else {
+        final Point newBounds;
+        if (isTextEmpty()) {
             // If no text, then we want to have the bounds of a space character,
             // so get those bounds here
-            bds = gc.stringExtent(" ");
-            maxWidth = bds.x;
-            height = bds.y;
+            newBounds = gc.stringExtent(" ");
+        }
+        else {
+            newBounds = calculateTextBounds(gc);
         }
 
         gc.dispose();
 
-        // Finally, set the bounds of this text
-        setBounds(translateX, translateY, maxWidth + 2 * DEFAULT_PADDING, height + 2 * DEFAULT_PADDING);
+        setBounds(translateX, translateY, newBounds.x + 2 * DEFAULT_PADDING, newBounds.y + 2 * DEFAULT_PADDING);
     }
 
+    /**
+     * Determines if this node's text is essentially empty.
+     * 
+     * @return true if the text is the empty string
+     */
+    private boolean isTextEmpty() {
+        return lines.isEmpty() || lines.size() == 1 && ((String) lines.get(0)).equals("");
+    }
+
+    /**
+     * Calculates the bounds of the text in the box as measured by the given
+     * graphics context and font metrics.
+     * 
+     * @param gc graphics context from which the measurements are done
+     * @return point representing the dimensions of the text's bounds
+     */
+    private Point calculateTextBounds(final GC gc) {
+        final SWTGraphics2D g2 = new SWTGraphics2D(gc, Display.getDefault());
+        g2.setFont(font);
+        final FontMetrics fm = g2.getSWTFontMetrics();
+        final Point textBounds = new Point(0, 0);
+
+        boolean firstLine = true;
+
+        final Iterator lineIterator = lines.iterator();
+        while (lineIterator.hasNext()) {
+            String line = (String) lineIterator.next();
+            Point lineBounds = gc.stringExtent(line);
+            if (firstLine) {
+                textBounds.x = lineBounds.x;
+                textBounds.y += fm.getAscent() + fm.getDescent() + fm.getLeading();
+                firstLine = false;
+            }
+            else {
+                textBounds.x = Math.max(lineBounds.x, textBounds.x);
+                textBounds.y += fm.getHeight();
+            }
+        }
+
+        return textBounds;
+    }
+
+    /** {@inheritDoc} */
     protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
         recomputeBounds();
     }

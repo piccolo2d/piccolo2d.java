@@ -82,7 +82,7 @@ public final class SWTBasicExample {
         circle.setPaint(Color.YELLOW);
         canvas.getLayer().addChild(circle);
 
-        PSWTText text = new PSWTText("Hello World");
+        PSWTText text = new PSWTText("Hello World\nMultiline");        
         text.translate(350, 150);
         text.setPenColor(Color.GRAY);
         text.setBackgroundColor(Color.BLACK);
