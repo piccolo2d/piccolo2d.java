@@ -31,5 +31,6 @@
     <module>extras</module>
     <module>swt</module>
     <module>examples</module>
+    <module>swt-examples</module>
   </modules>
 </project>
