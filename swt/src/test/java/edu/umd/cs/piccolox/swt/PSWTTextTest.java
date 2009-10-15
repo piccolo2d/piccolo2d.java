@@ -6,7 +6,7 @@ public class PSWTTextTest extends TestCase {
     private PSWTText testNode;
 
     public void setUp() {
-        testNode = new PSWTText();
+        //testNode = new PSWTText();
     }
 
     public void testTextPersistsTrainingAndInternalNewlines() {
