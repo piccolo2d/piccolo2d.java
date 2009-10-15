@@ -64,9 +64,7 @@ public class PSWTImage extends PNode {
         this.canvas = canvas;
         canvas.addDisposeListener(new DisposeListener() {
             public void widgetDisposed(final DisposeEvent de) {
-                if (image != null) {
-                    image.dispose();
-                }
+                disposeImage();
             }
         });
     }
@@ -124,6 +122,12 @@ public class PSWTImage extends PNode {
         }
 
         firePropertyChange(PImage.PROPERTY_CODE_IMAGE, PImage.PROPERTY_IMAGE, old, image);
+    }
+
+    protected void disposeImage() {
+        if (image != null) {
+            image.dispose();
+        }
     }
 
     protected void paint(final PPaintContext paintContext) {
