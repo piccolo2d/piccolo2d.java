@@ -57,7 +57,7 @@ public class SWTTimer extends Timer {
     // happen in applet case when TimerQueues thread is destroyed.
     private long expirationTime;
     private SWTTimer nextTimer;
-    private boolean running;
+    boolean running;
 
     /**
      * DoPostEvent is a runnable class that fires actionEvents to the listeners

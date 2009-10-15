@@ -213,7 +213,8 @@ public class SWTTimerQueue implements Runnable {
     }
 
     synchronized boolean containsTimer(final SWTTimer timer) {
-        return timer.isRunning();
+        //TODO: making this use isRunning without causing an infinite loop
+        return timer.running;
     }
 
     /**
