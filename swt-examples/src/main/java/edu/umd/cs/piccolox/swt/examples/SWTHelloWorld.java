@@ -36,17 +36,44 @@ import edu.umd.cs.piccolox.swt.PSWTCanvas;
 import edu.umd.cs.piccolox.swt.PSWTText;
 
 /**
- * @author good
+ * Piccolo2D SWT Hello World example.
  */
 public class SWTHelloWorld {
 
     /**
-     * Constructor for SWTBasicExample.
+     * Create a new Piccolo2D SWT Hello World example.
      */
     public SWTHelloWorld() {
         super();
     }
 
+
+    /**
+     * Create and open a new shell on the specified display.
+     *
+     * @param display display
+     * @return a new shell on the specified display
+     */
+    public static Shell open(final Display display) {
+        final Shell shell = new Shell(display);
+        shell.setLayout(new FillLayout());
+
+        // create a new SWT canvas
+        final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
+        // create a new SWT text node
+        final PSWTText text = new PSWTText("Hello World");
+        // add it as a child of the canvas' camera's first layer
+        canvas.getLayer().addChild(text);
+
+        shell.open();
+        return shell;
+    }
+
+    /**
+     * Main.
+     *
+     * @param args command line arguments, ignored
+     */
     public static void main(final String[] args) {
         final Display display = new Display();
         final Shell shell = open(display);
@@ -56,17 +83,5 @@ public class SWTHelloWorld {
             }
         }
         display.dispose();
-    }
-
-    public static Shell open(final Display display) {
-        final Shell shell = new Shell(display);
-        shell.setLayout(new FillLayout());
-        final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
-
-        final PSWTText text = new PSWTText("Hello World");
-        canvas.getLayer().addChild(text);
-
-        shell.open();
-        return shell;
     }
 }
