@@ -23,11 +23,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <!-- TODO don't hardcode swt here, but rather follow http://blambi.blogspot.com/2007/07/maven2-swt-builds.html -->
-      <groupId>swt</groupId>
-      <!--<artifactId>swt-linux-gtk</artifactId>-->
-      <artifactId>swt-win32</artifactId>
-      <version>3.0m8</version>
+      <groupId>${swt.groupId}</groupId>
+      <artifactId>${swt.artifactId}</artifactId>
+      <version>3.3.0-v3346</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
@@ -140,4 +138,98 @@
       </plugin>
     </plugins>  
   </reporting>
+  <profiles>
+    <profile>
+      <id>gtk_linux_x86_64</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.gtk.linux</swt.groupId>
+        <swt.artifactId>x86_64</swt.artifactId>
+        <swt.version>3.3.0-v3346</swt.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>gtk_linux_amd64</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>amd64</arch>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.gtk.linux</swt.groupId>
+        <swt.artifactId>x86_64</swt.artifactId>
+        <swt.version>3.3.0-v3346</swt.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>gtk_linux_x86</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.gtk.linux</swt.groupId>
+        <swt.artifactId>x86</swt.artifactId>
+        <swt.version>3.3.0-v3346</swt.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>gtk_linux_i386</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>i386</arch>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.gtk.linux</swt.groupId>
+        <swt.artifactId>x86</swt.artifactId>
+        <swt.version>3.3.0-v3346</swt.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.win32.win32</swt.groupId>
+        <swt.artifactId>x86</swt.artifactId>
+      </properties>
+    </profile>
+<!--
+
+    todo:
+
+    the following mac profile does not work on PPC
+    need to test mac profile on intel
+
+    consider adding:  gtk linux ppc
+                      gtk linux i686 (assume that uses x86 swt version)
+                      gtk solaris sparc
+                      motif aix ppc
+-->
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <name>mac</name>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.carbon</swt.groupId>
+        <swt.artifactId>macosx</swt.artifactId>
+      </properties>
+    </profile>
+  </profiles>
 </project>
