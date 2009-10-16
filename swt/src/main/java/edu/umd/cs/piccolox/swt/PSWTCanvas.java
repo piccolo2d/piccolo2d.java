@@ -62,22 +62,24 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PStack;
 
 /**
- * <b>PSWTCanvas</b> is a simple Swing component that can be used to embed Piccolo
- * into a Java Swing application. Canvas's view the Piccolo scene graph through
- * a camera. The canvas manages screen updates coming from this camera, and
- * forwards swing mouse and keyboard events to the camera.
+ * <b>PSWTCanvas</b> is a simple Swing component that can be used to embed
+ * Piccolo into a Java Swing application. Canvas's view the Piccolo scene graph
+ * through a camera. The canvas manages screen updates coming from this camera,
+ * and forwards swing mouse and keyboard events to the camera.
  * <P>
  * 
  * @version 1.0
  * @author Jesse Grosjean
  */
 public class PSWTCanvas extends Composite implements PComponent {
-
+    /**
+     * Terrible Singleton instance of the PSWTCanvas. Falsely assumes you will
+     * only have one of these per application.
+     */
     public static PSWTCanvas CURRENT_CANVAS = null;
 
     private Image backBuffer;
     private boolean doubleBuffered = true;
-
     private PCamera camera;
     private final PStack cursorStack;
     private Cursor curCursor;
@@ -90,10 +92,17 @@ public class PSWTCanvas extends Composite implements PComponent {
     private boolean paintingImmediately;
     private boolean animatingOnLastPaint;
 
+    private boolean isButton1Pressed;
+    private boolean isButton2Pressed;
+    private boolean isButton3Pressed;
+
     /**
      * Construct a canvas with the basic scene graph consisting of a root,
      * camera, and layer. Event handlers for zooming and panning are
      * automatically installed.
+     * 
+     * @param parent component onto which the canvas is installed
+     * @param style component style for the PSWTCanvas
      */
     public PSWTCanvas(final Composite parent, final int style) {
         super(parent, style | SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE);
@@ -110,15 +119,19 @@ public class PSWTCanvas extends Composite implements PComponent {
         addInputEventListener(panEventHandler);
         addInputEventListener(zoomEventHandler);
 
-        // Add a paint listener to call paint
+        installPaintListener();
+        installDisposeListener();
+    }
+
+    private void installPaintListener() {
         addPaintListener(new PaintListener() {
             public void paintControl(final PaintEvent pe) {
                 paintComponent(pe.gc, pe.x, pe.y, pe.width, pe.height);
             }
         });
+    }
 
-        // Keep track of the references so we can dispose of the Fonts and
-        // Colors
+    private void installDisposeListener() {
         SWTGraphics2D.incrementGCCount();
         addDisposeListener(new DisposeListener() {
             public void widgetDisposed(final DisposeEvent de) {
@@ -129,13 +142,15 @@ public class PSWTCanvas extends Composite implements PComponent {
     }
 
     // ****************************************************************
-    // Basic - Methods for accessing common piccolo nodes.
+    // Basic - Methods for accessing common Piccolo2D nodes.
     // ****************************************************************
 
     /**
      * Get the pan event handler associated with this canvas. This event handler
      * is set up to get events from the camera associated with this canvas by
      * default.
+     * 
+     * @return the current pan event handler, which may be null
      */
     public PPanEventHandler getPanEventHandler() {
         return panEventHandler;
@@ -260,19 +275,22 @@ public class PSWTCanvas extends Composite implements PComponent {
     }
 
     /**
-     * Get whether this canvas should use double buffering - the default is no
-     * double buffering
+     * Get whether this canvas should use double buffering - the default is to
+     * double buffer.
+     * 
+     * @return true if double buffering is enabled
      */
     public boolean getDoubleBuffered() {
         return doubleBuffered;
     }
 
     /**
-     * Set whether this canvas should use double buffering - the default is no
-     * double buffering
+     * Set whether this canvas should use double buffering - the default is yes.
+     * 
+     * @param doubleBuffered value of double buffering flas
      */
-    public void setDoubleBuffered(final boolean dBuffered) {
-        doubleBuffered = dBuffered;
+    public void setDoubleBuffered(final boolean doubleBuffered) {
+        this.doubleBuffered = doubleBuffered;
     }
 
     /**
@@ -315,56 +333,59 @@ public class PSWTCanvas extends Composite implements PComponent {
 
     /**
      * Set the canvas cursor, and remember the previous cursor on the cursor
-     * stack.
+     * stack. Under the hood it is mapping the java.awt.Cursor to
+     * org.eclipse.swt.graphics.Cursor objects.
+     * 
+     * @param newCursor new cursor to push onto the cursor stack
      */
-    public void pushCursor(final java.awt.Cursor cursor) {
-        Cursor aCursor = null;
-        if (cursor.getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEN);
+    public void pushCursor(final java.awt.Cursor newCursor) {
+        Cursor swtCursor = null;
+        if (newCursor.getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEN);
         }
-        else if (cursor.getType() == java.awt.Cursor.NE_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZENE);
+        else if (newCursor.getType() == java.awt.Cursor.NE_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZENE);
         }
-        else if (cursor.getType() == java.awt.Cursor.NW_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZENW);
+        else if (newCursor.getType() == java.awt.Cursor.NW_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZENW);
         }
-        else if (cursor.getType() == java.awt.Cursor.S_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZES);
+        else if (newCursor.getType() == java.awt.Cursor.S_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZES);
         }
-        else if (cursor.getType() == java.awt.Cursor.SE_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZESE);
+        else if (newCursor.getType() == java.awt.Cursor.SE_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZESE);
         }
-        else if (cursor.getType() == java.awt.Cursor.SW_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZESW);
+        else if (newCursor.getType() == java.awt.Cursor.SW_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZESW);
         }
-        else if (cursor.getType() == java.awt.Cursor.E_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEE);
+        else if (newCursor.getType() == java.awt.Cursor.E_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEE);
         }
-        else if (cursor.getType() == java.awt.Cursor.W_RESIZE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEW);
+        else if (newCursor.getType() == java.awt.Cursor.W_RESIZE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEW);
         }
-        else if (cursor.getType() == java.awt.Cursor.TEXT_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_IBEAM);
+        else if (newCursor.getType() == java.awt.Cursor.TEXT_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_IBEAM);
         }
-        else if (cursor.getType() == java.awt.Cursor.HAND_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
+        else if (newCursor.getType() == java.awt.Cursor.HAND_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
         }
-        else if (cursor.getType() == java.awt.Cursor.MOVE_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEALL);
+        else if (newCursor.getType() == java.awt.Cursor.MOVE_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_SIZEALL);
         }
-        else if (cursor.getType() == java.awt.Cursor.CROSSHAIR_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_CROSS);
+        else if (newCursor.getType() == java.awt.Cursor.CROSSHAIR_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_CROSS);
         }
-        else if (cursor.getType() == java.awt.Cursor.WAIT_CURSOR) {
-            aCursor = new Cursor(getDisplay(), SWT.CURSOR_WAIT);
+        else if (newCursor.getType() == java.awt.Cursor.WAIT_CURSOR) {
+            swtCursor = new Cursor(getDisplay(), SWT.CURSOR_WAIT);
         }
 
-        if (aCursor != null) {
+        if (swtCursor != null) {
             if (curCursor != null) {
                 cursorStack.push(curCursor);
             }
-            curCursor = aCursor;
-            setCursor(aCursor);
+            curCursor = swtCursor;
+            setCursor(swtCursor);
         }
     }
 
@@ -377,11 +398,11 @@ public class PSWTCanvas extends Composite implements PComponent {
             curCursor.dispose();
         }
 
-        if (!cursorStack.isEmpty()) {
-            curCursor = (Cursor) cursorStack.pop();
+        if (cursorStack.isEmpty()) {
+            curCursor = null;
         }
         else {
-            curCursor = null;
+            curCursor = (Cursor) cursorStack.pop();
         }
 
         // This sets the cursor back to default
@@ -392,148 +413,64 @@ public class PSWTCanvas extends Composite implements PComponent {
     // Code to manage connection to Swing. There appears to be a bug in
     // swing where it will occasionally send to many mouse pressed or mouse
     // released events. Below we attempt to filter out those cases before
-    // they get delivered to the Piccolo framework.
+    // they get delivered to the Piccolo2D framework.
     // ****************************************************************
-
-    private boolean isButton1Pressed;
-    private boolean isButton2Pressed;
-    private boolean isButton3Pressed;
 
     /**
      * This method installs mouse and key listeners on the canvas that forward
-     * those events to piccolo.
+     * those events to Piccolo2D.
      */
     protected void installInputSources() {
-        addMouseListener(new MouseListener() {
-            public void mouseDown(final MouseEvent me) {
-                boolean shouldBalanceEvent = false;
+        MouseInputSource mouseInputSource = new MouseInputSource();
+        addMouseListener(mouseInputSource);
+        addMouseMoveListener(mouseInputSource);
 
-                switch (me.button) {
-                    case 1:
-                        if (isButton1Pressed) {
-                            shouldBalanceEvent = true;
-                        }
-                        isButton1Pressed = true;
-                        break;
-                    case 2:
-                        if (isButton2Pressed) {
-                            shouldBalanceEvent = true;
-                        }
-                        isButton2Pressed = true;
-                        break;
-                    case 3:
-                        if (isButton3Pressed) {
-                            shouldBalanceEvent = true;
-                        }
-                        isButton3Pressed = true;
-                        break;
-                }
-
-                if (shouldBalanceEvent) {
-                    final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
-                            java.awt.event.MouseEvent.MOUSE_RELEASED, 1);
-                    sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
-                }
-
-                final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
-                        java.awt.event.MouseEvent.MOUSE_PRESSED, 1);
-                sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
-            }
-
-            public void mouseUp(final MouseEvent me) {
-                boolean shouldBalanceEvent = false;
-
-                switch (me.button) {
-                    case 1:
-                        if (!isButton1Pressed) {
-                            shouldBalanceEvent = true;
-                        }
-                        isButton1Pressed = false;
-                        break;
-                    case 2:
-                        if (!isButton2Pressed) {
-                            shouldBalanceEvent = true;
-                        }
-                        isButton2Pressed = false;
-                        break;
-                    case 3:
-                        if (!isButton3Pressed) {
-                            shouldBalanceEvent = true;
-                        }
-                        isButton3Pressed = false;
-                        break;
-                }
-
-                if (shouldBalanceEvent) {
-                    final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
-                            java.awt.event.MouseEvent.MOUSE_PRESSED, 1);
-                    sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
-                }
-
-                final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
-                        java.awt.event.MouseEvent.MOUSE_RELEASED, 1);
-                sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
-            }
-
-            public void mouseDoubleClick(final MouseEvent me) {
-                // This doesn't work with click event types for some reason - it
-                // has to do with how the click and release events are ordered,
-                // I think
-                java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me, java.awt.event.MouseEvent.MOUSE_PRESSED,
-                        2);
-                sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
-                inputEvent = new PSWTMouseEvent(me, java.awt.event.MouseEvent.MOUSE_RELEASED, 2);
-                sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
-            }
-        });
-
-        addMouseMoveListener(new MouseMoveListener() {
-            public void mouseMove(final MouseEvent me) {
-                if (isButton1Pressed || isButton2Pressed || isButton3Pressed) {
-                    final java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
-                            java.awt.event.MouseEvent.MOUSE_DRAGGED, 1);
-                    sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_DRAGGED);
-                }
-                else {
-                    final java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
-                            java.awt.event.MouseEvent.MOUSE_MOVED, 1);
-                    sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_MOVED);
-                }
-            }
-        });
-
-        addKeyListener(new KeyListener() {
-            public void keyPressed(final KeyEvent ke) {
-                final java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_PRESSED);
-                sendInputEventToInputManager(inputEvent, java.awt.event.KeyEvent.KEY_PRESSED);
-            }
-
-            public void keyReleased(final KeyEvent ke) {
-                final java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_RELEASED);
-                sendInputEventToInputManager(inputEvent, java.awt.event.KeyEvent.KEY_RELEASED);
-            }
-        });
-
+        addKeyListener(new KeyboardInputSource());
     }
 
-    protected void sendInputEventToInputManager(final InputEvent e, final int type) {
-        getRoot().getDefaultInputManager().processEventFromCamera(e, type, getCamera());
+    /**
+     * Dispatches the given event to the default input manager for the root of
+     * this canvas.
+     * 
+     * @param awtEvent awt event needing dispatching
+     * @param type type of the event
+     */
+    protected void sendInputEventToInputManager(final InputEvent awtEvent, final int type) {
+        getRoot().getDefaultInputManager().processEventFromCamera(awtEvent, type, getCamera());
     }
 
-    public void setBounds(final int x, final int y, final int w, final int h) {
-        camera.setBounds(camera.getX(), camera.getY(), w, h);
+    /**
+     * Changes the bounds of this PSWTCanvas. Updating the camera and the double
+     * buffered image appropriately.
+     * 
+     * @param x left of the new bounds
+     * @param y top of the new bounds
+     * @param newWidth new width of the bounds
+     * @param newHeight new height of the bounds
+     */
+    public void setBounds(final int x, final int y, final int newWidth, final int newHeight) {
+        camera.setBounds(camera.getX(), camera.getY(), newWidth, newHeight);
 
-        if (backBuffer == null || backBuffer.getBounds().width < w || backBuffer.getBounds().height < h) {
-            backBuffer = new Image(getDisplay(), w, h);
+        if (backBuffer == null || backBuffer.getBounds().width < newWidth || backBuffer.getBounds().height < newHeight) {
+            backBuffer = new Image(getDisplay(), newWidth, newHeight);
         }
 
-        super.setBounds(x, y, w, h);
+        super.setBounds(x, y, newWidth, newHeight);
     }
 
+    /**
+     * Exists to dispatch from the Swing's repaint method to SWT's redraw
+     * method.
+     */
     public void repaint() {
         super.redraw();
     }
 
+    /**
+     * Flags the bounds provided as needing to be redrawn.
+     * 
+     * @param bounds the bounds that should be repainted
+     */
     public void repaint(final PBounds bounds) {
         bounds.expandNearestIntegerDimensions();
         bounds.inset(-1, -1);
@@ -583,13 +520,13 @@ public class PSWTCanvas extends Composite implements PComponent {
             paintContext.setRenderQuality(defaultRenderQuality);
         }
 
-        // paint piccolo
+        // paint Piccolo2D
         camera.fullPaint(paintContext);
 
         // if switched state from animating to not animating invalidate
         // the entire screen so that it will be drawn with the default instead
         // of animating render quality.
-        if (!getAnimating() && animatingOnLastPaint) {
+        if (animatingOnLastPaint && !getAnimating()) {
             repaint();
         }
         animatingOnLastPaint = getAnimating();
@@ -616,5 +553,112 @@ public class PSWTCanvas extends Composite implements PComponent {
         redraw();
         update();
         paintingImmediately = false;
+    }
+
+    private final class KeyboardInputSource implements KeyListener {
+        public void keyPressed(final KeyEvent ke) {
+            final java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_PRESSED);
+            sendInputEventToInputManager(inputEvent, java.awt.event.KeyEvent.KEY_PRESSED);
+        }
+
+        public void keyReleased(final KeyEvent ke) {
+            final java.awt.event.KeyEvent inputEvent = new PSWTKeyEvent(ke, java.awt.event.KeyEvent.KEY_RELEASED);
+            sendInputEventToInputManager(inputEvent, java.awt.event.KeyEvent.KEY_RELEASED);
+        }
+    }
+
+    private final class MouseInputSource implements MouseListener, MouseMoveListener {
+        public void mouseMove(final MouseEvent me) {
+            if (isButton1Pressed || isButton2Pressed || isButton3Pressed) {
+                final java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
+                        java.awt.event.MouseEvent.MOUSE_DRAGGED, 1);
+                sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_DRAGGED);
+            }
+            else {
+                final java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me,
+                        java.awt.event.MouseEvent.MOUSE_MOVED, 1);
+                sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_MOVED);
+            }
+        }
+
+        public void mouseDown(final MouseEvent mouseEvent) {
+            boolean shouldBalanceEvent = false;
+
+            switch (mouseEvent.button) {
+                case 1:
+                    if (isButton1Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton1Pressed = true;
+                    break;
+                case 2:
+                    if (isButton2Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton2Pressed = true;
+                    break;
+                case 3:
+                    if (isButton3Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton3Pressed = true;
+                    break;
+            }
+
+            if (shouldBalanceEvent) {
+                final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(mouseEvent,
+                        java.awt.event.MouseEvent.MOUSE_RELEASED, 1);
+                sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
+            }
+
+            final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(mouseEvent,
+                    java.awt.event.MouseEvent.MOUSE_PRESSED, 1);
+            sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
+        }
+
+        public void mouseUp(final MouseEvent me) {
+            boolean shouldBalanceEvent = false;
+
+            switch (me.button) {
+                case 1:
+                    if (!isButton1Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton1Pressed = false;
+                    break;
+                case 2:
+                    if (!isButton2Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton2Pressed = false;
+                    break;
+                case 3:
+                    if (!isButton3Pressed) {
+                        shouldBalanceEvent = true;
+                    }
+                    isButton3Pressed = false;
+                    break;
+            }
+
+            if (shouldBalanceEvent) {
+                final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
+                        java.awt.event.MouseEvent.MOUSE_PRESSED, 1);
+                sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
+            }
+
+            final java.awt.event.MouseEvent balanceEvent = new PSWTMouseEvent(me,
+                    java.awt.event.MouseEvent.MOUSE_RELEASED, 1);
+            sendInputEventToInputManager(balanceEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
+        }
+
+        public void mouseDoubleClick(final MouseEvent me) {
+            // This doesn't work with click event types for some reason - it
+            // has to do with how the click and release events are ordered,
+            // I think
+            java.awt.event.MouseEvent inputEvent = new PSWTMouseEvent(me, java.awt.event.MouseEvent.MOUSE_PRESSED, 2);
+            sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_PRESSED);
+            inputEvent = new PSWTMouseEvent(me, java.awt.event.MouseEvent.MOUSE_RELEASED, 2);
+            sendInputEventToInputManager(inputEvent, java.awt.event.MouseEvent.MOUSE_RELEASED);
+        }
     }
 }

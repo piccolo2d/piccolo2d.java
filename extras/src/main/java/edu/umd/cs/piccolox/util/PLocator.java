@@ -55,16 +55,16 @@ public abstract class PLocator implements Serializable {
      * in dstPoints. Should dstPoints be null, it will create a new point and
      * return it.
      * 
-     * @param aDstPoint output parameter to store the located point
+     * @param dstPoint output parameter to store the located point
      * @return the located point
      */
-    public Point2D locatePoint(final Point2D aDstPoint) {
+    public Point2D locatePoint(final Point2D dstPoint) {
         Point2D result;
-        if (aDstPoint == null) {
+        if (dstPoint == null) {
             result = new Point2D.Double();
         }
         else {
-            result = aDstPoint;
+            result = dstPoint;
         }
         result.setLocation(locateX(), locateY());
         return result;
