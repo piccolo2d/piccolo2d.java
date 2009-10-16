@@ -177,11 +177,13 @@ public class PSWTHandle extends PSWTPath {
     // position.
     // ****************************************************************
 
+    /** {@inheritDoc} */
     public void setParent(final PNode newParent) {
-        super.setParent(newParent);
+        super.setParent(newParent);       
         relocateHandle();
     }
 
+    /** {@inheritDoc} */
     public void parentBoundsChanged() {
         relocateHandle();
     }

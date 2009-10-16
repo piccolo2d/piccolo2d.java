@@ -279,6 +279,14 @@ public class PSWTBoundsHandle extends PSWTHandle {
         l.getNode().endResizeBounds();
     }
 
+    /**
+     * Iterates over all of this node's handles flipping them if necessary. This
+     * is needed since a node can become inverted when it's width or height
+     * becomes negative.
+     * 
+     * @param flipX whether to allow flipping in the horizontal direction
+     * @param flipY whether to allow flipping in the vertical direction
+     */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
         final Iterator i = getParent().getChildrenIterator();
         while (i.hasNext()) {
@@ -290,8 +298,8 @@ public class PSWTBoundsHandle extends PSWTHandle {
     }
 
     /**
-     * Flips the handles around if needed. this is necessary since a node can
-     * become inverted when it's width or height becomes negative.
+     * Flips this particular handle around if needed. This is necessary since a
+     * node can become inverted when it's width or height becomes negative.
      * 
      * @param flipX whether to allow flipping in the horizontal direction
      * @param flipY whether to allow flipping in the vertical direction
