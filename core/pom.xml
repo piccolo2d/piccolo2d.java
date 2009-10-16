@@ -114,10 +114,14 @@
               <ignore>edu.umd.cs.piccolo.examples.*</ignore>
               <ignore>edu.umd.cs.piccolo.examples.pswing.*</ignore>
               <ignore>edu.umd.cs.piccolo.examples.swt.*</ignore>
-              <ignore>edu.umd.cs.piccolo.tutorial.*</ignore>
+              <ignore>edu.umd.cs.piccolo.tutorial.*</ignore>              
             </ignores>
             <excludes>
-              <exclude>edu/umd/cs/piccolo/examples/**</exclude>
+              <exclude>edu/umd/cs/piccolo/examples/**</exclude>              
+              <exclude>edu/umd/cs/piccolox/**/*Test.class</exclude>
+              <exclude>edu/umd/cs/piccolo/**/*Test.class</exclude>
+              <exclude>edu/umd/cs/piccolox/**/Mock*.class</exclude>
+              <exclude>edu/umd/cs/piccolo/**/Mock*.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
