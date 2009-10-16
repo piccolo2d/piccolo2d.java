@@ -8,4 +8,8 @@ public abstract class SWTTest extends TestCase {
 	public final boolean isHeadless() {
 		return GraphicsEnvironment.isHeadless();
 	}
+	
+	public final boolean hasHead() {
+		return !isHeadless();
+	}
 }

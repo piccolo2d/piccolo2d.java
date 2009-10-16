@@ -96,7 +96,7 @@ public class PSWTText extends PNode {
 
     /** Default constructor for PSWTTest. */
     public PSWTText() {
-        this("", DEFAULT_FONT);
+        this(DEFAULT_TEXT, DEFAULT_FONT);
     }
 
     /**
@@ -334,8 +334,8 @@ public class PSWTText extends PNode {
     /**
      * Set the text translation offset to the specified position.
      * 
-     * @param x the X-coord of translation
-     * @param y the Y-coord of translation
+     * @param x the X component of translation
+     * @param y the Y component of translation
      */
     public void setTranslation(final double x, final double y) {
         translateX = x;
