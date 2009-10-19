@@ -149,6 +149,13 @@ public class PSWTPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath for the poly-line for the given points.
+     * 
+     * @param points array of points for the point lines
+     * 
+     * @return created poly-line for the given points
+     */
     public static PSWTPath createPolyline(final Point2D[] points) {
         final PSWTPath result = new PSWTPath();
         result.setPathToPolyline(points);
@@ -156,6 +163,14 @@ public class PSWTPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a PPath for the poly-line for the given points.
+     * 
+     * @param xp array of x components of the points of the poly-lines
+     * @param yp array of y components of the points of the poly-lines
+     * 
+     * @return created poly-line for the given points
+     */
     public static PSWTPath createPolyline(final float[] xp, final float[] yp) {
         final PSWTPath result = new PSWTPath();
         result.setPathToPolyline(xp, yp);
@@ -170,6 +185,11 @@ public class PSWTPath extends PNode {
         strokePaint = DEFAULT_STROKE_PAINT;
     }
 
+    /**
+     * Creates an SWTPath in the given shape with the default paint and stroke.
+     * 
+     * @param aShape the desired shape
+     */
     public PSWTPath(final Shape aShape) {
         this();
         setShape(aShape);
@@ -205,6 +225,11 @@ public class PSWTPath extends PNode {
      * base bounds get too small then it is impossible to expand the path shape
      * again since all its numbers have tended to zero, so application code may
      * need to take this into consideration.
+     * 
+     * @param x new left position of bounds
+     * @param y new top position of bounds
+     * @param width the new width of the bounds
+     * @param height the new height of the bounds
      */
     protected void internalUpdateBounds(final double x, final double y, final double width, final double height) {
         if (updatingBoundsFromPath) {
@@ -240,23 +265,28 @@ public class PSWTPath extends PNode {
     }
 
     /**
-     * Returns true if this shape intersects the bounds provided.
+     * Returns true if path crosses the provided bounds. Takes visibility of
+     * path into account.
      * 
-     * 
+     * @param aBounds bounds being tested for intersection
+     * @return true if path visibly crosses bounds
      */
-    public boolean intersects(Rectangle2D aBounds) {
+    public boolean intersects(final Rectangle2D aBounds) {
         if (super.intersects(aBounds)) {
-
-            if (internalXForm != null) {
-                aBounds = new PBounds(aBounds);
-                internalXForm.inverseTransform(aBounds, aBounds);
+            final Rectangle2D srcBounds;
+            if (internalXForm == null) {
+                srcBounds = aBounds;
+            }
+            else {
+                srcBounds = new PBounds(aBounds);
+                internalXForm.inverseTransform(srcBounds, srcBounds);
             }
 
-            if (getPaint() != null && shape.intersects(aBounds)) {
+            if (getPaint() != null && shape.intersects(srcBounds)) {
                 return true;
             }
             else if (strokePaint != null) {
-                return BASIC_STROKE.createStrokedShape(shape).intersects(aBounds);
+                return BASIC_STROKE.createStrokedShape(shape).intersects(srcBounds);
             }
         }
         return false;
@@ -378,6 +408,11 @@ public class PSWTPath extends PNode {
         invalidatePaint();
     }
 
+    /**
+     * Updates the internal points used to draw the shape.
+     * 
+     * @param aShape shape to read points from
+     */
     public void updateShapePoints(final Shape aShape) {
         if (aShape instanceof Rectangle2D) {
             if (shapePts == null || shapePts.length < 4) {
@@ -428,6 +463,13 @@ public class PSWTPath extends PNode {
         }
     }
 
+    /**
+     * Clone's the shape provided.
+     * 
+     * @param aShape shape to be cloned
+     * 
+     * @return a cloned version of the provided shape
+     */
     public Shape cloneShape(final Shape aShape) {
         if (aShape instanceof Rectangle2D) {
             return new PBounds((Rectangle2D) aShape);
@@ -457,22 +499,54 @@ public class PSWTPath extends PNode {
         }
     }
 
+    /**
+     * Resets the path to a rectangle with the dimensions and position provided.
+     * 
+     * @param x left of the rectangle
+     * @param y top of te rectangle
+     * @param width width of the rectangle
+     * @param height height of the rectangle
+     */
     public void setPathToRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
         setShape(TEMP_RECTANGLE);
     }
 
+    /**
+     * Resets the path to a rectangle with the dimensions and position provided.
+     * 
+     * @param x left of the rectangle
+     * @param y top of te rectangle
+     * @param width width of the rectangle
+     * @param height height of the rectangle
+     * @param arcWidth width of arc in the corners of the rectangle
+     * @param arcHeight height of arc in the corners of the rectangle
+     */
     public void setPathToRoundRectangle(final float x, final float y, final float width, final float height,
             final float arcWidth, final float arcHeight) {
         TEMP_ROUNDRECTANGLE.setRoundRect(x, y, width, height, arcWidth, arcHeight);
         setShape(TEMP_ROUNDRECTANGLE);
     }
 
+    /**
+     * Resets the path to an ellipse positioned at the coordinate provided with
+     * the dimensions provided.
+     * 
+     * @param x left of the ellipse
+     * @param y top of the ellipse
+     * @param width width of the ellipse
+     * @param height height of the ellipse
+     */
     public void setPathToEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
         setShape(TEMP_ELLIPSE);
     }
 
+    /**
+     * Sets the path to a sequence of segments described by the points.
+     * 
+     * @param points points to that lie along the generated path
+     */
     public void setPathToPolyline(final Point2D[] points) {
         final GeneralPath path = new GeneralPath();
         path.reset();
@@ -483,6 +557,13 @@ public class PSWTPath extends PNode {
         setShape(path);
     }
 
+    /**
+     * Sets the path to a sequence of segments described by the point components
+     * provided.
+     * 
+     * @param xp the x components of the points along the path
+     * @param yp the y components of the points along the path
+     */
     public void setPathToPolyline(final float[] xp, final float[] yp) {
         final GeneralPath path = new GeneralPath();
         path.reset();
