@@ -160,6 +160,8 @@ public class PSWTCanvas extends Composite implements PComponent {
      * Get the zoom event handler associated with this canvas. This event
      * handler is set up to get events from the camera associated with this
      * canvas by default.
+     * 
+     * @return the event handler installed to handle zooming
      */
     public PZoomEventHandler getZoomEventHandler() {
         return zoomEventHandler;
@@ -169,6 +171,8 @@ public class PSWTCanvas extends Composite implements PComponent {
      * Return the camera associated with this canvas. All input events from this
      * canvas go through this camera. And this is the camera that paints this
      * canvas.
+     * 
+     * @return the camera associated with this canvas
      */
     public PCamera getCamera() {
         return camera;
@@ -178,6 +182,8 @@ public class PSWTCanvas extends Composite implements PComponent {
      * Set the camera associated with this canvas. All input events from this
      * canvas go through this camera. And this is the camera that paints this
      * canvas.
+     * 
+     * @param newCamera camera to attach to this canvas
      */
     public void setCamera(final PCamera newCamera) {
         if (camera != null) {
@@ -197,13 +203,20 @@ public class PSWTCanvas extends Composite implements PComponent {
 
     /**
      * Return root for this canvas.
+     * 
+     * @return root of the scene this canvas is viewing through its camera
      */
     public PRoot getRoot() {
         return camera.getRoot();
     }
 
     /**
-     * Return layer for this canvas.
+     * Helper method to return the first layer attached to the camera of this
+     * canvas.
+     * 
+     * Short form of <code>canvas.getCamera.getLayer(0)</code>
+     * 
+     * @return the first layer attached to the camera of this canvas
      */
     public PLayer getLayer() {
         return camera.getLayer(0);
@@ -211,18 +224,30 @@ public class PSWTCanvas extends Composite implements PComponent {
 
     /**
      * Add an input listener to the camera associated with this canvas.
+     * 
+     * @param listener listener to add to to the camera
      */
     public void addInputEventListener(final PInputEventListener listener) {
         getCamera().addInputEventListener(listener);
     }
 
     /**
-     * Remove an input listener to the camera associated with this canvas.
+     * Remove an input listener to the camera associated with this canvas. Does
+     * nothign is the listener is not found.
+     * 
+     * @param listener listener to remove from the set of event listeners
+     *            attached to this canvas.
      */
     public void removeInputEventListener(final PInputEventListener listener) {
         getCamera().removeInputEventListener(listener);
     }
 
+    /**
+     * Builds the basic scene graph associated with this canvas. Developers may
+     * override this method to install their own layers, and cameras.
+     * 
+     * @return PCamera viewing the freshly created scene
+     */
     public PCamera createBasicSceneGraph() {
         final PRoot r = new PSWTRoot(this);
         final PLayer l = new PLayer();
@@ -242,6 +267,8 @@ public class PSWTCanvas extends Composite implements PComponent {
     /**
      * Return true if this canvas has been marked as interacting. If so the
      * canvas will normally render at a lower quality that is faster.
+     * 
+     * @return true if canvas is flagged as interacting
      */
     public boolean getInteracting() {
         return interacting > 0;
@@ -252,14 +279,19 @@ public class PSWTCanvas extends Composite implements PComponent {
      * isAnimating were run in the last PRoot.processInputs() loop. This values
      * is used by this canvas to determine the render quality to use for the
      * next paint.
+     * 
+     * @return true if there is an animating activity that is currently active
      */
     public boolean getAnimating() {
         return getRoot().getActivityScheduler().getAnimating();
     }
 
     /**
-     * Set if this canvas is interacting. If so the canvas will normally render
-     * at a lower quality that is faster.
+     * Changes the number of callers that are interacting with the canvas. Will
+     * allow the scene to be rendered in a lower quality if the number is not 0.
+     * 
+     * @param isInteracting state the client considers the PSWTCanvas to be in
+     *            with regard to interacting
      */
     public void setInteracting(final boolean isInteracting) {
         if (isInteracting) {
@@ -451,11 +483,31 @@ public class PSWTCanvas extends Composite implements PComponent {
     public void setBounds(final int x, final int y, final int newWidth, final int newHeight) {
         camera.setBounds(camera.getX(), camera.getY(), newWidth, newHeight);
 
-        if (backBuffer == null || backBuffer.getBounds().width < newWidth || backBuffer.getBounds().height < newHeight) {
-            backBuffer = new Image(getDisplay(), newWidth, newHeight);
+        if (backBufferNeedsResizing(newWidth, newHeight)) {
+            resizeBackBuffer(newWidth, newHeight);
         }
 
         super.setBounds(x, y, newWidth, newHeight);
+    }
+
+    private void resizeBackBuffer(final int newWidth, final int newHeight) {
+        if (backBuffer != null) {
+            backBuffer.dispose();
+        }
+        
+        System.out.println("new size: " + newWidth);
+            
+        backBuffer = new Image(getDisplay(), newWidth, newHeight);
+    }
+
+    private boolean backBufferNeedsResizing(final int newWidth, final int newHeight) {
+        if (!doubleBuffered)
+            return false;
+        
+        if (backBuffer == null)
+            return true;
+
+        return backBuffer.getBounds().width < newWidth || backBuffer.getBounds().height < newHeight;
     }
 
     /**
@@ -478,6 +530,16 @@ public class PSWTCanvas extends Composite implements PComponent {
         redraw((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height, true);
     }
 
+    /**
+     * Paints the region specified of the canvas onto the given Graphics
+     * Context.
+     * 
+     * @param gc graphics onto within painting should occur
+     * @param x left of the dirty region
+     * @param y top of the dirty region
+     * @param w width of the dirty region
+     * @param h height of the dirty region
+     */
     public void paintComponent(final GC gc, final int x, final int y, final int w, final int h) {
         PDebug.startProcessingOutput();
 
@@ -544,6 +606,10 @@ public class PSWTCanvas extends Composite implements PComponent {
         }
     }
 
+    /**
+     * Performs an immediate repaint if no other client is currently performing
+     * one.
+     */
     public void paintImmediately() {
         if (paintingImmediately) {
             return;
@@ -603,6 +669,7 @@ public class PSWTCanvas extends Composite implements PComponent {
                     }
                     isButton3Pressed = true;
                     break;
+                default:
             }
 
             if (shouldBalanceEvent) {
@@ -638,6 +705,7 @@ public class PSWTCanvas extends Composite implements PComponent {
                     }
                     isButton3Pressed = false;
                     break;
+                default:
             }
 
             if (shouldBalanceEvent) {
