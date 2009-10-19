@@ -83,6 +83,8 @@ import org.eclipse.swt.graphics.Transform;
  * @author Lance Good
  */
 public class SWTGraphics2D extends Graphics2D {
+    private static final int DEFAULT_FONT_SIZE = 12;
+
     private static final boolean DEFAULT_STRING_TRANSPARENCY = true;
 
     /**
@@ -373,7 +375,7 @@ public class SWTGraphics2D extends Graphics2D {
 
             final String name = fontString.substring(0, fontString.indexOf(";"));
             final String size = fontString.substring(fontString.lastIndexOf(";") + 1, fontString.length());
-            int sizeInt = 12;
+            int sizeInt = DEFAULT_FONT_SIZE;
             try {
                 sizeInt = Integer.parseInt(size.substring(size.indexOf("=") + 1, size.length()));
             }

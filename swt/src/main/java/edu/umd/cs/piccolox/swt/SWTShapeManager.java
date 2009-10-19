@@ -128,6 +128,7 @@ public class SWTShapeManager {
                 case PathIterator.SEG_CLOSE:
                     segList.add(new Point2D.Double(aPoint.getX(), aPoint.getY()));
                     break;
+                default:
             }
             pi.next();
         }
@@ -146,14 +147,14 @@ public class SWTShapeManager {
      * Transforms the given points by the transform provided, leaving the
      * original points untouched.
      * 
-     * @param pts points to transform
+     * @param points points to transform
      * @param at transform to apply
      * @return transformed coordinates given in format x1,y2,x2,y2,...
      */
-    public static int[] transform(final double[] pts, final AffineTransform at) {
-        final int[] intPts = new int[pts.length];
-        for (int i = 0; i < pts.length / 2; i++) {
-            aPoint.setLocation(pts[2 * i], pts[2 * i + 1]);
+    public static int[] transform(final double[] points, final AffineTransform at) {
+        final int[] intPts = new int[points.length];
+        for (int i = 0; i < points.length / 2; i++) {
+            aPoint.setLocation(points[2 * i], points[2 * i + 1]);
             at.transform(aPoint, aPoint);
             intPts[2 * i] = (int) (aPoint.getX() + 0.5);
             intPts[2 * i + 1] = (int) (aPoint.getY() + 0.5);
