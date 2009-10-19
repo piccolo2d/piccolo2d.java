@@ -51,20 +51,21 @@ public final class ShadowUtils {
         // empty
     }
 
-
     /**
-     * Create and return a new buffered image containing a shadow of the specified source image
-     * using the specifed shadow paint and gaussian blur radius.  The dimensions of the returned image will be
-     * <code>src.getWidth() + 4 * blurRadius</code> x <code>src.getHeight() + 4 * blurRadius</code>
-     * to account for blurring beyond the bounds of the source image.  Thus the source image
-     * will appear to be be offset by (<code>2 * blurRadius</code>, <code>2 * blurRadius</code>)
-     * in the returned image.
-     *
+     * Create and return a new buffered image containing a shadow of the
+     * specified source image using the specifed shadow paint and gaussian blur
+     * radius. The dimensions of the returned image will be
+     * <code>src.getWidth() + 4 * blurRadius</code> x
+     * <code>src.getHeight() + 4 * blurRadius</code> to account for blurring
+     * beyond the bounds of the source image. Thus the source image will appear
+     * to be be offset by (<code>2 * blurRadius</code>,
+     * <code>2 * blurRadius</code>) in the returned image.
+     * 
      * @param src source image, must not be null
      * @param shadowPaint shadow paint
      * @param blurRadius gaussian blur radius, must be <code>&gt; 0</code>
-     * @return a new buffered image containing a shadow of the specified source image
-     *   using the specifed shadow paint and gaussian blur radius
+     * @return a new buffered image containing a shadow of the specified source
+     *         image using the specifed shadow paint and gaussian blur radius
      */
     public static BufferedImage createShadow(final Image src, final Paint shadowPaint, final int blurRadius) {
         if (src == null) {
@@ -100,19 +101,20 @@ public final class ShadowUtils {
 
         /**
          * Create a new gaussian kernel with the specified blur radius.
-         *
+         * 
          * @param blurRadius blur radius
          */
         GaussianKernel(final int blurRadius) {
             super((2 * blurRadius) + 1, (2 * blurRadius) + 1, createKernel(blurRadius));
         }
 
-
         /**
-         * Create an array of floats representing a gaussian kernel with the specified radius.
-         *
+         * Create an array of floats representing a gaussian kernel with the
+         * specified radius.
+         * 
          * @param r radius
-         * @return an array of floats representing a gaussian kernel with the specified radius
+         * @return an array of floats representing a gaussian kernel with the
+         *         specified radius
          */
         private static float[] createKernel(final int r) {
             int w = (2 * r) + 1;
@@ -121,16 +123,17 @@ public final class ShadowUtils {
             double n = Math.PI * m;
 
             double sum = 0.0d;
-            for (int i = 0; i < w; i++) {
-                for (int j = 0; j < w; j++) {
-                    kernel[i * w + j] = (float) (Math.pow(Math.E, -((j - r) * (j - r) + (i - r) * (i - r)) / m) / n);
-                    sum += kernel[i * w + j];
+            for (int x = 0; x < w; x++) {
+                int xr2 = (x-r) * (x-r);                
+                for (int y = 0; y < w; y++) {
+                    int yr2 = (y-r) * (y-r);
+                    kernel[x * w + y] = (float) (Math.pow(Math.E, -(yr2 + xr2) / m) / n);
+                    sum += kernel[x * w + y];
                 }
             }
-            for (int i = 0; i < w; i++) {
-                for (int j = 0; j < w; j++) {
-                    kernel[i * w + j] /= sum;
-                }
+
+            for (int i = kernel.length - 1; i >= 0; i--) {
+                kernel[i] /= sum;
             }
             return kernel;
         }

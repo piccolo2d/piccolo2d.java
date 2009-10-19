@@ -31,8 +31,9 @@ package edu.umd.cs.piccolox.util;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-
 import java.awt.image.BufferedImage;
+
+import edu.umd.cs.piccolox.nodes.PShadow;
 
 import junit.framework.TestCase;
 
@@ -40,43 +41,59 @@ import junit.framework.TestCase;
  * Unit test for ShadowUtils.
  */
 public final class ShadowUtilsTest extends TestCase {
+    private static final int TEST_IMAGE_SIZE = 25;
+    private static final Paint shadowPaint = new Color(20, 20, 20, 200);
+    private BufferedImage src;
 
-    public void testCreateShadow() {
-        BufferedImage src = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+    public void setUp() {
+        src = new BufferedImage(TEST_IMAGE_SIZE, TEST_IMAGE_SIZE, BufferedImage.TYPE_INT_ARGB);
         Paint srcPaint = new Color(255, 0, 0, 200);
-        Paint shadowPaint = new Color(20, 20, 20, 200);
         Graphics2D g = src.createGraphics();
         g.setPaint(srcPaint);
         g.drawRect(25, 25, 50, 50);
         g.dispose();
+    }
 
-        for (int blurRadius = 1; blurRadius < 33; blurRadius += 4) {
-            BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, blurRadius);
-            assertNotNull(dest);
-            assertEquals(src.getWidth() + 4 * blurRadius, dest.getWidth());
-            assertEquals(src.getHeight() + 4 * blurRadius, dest.getHeight());
-        }
+    public void testCreateShadowAcceptsTinyShadow() {
+        BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, 1);
+        assertNotNull(dest);
+        assertEquals(TEST_IMAGE_SIZE + 4, dest.getWidth());
+        assertEquals(TEST_IMAGE_SIZE + 4, dest.getHeight());
+    }
 
-        try {
-            ShadowUtils.createShadow(null, shadowPaint, 4);
-            fail("createShadow(null, ...) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
+    public void testCreateShadowAcceptsHugeShadow() {
+        BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, 25);
+        assertNotNull(dest);
+        assertEquals(TEST_IMAGE_SIZE + 100, dest.getWidth());
+        assertEquals(TEST_IMAGE_SIZE + 100, dest.getHeight());
+    }
+
+    public void testNonPositiveBlurRadiusFails() {
         try {
             ShadowUtils.createShadow(src, shadowPaint, 0);
-            fail("createShadow(..., 0) expected IllegalArgumentException");
+            fail("Non positive blur radius should fail");
         }
         catch (IllegalArgumentException e) {
             // expected
         }
+
         try {
             ShadowUtils.createShadow(src, shadowPaint, -1);
-            fail("createShadow(..., -1) expected IllegalArgumentException");
+            fail("Non positive blur radius should fail");
         }
         catch (IllegalArgumentException e) {
             // expected
         }
     }
+
+    public void testConstructorDoesNotAcceptNullSrc() {
+        try {
+            ShadowUtils.createShadow(null, Color.BLACK, 4);
+            fail("ctr(null, ...) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
 }

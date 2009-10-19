@@ -40,43 +40,26 @@ import junit.framework.TestCase;
  * Unit test for PShadow.
  */
 public final class PShadowTest extends TestCase {
+    private static final int TEST_IMAGE_WIDTH = 25;
+    private static final int TEST_IMAGE_HEIGHT = 10;
+    private BufferedImage src;
+    private Color shadowPaint;
 
-    public void testConstructor() {
-        BufferedImage src = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+    public void setUp() {
+        shadowPaint = new Color(20, 20, 20, 200);
+        src = new BufferedImage(TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Paint srcPaint = new Color(255, 0, 0, 200);
-        Paint shadowPaint = new Color(20, 20, 20, 200);
+
         Graphics2D g = src.createGraphics();
         g.setPaint(srcPaint);
         g.drawRect(25, 25, 50, 50);
         g.dispose();
+    }
 
-        for (int blurRadius = 1; blurRadius < 33; blurRadius += 4) {
-            PShadow shadowNode = new PShadow(src, shadowPaint, blurRadius);
-            assertNotNull(shadowNode);
-            assertEquals(src.getWidth() + 4 * blurRadius, shadowNode.getWidth(), 0.001d);
-            assertEquals(src.getHeight() + 4 * blurRadius, shadowNode.getHeight(), 0.001d);
-        }
-
-        try {
-            new PShadow(null, shadowPaint, 4);
-            fail("ctr(null, ...) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            new PShadow(src, shadowPaint, 0);
-            fail("ctr(..., -1) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            new PShadow(src, shadowPaint, -1);
-            fail("ctr(..., -1) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
+    public void testShadowCreatesCorrectImageSize() {
+        PShadow shadowNode = new PShadow(src, shadowPaint, 4);
+        assertNotNull(shadowNode);
+        assertEquals(TEST_IMAGE_WIDTH + 16, shadowNode.getWidth(), 0.001d);
+        assertEquals(TEST_IMAGE_HEIGHT + 16, shadowNode.getHeight(), 0.001d);
     }
 }
