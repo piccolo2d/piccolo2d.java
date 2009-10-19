@@ -521,7 +521,8 @@ public class PPath extends PNode {
      * @param x3 x component of point through which curve must pass
      * @param y3 y component of point through which curve must pass
      */
-    public void curveTo(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
+    public void curveTo(final float x1, final float y1, final float x2, final float y2,
+            final float x3, final float y3) {
         path.curveTo(x1, y1, x2, y2, x3, y3);
         firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, path);
         updateBoundsFromPath();

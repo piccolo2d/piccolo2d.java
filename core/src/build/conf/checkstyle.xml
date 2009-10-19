@@ -151,10 +151,13 @@
         </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <!--  TODO: Make this check ints and longs aswell -->
-        <module name="MagicNumber">        	        	
-    		<property name="ignoreNumbers" value="0, 0.5, 2, 1, -1, 1000" />        	
+        <!-- 2.0:  Lots of enums are defined using constants, so until 2.0 this needs to stay disabled. -->
+        <!-- 
+        <module name="MagicNumber">        	            	    
+    		<property name="ignoreNumbers" value="0, 0.5, 2, 1, -1, 1000, 2, 3, 4, 5, 6, 7, 8" />
         </module>
+    	-->        	
+
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>

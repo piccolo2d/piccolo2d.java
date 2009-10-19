@@ -67,7 +67,7 @@ public class PPickPath implements PInputEventListener {
     public static PPickPath CURRENT_PICK_PATH;
 
     /** Used when calculating the scale. */
-    private static double[] PTS = new double[4];
+    private static final double[] PTS = new double[4];
 
     /** Stack of nodes representing all picked nodes. */
     private PStack nodeStack;

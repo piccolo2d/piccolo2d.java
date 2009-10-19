@@ -43,8 +43,7 @@ import edu.umd.cs.piccolo.util.PAffineTransform;
  * @author Jesse Grosjean
  */
 public class PTransformActivity extends PInterpolatingActivity {
-
-    private static PAffineTransform STATIC_TRANSFORM = new PAffineTransform();
+    private static final PAffineTransform STATIC_TRANSFORM = new PAffineTransform();
 
     private final double[] source;
     private double[] destination;

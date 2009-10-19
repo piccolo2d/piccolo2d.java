@@ -164,6 +164,7 @@ public class PText extends PNode {
      */
     public PText() {
         super();
+        setText(DEFAULT_TEXT);
     }
 
     /**

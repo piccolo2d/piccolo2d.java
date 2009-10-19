@@ -154,6 +154,9 @@ public class PCanvas extends JComponent implements PComponent {
      */
     private transient MouseMotionListener mouseMotionListener;
 
+    private static final int ALL_BUTTONS_MASK = InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK
+            | InputEvent.BUTTON3_DOWN_MASK;
+
     /**
      * Construct a canvas with the basic scene graph consisting of a root,
      * camera, and layer. Zooming and panning are automatically installed.
@@ -843,10 +846,6 @@ public class PCanvas extends JComponent implements PComponent {
             sendInputEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
         }
 
-        private boolean isAnyButtonDown(final MouseEvent e) { 
-            return (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) != 0;
-        }
-
         private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, final int eventType) {
             if (rawEvent.getButton() != MouseEvent.NOBUTTON) {
                 return rawEvent;
@@ -886,6 +885,10 @@ public class PCanvas extends JComponent implements PComponent {
         }
     }
 
+    private boolean isAnyButtonDown(final MouseEvent e) {
+        return (e.getModifiersEx() & ALL_BUTTONS_MASK) != 0;
+    }
+
     /**
      * Class responsible for sending key events to the the InputManager.
      */
@@ -904,6 +907,9 @@ public class PCanvas extends JComponent implements PComponent {
         }
     }
 
+    /**
+     * Class responsible for sending mouse events to the the InputManager.
+     */
     private final class MouseWheelInputSourceListener implements MouseWheelListener {
         /** {@inheritDoc} */
         public void mouseWheelMoved(final MouseWheelEvent e) {

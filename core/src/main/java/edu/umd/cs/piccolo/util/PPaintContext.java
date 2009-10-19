@@ -68,7 +68,7 @@ public class PPaintContext {
     public static PPaintContext CURRENT_PAINT_CONTEXT;
 
     /** Used while calculating scale at which rendering is occurring. */
-    private static double[] PTS = new double[4];
+    private static final double[] PTS = new double[4];
 
     /** PaintContext is associated with this graphics context. */
     private final Graphics2D graphics;
