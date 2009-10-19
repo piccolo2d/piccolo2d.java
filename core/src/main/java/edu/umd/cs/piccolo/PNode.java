@@ -1454,11 +1454,11 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Set the bounds of this node to the given value. These bounds are stored
+     * Set the bounds of this node to the given position and size. These bounds are stored
      * in the local coordinate system of this node.
      * 
      * If the width or height is less then or equal to zero then the bound's
-     * emtpy bit will be set to true.
+     * empty bit will be set to true.
      * 
      * Subclasses must call the super.setBounds() method.
      * 

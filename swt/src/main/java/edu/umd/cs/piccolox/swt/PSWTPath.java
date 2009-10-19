@@ -69,10 +69,6 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * @author Jesse Grosjean
  */
 public class PSWTPath extends PNode {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -92,15 +88,24 @@ public class PSWTPath extends PNode {
 
     private Paint strokePaint;
 
-    boolean updatingBoundsFromPath;
-    Shape origShape;
-    Shape shape;
+    private boolean updatingBoundsFromPath;
+    private Shape origShape;
+    private Shape shape;
 
-    PAffineTransform internalXForm;
-    AffineTransform inverseXForm;
+    private PAffineTransform internalXForm;
+    private AffineTransform inverseXForm;
 
-    double[] shapePts;
+    private double[] shapePts;
 
+    /**
+     * Creates a path representing the rectangle provided.
+     * 
+     * @param x left of rectangle
+     * @param y top of rectangle
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @return created rectangle
+     */
     public static PSWTPath createRectangle(final float x, final float y, final float width, final float height) {
         TEMP_RECTANGLE.setFrame(x, y, width, height);
         final PSWTPath result = new PSWTPath(TEMP_RECTANGLE);
@@ -108,6 +113,17 @@ public class PSWTPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a path representing the rounded rectangle provided.
+     * 
+     * @param x left of rectangle
+     * @param y top of rectangle
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @param arcWidth width of the arc at the corners
+     * @param arcHeight height of arc at the corners
+     * @return created rounded rectangle
+     */
     public static PSWTPath createRoundRectangle(final float x, final float y, final float width, final float height,
             final float arcWidth, final float arcHeight) {
         TEMP_ROUNDRECTANGLE.setRoundRect(x, y, width, height, arcWidth, arcHeight);
@@ -116,6 +132,16 @@ public class PSWTPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates a path representing an ellipse that covers the rectangle
+     * provided.
+     * 
+     * @param x left of rectangle
+     * @param y top of rectangle
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @return created ellipse
+     */
     public static PSWTPath createEllipse(final float x, final float y, final float width, final float height) {
         TEMP_ELLIPSE.setFrame(x, y, width, height);
         final PSWTPath result = new PSWTPath(TEMP_ELLIPSE);
@@ -137,6 +163,9 @@ public class PSWTPath extends PNode {
         return result;
     }
 
+    /**
+     * Creates an empty PSWTPath.
+     */
     public PSWTPath() {
         strokePaint = DEFAULT_STROKE_PAINT;
     }
@@ -149,14 +178,23 @@ public class PSWTPath extends PNode {
     // ****************************************************************
     // Stroke
     // ****************************************************************
-
+    /**
+     * Returns the paint to use when drawing the stroke of the shape.
+     * 
+     * @return path's stroke paint
+     */
     public Paint getStrokePaint() {
         return strokePaint;
     }
 
-    public void setStrokeColor(final Paint aPaint) {
+    /**
+     * Sets the paint to use when drawing the stroke of the shape.
+     * 
+     * @param strokeColor new stroke color
+     */
+    public void setStrokeColor(final Paint strokeColor) {
         final Paint old = strokePaint;
-        strokePaint = aPaint;
+        strokePaint = strokeColor;
         invalidatePaint();
         firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, old, strokePaint);
     }
@@ -201,6 +239,11 @@ public class PSWTPath extends PNode {
         }
     }
 
+    /**
+     * Returns true if this shape intersects the bounds provided.
+     * 
+     * 
+     */
     public boolean intersects(Rectangle2D aBounds) {
         if (super.intersects(aBounds)) {
 
@@ -219,6 +262,9 @@ public class PSWTPath extends PNode {
         return false;
     }
 
+    /**
+     * Recalculates the path's bounds by examining it's associated shape.
+     */
     public void updateBoundsFromPath() {
         updatingBoundsFromPath = true;
 
@@ -243,7 +289,11 @@ public class PSWTPath extends PNode {
     // ****************************************************************
     // Painting
     // ****************************************************************
-
+    /**
+     * Paints the path on the context provided.
+     * 
+     * @param paintContext the context onto which the path will be painted
+     */
     protected void paint(final PPaintContext paintContext) {
         final Paint p = getPaint();
         final SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
@@ -254,52 +304,12 @@ public class PSWTPath extends PNode {
 
         if (p != null) {
             g2.setBackground((Color) p);
-
-            final double lineWidth = g2.getTransformedLineWidth();
-            if (shape instanceof Rectangle2D) {
-                g2.fillRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth);
-            }
-            else if (shape instanceof Ellipse2D) {
-                g2.fillOval(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth);
-            }
-            else if (shape instanceof Arc2D) {
-                g2.fillArc(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
-            }
-            else if (shape instanceof RoundRectangle2D) {
-                g2.fillRoundRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
-            }
-            else {
-                g2.fill(shape);
-            }
+            fillShape(g2);
         }
 
         if (strokePaint != null) {
             g2.setColor((Color) strokePaint);
-
-            final double lineWidth = g2.getTransformedLineWidth();
-            if (shape instanceof Rectangle2D) {
-                g2.drawRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth);
-            }
-            else if (shape instanceof Ellipse2D) {
-                g2.drawOval(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth);
-            }
-            else if (shape instanceof Arc2D) {
-                g2.drawArc(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
-            }
-            else if (shape instanceof RoundRectangle2D) {
-                g2.drawRoundRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
-                        shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
-            }
-            else {               
-                g2.draw(shape);
-            }
+            drawShape(g2);
         }
 
         if (inverseXForm != null) {
@@ -307,10 +317,61 @@ public class PSWTPath extends PNode {
         }
     }
 
-    public void setShape(final Shape aShape) {
-        shape = cloneShape(aShape);
+    private void drawShape(final SWTGraphics2D g2) {
+        final double lineWidth = g2.getTransformedLineWidth();
+        if (shape instanceof Rectangle2D) {
+            g2.drawRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth, shapePts[3]
+                    - lineWidth);
+        }
+        else if (shape instanceof Ellipse2D) {
+            g2.drawOval(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth, shapePts[3]
+                    - lineWidth);
+        }
+        else if (shape instanceof Arc2D) {
+            g2.drawArc(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth, shapePts[3]
+                    - lineWidth, shapePts[4], shapePts[5]);
+        }
+        else if (shape instanceof RoundRectangle2D) {
+            g2.drawRoundRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
+                    shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
+        }
+        else {
+            g2.draw(shape);
+        }
+    }
+
+    private void fillShape(final SWTGraphics2D g2) {
+        final double lineWidth = g2.getTransformedLineWidth();
+        if (shape instanceof Rectangle2D) {
+            g2.fillRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth, shapePts[3]
+                    - lineWidth);
+        }
+        else if (shape instanceof Ellipse2D) {
+            g2.fillOval(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth, shapePts[3]
+                    - lineWidth);
+        }
+        else if (shape instanceof Arc2D) {
+            g2.fillArc(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth, shapePts[3]
+                    - lineWidth, shapePts[4], shapePts[5]);
+        }
+        else if (shape instanceof RoundRectangle2D) {
+            g2.fillRoundRect(shapePts[0] + lineWidth / 2, shapePts[1] + lineWidth / 2, shapePts[2] - lineWidth,
+                    shapePts[3] - lineWidth, shapePts[4], shapePts[5]);
+        }
+        else {
+            g2.fill(shape);
+        }
+    }
+
+    /**
+     * Changes the underlying shape of this PSWTPath.
+     * 
+     * @param newShape new associated shape of this PSWTPath
+     */
+    public void setShape(final Shape newShape) {
+        shape = cloneShape(newShape);
         origShape = shape;
-        updateShapePoints(aShape);
+        updateShapePoints(newShape);
 
         firePropertyChange(PPath.PROPERTY_CODE_PATH, PPath.PROPERTY_PATH, null, shape);
         updateBoundsFromPath();
@@ -389,7 +450,7 @@ public class PSWTPath extends PNode {
             final Line2D l2 = (Line2D) aShape;
             return new Line2D.Double(l2.getP1(), l2.getP2());
         }
-        else {    
+        else {
             final GeneralPath aPath = new GeneralPath();
             aPath.append(aShape, false);
             return aPath;
