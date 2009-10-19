@@ -323,6 +323,10 @@ public class PSWTCanvas extends Composite implements PComponent {
      */
     public void setDoubleBuffered(final boolean doubleBuffered) {
         this.doubleBuffered = doubleBuffered;
+        if (!doubleBuffered && backBuffer != null) {
+            backBuffer.dispose();
+            backBuffer = null;
+        }
     }
 
     /**
@@ -494,16 +498,16 @@ public class PSWTCanvas extends Composite implements PComponent {
         if (backBuffer != null) {
             backBuffer.dispose();
         }
-        
+
         System.out.println("new size: " + newWidth);
-            
+
         backBuffer = new Image(getDisplay(), newWidth, newHeight);
     }
 
     private boolean backBufferNeedsResizing(final int newWidth, final int newHeight) {
         if (!doubleBuffered)
             return false;
-        
+
         if (backBuffer == null)
             return true;
 
