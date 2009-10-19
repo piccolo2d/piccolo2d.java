@@ -10,9 +10,7 @@ public class PSWTTextTest extends SWTTest {
 	private PSWTText textNode;
 
 	public void setUp() {
-		if (hasHead()) {
-			textNode = new PSWTText();
-		}
+		textNode = new PSWTText();		
 	}
 
 	public void testConstructorRemembersTextValue() {
