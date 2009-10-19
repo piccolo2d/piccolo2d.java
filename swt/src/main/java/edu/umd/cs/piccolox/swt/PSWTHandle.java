@@ -59,13 +59,12 @@ import edu.umd.cs.piccolox.util.PNodeLocator;
  * @author Jesse Grosjean
  */
 public class PSWTHandle extends PSWTPath {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+    /** The Default Size of a handle not including its border. */
     public static float DEFAULT_HANDLE_SIZE = 8;
+    /** The default shape to use when drawing handles. Default is an ellipse. */
     public static Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
+    /** The default color to use when drawing a handle. (white) */
     public static Color DEFAULT_COLOR = Color.white;
 
     private PLocator locator;
@@ -74,6 +73,8 @@ public class PSWTHandle extends PSWTPath {
     /**
      * Construct a new handle that will use the given locator to locate itself
      * on its parent node.
+     * 
+     * @param aLocator locator to use when positioning this handle
      */
     public PSWTHandle(final PLocator aLocator) {
         super(DEFAULT_HANDLE_SHAPE);
@@ -82,26 +83,12 @@ public class PSWTHandle extends PSWTPath {
         installHandleEventHandlers();
     }
 
+    /**
+     * Installs the handler that will reposition the handle when it is dragged,
+     * and invoke appropriate call backs.
+     */
     protected void installHandleEventHandlers() {
-        handleDragger = new PDragSequenceEventHandler() {
-            protected void startDrag(final PInputEvent event) {
-                super.startDrag(event);
-                startHandleDrag(event.getPositionRelativeTo(PSWTHandle.this), event);
-            }
-
-            protected void drag(final PInputEvent event) {
-                super.drag(event);
-                final PDimension aDelta = event.getDeltaRelativeTo(PSWTHandle.this);
-                if (aDelta.getWidth() != 0 || aDelta.getHeight() != 0) {
-                    dragHandle(aDelta, event);
-                }
-            }
-
-            protected void endDrag(final PInputEvent event) {
-                super.endDrag(event);
-                endHandleDrag(event.getPositionRelativeTo(PSWTHandle.this), event);
-            }
-        };
+        handleDragger = new HandleDragHandler();
 
         addPropertyChangeListener(PNode.PROPERTY_TRANSFORM, new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent evt) {
@@ -109,12 +96,6 @@ public class PSWTHandle extends PSWTPath {
             }
         });
 
-        handleDragger.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
-        handleDragger.getEventFilter().setMarksAcceptedEventsAsHandled(true);
-        handleDragger.getEventFilter().setAcceptsMouseEntered(false);
-        handleDragger.getEventFilter().setAcceptsMouseExited(false);
-        // no need for moved events for handle interaction,
-        handleDragger.getEventFilter().setAcceptsMouseMoved(false);
         // so reject them so we don't consume them
         addInputEventListener(handleDragger);
     }
@@ -122,6 +103,8 @@ public class PSWTHandle extends PSWTPath {
     /**
      * Return the event handler that is responsible for the drag handle
      * interaction.
+     * 
+     * @return handler responsible for responding to drag events
      */
     public PDragSequenceEventHandler getHandleDraggerHandler() {
         return handleDragger;
@@ -130,6 +113,8 @@ public class PSWTHandle extends PSWTPath {
     /**
      * Get the locator that this handle uses to position itself on its parent
      * node.
+     * 
+     * @return locator used to position this handle
      */
     public PLocator getLocator() {
         return locator;
@@ -138,6 +123,8 @@ public class PSWTHandle extends PSWTPath {
     /**
      * Set the locator that this handle uses to position itself on its parent
      * node.
+     * 
+     * @param aLocator used to position this handle
      */
     public void setLocator(final PLocator aLocator) {
         locator = aLocator;
@@ -153,12 +140,20 @@ public class PSWTHandle extends PSWTPath {
     /**
      * Override this method to get notified when the handle starts to get
      * dragged.
+     * 
+     * @param aLocalPoint point at which dragging was started relative to the
+     *            handle's coordinate system
+     * @param aEvent event representing the start of the drag
      */
     public void startHandleDrag(final Point2D aLocalPoint, final PInputEvent aEvent) {
     }
 
     /**
      * Override this method to get notified as the handle is dragged.
+     * 
+     * @param aLocalDimension magnitude of the dragHandle event in the
+     *            dimensions of the handle's coordinate system.
+     * @param aEvent event representing the drag
      */
     public void dragHandle(final PDimension aLocalDimension, final PInputEvent aEvent) {
     }
@@ -166,6 +161,10 @@ public class PSWTHandle extends PSWTPath {
     /**
      * Override this method to get notified when the handle stops getting
      * dragged.
+     * 
+     * @param aLocalPoint point at which dragging was ended relative to the
+     *            handle's coordinate system
+     * @param aEvent event representing the end of the drag
      */
     public void endHandleDrag(final Point2D aLocalPoint, final PInputEvent aEvent) {
     }
@@ -179,7 +178,7 @@ public class PSWTHandle extends PSWTPath {
 
     /** {@inheritDoc} */
     public void setParent(final PNode newParent) {
-        super.setParent(newParent);       
+        super.setParent(newParent);
         relocateHandle();
     }
 
@@ -224,5 +223,34 @@ public class PSWTHandle extends PSWTPath {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         installHandleEventHandlers();
+    }
+
+    private final class HandleDragHandler extends PDragSequenceEventHandler {
+        public HandleDragHandler() {
+            final PInputEventFilter filter = new PInputEventFilter(InputEvent.BUTTON1_MASK);
+            setEventFilter(filter);
+            filter.setMarksAcceptedEventsAsHandled(true);
+            filter.setAcceptsMouseEntered(false);
+            filter.setAcceptsMouseExited(false);
+            filter.setAcceptsMouseMoved(false);
+        }
+
+        protected void startDrag(final PInputEvent event) {
+            super.startDrag(event);
+            startHandleDrag(event.getPositionRelativeTo(PSWTHandle.this), event);
+        }
+
+        protected void drag(final PInputEvent event) {
+            super.drag(event);
+            final PDimension aDelta = event.getDeltaRelativeTo(PSWTHandle.this);
+            if (aDelta.getWidth() != 0 || aDelta.getHeight() != 0) {
+                dragHandle(aDelta, event);
+            }
+        }
+
+        protected void endDrag(final PInputEvent event) {
+            super.endDrag(event);
+            endHandleDrag(event.getPositionRelativeTo(PSWTHandle.this), event);
+        }
     }
 }

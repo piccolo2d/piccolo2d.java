@@ -324,7 +324,7 @@ public class SWTTimer extends Timer {
     /**
      * @param running the running to set
      */
-    public void setRunning(boolean running) {
+    public void setRunning(final boolean running) {
         this.running = running;
     }
 

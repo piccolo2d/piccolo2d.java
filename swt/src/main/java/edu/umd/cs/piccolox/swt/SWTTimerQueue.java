@@ -212,8 +212,14 @@ public class SWTTimerQueue implements Runnable {
         return null;
     }
 
+    /**
+     * Returns true if this timer queue contains the given timer.
+     * 
+     * @param timer timer being checked
+     * @return true if timer is scheduled in this queue
+     */
     synchronized boolean containsTimer(final SWTTimer timer) {
-        //TODO: making this use isRunning without causing an infinite loop
+        // TODO: making this use isRunning without causing an infinite loop
         return timer.running;
     }
 
@@ -221,8 +227,11 @@ public class SWTTimerQueue implements Runnable {
      * If there are a ton of timers, this method may never return. It loops
      * checking to see if the head of the Timer list has expired. If it has, it
      * posts the Timer and reschedules it if necessary.
+     * 
+     * @return how long the app can take before it should invoke this method
+     *         again.
      */
-    synchronized long postExpiredTimers() {
+    private synchronized long postExpiredTimers() {
         SWTTimer timer;
         long currentTime;
         long timeToWait;
@@ -265,14 +274,17 @@ public class SWTTimerQueue implements Runnable {
                     wait(1);
                 }
                 catch (final InterruptedException e) {
-                    
+                    // Nothing to do
                 }
             }
         } while (timeToWait <= 0);
 
         return timeToWait;
     }
-    
+
+    /**
+     * Dispatches work to timers until the queue is told to stop running.
+     */
     public synchronized void run() {
         long timeToWait;
 
@@ -283,6 +295,7 @@ public class SWTTimerQueue implements Runnable {
                     wait(timeToWait);
                 }
                 catch (final InterruptedException e) {
+                    // Nothing to do
                 }
             }
         }
@@ -335,15 +348,24 @@ public class SWTTimerQueue implements Runnable {
 
         private final Display display;
 
+        /**
+         * Constructs a QueueRestart Runnable that will message the Timer Queue
+         * to Restart.
+         * 
+         * @param display display associated with the SWTTimerQueue
+         */
         public SWTTimerQueueRestart(final Display display) {
             this.display = display;
         }
 
-        public synchronized void run() {            
+        /**
+         * Attempts to restart the queue associated with the display.
+         */
+        public synchronized void run() {
             if (attemptedStart) {
                 return;
             }
-            
+
             final SWTTimerQueue q = SWTTimerQueue.sharedInstance(display);
 
             synchronized (q) {

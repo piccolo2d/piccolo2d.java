@@ -43,7 +43,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolox.event.PSelectionEventHandler;
 
 /**
- * Modified to use SWT paths instead of normal paths
+ * Modified to use SWT paths instead of normal paths.
  * 
  * @version 1.0
  * @author Lance Good
@@ -81,20 +81,32 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
         this.marqueeParent = marqueeParent;
     }
 
+    /**
+     * Modifies the provided node so that it is displayed as selected.
+     * 
+     * @param node node to be decorated
+     */
     public void decorateSelectedNode(final PNode node) {
         PSWTBoundsHandle.addBoundsHandlesTo(node);
     }
 
+    /**
+     * Undoes any modifications to the provided node so that it is not displayed as selected.
+     * 
+     * @param node node to be undecorated
+     */
     public void undecorateSelectedNode(final PNode node) {
         PSWTBoundsHandle.removeBoundsHandlesFrom(node);
     }
 
+    /** {@inheritDoc} */
     protected void initializeSelection(final PInputEvent pie) {
         super.initializeSelection(pie);
         pressPt = pie.getPosition();
         canvasPressPt = pie.getCanvasPosition();
     }
 
+    /** {@inheritDoc} */
     protected void initializeMarquee(final PInputEvent e) {
         super.initializeMarquee(e);
 
@@ -116,6 +128,7 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
         marqueeParent.addChild(marquee);
     }
 
+    /** {@inheritDoc} */
     protected void updateMarquee(final PInputEvent pie) {
         super.updateMarquee(pie);
 
@@ -136,6 +149,7 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
         b.add(pie.getPosition());
     }
 
+    /** {@inheritDoc} */
     protected PBounds getMarqueeBounds() {
         if (marquee != null) {
             return marquee.getBounds();
@@ -143,18 +157,15 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
         return new PBounds();
     }
 
+    /** {@inheritDoc} */
     protected void endMarqueeSelection(final PInputEvent e) {
         super.endMarqueeSelection(e);
 
-        // Remove marquee
         marquee.removeFromParent();
         marquee = null;
     }
 
-    /**
-     * This gets called continuously during the drag, and is used to animate the
-     * marquee
-     */
+    /** {@inheritDoc} */
     protected void dragActivityStep(final PInputEvent aEvent) {
     }
 }

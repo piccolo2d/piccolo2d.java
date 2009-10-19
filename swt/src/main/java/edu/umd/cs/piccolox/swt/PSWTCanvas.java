@@ -72,6 +72,10 @@ import edu.umd.cs.piccolo.util.PStack;
  * @author Jesse Grosjean
  */
 public class PSWTCanvas extends Composite implements PComponent {
+    private static final int SWT_BUTTON1 = 1;
+    private static final int SWT_BUTTON2 = 2;
+    private static final int SWT_BUTTON3 = 3;
+    
     /**
      * Terrible Singleton instance of the PSWTCanvas. Falsely assumes you will
      * only have one of these per application.
@@ -505,11 +509,13 @@ public class PSWTCanvas extends Composite implements PComponent {
     }
 
     private boolean backBufferNeedsResizing(final int newWidth, final int newHeight) {
-        if (!doubleBuffered)
+        if (!doubleBuffered) {
             return false;
+        }
 
-        if (backBuffer == null)
+        if (backBuffer == null) {
             return true;
+        }
 
         return backBuffer.getBounds().width < newWidth || backBuffer.getBounds().height < newHeight;
     }
@@ -655,19 +661,19 @@ public class PSWTCanvas extends Composite implements PComponent {
             boolean shouldBalanceEvent = false;
 
             switch (mouseEvent.button) {
-                case 1:
+                case SWT_BUTTON1:
                     if (isButton1Pressed) {
                         shouldBalanceEvent = true;
                     }
                     isButton1Pressed = true;
                     break;
-                case 2:
+                case SWT_BUTTON2:
                     if (isButton2Pressed) {
                         shouldBalanceEvent = true;
                     }
                     isButton2Pressed = true;
                     break;
-                case 3:
+                case SWT_BUTTON3:
                     if (isButton3Pressed) {
                         shouldBalanceEvent = true;
                     }
@@ -691,19 +697,19 @@ public class PSWTCanvas extends Composite implements PComponent {
             boolean shouldBalanceEvent = false;
 
             switch (me.button) {
-                case 1:
+                case SWT_BUTTON1:
                     if (!isButton1Pressed) {
                         shouldBalanceEvent = true;
                     }
                     isButton1Pressed = false;
                     break;
-                case 2:
+                case SWT_BUTTON2:
                     if (!isButton2Pressed) {
                         shouldBalanceEvent = true;
                     }
                     isButton2Pressed = false;
                     break;
-                case 3:
+                case SWT_BUTTON3:
                     if (!isButton3Pressed) {
                         shouldBalanceEvent = true;
                     }
