@@ -452,14 +452,14 @@ public class SWTGraphics2D extends Graphics2D {
     }
 
     /** {@inheritDoc} */
-    public void transform(final AffineTransform Tx) {
-        transform.concatenate(Tx);
+    public void transform(final AffineTransform srcTransform) {
+        transform.concatenate(srcTransform);
         updateSWTTransform();
     }
 
     /** {@inheritDoc} */
-    public void setTransform(final AffineTransform Tx) {
-        transform = (AffineTransform) Tx.clone();
+    public void setTransform(final AffineTransform newTransform) {
+        transform = (AffineTransform) newTransform.clone();
         updateSWTTransform();
     }
 

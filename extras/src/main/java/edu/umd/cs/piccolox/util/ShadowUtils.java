@@ -124,9 +124,9 @@ public final class ShadowUtils {
 
             double sum = 0.0d;
             for (int x = 0; x < w; x++) {
-                int xr2 = (x-r) * (x-r);                
+                int xr2 = (x - r) * (x - r);
                 for (int y = 0; y < w; y++) {
-                    int yr2 = (y-r) * (y-r);
+                    int yr2 = (y - r) * (y - r);
                     kernel[x * w + y] = (float) (Math.pow(Math.E, -(yr2 + xr2) / m) / n);
                     sum += kernel[x * w + y];
                 }

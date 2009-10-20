@@ -112,8 +112,8 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     }
 
     public PFixedWidthStroke(final float width, final int cap, final int join, final float miterlimit,
-            final float[] dash, final float dash_phase) {
-        this(new BasicStroke(width, cap, join, miterlimit, dash, dash_phase));
+            final float[] dash, final float dashPhase) {
+        this(new BasicStroke(width, cap, join, miterlimit, dash, dashPhase));
     }
 
     /**
