@@ -240,9 +240,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /** Swing canvas for this swing node. */
     private PSwingCanvas canvas;
 
-    /*
-     * Keep track of which nodes we've attached listeners to since no built in
-     * support in PNode
+    /**
+     * Used to keep track of which nodes we've attached listeners to since no
+     * built in support in PNode.
      */
     private final List listeningTo = new ArrayList();
 
@@ -252,14 +252,29 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         public void propertyChange(final PropertyChangeEvent evt) {
             final PNode parent = (PNode) evt.getNewValue();
             clearListeners((PNode) evt.getOldValue());
-            if (parent != null) {
-                listenForCanvas(parent);
+            if (parent == null) {
+                updateCanvas(null);
             }
             else {
-                updateCanvas(null);
+                listenForCanvas(parent);
             }
 
         }
+
+        /**
+         * Clear out all the listeners registered to make sure there are no
+         * stray references.
+         * 
+         * @param fromParent Parent to start with for clearing listeners
+         */
+        private void clearListeners(final PNode fromParent) {
+            if (fromParent != null && listeningTo(fromParent)) {
+                fromParent.removePropertyChangeListener(PNode.PROPERTY_PARENT, parentListener);
+                listeningTo.remove(fromParent);
+                clearListeners(fromParent.getParent());
+            }
+        }
+
     };
 
     /**
@@ -635,23 +650,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             }
         }
         return false;
-    }
-
-    /**
-     * Clear out all the listeners registered to make sure there are no stray
-     * references.
-     * 
-     * @param fromParent Parent to start with for clearing listeners
-     */
-    private void clearListeners(final PNode fromParent) {
-        if (fromParent == null) {
-            return;
-        }
-        if (listeningTo(fromParent)) {
-            fromParent.removePropertyChangeListener(PNode.PROPERTY_PARENT, parentListener);
-            listeningTo.remove(fromParent);
-            clearListeners(fromParent.getParent());
-        }
     }
 
     /**

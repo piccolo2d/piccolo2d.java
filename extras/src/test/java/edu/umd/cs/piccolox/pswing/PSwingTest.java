@@ -31,10 +31,13 @@ package edu.umd.cs.piccolox.pswing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
@@ -78,11 +81,6 @@ public class PSwingTest extends TestCase {
         final JPanel panel = new JPanel();
 
         new PSwing(panel) {
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1L;
-
             protected void reshape() {
                 super.reshape();
 
@@ -95,15 +93,12 @@ public class PSwingTest extends TestCase {
 
     public void testPSwingDelegatesPaintingToItsComponent() throws IOException {
         final JPanel panel = new JPanel();
-        final PSwing pSwing = new PSwing(panel);
+        final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
         panel.setBackground(Color.RED);
         panel.setPreferredSize(new Dimension(100, 100));
 
-        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        final Graphics2D graphics = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
-        final PPaintContext paintContext = new PPaintContext(graphics);
-        ;
-        pSwing.paintComponent(paintContext);
+        final BufferedImage img = pSwing.paintComponent();
+
         assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
     }
 
@@ -127,5 +122,166 @@ public class PSwingTest extends TestCase {
         final PSwing pSwing = new PSwing(panel);
         pSwing.setVisible(false);
         assertFalse(panel.isVisible());
+    }
+
+    public void testPaintTooSmallPaintsGreek() {
+        final JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 100, 100);
+        final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
+
+        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
+        graphics.setTransform(AffineTransform.getScaleInstance(0.01, 0.01));
+        PPaintContext paintContext = new PPaintContext(graphics);
+
+        pSwing.paint(paintContext);
+        assertTrue(pSwing.isPaintedGreek());
+        assertFalse(pSwing.isPaintedComponent());
+
+    }
+
+    public void testPaintBigPaintsComponent() {
+        final JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 100, 100);
+        final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
+
+        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
+        graphics.setTransform(AffineTransform.getScaleInstance(5, 5));
+        PPaintContext paintContext = new PPaintContext(graphics);
+
+        pSwing.paint(paintContext);
+        assertFalse(pSwing.isPaintedGreek());
+        assertTrue(pSwing.isPaintedComponent());
+    }
+
+    public void testGreekThresholdIsHonoured() {
+        final JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 100, 100);
+        final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
+        pSwing.setGreekThreshold(2);
+        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
+        PPaintContext paintContext = new PPaintContext(graphics);
+
+        pSwing.paint(paintContext);
+        assertTrue(pSwing.isPaintedGreek());
+        assertFalse(pSwing.isPaintedComponent());
+    }
+    
+    public void testGreekThresholdIsPersisted() {
+        final JPanel panel = new JPanel();        
+        final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
+        pSwing.setGreekThreshold(2);
+        assertEquals(2, pSwing.getGreekThreshold(), Double.MIN_VALUE);
+        pSwing.setGreekThreshold(0.5);
+        assertEquals(0.5, pSwing.getGreekThreshold(), Double.MIN_VALUE);
+    }
+
+    public void testAssertSettingJLabelWidthTooSmallGrowsIt() {
+        JLabel label = new JLabel("Hello");
+        PSwingCanvas canvas = new PSwingCanvas();
+        canvas.setBounds(0, 0, 100, 100);
+        MockPaintingPSwing swing = new MockPaintingPSwing(label);
+        assertFalse(label.getMinimumSize().getWidth() == 0);
+        swing.setWidth(10);
+        canvas.getLayer().addChild(swing);
+        canvas.doLayout();
+        // While paint, it uses the graphics element to determine the font's
+        // display size and hence determine minimum size of JLabel.
+        swing.paint();
+        assertFalse(10 == swing.getWidth());
+    }
+    
+    public void testAssertSettingJButtonWidthTooSmallGrowsIt() {
+        JButton label = new JButton("Hello");
+        PSwingCanvas canvas = new PSwingCanvas();
+        canvas.setBounds(0, 0, 100, 100);
+        MockPaintingPSwing swing = new MockPaintingPSwing(label);
+        assertFalse(label.getMinimumSize().getWidth() == 0);
+        swing.setWidth(10);
+        canvas.getLayer().addChild(swing);
+        canvas.doLayout();
+        // While paint, it uses the graphics element to determine the font's
+        // display size and hence determine minimum size of JLabel.
+        swing.paint();
+        assertFalse(10 == swing.getWidth());
+    }
+
+    public void testPSwingAttachesItselfToItsCanvasWhenAddedToItsSceneGraph() {
+        PSwingCanvas canvas1 = new PSwingCanvas();        
+        PSwing label = new PSwing(new JLabel("Hello"));
+        assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
+        canvas1.getLayer().addChild(label);
+        assertEquals(1, canvas1.getSwingWrapper().getComponentCount());                                
+    }
+
+    public void testPSwingRemovesItselfFromItsCanvasWhenRemovedFromScene() {
+        PSwingCanvas canvas1 = new PSwingCanvas();        
+        PSwing label = new PSwing(new JLabel("Hello"));        
+        canvas1.getLayer().addChild(label);
+        label.removeFromParent();
+        assertEquals(0, canvas1.getSwingWrapper().getComponentCount());                                
+    }
+
+    
+    
+    public void testPSwingReattachesItselfWhenMovedFromCanvasToCanvas() {
+        PSwingCanvas canvas1 = new PSwingCanvas();
+        PSwingCanvas canvas2 = new PSwingCanvas();
+        PSwing label = new PSwing(new JLabel("Hello"));
+        canvas1.getLayer().addChild(label);
+        canvas2.getLayer().addChild(label);
+        assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
+        assertEquals(1, canvas2.getSwingWrapper().getComponentCount());
+    }
+
+    public class MockPaintingPSwing extends PSwing {
+        private boolean paintedGreek;
+        private boolean paintedComponent;
+
+        public MockPaintingPSwing(JComponent component) {
+            super(component);
+        }
+
+        public void paintOnto(BufferedImage image) {
+            PPaintContext paintContext = new PPaintContext(image.createGraphics());
+            paint(paintContext);
+        }
+
+        public BufferedImage paint() {
+            BufferedImage image = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
+            paintOnto(image);
+            return image;
+        }
+
+        public BufferedImage paintComponent() {
+            BufferedImage image = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
+            paintComponentOnto(image);
+            return image;
+        }
+
+        public void paintComponentOnto(BufferedImage image) {
+            PPaintContext paintContext = new PPaintContext(image.createGraphics());
+            paintComponent(paintContext);
+        }
+
+        protected void paintComponent(PPaintContext paintContext) {
+            super.paintComponent(paintContext);
+            paintedComponent = true;
+        }
+
+        protected void paintGreek(PPaintContext paintContext) {
+            super.paintGreek(paintContext);
+            paintedGreek = true;
+        }
+
+        public boolean isPaintedGreek() {
+            return paintedGreek;
+        }
+
+        public boolean isPaintedComponent() {
+            return paintedComponent;
+        }
     }
 }
