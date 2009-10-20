@@ -47,7 +47,7 @@ public class PImageTest extends TestCase {
         assertEquals(srcNode.getImage().getWidth(null), clonedNode.getImage().getWidth(null));
         assertEquals(srcNode.getImage().getHeight(null), clonedNode.getImage().getHeight(null));
 
-        assertEquals(srcNode.getBounds(), clonedNode.getBounds());
+        assertEquals(srcNode.getBounds(), clonedNode.getBounds());        
     }
 
     public void testToString() {

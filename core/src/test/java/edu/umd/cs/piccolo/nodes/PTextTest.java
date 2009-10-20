@@ -50,10 +50,12 @@ public class PTextTest extends TestCase {
     }
 
     public void testClone() {
+        textNode.setTextPaint(Color.BLUE);
         textNode.setText("Boo");
         final PText clonedNode = (PText) textNode.clone();
         assertEquals("Boo", clonedNode.getText());
         assertEquals(textNode.getFont(), clonedNode.getFont());
+        assertEquals(Color.BLUE, clonedNode.getTextPaint());
     }
 
     public void testTextIsEmptyByDefault() {

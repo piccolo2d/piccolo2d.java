@@ -32,14 +32,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +44,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-import javax.imageio.ImageIO;
 import javax.swing.text.MutableAttributeSet;
 
 import junit.framework.TestCase;
@@ -236,6 +232,14 @@ public class PNodeTest extends TestCase {
         assertEquals(6, clonedNode.getYOffset(), Double.MIN_VALUE);
     }
 
+    public void testCloneDoesNotCopyEventListeners() {
+        node.addInputEventListener(new PBasicInputEventHandler() {});
+
+        final PNode clonedNode = (PNode) node.clone();
+
+        assertNull(clonedNode.getListenerList());               
+    }
+    
     public void testCloneClonesChildrenAswell() {
         final PNode child = new PNode();
         node.addChild(child);
@@ -244,6 +248,15 @@ public class PNodeTest extends TestCase {
 
         assertEquals(clonedNode.getChildrenCount(), 1);
         assertNotSame(child, clonedNode.getChild(0));
+    }
+    
+    public void testCloneDoesNotCopyParent() {
+        final PNode child = new PNode();
+        node.addChild(child);
+
+        final PNode clonedChild = (PNode) child.clone();
+
+        assertNull(clonedChild.getParent());
     }
 
     public void testLocalToGlobal() {
@@ -1441,9 +1454,5 @@ public class PNodeTest extends TestCase {
 
         final PPickPath path = canvas.getCamera().pick(5, 5, 5);
         assertSame(node1, path.getPickedNode());
-    }
-
-    public void testToImageDoesNotClip() {
-
     }
 }

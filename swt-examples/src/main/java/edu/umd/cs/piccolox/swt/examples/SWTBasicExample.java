@@ -38,18 +38,7 @@ import edu.umd.cs.piccolox.swt.PSWTCanvas;
 import edu.umd.cs.piccolox.swt.PSWTPath;
 import edu.umd.cs.piccolox.swt.PSWTText;
 
-/**
- * Piccolo2D SWT basic example.
- */
 public final class SWTBasicExample {
-
-    /**
-     * Create a new Piccolo2D SWT basic example.
-     */
-    public SWTBasicExample() {
-        super();
-    }
-
 
     /**
      * Create and open a new shell on the specified display.
@@ -63,6 +52,7 @@ public final class SWTBasicExample {
 
         // create a new SWT canvas
         final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
+        canvas.setDoubleBuffered(false);
 
         // create some SWT nodes
         //    and add them as child nodes to the canvas' camera's first layer
@@ -96,12 +86,7 @@ public final class SWTBasicExample {
         shell.open();
         return shell;
     }
-
-    /**
-     * Main.
-     *
-     * @param args command line arguments, ignored
-     */
+    
     public static void main(final String[] args) {
         final Display display = new Display();
         final Shell shell = open(display);

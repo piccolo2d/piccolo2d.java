@@ -32,10 +32,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.MockPropertyChangeListener;
@@ -47,6 +43,7 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public class PHtmlViewTest extends TestCase {
 
+    private static final String LOREM_IPSUM = "<html><body>30. Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere.</body></html>";
     private MockPropertyChangeListener mockListener;
 
     public void setUp() {
@@ -226,7 +223,7 @@ public class PHtmlViewTest extends TestCase {
     }       
     
     public void testPaintFillsBounds() {
-        PHtmlView html = new PHtmlView("<html><body>30. Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere.</body></html>");
+        PHtmlView html = new PHtmlView(LOREM_IPSUM);
         html.setPaint(Color.RED);
         
         PCanvas canvas = new PCanvas();
@@ -241,5 +238,14 @@ public class PHtmlViewTest extends TestCase {
         assertEquals(Color.red.getRGB(), image.getRGB(0, 0));
         assertEquals(Color.red.getRGB(), image.getRGB(0, (int)(html.getHeight()-1)));        
         assertEquals(Color.red.getRGB(), image.getRGB(300, 0));
+    }
+    
+    public void testClone() {
+        PHtmlView html = new PHtmlView(LOREM_IPSUM);
+        html.setTextColor(Color.RED);
+        PHtmlView clone = (PHtmlView) html.clone();
+        assertNotNull(clone);
+        assertEquals(Color.RED, clone.getTextColor());
+        assertEquals(LOREM_IPSUM, clone.getText());
     }
 }

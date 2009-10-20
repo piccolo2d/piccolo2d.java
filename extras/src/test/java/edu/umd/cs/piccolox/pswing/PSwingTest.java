@@ -44,11 +44,6 @@ import javax.swing.RepaintManager;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
-/**
- * JUnit test class to exercise PSwing bugfixes.
- * 
- * @author Stephen Chin
- */
 public class PSwingTest extends TestCase {
     public void setUp() {
         RepaintManager.setCurrentManager(new PSwingRepaintManager());
@@ -235,8 +230,6 @@ public class PSwingTest extends TestCase {
         label.removeFromParent();
         assertEquals(0, canvas1.getSwingWrapper().getComponentCount());                                
     }
-
-    
     
     public void testPSwingReattachesItselfWhenMovedFromCanvasToCanvas() {
         PSwingCanvas canvas1 = new PSwingCanvas();

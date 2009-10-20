@@ -63,10 +63,10 @@ public class PPathTest extends TestCase {
     }
 
     public void testClone() {
-        PPath p = PPath.createEllipse(0, 0, 100, 100);
-        final PBounds b = p.getBounds();
-        p = (PPath) p.clone();
-        assertEquals(p.getBounds(), b);
+        PPath p = PPath.createEllipse(0, 0, 100, 100);        
+        PPath cloned = (PPath) p.clone();
+        assertEquals(p.getBounds(), cloned.getBounds());
+        //assertEquals(p.getPathReference()., cloned.getPathReference());
     }
 
     public void testSerialization() throws IOException, ClassNotFoundException {
