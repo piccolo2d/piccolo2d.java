@@ -336,6 +336,9 @@ public class PCamera extends PNode {
      *    by this camera is empty
      */
     public PBounds getUnionOfLayerFullBounds() {
+        // todo:  this method is implemented inconsistently with regards to non-final methods
+        //   a subclass might override getLayerCount and/or getLayer, thus this method should either
+        //    use layers.size() and layers.get(index) or getLayerCount() and getLayer(index)
         final PBounds result = new PBounds();
         final int count = getLayerCount();
         for (int i = 0; i < count; i++) {
@@ -608,10 +611,11 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Translate the view transform that is applied to the camera's layers.
+     * Translate the view transform applied to the list of layers viewed by this
+     * camera by <code>[dx, dy]</code>.
      * 
-     * @param dx the delta which the x coordinate should be increased by
-     * @param dy the delta which the y coordinate should be increased by
+     * @param dx translate delta x
+     * @param dy translate delta y
      */
     public void translateView(final double dx, final double dy) {
         viewTransform.translate(dx, dy);
@@ -621,11 +625,25 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Sets the offset of the view transform that is applied to the camera's
-     * layers.
+     * Offset the view transform applied to the list of layers viewed by this camera by <code>[dx, dy]</code>. This is
+     * NOT effected by the view transform's current scale or rotation. This is implemented by directly adding dx to the
+     * m02 position and dy to the m12 position in the affine transform.
      * 
-     * @param x the new x translation of the view transform
-     * @param y the new y translation of the view transform
+     * @param dx offset delta x
+     * @param dy offset delta y
+     */
+    /*
+    public void offsetView(final double dx, final double dy) {
+        setViewOffset(viewTransform.getTranslateX() + dx, viewTransform.getTranslateY() + dy);
+    }
+    */
+
+    /**
+     * Set the offset for the view transform applied to the list of layers
+     * viewed by this camera to <code>[x, y]</code>.
+     * 
+     * @param x offset x
+     * @param y offset y
      */
     public void setViewOffset(final double x, final double y) {
         viewTransform.setOffset(x, y);
@@ -635,35 +653,39 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Get a copy of the view transform that is applied to the camera's layers.
+     * Return a copy of the view transform applied to the list of layers
+     * viewed by this camera.
      * 
-     * @return the viewTransform being applied to the layers
+     * @return a copy of the view transform applied to the list of layers
+     *    viewed by this camera
      */
     public PAffineTransform getViewTransform() {
         return (PAffineTransform) viewTransform.clone();
     }
 
     /**
-     * Get a reference to the view transform that is applied to the camera's
-     * layers.
+     * Return a reference to the view transform applied to the list of layers
+     * viewed by this camera.
      * 
-     * @return a direct reference to the view transform being applied to the
-     *         layers
+     * @return the view transform applied to the list of layers
+     *    viewed by this camera
      */
     public PAffineTransform getViewTransformReference() {
         return viewTransform;
     }
 
     /**
-     * Set the view transform that is applied to the views layers.
+     * Set the view transform applied to the list of layers
+     * viewed by this camera to <code>viewTransform</code>
      * 
-     * @param aTransform the new view transform
+     * @param viewTransform  view transform applied to the list of layers
+     *    viewed by this camera
      */
-    public void setViewTransform(final AffineTransform aTransform) {
-        viewTransform.setTransform(aTransform);
+    public void setViewTransform(final AffineTransform viewTransform) {
+        this.viewTransform.setTransform(viewTransform);
         applyViewConstraints();
         invalidatePaint();
-        firePropertyChange(PROPERTY_CODE_VIEW_TRANSFORM, PROPERTY_VIEW_TRANSFORM, null, viewTransform);
+        firePropertyChange(PROPERTY_CODE_VIEW_TRANSFORM, PROPERTY_VIEW_TRANSFORM, null, this.viewTransform);
     }
 
     /**
@@ -798,21 +820,30 @@ public class PCamera extends PNode {
     // ****************************************************************
 
     /**
-     * Returns the constraint being applied to the view.
+     * Return the constraint applied to the view. The view constraint will be one of {@link #VIEW_CONSTRAINT_NONE},
+     * {@link #VIEW_CONSTRAINT_CENTER}, or {@link #VIEW_CONSTRAINT_CENTER}. Defaults to {@link #VIEW_CONSTRAINT_NONE}.
      * 
-     * @return the viewConstraint being applied to the view
+     * @return the view constraint being applied to the view
      */
     public int getViewConstraint() {
         return viewConstraint;
     }
 
     /**
-     * Sets the view constraint to apply to the view.
+     * Set the view constraint to apply to the view to <code>viewConstraint</code>. The view constraint must be one of
+     * {@link #VIEW_CONSTRAINT_NONE}, {@link #VIEW_CONSTRAINT_CENTER}, or {@link #VIEW_CONSTRAINT_CENTER}.
      * 
-     * @param constraint the new constraint to apply to the view
+     * @param viewConstraint constraint to apply to the view
+     * @throws IllegalArgumentException if <code>viewConstraint</code> is not one of {@link #VIEW_CONSTRAINT_NONE},
+     *         {@link #VIEW_CONSTRAINT_CENTER}, or {@link #VIEW_CONSTRAINT_CENTER}
      */
-    public void setViewConstraint(final int constraint) {
-        viewConstraint = constraint;
+    public void setViewConstraint(final int viewConstraint) {
+        if (viewConstraint != VIEW_CONSTRAINT_NONE && viewConstraint != VIEW_CONSTRAINT_CENTER
+                && viewConstraint != VIEW_CONSTRAINT_ALL) {
+            throw new IllegalArgumentException("view constraint must be one "
+                    + "of VIEW_CONSTRAINT_NONE, VIEW_CONSTRAINT_CENTER, or VIEW_CONSTRAINT_ALL");
+        }
+        this.viewConstraint = viewConstraint;
         applyViewConstraints();
     }
 

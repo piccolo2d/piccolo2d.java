@@ -334,6 +334,15 @@ public class PCameraTest extends TestCase {
         assertEquals(PCamera.VIEW_CONSTRAINT_ALL, camera.getViewConstraint());
     }
 
+    public void testSetViewConstraintsThrowsIllegalArgumentException() {
+        try {
+            camera.setViewConstraint(-1);
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
     static class MockPComponent implements PComponent {
 
         public void paintImmediately() {
