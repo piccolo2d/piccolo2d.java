@@ -58,7 +58,7 @@ import edu.umd.cs.piccolo.util.PUtil;
  * and scaling this view transform is how zooming and panning are implemented.
  * <p>
  * Cameras are also the point through which all PInputEvents enter Piccolo. The
- * canvas coordinate system, and the local coordinate system of the topmost
+ * canvas coordinate system and the local coordinate system of the topmost
  * camera should always be the same.
  * </p>
  * 
@@ -163,7 +163,7 @@ public class PCamera extends PNode {
      * Set the component for this camera to <code>component</code>. The
      * component, if non-null, receives repaint notification from this camera.
      * 
-     * @param component the component for this camera
+     * @param component component for this camera
      */
     public void setComponent(final PComponent component) {
         this.component = component;
@@ -174,8 +174,8 @@ public class PCamera extends PNode {
      * Repaint this camera and forward the repaint request to the component
      * for this camera, if it is non-null.
      * 
-     * @param localBounds the area that requires repainting
-     * @param sourceNode the node from which the repaint message originates, may
+     * @param localBounds bounds in local coordinates that requires repainting
+     * @param sourceNode node from which the repaint message originates, may
      *    be the camera itself
      */
     public void repaintFrom(final PBounds localBounds, final PNode sourceNode) {
@@ -196,8 +196,8 @@ public class PCamera extends PNode {
      * in Piccolo2D this one must not modify the <code>viewBounds</code>
      * parameter.
      * 
-     * @param viewBounds bounds of the region needing painting
-     * @param repaintedLayer the layer dispatching the repaint notification
+     * @param viewBounds bounds in view coordinates that requires repainting
+     * @param repaintedLayer layer dispatching the repaint notification
      */
     public void repaintFromLayer(final PBounds viewBounds, final PLayer repaintedLayer) {
         TEMP_REPAINT_RECT.setRect(viewBounds);
@@ -211,8 +211,8 @@ public class PCamera extends PNode {
     /**
      * @deprecated by {@link #repaintFromLayer(PBounds, PLayer)}. Will be removed
      *    in version 2.0.
-     * @param viewBounds bounds of the region needing painting
-     * @param repaintedLayer the layer dispatching the repaint notification
+     * @param viewBounds bounds in view coordinates that requires repainting
+     * @param repaintedLayer layer dispatching the repaint notification
      */
     public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
         if (repaintedLayer instanceof PLayer) {
@@ -244,7 +244,7 @@ public class PCamera extends PNode {
     /**
      * Return the layer at the specified position in the list of layers viewed by this camera.
      * 
-     * @param index the index of the layer to return
+     * @param index index of the layer to return
      * @return the layer at the specified position in the list of layers viewed by this camera
      * @throws IndexOutOfBoundsException if the specified index is out of range
      *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
@@ -490,6 +490,9 @@ public class PCamera extends PNode {
      * picked all of the layers in the list of layers viewed by this camera are
      * given a chance to be picked.
      * </p>
+     * 
+     * @return true if any of the layers in the list of layers viewed by this
+     *    camera were picked
      */
     protected boolean pickAfterChildren(final PPickPath pickPath) {
         if (intersects(pickPath.getPickBounds())) {
