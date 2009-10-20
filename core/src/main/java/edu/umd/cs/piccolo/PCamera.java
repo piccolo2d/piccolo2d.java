@@ -209,8 +209,10 @@ public class PCamera extends PNode {
     }
 
     /**
-     * @deprecated by {@link repaintFromLayer(PBounds, PLayer)}. Will be removed
+     * @deprecated by {@link #repaintFromLayer(PBounds, PLayer)}. Will be removed
      *    in version 2.0.
+     * @param viewBounds bounds of the region needing painting
+     * @param repaintedLayer the layer dispatching the repaint notification
      */
     public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
         if (repaintedLayer instanceof PLayer) {
@@ -245,7 +247,7 @@ public class PCamera extends PNode {
      * @param index the index of the layer to return
      * @return the layer at the specified position in the list of layers viewed by this camera
      * @throws IndexOutOfBoundsException if the specified index is out of range
-     *    (<code>index &lt; 0 || index &gt;= getLayerCount())
+     *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
      */
     public PLayer getLayer(final int index) {
         return (PLayer) layers.get(index);
@@ -282,7 +284,7 @@ public class PCamera extends PNode {
      * @param index index at which the specified layer is to be inserted
      * @param layer layer to add
      * @throws IndexOutOfBoundsException if the specified index is out of range
-     *    (<code>index &lt; 0 || index &gt;= getLayerCount())
+     *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
      */
     public void addLayer(final int index, final PLayer layer) {
         layers.add(index, layer);
@@ -314,7 +316,7 @@ public class PCamera extends PNode {
      * @param index index of the layer to remove
      * @return the layer previously at the specified position
      * @throws IndexOutOfBoundsException if the specified index is out of range
-     *    (<code>index &lt; 0 || index &gt;= getLayerCount())
+     *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
      */
     public PLayer removeLayer(final int index) {
         final PLayer layer = (PLayer) layers.remove(index);
