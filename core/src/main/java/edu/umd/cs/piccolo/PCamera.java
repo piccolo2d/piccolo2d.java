@@ -174,7 +174,7 @@ public class PCamera extends PNode {
      * Repaint this camera and forward the repaint request to the component
      * for this camera, if it is non-null.
      * 
-     * @param localBounds bounds in local coordinates that requires repainting
+     * @param localBounds bounds in local coordinates that require repainting
      * @param sourceNode node from which the repaint message originates, may
      *    be the camera itself
      */
@@ -196,7 +196,7 @@ public class PCamera extends PNode {
      * in Piccolo2D this one must not modify the <code>viewBounds</code>
      * parameter.
      * 
-     * @param viewBounds bounds in view coordinates that requires repainting
+     * @param viewBounds bounds in view coordinates that require repainting
      * @param repaintedLayer layer dispatching the repaint notification
      */
     public void repaintFromLayer(final PBounds viewBounds, final PLayer repaintedLayer) {
@@ -211,7 +211,7 @@ public class PCamera extends PNode {
     /**
      * @deprecated by {@link #repaintFromLayer(PBounds, PLayer)}. Will be removed
      *    in version 2.0.
-     * @param viewBounds bounds in view coordinates that requires repainting
+     * @param viewBounds bounds in view coordinates that require repainting
      * @param repaintedLayer layer dispatching the repaint notification
      */
     public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
