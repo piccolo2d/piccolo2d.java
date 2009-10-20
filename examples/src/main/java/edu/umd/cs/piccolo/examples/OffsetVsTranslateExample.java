@@ -72,11 +72,26 @@ public class OffsetVsTranslateExample
     /** {@inheritDoc} */
     public void initialize() {
         final PText offset = new PText("Offset node");
+        final PText offsetRotated = new PText("Offset rotated node");
         final PText translate = new PText("Translated node");
+        final PText translateRotated = new PText("Translated rotated node");
+
+        offset.setScale(2.0d);
+        offsetRotated.setScale(2.0d);
+        translate.setScale(2.0d);
+        translateRotated.setScale(2.0d);
+
+        offsetRotated.setRotation(Math.PI / 8.0d);
+        translateRotated.setRotation(Math.PI / 8.0d);
         offset.setOffset(15.0d, 100.0d);
-        translate.setOffset(15.0d, 300.0d);
+        offsetRotated.setOffset(15.0d, 150.0d);
+        translate.setOffset(15.0d, 200.0d);
+        translateRotated.setOffset(15.0d, 250.0d);
+
         getCanvas().getLayer().addChild(offset);
+        getCanvas().getLayer().addChild(offsetRotated);
         getCanvas().getLayer().addChild(translate);
+        getCanvas().getLayer().addChild(translateRotated);
 
         offset.addActivity(new PActivity(-1L) {
             /** {@inheritDoc} */
@@ -84,10 +99,22 @@ public class OffsetVsTranslateExample
                 offset.offset(1.0d, 0.0d);
             }
         });
+        offsetRotated.addActivity(new PActivity(-1L) {
+            /** {@inheritDoc} */
+            protected void activityStep(final long elapsedTime) {
+                offsetRotated.offset(1.0d, 0.0d);
+            }
+        });
         translate.addActivity(new PActivity(-1L) {
             /** {@inheritDoc} */
             protected void activityStep(final long elapsedTime) {
                 translate.translate(1.0d, 0.0d);
+            }
+        });
+        translateRotated.addActivity(new PActivity(-1L) {
+            /** {@inheritDoc} */
+            protected void activityStep(final long elapsedTime) {
+                translateRotated.translate(1.0d, 0.0d);
             }
         });
     }
