@@ -149,9 +149,11 @@
         </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
+        <!-- In 2.0 roll this back out
         <module name="MagicNumber">        	        	
     		<property name="ignoreNumbers" value="0, 0.5, 2, 1, -1" />        	
         </module>
+         -->
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>

@@ -62,6 +62,9 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
     private static final float DEFAULT_MITER_LIMIT = 10.0f;
 
+    private static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_SQUARE,
+            BasicStroke.JOIN_MITER, DEFAULT_MITER_LIMIT, null, 0.0f);
+
     private static final long serialVersionUID = 1L;
 
     // avoid repeated cloning:
@@ -71,11 +74,10 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     private final transient float[] tmpDash;
 
     /**
-     * Constructs a simple PFixedWidthStroke with thickness 1, square caps, join
-     * meter, and no dashing.
+     * Constructs a simple PFixedWidthStroke with the default stroke.
      */
     public PFixedWidthStroke() {
-        this(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, DEFAULT_MITER_LIMIT, null, 0.0f);
+        this(DEFAULT_STROKE);
     }
 
     /**
@@ -97,20 +99,53 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     /**
      * Constructs a simple PFixedWidthStroke with the width provided.
      * 
+     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
+     * 
      * @param width desired width of the stroke
      */
     public PFixedWidthStroke(final float width) {
         this(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, DEFAULT_MITER_LIMIT, null, 0.0f);
     }
 
+    /**
+     * Constructs a PFixedWidthStroke with the stroke properties provided.
+     * 
+     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
+     * 
+     * @param width width of stroke
+     * @param cap cap to use in stroke
+     * @param join join to use in stroke
+     */
     public PFixedWidthStroke(final float width, final int cap, final int join) {
         this(width, cap, join, DEFAULT_MITER_LIMIT, null, 0.0f);
     }
 
+    /**
+     * Constructs a PFixedWidthStroke with the stroke properties provided.
+     * 
+     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
+     * 
+     * @param width width of stroke
+     * @param cap cap to use in stroke
+     * @param join join to use in stroke
+     * @param miterlimit miter limit of stroke
+     */
     public PFixedWidthStroke(final float width, final int cap, final int join, final float miterlimit) {
         this(width, cap, join, miterlimit, null, 0.0f);
     }
 
+    /**
+     * Constructs a PFixedWidthStroke with the stroke properties provided.
+     * 
+     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
+     * 
+     * @param width width of stroke
+     * @param cap cap to use in stroke
+     * @param join join to use in stroke
+     * @param miterlimit miter limit of stroke
+     * @param dash array of dash lengths
+     * @param dashPhase phase to use when rendering dashes
+     */
     public PFixedWidthStroke(final float width, final int cap, final int join, final float miterlimit,
             final float[] dash, final float dashPhase) {
         this(new BasicStroke(width, cap, join, miterlimit, dash, dashPhase));
