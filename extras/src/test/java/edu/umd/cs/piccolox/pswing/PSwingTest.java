@@ -34,7 +34,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -108,20 +107,39 @@ public class PSwingTest extends TestCase {
         // thread needs time to push the component hidden method before this
         // test passes
         // There has to be a way of forcing this without a sleep
-        int tryCount = 0;
-        while (tryCount < 10) {
-            if (!pSwing.getVisible()) {
+        assertDelayedSuccess("setting component to invisible did not reflect in associated PSwing", 500,
+                new Predicate() {
+
+                    public boolean isTrue() {
+                        return !pSwing.getVisible();
+                    }
+                });
+
+    }
+
+    public void assertDelayedSuccess(String message, int delay, Predicate p) {
+        int remainingTries = delay / 50;
+        while (remainingTries > 0) {
+            if (p.isTrue()) {
                 return;
             }
-            tryCount ++;
+            remainingTries--;
             try {
                 Thread.sleep(50);
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 // do nothing
             }
-            
         }
-        fail("setting component to invisible did not reflect in associated PSwing");
+        fail(message);
+    }
+    
+    public void assertDelayedSuccess(int delay, Predicate p) {
+        assertDelayedSuccess("Failed asserting delayed success", delay, p);
+    }
+
+    private interface Predicate {
+        boolean isTrue();
     }
 
     public void testHidingPNodeHidesComponent() {
@@ -175,9 +193,9 @@ public class PSwingTest extends TestCase {
         assertTrue(pSwing.isPaintedGreek());
         assertFalse(pSwing.isPaintedComponent());
     }
-    
+
     public void testGreekThresholdIsPersisted() {
-        final JPanel panel = new JPanel();        
+        final JPanel panel = new JPanel();
         final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
         pSwing.setGreekThreshold(2);
         assertEquals(2, pSwing.getGreekThreshold(), Double.MIN_VALUE);
@@ -186,20 +204,27 @@ public class PSwingTest extends TestCase {
     }
 
     public void testAssertSettingJLabelWidthTooSmallGrowsIt() {
-        JLabel label = new JLabel("Hello");
+        final JLabel label = new JLabel("Hello");
         PSwingCanvas canvas = new PSwingCanvas();
         canvas.setBounds(0, 0, 100, 100);
-        MockPaintingPSwing swing = new MockPaintingPSwing(label);
-        assertFalse(label.getMinimumSize().getWidth() == 0);
+        final MockPaintingPSwing swing = new MockPaintingPSwing(label);        
+        assertDelayedSuccess(500,
+                new Predicate() {
+
+                    public boolean isTrue() {
+                        return label.getMinimumSize().getWidth() != 0;
+                    }
+                });
         swing.setWidth(10);
         canvas.getLayer().addChild(swing);
         canvas.doLayout();
         // While paint, it uses the graphics element to determine the font's
         // display size and hence determine minimum size of JLabel.
         swing.paint();
+        
         assertFalse(10 == swing.getWidth());
     }
-    
+
     public void testAssertSettingJButtonWidthTooSmallGrowsIt() {
         JButton label = new JButton("Hello");
         PSwingCanvas canvas = new PSwingCanvas();
@@ -216,21 +241,21 @@ public class PSwingTest extends TestCase {
     }
 
     public void testPSwingAttachesItselfToItsCanvasWhenAddedToItsSceneGraph() {
-        PSwingCanvas canvas1 = new PSwingCanvas();        
+        PSwingCanvas canvas1 = new PSwingCanvas();
         PSwing label = new PSwing(new JLabel("Hello"));
         assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
         canvas1.getLayer().addChild(label);
-        assertEquals(1, canvas1.getSwingWrapper().getComponentCount());                                
+        assertEquals(1, canvas1.getSwingWrapper().getComponentCount());
     }
 
     public void testPSwingRemovesItselfFromItsCanvasWhenRemovedFromScene() {
-        PSwingCanvas canvas1 = new PSwingCanvas();        
-        PSwing label = new PSwing(new JLabel("Hello"));        
+        PSwingCanvas canvas1 = new PSwingCanvas();
+        PSwing label = new PSwing(new JLabel("Hello"));
         canvas1.getLayer().addChild(label);
         label.removeFromParent();
-        assertEquals(0, canvas1.getSwingWrapper().getComponentCount());                                
+        assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
     }
-    
+
     public void testPSwingReattachesItselfWhenMovedFromCanvasToCanvas() {
         PSwingCanvas canvas1 = new PSwingCanvas();
         PSwingCanvas canvas2 = new PSwingCanvas();
