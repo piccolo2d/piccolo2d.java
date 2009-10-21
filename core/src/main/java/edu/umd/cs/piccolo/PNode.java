@@ -459,7 +459,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             public void setRelativeTargetValue(final float zeroToOne) {
                 PNode.this.setBounds(src.x + zeroToOne * (dst.x - src.x), src.y + zeroToOne * (dst.y - src.y),
                         src.width + zeroToOne * (dst.width - src.width), src.height + zeroToOne
-                                * (dst.height - src.height));
+                        * (dst.height - src.height));
             }
 
             protected void activityFinished() {
@@ -1454,8 +1454,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Set the bounds of this node to the given position and size. These bounds are stored
-     * in the local coordinate system of this node.
+     * Set the bounds of this node to the given position and size. These bounds
+     * are stored in the local coordinate system of this node.
      * 
      * If the width or height is less then or equal to zero then the bound's
      * empty bit will be set to true.
@@ -2942,7 +2942,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                     scale = image.getHeight() / nodeHeight;
                 }
                 g2.scale(scale, scale);
-                g2.translate(-nodeWidth * scale, -nodeHeight * scale);
+                g2.translate(-nodeWidth / scale, -nodeHeight / scale);
                 break;
             case FILL_STRATEGY_EXACT_FIT:
                 // scale the node so that it covers then entire image,
