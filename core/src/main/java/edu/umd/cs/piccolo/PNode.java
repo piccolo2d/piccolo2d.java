@@ -2941,8 +2941,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 else {
                     scale = image.getHeight() / nodeHeight;
                 }
-                g2.scale(scale, scale);
-                g2.translate(-nodeWidth / scale, -nodeHeight / scale);
+                g2.scale(scale, scale);               
                 break;
             case FILL_STRATEGY_EXACT_FIT:
                 // scale the node so that it covers then entire image,
