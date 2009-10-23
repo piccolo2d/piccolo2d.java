@@ -312,7 +312,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * @deprecated by {@link PSwing(JComponent)}
+     * @deprecated by {@link #PSwing(JComponent)}
      * 
      * @param swingCanvas canvas on which the PSwing node will be embedded
      * @param component not used
@@ -403,7 +403,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /**
      * Return the greek threshold in scale. When the scale will be below this
      * threshold the Swing component is rendered as 'greek' instead of painting
-     * the Swing component. Defaults to {@link DEFAULT_GREEK_THRESHOLD}.
+     * the Swing component. Defaults to {@link #DEFAULT_GREEK_THRESHOLD}.
      * 
      * @see PSwing#paintGreek(PPaintContext)
      * @return the current greek threshold in scale
@@ -579,7 +579,16 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Read this node and all of its descendants in from the given input stream.
+     * 
+     * @param in the stream to read from
+     * 
+     * @throws IOException when an error occurs speaking to underlying
+     *             ObjectOutputStream
+     * @throws ClassNotFoundException when a class is deserialized that no
+     *             longer exists. This can happen if it's renamed or deleted.
+     */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         init(component);

@@ -208,7 +208,7 @@ public class P3DRect extends PNode {
     }
 
     /**
-     * @Deprecated since it has been moved to P3DRectExample.
+     * @deprecated since it has been moved to P3DRectExample.
      * 
      * @param args Command line arguments
      */
