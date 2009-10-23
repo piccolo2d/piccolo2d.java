@@ -99,7 +99,7 @@ public class SWTTimerQueue implements Runnable {
      */
     synchronized void stop() {
         running = false;
-        notify();
+        notifyAll();
     }
 
     /**
@@ -117,7 +117,7 @@ public class SWTTimerQueue implements Runnable {
             timer.setExpirationTime(expirationTime);
 
             timer.setRunning(true);
-            notify();
+            notifyAll();
         }
     }
 

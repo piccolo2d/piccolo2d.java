@@ -242,7 +242,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      * @param pce property change event to examine
      */
     public void propertyChange(final PropertyChangeEvent pce) {
-        final boolean isRelevantViewEvent = PCamera.PROPERTY_VIEW_TRANSFORM == pce.getPropertyName();
+        final boolean isRelevantViewEvent = PCamera.PROPERTY_VIEW_TRANSFORM.equals(pce.getPropertyName());
         final boolean isRelevantBoundsEvent = isBoundsChangedEvent(pce)
                 && (pce.getSource() == camera || pce.getSource() == view.getRoot());
 
@@ -257,7 +257,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     private boolean isBoundsChangedEvent(final PropertyChangeEvent pce) {
-        return PNode.PROPERTY_BOUNDS == pce.getPropertyName() || PNode.PROPERTY_FULL_BOUNDS == pce.getPropertyName();
+        return PNode.PROPERTY_BOUNDS.equals(pce.getPropertyName()) || PNode.PROPERTY_FULL_BOUNDS.equals(pce.getPropertyName());
     }
 
     /**

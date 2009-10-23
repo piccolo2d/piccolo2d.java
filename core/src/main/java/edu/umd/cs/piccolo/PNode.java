@@ -2940,7 +2940,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 }
                 else {
                     scale = image.getHeight() / nodeHeight;
-                }
+                }                           
                 g2.scale(scale, scale);               
                 break;
             case FILL_STRATEGY_EXACT_FIT:
@@ -2997,6 +2997,11 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (pageIndex != 0) {
             return NO_SUCH_PAGE;
         }
+        
+        if (!(graphics instanceof Graphics2D)) {
+            throw new IllegalArgumentException("Provided graphics context is not a Graphics2D object");
+        }
+        
 
         final Graphics2D g2 = (Graphics2D) graphics;
         final PBounds imageBounds = getFullBounds();

@@ -55,9 +55,9 @@ import edu.umd.cs.piccolo.util.PUtil;
  */
 public class PActivityScheduler implements Serializable {
     private static final long serialVersionUID = 1L;
+    private transient Timer activityTimer = null;
     private final PRoot root;
-    private final List activities;
-    private transient Timer activityTimer;
+    private final List activities;    
     private boolean activitiesChanged;
     private boolean animating;
     private final ArrayList processingActivities;

@@ -468,8 +468,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
      * @param camera the camera to be transformed
      */
     protected void fillViewWhiteSpace(final PCamera camera) {
-        final PBounds rootBounds = camera.getRoot().getFullBoundsReference();
-        PBounds viewBounds = camera.getViewBounds();
+        final PBounds rootBounds = camera.getRoot().getFullBoundsReference();        
 
         if (rootBounds.contains(camera.getViewBounds())) {
             return;
@@ -481,7 +480,8 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         // center content.
         double dx = 0;
         double dy = 0;
-        viewBounds = camera.getViewBounds();
+        
+        PBounds viewBounds = camera.getViewBounds();
 
         if (viewBounds.getWidth() > rootBounds.getWidth()) {
             // then center along x axis.

@@ -226,7 +226,6 @@ public class PStyledText extends PNode {
                         - paragraphRange.startIndex), Math.min(paragraphRange.length(), curElement.getEndOffset()
                         - paragraphRange.startIndex));
 
-                // These are the optional attributes
                 final Font font = extractFont(styleContext, pos, rootElement, attributes);
                 applyFontAttribute(paragraphRange, attributedString, curElement, font);
                 applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
@@ -249,15 +248,10 @@ public class PStyledText extends PNode {
                             - paragraphRange.startIndex));
 
                     final Font font = extractFont(styleContext, pos, rootElement, attributes);
-                    applyFontAttribute(paragraphRange, attributedString, curElement, font);
-
-                    // These are the optional attributes
-
+                    applyFontAttribute(paragraphRange, attributedString, curElement, font);                    
                     applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
-
                     applyUnderlineAttribute(paragraphRange, attributedString, curElement, attributes);
-
-                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);
+                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);          
 
                     // And set the position to the end of the given attribute
                     pos = curElement.getEndOffset();
@@ -333,25 +327,28 @@ public class PStyledText extends PNode {
 
     private Font extractFont(final StyleContext style, final int pos, final Element rootElement,
             final AttributeSet attributes) {
-        Font font;
+        Font font = null;
         if (attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily)) {
             font = style.getFont(attributes);
-        }
-        else {
-            font = null;
         }
 
         if (font == null) {
             if (document instanceof DefaultStyledDocument) {
-                font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos).getAttributes());
-                if (font == null) {
-                    font = style.getFont(((DefaultStyledDocument) document).getParagraphElement(pos).getAttributes());
-                    if (font == null) {
-                        font = style.getFont(rootElement.getAttributes());
-                    }
-                }
+                font = extractFontFromDefaultStyledDocument((DefaultStyledDocument) document, style, pos, rootElement);
             }
             else {
+                font = style.getFont(rootElement.getAttributes());
+            }
+        }
+        return font;
+    }
+
+    private Font extractFontFromDefaultStyledDocument(final DefaultStyledDocument styledDocument,
+            final StyleContext style, final int pos, final Element rootElement) {
+        Font font = style.getFont(styledDocument.getCharacterElement(pos).getAttributes());
+        if (font == null) {
+            font = style.getFont(styledDocument.getParagraphElement(pos).getAttributes());
+            if (font == null) {
                 font = style.getFont(rootElement.getAttributes());
             }
         }
@@ -502,7 +499,7 @@ public class PStyledText extends PNode {
             textWidth = Math.max(textWidth, lineWidth);
         }
 
-        lines = (LineInfo[]) linesList.toArray(new LineInfo[0]);
+        lines = (LineInfo[]) linesList.toArray(new LineInfo[linesList.size()]);
 
         constrainDimensionsIfNeeded(textWidth, textHeight);
     }
