@@ -114,7 +114,7 @@ public class PSwingEventHandler implements PInputEventListener {
     /**
      * Sets whether this event handler can fire events.
      * 
-     * @param active true if thie event handler can fire events
+     * @param active true if this event handler can fire events
      */
     void setActive(final boolean active) {
         if (this.active && !active) {
@@ -266,11 +266,11 @@ public class PSwingEventHandler implements PInputEventListener {
         }
         else if (isWheelEvent(pSwingMouseEvent) && comp != null) {
             final MouseWheelEvent mWEvent = (MouseWheelEvent) mEvent;
-            
+
             final MouseWheelEvent tempEvent = new MouseWheelEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(),
                     mEvent.getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
-                            .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent
-                            .getWheelRotation());
+                    .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent
+                    .getWheelRotation());
 
             final PSwingMouseWheelEvent e2 = new PSwingMouseWheelEvent(tempEvent.getID(), tempEvent, aEvent);
             dispatchEvent(comp, e2);
@@ -465,29 +465,34 @@ public class PSwingEventHandler implements PInputEventListener {
      * Process a Piccolo2D event and (if active) dispatch the corresponding
      * Swing event.
      * 
-     * @param aEvent Piccolo2D event being testing for dispatch to swing
+     * @param aEvent Piccolo2D event being tested for dispatch to swing
      * @param type is not used in this method
      */
     public void processEvent(final PInputEvent aEvent, final int type) {
-        if (aEvent.isMouseEvent()) {
-            final InputEvent sourceSwingEvent = aEvent.getSourceSwingEvent();
-            if (sourceSwingEvent instanceof MouseEvent) {
-                final MouseEvent swingMouseEvent = (MouseEvent) sourceSwingEvent;
-                final PSwingEvent pSwingMouseEvent = PSwingMouseEvent.createMouseEvent(swingMouseEvent.getID(),
-                        swingMouseEvent, aEvent);
-                if (!recursing) {
-                    recursing = true;
-                    dispatchEvent(pSwingMouseEvent, aEvent);
-                    if (pSwingMouseEvent.asMouseEvent().isConsumed()) {
-                        aEvent.setHandled(true);
-                    }
-                    recursing = false;
-                }
+        if (!aEvent.isMouseEvent()) {
+            return;
+        }
+
+        final InputEvent sourceSwingEvent = aEvent.getSourceSwingEvent();
+        if (!(sourceSwingEvent instanceof MouseEvent)) {
+            throw new RuntimeException("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
+                    + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName());
+        }
+
+        processMouseEvent(aEvent, (MouseEvent) sourceSwingEvent);
+    }
+
+    private void processMouseEvent(final PInputEvent aEvent, final MouseEvent swingMouseEvent) {
+        if (!recursing) {
+            recursing = true;
+            final PSwingEvent pSwingMouseEvent = PSwingMouseEvent.createMouseEvent(swingMouseEvent.getID(),
+                    swingMouseEvent, aEvent);
+            
+            dispatchEvent(pSwingMouseEvent, aEvent);
+            if (pSwingMouseEvent.asMouseEvent().isConsumed()) {
+                aEvent.setHandled(true);
             }
-            else {
-                throw new RuntimeException("PInputEvent.getSourceSwingEvent was not a MouseEvent.  Actual event: "
-                        + sourceSwingEvent + ", class=" + sourceSwingEvent.getClass().getName());
-            }
+            recursing = false;
         }
     }
 

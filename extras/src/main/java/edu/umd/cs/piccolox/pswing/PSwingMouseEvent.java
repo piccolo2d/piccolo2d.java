@@ -109,6 +109,10 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwing
      * @return the constructed PSwingEvent
      */
     public static PSwingEvent createMouseEvent(final int id, final MouseEvent swingEvent, final PInputEvent pEvent) {
+        if (pEvent == null) {
+            throw new IllegalArgumentException("PInputEvent associated with PSwingEvent may not be null");
+        }
+        
         if (id == MouseEvent.MOUSE_MOVED || id == MouseEvent.MOUSE_DRAGGED) {
             return new PSwingMouseMotionEvent(id, swingEvent, pEvent);
         }
