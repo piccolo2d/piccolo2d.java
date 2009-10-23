@@ -59,6 +59,11 @@ public class PHandleTest extends TestCase {
         parent.setBounds(0, 0, 100, 100);
         assertEquals(1, relocateCounts[0]);
     }
+    
+    public void testLocatorCanBeNullWithoutAProblem() {
+        PHandle handle = new PHandle(null);
+        handle.relocateHandle();        
+    }
 
     private final class OriginLocator extends PLocator {
         public double locateX() {
