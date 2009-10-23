@@ -336,12 +336,9 @@ public class PCamera extends PNode {
      *    by this camera is empty
      */
     public PBounds getUnionOfLayerFullBounds() {
-        // todo:  this method is implemented inconsistently with regards to non-final methods
-        //   a subclass might override getLayerCount and/or getLayer, thus this method should either
-        //    use layers.size() and layers.get(index) or getLayerCount() and getLayer(index)
         final PBounds result = new PBounds();
-        final int count = getLayerCount();
-        for (int i = 0; i < count; i++) {
+        final int size = layers.size();
+        for (int i = 0; i < size; i++) {
             final PLayer each = (PLayer) layers.get(i);
             result.add(each.getFullBoundsReference());
         }
@@ -375,11 +372,8 @@ public class PCamera extends PNode {
      * @param paintContext context in which painting occurs
      */
     protected void paintCameraView(final PPaintContext paintContext) {
-        // todo:  this method is implemented inconsistently with regards to non-final methods
-        //   a subclass might override getLayerCount and/or getLayer, thus this method should either
-        //    use layers.size() and layers.get(index) or getLayerCount() and getLayer(index)
-        final int count = getLayerCount();
-        for (int i = 0; i < count; i++) {
+        final int size = layers.size();
+        for (int i = 0; i < size; i++) {
             final PLayer each = (PLayer) layers.get(i);
             each.fullPaint(paintContext);
         }
@@ -402,8 +396,9 @@ public class PCamera extends PNode {
             final Color boundsColor = Color.red;
             final Color fullBoundsColor = new Color(1.0f, 0f, 0f, 0.2f);
 
-            for (int i = 0; i < getLayerCount(); i++) {
-                getLayer(i).getAllNodes(null, nodes);
+            final int size = layers.size();
+            for (int i = 0; i < size; i++) {
+                ((PLayer) layers.get(i)).getAllNodes(null, nodes);
             }
 
             final Iterator i = getAllNodes(null, nodes).iterator();
@@ -521,11 +516,8 @@ public class PCamera extends PNode {
      *    camera were picked
      */
     protected boolean pickCameraView(final PPickPath pickPath) {
-        // todo:  this method is implemented inconsistently with regards to non-final methods
-        //   a subclass might override getLayerCount and/or getLayer, thus this method should either
-        //    use layers.size() and layers.get(index) or getLayerCount() and getLayer(index)
-        final int count = getLayerCount();
-        for (int i = count - 1; i >= 0; i--) {
+        final int size = layers.size();
+        for (int i = size - 1; i >= 0; i--) {
             final PLayer each = (PLayer) layers.get(i);
             if (each.fullPick(pickPath)) {
                 return true;

@@ -35,6 +35,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.activities.PActivity;
@@ -42,6 +43,7 @@ import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDebug;
+import edu.umd.cs.piccolo.util.PNodeFilter;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
@@ -346,6 +348,90 @@ public class PCameraTest extends TestCase {
         }
     }
 
+    public void testTooFewLayersCamera() {
+        PCamera tooFew = new TooFewLayersCamera();
+        MockPLayer layer0 = new MockPLayer();
+        MockPLayer layer1 = new MockPLayer();
+        tooFew.addLayer(layer0);
+        tooFew.addLayer(layer1);
+        assertEquals(layer0, tooFew.getLayer(0));
+        assertEquals(layer1, tooFew.getLayer(1));
+        assertEquals(layer0, tooFew.getLayersReference().get(0));
+        assertEquals(layer1, tooFew.getLayersReference().get(1));
+        assertEquals(0, tooFew.indexOfLayer(layer0));
+        assertEquals(0, tooFew.indexOfLayer(layer0));
+
+        // pickCameraView
+        PPickPath pickPath = new PPickPath(tooFew, new PBounds(0, 0, 400, 400));
+        tooFew.pickCameraView(pickPath);
+        assertTrue(layer0.fullPickCalled());
+        assertTrue(layer1.fullPickCalled());
+
+        // paintCameraView
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        PPaintContext paintContext = new PPaintContext(graphics);
+        tooFew.paintCameraView(paintContext);
+        assertTrue(layer0.fullPaintCalled());
+        assertTrue(layer1.fullPaintCalled());
+
+        // getUnionOfLayerFullBounds
+        tooFew.getUnionOfLayerFullBounds();
+        assertTrue(layer0.fullBoundsReferenceCalled());
+        assertTrue(layer1.fullBoundsReferenceCalled());
+
+        // paintDebugInfo
+        PDebug.debugBounds = true;
+        tooFew.paintDebugInfo(paintContext);
+        assertTrue(layer0.getAllNodesCalled());
+        assertTrue(layer1.getAllNodesCalled());
+        PDebug.debugBounds = false;
+
+        graphics.dispose();
+    }
+
+    public void testTooManyLayersCamera() {
+        PCamera tooMany = new TooManyLayersCamera();
+        MockPLayer layer0 = new MockPLayer();
+        MockPLayer layer1 = new MockPLayer();
+        tooMany.addLayer(layer0);
+        tooMany.addLayer(layer1);
+        assertEquals(layer0, tooMany.getLayer(0));
+        assertEquals(layer1, tooMany.getLayer(1));
+        assertEquals(layer0, tooMany.getLayersReference().get(0));
+        assertEquals(layer1, tooMany.getLayersReference().get(1));
+        assertEquals(0, tooMany.indexOfLayer(layer0));
+        assertEquals(0, tooMany.indexOfLayer(layer0));
+
+        // pickCameraView
+        PPickPath pickPath = new PPickPath(tooMany, new PBounds(0, 0, 400, 400));
+        tooMany.pickCameraView(pickPath);
+        assertTrue(layer0.fullPickCalled());
+        assertTrue(layer1.fullPickCalled());
+
+        // paintCameraView
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        PPaintContext paintContext = new PPaintContext(graphics);
+        tooMany.paintCameraView(paintContext);
+        assertTrue(layer0.fullPaintCalled());
+        assertTrue(layer1.fullPaintCalled());
+
+        // getUnionOfLayerFullBounds
+        tooMany.getUnionOfLayerFullBounds();
+        assertTrue(layer0.fullBoundsReferenceCalled());
+        assertTrue(layer1.fullBoundsReferenceCalled());
+
+        // paintDebugInfo
+        PDebug.debugBounds = true;
+        tooMany.paintDebugInfo(paintContext);
+        assertTrue(layer0.getAllNodesCalled());
+        assertTrue(layer1.getAllNodesCalled());
+        PDebug.debugBounds = false;
+
+        graphics.dispose();
+    }
+
     static class MockPComponent implements PComponent {
 
         public void paintImmediately() {
@@ -361,6 +447,81 @@ public class PCameraTest extends TestCase {
         }
 
         public void setInteracting(final boolean interacting) {
+        }
+    }
+
+    /**
+     * Mock PLayer.  Should consider using mock library in version 2.0.
+     */
+    private static final class MockPLayer extends PLayer {
+        private static final long serialVersionUID = 1L;
+        private boolean fullBoundsReferenceCalled = false;
+        private boolean fullPaintCalled = false;
+        private boolean getAllNodesCalled = false;
+        private boolean fullPickCalled = false;
+
+        /** {@inheritDoc} */
+        public PBounds getFullBoundsReference() {
+            fullBoundsReferenceCalled = true;
+            return super.getFullBoundsReference();
+        }
+
+        /** {@inheritDoc} */
+        public void fullPaint(final PPaintContext paintContext) {
+            fullPaintCalled = true;
+            super.fullPaint(paintContext);
+        }
+
+        /** {@inheritDoc} */
+        public Collection getAllNodes(final PNodeFilter filter, final Collection nodes) {
+            getAllNodesCalled = true;
+            return super.getAllNodes(filter, nodes);
+        }
+
+        /** {@inheritDoc} */
+        public boolean fullPick(final PPickPath pickPath) {
+            fullPickCalled = true;
+            return super.fullPick(pickPath);
+        }
+
+        private boolean fullBoundsReferenceCalled() {
+            return fullBoundsReferenceCalled;
+        }
+
+        private boolean fullPaintCalled() {
+            return fullPaintCalled;
+        }
+
+        private boolean getAllNodesCalled() {
+            return getAllNodesCalled;
+        }
+
+        private boolean fullPickCalled() {
+            return fullPickCalled;
+        }
+    }
+
+    /**
+     * Subclass of PCamera that advertises too few layers.
+     */
+    private static final class TooFewLayersCamera extends PCamera {
+        private static final long serialVersionUID = 1L;
+
+        /** {@inheritDoc} */
+        public int getLayerCount() {
+            return Math.max(0, super.getLayerCount() - 1);
+        }
+    }
+
+    /**
+     * Subclass of PCamera that advertises too many layers.
+     */
+    private static final class TooManyLayersCamera extends PCamera {
+        private static final long serialVersionUID = 1L;
+
+        /** {@inheritDoc} */
+        public int getLayerCount() {
+            return super.getLayerCount() + 1;
         }
     }
 }
