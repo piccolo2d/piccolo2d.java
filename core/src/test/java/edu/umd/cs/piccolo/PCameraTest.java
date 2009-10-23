@@ -30,9 +30,12 @@ package edu.umd.cs.piccolo;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Dimension2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
@@ -337,6 +340,10 @@ public class PCameraTest extends TestCase {
     public void testSetViewContraintsPersists() {
         camera.setViewConstraint(PCamera.VIEW_CONSTRAINT_ALL);
         assertEquals(PCamera.VIEW_CONSTRAINT_ALL, camera.getViewConstraint());
+        camera.setViewConstraint(PCamera.VIEW_CONSTRAINT_CENTER);
+        assertEquals(PCamera.VIEW_CONSTRAINT_CENTER, camera.getViewConstraint());
+        camera.setViewConstraint(PCamera.VIEW_CONSTRAINT_NONE);
+        assertEquals(PCamera.VIEW_CONSTRAINT_NONE, camera.getViewConstraint());
     }
 
     public void testSetViewConstraintsThrowsIllegalArgumentException() {
@@ -431,6 +438,220 @@ public class PCameraTest extends TestCase {
 
         graphics.dispose();
     }
+
+    public void testRepaintFromNullParent() {
+        camera.setParent(null);
+        PCanvas canvas = new PCanvas();
+        camera.setComponent(canvas);
+        camera.repaintFrom(new PBounds(0, 0, 1, 1), camera);
+    }
+
+    public void testRepaintFromNullComponent() {
+        PNode parent = new PNode();
+        camera.setParent(parent);
+        camera.setComponent(null);
+        camera.repaintFrom(new PBounds(0, 0, 1, 1), camera);
+    }
+
+    public void testRepaintFromNullParentNullComponent() {
+        camera.setParent(null);
+        camera.setComponent(null);
+        camera.repaintFrom(new PBounds(0, 0, 1, 1), camera);
+    }
+
+    public void testRepaintFromLayer() {
+        PLayer layer = new PLayer();
+        camera.addLayer(layer);
+        camera.repaintFromLayer(new PBounds(0, 0, 1, 1), layer);
+    }
+
+    public void testRepaintFromLayerNotViewedByCamera() {
+        PLayer layer = new PLayer();
+        // todo:  layer is not contained in list of layers viewed by camera, should complain
+        camera.repaintFromLayer(new PBounds(0, 0, 1, 1), layer);
+    }
+
+    public void testRepaintFromLayerNotALayer() {
+        try {
+            camera.repaintFromLayer(new PBounds(0, 0, 1, 1), new PNode());
+            fail("repaintFromLayer(PBounds, PNode) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    public void testRemoveLayerAtIndex() {
+        PLayer layer = new PLayer();
+        camera.addLayer(layer);
+        assertEquals(1, camera.getLayerCount());
+        assertEquals(1, camera.getLayersReference().size());
+        camera.removeLayer(0);
+        assertEquals(0, camera.getLayerCount());
+        assertEquals(0, camera.getLayersReference().size());
+    }
+
+    public void testRemoveLayerAtIndexIndexOutOfBounds() {
+        PLayer layer = new PLayer();
+        camera.addLayer(layer);
+        try {
+            camera.removeLayer(2);
+            fail("removeLayer(2) expected IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException e) {
+            // expected
+        }
+    }
+
+    public void testPaintDebugInfoDebugFullBounds() {
+        PLayer layer = new PLayer();
+        camera.addLayer(layer);
+        PNode child = new PNode();
+        child.setBounds(0.0d, 0.0d, 200.0d, 200.0d);
+        layer.addChild(child);
+        BufferedImage image = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        PPaintContext paintContext = new PPaintContext(graphics);
+        PDebug.debugFullBounds = true;
+        camera.paintDebugInfo(paintContext);
+        PDebug.debugFullBounds = false;
+        graphics.dispose();
+    }
+
+    public void testPaintDebugInfoDebugFullBoundsNoChildNodes() {
+        PLayer layer = new PLayer();
+        camera.addLayer(layer);
+        BufferedImage image = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        PPaintContext paintContext = new PPaintContext(graphics);
+        PDebug.debugFullBounds = true;
+        camera.paintDebugInfo(paintContext);
+        PDebug.debugFullBounds = false;
+        graphics.dispose();
+    }
+
+    public void testPickAfterChildrenNotPicked() {
+        PPickPath pickPath = new PPickPath(camera, new PBounds(-5, -5, 0, 0));
+        assertFalse(camera.pickAfterChildren(pickPath));
+    }
+
+    public void testLocalToViewPoint2D() {
+        Point2D local = new Point2D.Double(0.0d, 0.0d);
+        camera.localToView(local);
+        assertEquals(0.0d, local.getX(), 0.1d);
+        assertEquals(0.0d, local.getY(), 0.1d);
+    }
+
+    public void testLocalToViewPoint2DTranslateView() {
+        camera.translateView(10.0d, 20.0d);
+        Point2D local = new Point2D.Double(0.0d, 0.0d);
+        camera.localToView(local);
+        assertEquals(-10.0d, local.getX(), 0.1d);
+        assertEquals(-20.0d, local.getY(), 0.1d);
+    }
+
+    public void testLocalToViewPoint2DScaleView() {
+        camera.scaleView(10.0d);
+        Point2D local = new Point2D.Double(10.0d, 20.0d);
+        camera.localToView(local);
+        assertEquals(1.0d, local.getX(), 0.1d);
+        assertEquals(2.0d, local.getY(), 0.1d);
+    }
+
+    public void testLocalToViewDimension2D() {
+        Dimension2D local = new Dimension(0, 0);
+        camera.localToView(local);
+        assertEquals(0.0d, local.getWidth(), 0.1d);
+        assertEquals(0.0d, local.getHeight(), 0.1d);
+    }
+
+    public void testLocalToViewDimension2DTranslateView() {
+        camera.translateView(10.0d, 20.0d);
+        Dimension2D local = new Dimension(0, 0);
+        camera.localToView(local);
+        assertEquals(0.0d, local.getWidth(), 0.1d);
+        assertEquals(0.0d, local.getHeight(), 0.1d);
+    }
+
+    public void testLocalToViewDimension2DScaleView() {
+        camera.scaleView(10.0d);
+        Dimension2D local = new Dimension(10, 20);
+        camera.localToView(local);
+        assertEquals(1.0d, local.getWidth(), 0.1d);
+        assertEquals(2.0d, local.getHeight(), 0.1d);
+    }
+
+    public void testViewToLocalPoint2D() {
+        Point2D view = new Point2D.Double(0.0d, 0.0d);
+        camera.viewToLocal(view);
+        assertEquals(0.0d, view.getX(), 0.1d);
+        assertEquals(0.0d, view.getY(), 0.1d);
+    }
+
+    public void testViewToLocalPoint2DTranslateView() {
+        camera.translateView(10.0d, 20.0d);
+        Point2D view = new Point2D.Double(0.0d, 0.0d);
+        camera.viewToLocal(view);
+        assertEquals(10.0d, view.getX(), 0.1d);
+        assertEquals(20.0d, view.getY(), 0.1d);
+    }
+
+    public void testViewToLocalPoint2DScaleView() {
+        camera.scaleView(10.0d);
+        Point2D view = new Point2D.Double(10.0d, 20.0d);
+        camera.viewToLocal(view);
+        assertEquals(100.0d, view.getX(), 0.1d);
+        assertEquals(200.0d, view.getY(), 0.1d);
+    }
+
+    public void testViewToLocalDimension2D() {
+        Dimension2D view = new Dimension(0, 0);
+        camera.viewToLocal(view);
+        assertEquals(0.0d, view.getWidth(), 0.1d);
+        assertEquals(0.0d, view.getHeight(), 0.1d);
+    }
+
+    public void testViewToLocalDimension2DTranslateView() {
+        camera.translateView(10.0d, 20.0d);
+        Dimension2D view = new Dimension(0, 0);
+        camera.viewToLocal(view);
+        assertEquals(0.0d, view.getWidth(), 0.1d);
+        assertEquals(0.0d, view.getHeight(), 0.1d);
+    }
+
+    public void testViewToLocalDimension2DScaleView() {
+        camera.scaleView(10.0d);
+        Dimension2D view = new Dimension(10, 20);
+        camera.viewToLocal(view);
+        assertEquals(100.0d, view.getWidth(), 0.1d);
+        assertEquals(200.0d, view.getHeight(), 0.1d);
+    }
+
+    public void testPickWithoutIntersectionStillContainsCamera() {
+        camera.offset(10.0d, 10.0d);
+        PPickPath pickPath = camera.pick(0.0d, 0.0d, 0.0d);
+        // todo:  don't understand why this should be the case
+        assertFalse(pickPath.getNodeStackReference().isEmpty());
+        assertTrue(pickPath.getNodeStackReference().contains(camera));
+    }
+
+    /*
+    public void testAnimateViewToTransformIdentity() {
+        PRoot root = new PRoot();
+        PLayer layer = new PLayer();
+        root.addChild(camera);
+        root.addChild(layer);
+        camera.addChild(layer);
+
+        AffineTransform identity = new AffineTransform();
+        camera.animateViewToTransform(identity, System.currentTimeMillis());
+        // todo:  throws NPE at PActivityScheduler.processActivities(PActivityScheduler.java:176)
+        root.waitForActivities();
+
+        assertSame(identity, camera.getViewTransformReference());
+    }
+    */
+
 
     static class MockPComponent implements PComponent {
 

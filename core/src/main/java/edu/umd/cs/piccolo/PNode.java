@@ -3664,7 +3664,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @throws IOException when an error occurs speaking to underlying
      *             ObjectOutputStream
-     * @throws ClassNotFoundException when a class is desiarialized that no
+     * @throws ClassNotFoundException when a class is deserialized that no
      *             longer exists. This can happen if it's renamed or deleted.
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {

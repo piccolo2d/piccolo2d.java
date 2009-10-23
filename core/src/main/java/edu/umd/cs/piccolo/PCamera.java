@@ -215,12 +215,7 @@ public class PCamera extends PNode {
      * @param repaintedLayer layer dispatching the repaint notification
      */
     public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
-        if (repaintedLayer instanceof PLayer) {
-            this.repaintFromLayer(viewBounds, (PLayer) repaintedLayer);
-        }
-        else {
-            throw new RuntimeException("Passed non PLayer node to repaintFromLayer");
-        }
+        throw new IllegalArgumentException("repaintedLayer not an instance of PLayer");
     }
 
     /**
@@ -786,10 +781,12 @@ public class PCamera extends PNode {
         }
 
         final PTransformActivity.Target t = new PTransformActivity.Target() {
+            /** {@inheritDoc} */
             public void setTransform(final AffineTransform aTransform) {
                 PCamera.this.setViewTransform(aTransform);
             }
 
+            /** {@inheritDoc} */
             public void getSourceMatrix(final double[] aSource) {
                 viewTransform.getMatrix(aSource);
             }
@@ -843,28 +840,16 @@ public class PCamera extends PNode {
      * Transforms the view so that it conforms to the given constraint.
      */
     protected void applyViewConstraints() {
-        if (viewConstraint == VIEW_CONSTRAINT_NONE) {
+        if (VIEW_CONSTRAINT_NONE == viewConstraint) {
             return;
         }
-
         final PBounds viewBounds = getViewBounds();
         final PBounds layerBounds = (PBounds) globalToLocal(getUnionOfLayerFullBounds());
-        PDimension constraintDelta = null;
 
-        switch (viewConstraint) {
-            case VIEW_CONSTRAINT_ALL:
-                constraintDelta = viewBounds.deltaRequiredToContain(layerBounds);
-                break;
-
-            case VIEW_CONSTRAINT_CENTER:
-                layerBounds.setRect(layerBounds.getCenterX(), layerBounds.getCenterY(), 0, 0);
-                constraintDelta = viewBounds.deltaRequiredToContain(layerBounds);
-                break;
-            default:
-
-                throw new RuntimeException("Invalid View Constraint");
+        if (VIEW_CONSTRAINT_CENTER == viewConstraint) {
+            layerBounds.setRect(layerBounds.getCenterX(), layerBounds.getCenterY(), 0, 0);            
         }
-
+        PDimension constraintDelta = viewBounds.deltaRequiredToContain(layerBounds);
         viewTransform.translate(-constraintDelta.width, -constraintDelta.height);
     }
 
