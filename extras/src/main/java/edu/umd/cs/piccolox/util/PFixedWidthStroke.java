@@ -81,7 +81,9 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     }
 
     /**
-     * This should be "public" and the "main" constructor.
+     * Making this constructor public would break encapsulation. Users don't
+     * need to know that they are dealing with an adapter to an underlying
+     * stroke.
      * 
      * @param stroke stroke being used by this PFixedWithStroke
      */
@@ -99,8 +101,6 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     /**
      * Constructs a simple PFixedWidthStroke with the width provided.
      * 
-     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
-     * 
      * @param width desired width of the stroke
      */
     public PFixedWidthStroke(final float width) {
@@ -109,8 +109,6 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
     /**
      * Constructs a PFixedWidthStroke with the stroke properties provided.
-     * 
-     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
      * 
      * @param width width of stroke
      * @param cap cap to use in stroke
@@ -123,8 +121,6 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     /**
      * Constructs a PFixedWidthStroke with the stroke properties provided.
      * 
-     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
-     * 
      * @param width width of stroke
      * @param cap cap to use in stroke
      * @param join join to use in stroke
@@ -136,8 +132,6 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
     /**
      * Constructs a PFixedWidthStroke with the stroke properties provided.
-     * 
-     * @deprecated in favor of PFixedWidthStroke(BasicStroke stroke)
      * 
      * @param width width of stroke
      * @param cap cap to use in stroke
