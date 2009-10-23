@@ -510,14 +510,14 @@ public class PPath extends PNode {
 
     /**
      * Adds a curved segment, defined by three new points, to the path by
-     * drawing a Bézier curve that intersects both the current coordinates and
+     * drawing a B&#233;zier curve that intersects both the current coordinates and
      * the coordinates (x3, y3), using the specified points (x1, y1) and (x2,
-     * y2) as Bézier control points.
+     * y2) as B&#233;zier control points.
      * 
-     * @param x1 x component of first Bézier control point
-     * @param y1 y component of first Bézier control point
-     * @param x2 x component of second Bézier control point
-     * @param y2 y component of second Bézier control point
+     * @param x1 x component of first B&#233;zier control point
+     * @param y1 y component of first B&#233;zier control point
+     * @param x2 x component of second B&#233;zier control point
+     * @param y2 y component of second B&#233;zier control point
      * @param x3 x component of point through which curve must pass
      * @param y3 y component of point through which curve must pass
      */
