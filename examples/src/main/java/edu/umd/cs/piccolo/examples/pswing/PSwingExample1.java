@@ -171,6 +171,8 @@ public class PSwingExample1 {
         // Revalidate and repaint
         pCanvas.revalidate();
         pCanvas.repaint();
+        
+        pCanvas.getCamera().animateViewToCenterBounds(pCanvas.getLayer().getFullBounds(), true, 1200);
     }
 
 }
