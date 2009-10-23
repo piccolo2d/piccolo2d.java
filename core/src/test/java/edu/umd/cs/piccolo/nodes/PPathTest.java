@@ -44,6 +44,9 @@ import edu.umd.cs.piccolo.PiccoloAsserts;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PObjectOutputStream;
 
+/**
+ * Unit test for PPath.
+ */
 public class PPathTest extends TestCase {
 
     private MockPropertyChangeListener mockListener;

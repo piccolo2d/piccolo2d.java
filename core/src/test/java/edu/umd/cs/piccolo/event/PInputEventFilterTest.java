@@ -36,6 +36,9 @@ import javax.swing.JPanel;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.PInputManager;
 
+/**
+ * Unit test for PInputEventFilter.
+ */
 public class PInputEventFilterTest extends TestCase {
     private PInputEventFilter filter;
 

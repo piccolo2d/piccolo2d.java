@@ -33,6 +33,9 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit test for PUtil.
+ */
 public class PUtilTest extends TestCase {
 
     // see http://code.google.com/p/piccolo2d/issues/detail?id=116

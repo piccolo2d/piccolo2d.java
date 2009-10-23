@@ -35,6 +35,9 @@ import java.awt.Font;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.MockPropertyChangeListener;
 
+/**
+ * Unit test for PText.
+ */
 public class PTextTest extends TestCase {
 
     private PText textNode;

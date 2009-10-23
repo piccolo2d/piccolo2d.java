@@ -37,6 +37,9 @@ import javax.imageio.ImageIO;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
+/**
+ * Unit test for PImage.
+ */
 public class PImageTest extends TestCase {
 
     public void testClone() {

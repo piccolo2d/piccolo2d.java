@@ -31,11 +31,16 @@ package edu.umd.cs.piccolo;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Performance log.
+ */
 public class PerformanceLog {
 
     private final ArrayList log = new ArrayList();
     private long testTime;
 
+
+    // heh, something tells me this was copied from Jazz  :)
     public static class ZLogEntry {
         public String name;
         public long time;

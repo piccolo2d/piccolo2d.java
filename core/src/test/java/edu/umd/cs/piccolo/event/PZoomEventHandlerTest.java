@@ -30,6 +30,9 @@ package edu.umd.cs.piccolo.event;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit test for PZoomEventHandler.
+ */
 public class PZoomEventHandlerTest extends TestCase {
 
     public PZoomEventHandlerTest(final String name) {

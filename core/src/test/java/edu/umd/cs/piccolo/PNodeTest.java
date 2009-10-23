@@ -62,6 +62,9 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 import edu.umd.cs.piccolo.util.PUtil;
 
+/**
+ * Unit test for PNode.
+ */
 public class PNodeTest extends TestCase {
 
     private MockPropertyChangeListener mockListener;

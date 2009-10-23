@@ -35,6 +35,9 @@ import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 
+/**
+ * Unit test for PPickPath.
+ */
 public class PPickPathTest extends TestCase {
 
     public PPickPathTest(final String name) {

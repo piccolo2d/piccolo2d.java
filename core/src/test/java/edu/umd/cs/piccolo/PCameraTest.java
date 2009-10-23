@@ -45,6 +45,9 @@ import edu.umd.cs.piccolo.util.PDebug;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
+/**
+ * Unit test for PCamera.
+ */
 public class PCameraTest extends TestCase {
 
     private PCamera camera;

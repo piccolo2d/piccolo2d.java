@@ -36,6 +36,9 @@ import java.awt.geom.Rectangle2D;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.PiccoloAsserts;
 
+/**
+ * Unit test for PAffineTransform.
+ */
 public class PAffineTransformTest extends TestCase {
 
     private PAffineTransform at;

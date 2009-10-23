@@ -45,6 +45,9 @@ import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PAffineTransform;
 import edu.umd.cs.piccolo.util.PBounds;
 
+/**
+ * Performance tests.
+ */
 public class PerformanceTests extends TestCase {
 
     private static PerformanceLog log = new PerformanceLog();
