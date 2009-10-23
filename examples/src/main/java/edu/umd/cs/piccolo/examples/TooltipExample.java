@@ -84,7 +84,7 @@ public class TooltipExample extends PFrame {
             }
 
             public void updateToolTip(final PInputEvent event) {
-                final PNode n = event.getInputManager().getMouseOver().getPickedNode();
+                final PNode n = event.getPickedNode();
                 final String tooltipString = (String) n.getAttribute("tooltip");
                 final Point2D p = event.getCanvasPosition();
 
