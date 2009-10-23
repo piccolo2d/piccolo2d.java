@@ -345,13 +345,18 @@ public class SWTGraphics2D extends Graphics2D {
 
     /** {@inheritDoc} */
     public void setFont(final Font font) {
+        // TODO:  prevent NPE
         final String fontString = "name=" + font.getFamily() + ";bold=" + font.isBold() + ";italic=" + font.isItalic()
                 + ";size=" + font.getSize();
 
         curFont = getFont(fontString);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Set the font for this SWTGraphics2D to <code>font</code>.
+     *
+     * @param font font for this SWTGraphics2D
+     */
     public void setFont(final org.eclipse.swt.graphics.Font font) {
         curFont = font;
     }
@@ -599,7 +604,11 @@ public class SWTGraphics2D extends Graphics2D {
         gc.drawPolyline(ptArray);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Draw a polyline from the specified double array of points.
+     *
+     * @param pts double array of points
+     */
     public void drawPolyline(final double[] pts) {
         final int[] intPts = SWTShapeManager.transform(pts, transform);
         gc.drawPolyline(intPts);
@@ -618,7 +627,11 @@ public class SWTGraphics2D extends Graphics2D {
         gc.drawPolygon(ptArray);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Fill a polyline from the specified double array of points.
+     *
+     * @param pts double array of points
+     */
     public void fillPolygon(final double[] pts) {
         final int[] intPts = SWTShapeManager.transform(pts, transform);
         gc.fillPolygon(intPts);
