@@ -355,7 +355,9 @@ public class PRoot extends PNode {
         scheduleProcessInputsIfNeeded();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Schedule process inputs if needed.
+     */
     public void scheduleProcessInputsIfNeeded() {
         /*
          * The reason for the special case here (when not in the event dispatch

@@ -319,7 +319,7 @@ public class PText extends PNode {
     /**
      * Return the greek threshold in screen font size. When the screen font size
      * will be below this threshold the text is rendered as 'greek' instead of
-     * drawing the text glyphs. Defaults to {@link DEFAULT_GREEK_THRESHOLD}.
+     * drawing the text glyphs. Defaults to {@link #DEFAULT_GREEK_THRESHOLD}.
      * 
      * @see PText#paintGreek(PPaintContext)
      * @return the current greek threshold in screen font size

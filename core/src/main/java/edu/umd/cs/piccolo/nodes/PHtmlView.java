@@ -87,28 +87,28 @@ public class PHtmlView extends PNode {
 
     /**
      * The property name that identifies a change of this node's HTML text (see
-     * {@link #getHTML getHTML}). Both old and new value will be set in any
+     * {@link #getText getText}). Both old and new value will be set in any
      * property change event.
      */
     public static final String PROPERTY_TEXT = "text";
 
     /**
      * The property code that identifies a change of this node's HTML text (see
-     * {@link #getHTML getHTML}). Both old and new value will be set in any
+     * {@link #getText getText}). Both old and new value will be set in any
      * property change event.
      */
     public static final int PROPERTY_CODE_TEXT = 1 << 21;
 
     /**
      * The property name that identifies a change of this node's HTML text color
-     * (see {@link #getHtml getHTMLColor}). Both old and new value will be set
+     * (see {@link #getTextColor getTextColor}). Both old and new value will be set
      * in any property change event.
      */
     public static final String PROPERTY_TEXT_COLOR = "text color";
 
     /**
      * The property code that identifies a change of this node's HTML text color
-     * (see {@link #getHtml getHTMLColor}). Both old and new value will be set
+     * (see {@link #getTextColor getTextColor}). Both old and new value will be set
      * in any property change event.
      */
     public static final int PROPERTY_CODE_TEXT_COLOR = 1 << 22;
