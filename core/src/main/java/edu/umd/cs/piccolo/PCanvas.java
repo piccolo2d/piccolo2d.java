@@ -35,6 +35,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -565,6 +566,8 @@ public class PCanvas extends JComponent implements PComponent {
         repaint((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
     }
 
+    private PBounds repaintBounds = new PBounds();
+
     /**
      * {@inheritDoc}
      */
@@ -579,6 +582,10 @@ public class PCanvas extends JComponent implements PComponent {
         if (isOpaque()) {
             g2.setColor(getBackground());
             g2.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        if (getAnimating()) {
+            repaintBounds.add(g2.getClipBounds());
         }
 
         // create new paint context and set render quality to lowest common
@@ -596,16 +603,16 @@ public class PCanvas extends JComponent implements PComponent {
             paintContext.setRenderQuality(normalRenderQuality);
         }
 
-        // paint piccolo
         camera.fullPaint(paintContext);
 
         // if switched state from animating to not animating invalidate the
-        // entire
-        // screen so that it will be drawn with the default instead of animating
-        // render quality.
+        // repaint bounds so that it will be drawn with the default instead of
+        // animating render quality.
         if (!getAnimating() && animatingOnLastPaint) {
-            repaint();
+            repaint(repaintBounds);
+            repaintBounds.reset();
         }
+
         animatingOnLastPaint = getAnimating();
 
         PDebug.endProcessingOutput(g2);
