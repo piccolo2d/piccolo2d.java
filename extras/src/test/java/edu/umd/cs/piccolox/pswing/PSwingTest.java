@@ -291,17 +291,16 @@ public class PSwingTest extends TestCase {
             return image;
         }
 
-        public void paintComponentOnto(BufferedImage image) {
-            PPaintContext paintContext = new PPaintContext(image.createGraphics());
-            paintComponent(paintContext);
+        public void paintComponentOnto(BufferedImage image) {            
+            paintComponent(image.createGraphics());
         }
 
-        protected void paintComponent(PPaintContext paintContext) {
+        protected void paintComponent(Graphics2D paintContext) {
             super.paintComponent(paintContext);
             paintedComponent = true;
         }
 
-        protected void paintGreek(PPaintContext paintContext) {
+        protected void paintGreek(Graphics2D paintContext) {
             super.paintGreek(paintContext);
             paintedGreek = true;
         }
