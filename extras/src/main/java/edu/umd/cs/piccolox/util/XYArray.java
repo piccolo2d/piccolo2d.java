@@ -365,7 +365,7 @@ public class XYArray implements MutablePoints, Cloneable {
             ps.numPoints = numPoints;
         }
         catch (final CloneNotSupportedException e) {
-            
+            // wow, this is terrible.
         }
 
         return ps;

@@ -663,7 +663,7 @@ public class PCamera extends PNode {
 
     /**
      * Set the view transform applied to the list of layers
-     * viewed by this camera to <code>viewTransform</code>
+     * viewed by this camera to <code>viewTransform</code>.
      * 
      * @param viewTransform  view transform applied to the list of layers
      *    viewed by this camera
@@ -678,7 +678,7 @@ public class PCamera extends PNode {
     /**
      * Animate the camera's view from its current transform when the activity
      * starts to a new transform that centers the given bounds in the camera
-     * layers coordinate system into the cameras view bounds. If the duration is
+     * layer's coordinate system into the cameras view bounds. If the duration is
      * 0 then the view will be transformed immediately, and null will be
      * returned. Else a new PTransformActivity will get returned that is set to
      * animate the camera's view transform to the new bounds. If shouldScale is

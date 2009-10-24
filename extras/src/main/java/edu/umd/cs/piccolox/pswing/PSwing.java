@@ -216,7 +216,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     /** Minimum font size. */
     private double minFontSize = Double.MAX_VALUE;
-    
+
     private static final AffineTransform IDENTITY_TRANSFORM = new AffineTransform();
 
     /**
@@ -225,8 +225,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      */
     private transient Stroke defaultStroke = new BasicStroke();
 
-    private static final Color BUFFER_BACKGROUND_COLOR = new Color( 0, 0, 0, 0 );
-    
+    private static final Color BUFFER_BACKGROUND_COLOR = new Color(0, 0, 0, 0);
+
     /**
      * Default font, 12 point <code>"SansSerif"</code>. Will be made final in
      * version 2.0.
@@ -242,7 +242,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     private PSwingCanvas canvas;
 
     private BufferedImage buffer;
-    
+
     /**
      * Used to keep track of which nodes we've attached listeners to since no
      * built in support in PNode.
@@ -329,8 +329,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * bounds of this PNode.
      */
     void reshape() {
-        component.setBounds( 0, 0, component.getPreferredSize().width, component.getPreferredSize().height );
-        setBounds( 0, 0, component.getPreferredSize().width, component.getPreferredSize().height );
+        component.setBounds(0, 0, component.getPreferredSize().width, component.getPreferredSize().height);
+        setBounds(0, 0, component.getPreferredSize().width, component.getPreferredSize().height);
     }
 
     /** {@inheritDoc} */
@@ -347,15 +347,15 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         if (component.getParent() == null) {
             component.revalidate();
         }
-        
+
         if (shouldRenderGreek(paintContext)) {
             paintGreek(graphics);
         }
         else {
             paintComponent(graphics);
-        }        
+        }
     }
-   
+
     /**
      * Return the greek threshold in scale. When the scale will be below this
      * threshold the Swing component is rendered as 'greek' instead of painting
@@ -401,7 +401,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * 
      * @param paintContext paint context
      */
-    protected void paintGreek(final Graphics2D graphics) {        
+    protected void paintGreek(final Graphics2D graphics) {
         final Color background = component.getBackground();
         final Color foreground = component.getForeground();
         final Rectangle2D rect = getBounds();
@@ -433,54 +433,59 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @param paintContext paint context
      */
     protected void paintComponent(final Graphics2D g2) {
-        if( component.getBounds().isEmpty() ) {
+        if (component.getBounds().isEmpty()) {
             // The component has not been initialized yet.
             return;
         }
 
-        PSwingRepaintManager manager = (PSwingRepaintManager)RepaintManager.currentManager( component );
-        manager.lockRepaint( component );
+        PSwingRepaintManager manager = (PSwingRepaintManager) RepaintManager.currentManager(component);
+        manager.lockRepaint(component);
 
         Graphics2D bufferedGraphics = null;
-        if( !isBufferValid() ) {
+        if (!isBufferValid()) {
             // Get the graphics context associated with a new buffered image.
-            // Use TYPE_INT_ARGB_PRE so that transparent components look good on Windows.
-            buffer = new BufferedImage( component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE );
+            // Use TYPE_INT_ARGB_PRE so that transparent components look good on
+            // Windows.
+            buffer = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
             bufferedGraphics = buffer.createGraphics();
         }
         else {
-            // Use the graphics context associated with the existing buffered image
+            // Use the graphics context associated with the existing buffered
+            // image
             bufferedGraphics = buffer.createGraphics();
             // Clear the buffered image to prevent artifacts on Macintosh
-            bufferedGraphics.setBackground( BUFFER_BACKGROUND_COLOR );
-            bufferedGraphics.clearRect( 0, 0, component.getWidth(), component.getHeight() );
+            bufferedGraphics.setBackground(BUFFER_BACKGROUND_COLOR);
+            bufferedGraphics.clearRect(0, 0, component.getWidth(), component.getHeight());
         }
 
         // Start with the rendering hints from the provided graphics context
-        bufferedGraphics.setRenderingHints( g2.getRenderingHints() );
+        bufferedGraphics.setRenderingHints(g2.getRenderingHints());
 
-        //PSwing sometimes causes JComponent text to render with "..." when fractional font metrics are enabled.  These are now always disabled for the offscreen buffer.
-        bufferedGraphics.setRenderingHint( RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF );
+        // PSwing sometimes causes JComponent text to render with "..." when
+        // fractional font metrics are enabled. These are now always disabled
+        // for the offscreen buffer.
+        bufferedGraphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+                RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
 
         // Draw the component to the buffer
-        component.paint( bufferedGraphics );
+        component.paint(bufferedGraphics);
 
         // Draw the buffer to g2's associated drawing surface
-        g2.drawRenderedImage( buffer, IDENTITY_TRANSFORM );
+        g2.drawRenderedImage(buffer, IDENTITY_TRANSFORM);
 
-        manager.unlockRepaint( component );
+        manager.unlockRepaint(component);
     }
-    
+
     /**
-     * Tells whether the buffer for the image of the Swing components
-     * is currently valid.
-     *
+     * Tells whether the buffer for the image of the Swing components is
+     * currently valid.
+     * 
      * @return true if the buffer is currently valid
      */
     private boolean isBufferValid() {
-        return !( buffer == null || buffer.getWidth() != component.getWidth() || buffer.getHeight() != component.getHeight() );
+        return !(buffer == null || buffer.getWidth() != component.getWidth() || buffer.getHeight() != component
+                .getHeight());
     }
-
 
     /** {@inheritDoc} */
     public void setVisible(final boolean visible) {

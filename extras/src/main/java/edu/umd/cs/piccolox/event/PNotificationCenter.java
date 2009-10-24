@@ -66,7 +66,7 @@ public class PNotificationCenter {
     public static final Object NULL_MARKER = new Object();
 
     /** Singleton instance of the notification center. */
-    protected volatile static PNotificationCenter DEFAULT_CENTER;
+    protected  static volatile PNotificationCenter DEFAULT_CENTER;
 
     /** A map of listeners keyed by NotificationKey objects. */
     protected HashMap listenersMap;
