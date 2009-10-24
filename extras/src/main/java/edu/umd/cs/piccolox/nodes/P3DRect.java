@@ -55,8 +55,8 @@ public class P3DRect extends PNode {
     private Color topLeftInnerColor;
     private Color bottomRightInnerColor;
     private Color bottomRightOuterColor;
-    private final GeneralPath path;
-    private final transient Stroke stroke;
+    private transient GeneralPath path = null;
+    private transient Stroke stroke = null;
     private boolean raised;
 
     /**
@@ -64,8 +64,6 @@ public class P3DRect extends PNode {
      */
     public P3DRect() {
         raised = true;
-        stroke = new BasicStroke(0);
-        path = new GeneralPath();
     }
 
     /**
@@ -118,6 +116,14 @@ public class P3DRect extends PNode {
      * @param paintContext context in which the paiting should occur
      */
     protected void paint(final PPaintContext paintContext) {
+        // lazy init:
+        if (stroke == null) {
+            stroke = new BasicStroke(0);
+        }
+        if (path == null) {
+            path = new GeneralPath();
+        }
+
         final Graphics2D g2 = paintContext.getGraphics();
 
         final double x = getX();
@@ -208,6 +214,8 @@ public class P3DRect extends PNode {
     }
 
     /**
+     * TODO can we remove this?
+     * 
      * @deprecated since it has been moved to P3DRectExample.
      * 
      * @param args Command line arguments
