@@ -39,6 +39,7 @@ public class P3DRectTest extends TestCase {
     public void testClone() {
         P3DRect rect = new P3DRect(10, 10, 10, 10);
         rect.setPaint(Color.BLUE);
+        // FIXME breaks on jdk < 1.6 as GeneralPath field isn't transient nor serializable
         P3DRect cloned = (P3DRect) rect.clone();
         assertNotNull(cloned);
         assertEquals(Color.BLUE, cloned.getPaint());       
