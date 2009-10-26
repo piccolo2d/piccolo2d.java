@@ -2,13 +2,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>piccolo2d-parent</artifactId>
-    <groupId>org.piccolo2d</groupId>
-    <version>1.3-SNAPSHOT</version>
-    <relativePath>./parent/pom.xml</relativePath>
-  </parent>
+
   <artifactId>piccolo2d-complete</artifactId>
+  <groupId>org.piccolo2d</groupId>
+  <version>1.3-SNAPSHOT</version>  
+
   <packaging>pom</packaging>
   <name>Piccolo2D</name>
   <description>
