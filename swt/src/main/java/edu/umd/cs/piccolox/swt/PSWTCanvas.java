@@ -62,11 +62,10 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PStack;
 
 /**
- * <b>PSWTCanvas</b> is a simple Swing component that can be used to embed
- * Piccolo into a Java Swing application. Canvas's view the Piccolo scene graph
+ * <b>PSWTCanvas</b> is an SWT Composite that can be used to embed
+ * Piccolo into a SWT application. Canvases view the Piccolo scene graph
  * through a camera. The canvas manages screen updates coming from this camera,
  * and forwards swing mouse and keyboard events to the camera.
- * <P>
  * 
  * @version 1.0
  * @author Jesse Grosjean

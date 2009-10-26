@@ -49,9 +49,9 @@ import edu.umd.cs.piccolox.util.PLocator;
 import edu.umd.cs.piccolox.util.PNodeLocator;
 
 /**
- * <b>PHandle</b> is used to modify some aspect of Piccolo when it is dragged.
+ * <b>PSWTHandle</b> is used to modify some aspect of Piccolo when it is dragged.
  * Each handle has a PLocator that it uses to automatically position itself. See
- * PBoundsHandle for an example of a handle that resizes the bounds of another
+ * PSWTBoundsHandle for an example of a handle that resizes the bounds of another
  * node.
  * <P>
  * 

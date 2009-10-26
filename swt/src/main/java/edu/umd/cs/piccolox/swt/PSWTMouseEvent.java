@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * Overridden to wrap an SWT MouseEvent as a Swing MouseEvent.
+ * Mouse event overridden to wrap an SWT MouseEvent as a Swing MouseEvent.
  * 
  * @author Lance Good
  */

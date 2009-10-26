@@ -43,7 +43,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolox.event.PSelectionEventHandler;
 
 /**
- * Modified to use SWT paths instead of normal paths.
+ * Selection event handler modified to use SWT paths instead of normal paths.
  * 
  * @version 1.0
  * @author Lance Good

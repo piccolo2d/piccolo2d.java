@@ -41,7 +41,6 @@ import edu.umd.cs.piccolo.PRoot;
  * environment. In particular it uses SWTTimers and the SWT event dispatch
  * thread. With the current setup only a single PSWTCanvas is expected to be
  * connected to a root.
- * <P>
  * 
  * @version 1.1
  * @author Jesse Grosjean

@@ -27,12 +27,6 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * repositioned with mouse clicks. The text object is positioned so that its
  * upper-left corner is at the origin, though this can be changed with the
  * translate methods.
- * <P>
- * <b>Warning:</b> Serialized and ZSerialized objects of this class will not be
- * compatible with future Jazz releases. The current serialization support is
- * appropriate for short term storage or RMI between applications running the
- * same version of Jazz. A future release of Jazz will provide support for long
- * term persistence.
  */
 public class PSWTText extends PNode {
     private static final long serialVersionUID = 1L;

@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * Overridden to wrap an SWT KeyEvent as a swing KeyEvent.
+ * Key event overridden to wrap an SWT KeyEvent as a swing KeyEvent.
  * 
  * @author Lance Good
  */

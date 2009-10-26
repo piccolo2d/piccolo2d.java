@@ -36,7 +36,7 @@ import javax.swing.Timer;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * 
+ * SWT timer.
  * 
  * @author Lance Good
  */

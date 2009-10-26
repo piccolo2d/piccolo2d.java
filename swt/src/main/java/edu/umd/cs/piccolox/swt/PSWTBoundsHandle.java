@@ -45,12 +45,11 @@ import edu.umd.cs.piccolo.util.PPickPath;
 import edu.umd.cs.piccolox.util.PBoundsLocator;
 
 /**
- * <b>PBoundsHandle</b> a handle for resizing the bounds of another node. If a
+ * <b>PSWTBoundsHandle</b> a handle for resizing the bounds of another node. If a
  * bounds handle is dragged such that the other node's width or height becomes
  * negative then the each drag handle's locator assciated with that other node
  * is "flipped" so that they are attached to and dragging a different corner of
  * the nodes bounds.
- * <P>
  * 
  * @version 1.0
  * @author Jesse Grosjean

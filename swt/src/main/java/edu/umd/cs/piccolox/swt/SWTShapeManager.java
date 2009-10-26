@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
+ * SWT shape manager.
+ * 
  * @author Lance Good
  */
 public class SWTShapeManager {

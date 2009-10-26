@@ -49,21 +49,8 @@ import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
- * <b>PPath</b> is a wrapper around a java.awt.geom.GeneralPath. The setBounds
- * method works by scaling the path to fit into the specified bounds. This
- * normally works well, but if the specified base bounds get too small then it
- * is impossible to expand the path shape again since all its numbers have
- * tended to zero, so application code may need to take this into consideration.
- * <P>
- * One option that applications have is to call <code>startResizeBounds</code>
- * before starting an interaction that may make the bounds very small, and
- * calling <code>endResizeBounds</code> when this interaction is finished. When
- * this is done PPath will use a copy of the original path to do the resizing so
- * the numbers in the path wont loose resolution.
- * <P>
- * This class also provides methods for constructing common shapes using a
- * general path.
- * <P>
+ * <b>PSWTPath</b> is a wrapper around a java.awt.geom.GeneralPath, with
+ * workarounds for drawing shapes in SWT where necessary.
  * 
  * @version 1.0
  * @author Jesse Grosjean
