@@ -560,4 +560,14 @@ public class PSWTPath extends PNode {
         }
         setShape(path);
     }
+
+    /**
+     * Return the center of this SWT path node, based on its bounds.
+     *
+     * @return the center of this SWT path node, based on its bounds
+     */
+    public Point2D getCenter() {                                                                                                              
+        PBounds bounds = getBoundsReference();                                                                                                        
+        return new Point2D.Double(bounds.x + (bounds.width / 2.0), bounds.y + (bounds.height / 2.0));
+    } 
 }
