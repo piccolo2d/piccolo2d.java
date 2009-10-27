@@ -28,6 +28,8 @@
  */
 package edu.umd.cs.piccolo.activities;
 
+import edu.umd.cs.piccolo.util.PUtil;
+
 /**
  * <b>PInterpolatingActivity</b> interpolates between two states (source and
  * destination) over the duration of the activity. The interpolation can be
@@ -68,6 +70,15 @@ public class PInterpolatingActivity extends PActivity {
     private boolean slowInSlowOut;
     private int loopCount;
     private boolean firstLoop;
+
+    /**
+     * Constructs an interpolating activity that will last the duration given.
+     * 
+     * @param duration duration in milliseconds of the entire activity
+     */
+    public PInterpolatingActivity(final long duration) {
+        this(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, 1, PInterpolatingActivity.SOURCE_TO_DESTINATION);
+    }
 
     /**
      * Constructs an interpolating activity that will last the duration given
