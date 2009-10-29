@@ -41,13 +41,37 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public interface PComponent {
 
-    public void repaint(PBounds bounds);
+    /**
+     * Called to notify PComponent that given bounds need repainting.
+     * 
+     * @param bounds bounds needing repaint
+     */
+    void repaint(PBounds bounds);
 
-    public void paintImmediately();
+    /**
+     * Sends a repaint notification the repaint manager if PComponent is not
+     * already painting immediately.
+     */
+    void paintImmediately();
 
-    public void pushCursor(Cursor cursor);
+    /**
+     * Pushes the given cursor onto the cursor stack and sets the current cursor
+     * to the one provided.
+     * 
+     * @param cursor The cursor to set as the current one and push
+     */
+    void pushCursor(Cursor cursor);
 
-    public void popCursor();
+    /**
+     * Pops the topmost cursor from the stack and sets it as the current one.
+     */
+    void popCursor();
 
-    public void setInteracting(boolean interacting);
+    /**
+     * Sets whether the component is currently being interacted with.
+     * 
+     * @param interacting whether the component is currently being interacted
+     *            with
+     */
+    void setInteracting(boolean interacting);
 }

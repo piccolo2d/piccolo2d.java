@@ -69,28 +69,37 @@ public class PImage extends PNode {
      * to Image objects in any property change event.
      */
     public static final String PROPERTY_IMAGE = "image";
+    /**
+     * The property code that identifies a change of this node's image (see
+     * {@link #getImage getImage}). Both old and new value will be set correctly
+     * to Image objects in any property change event.
+     */
+    
     public static final int PROPERTY_CODE_IMAGE = 1 << 15;
 
     private transient Image image;
 
+    /** Constructs a PImage without a java.awt.Image attached. */
     public PImage() {
-        super();
-    }
-
-    /**
-     * Construct a new PImage wrapping the given java.awt.Image.
-     */
-    public PImage(final Image newImage) {
-        this();
-        setImage(newImage);
     }
 
     /**
      * Construct a new PImage by loading the given fileName and wrapping the
      * resulting java.awt.Image.
+     * 
+     * @param fileName of the image to wrap
      */
     public PImage(final String fileName) {
         this(Toolkit.getDefaultToolkit().getImage(fileName));
+    }
+
+    /**
+     * Construct a new PImage wrapping the given java.awt.Image.
+     * 
+     * @param image image that this PImage will wrap
+     */
+    public PImage(final Image image) {
+        setImage(image);
     }
 
     /**
@@ -98,18 +107,19 @@ public class PImage extends PNode {
      * resulting java.awt.Image. If the url is <code>null</code>, create an
      * empty PImage; this behaviour is useful when fetching resources that may
      * be missing.
+     * 
+     * @param url URL of image resource to load
      */
     public PImage(final java.net.URL url) {
-        this();
         if (url != null) {
             setImage(Toolkit.getDefaultToolkit().getImage(url));
         }
     }
 
     /**
-     * Returns the image that is shown by this node.
+     * Returns the image that is shown by this node, or null if none.
      * 
-     * @return the image that is shown by this node
+     * @return java.awt.Image being wrapped by this node
      */
     public Image getImage() {
         return image;
@@ -118,6 +128,8 @@ public class PImage extends PNode {
     /**
      * Set the image that is wrapped by this PImage node. This method will also
      * load the image using a MediaTracker before returning.
+     * 
+     * @param fileName file to be wrapped by this PImage
      */
     public void setImage(final String fileName) {
         setImage(Toolkit.getDefaultToolkit().getImage(fileName));
@@ -126,33 +138,17 @@ public class PImage extends PNode {
     /**
      * Set the image that is wrapped by this PImage node. This method will also
      * load the image using a MediaTracker before returning.
+     * 
+     * @param newImage image to be displayed by this PImage
      */
     public void setImage(final Image newImage) {
-        final Image old = image;
+        final Image oldImage = image;
 
         if (newImage == null || newImage instanceof BufferedImage) {
             image = newImage;
         }
-        else { // else make sure the image is loaded
-            final ImageIcon imageLoader = new ImageIcon(newImage);
-            switch (imageLoader.getImageLoadStatus()) {
-                case MediaTracker.LOADING:
-                    System.err.println("media tracker still loading image after requested to wait until finished");
-
-                case MediaTracker.COMPLETE:
-                    image = imageLoader.getImage();
-                    break;
-
-                case MediaTracker.ABORTED:
-                    System.err.println("media tracker aborted image load");
-                    image = null;
-                    break;
-
-                case MediaTracker.ERRORED:
-                    System.err.println("media tracker errored image load");
-                    image = null;
-                    break;
-            }
+        else {
+            image = getLoadedImage(newImage);
         }
 
         if (image != null) {
@@ -160,9 +156,32 @@ public class PImage extends PNode {
             invalidatePaint();
         }
 
-        firePropertyChange(PROPERTY_CODE_IMAGE, PROPERTY_IMAGE, old, image);
+        firePropertyChange(PROPERTY_CODE_IMAGE, PROPERTY_IMAGE, oldImage, image);
     }
 
+    /**
+     * Ensures the image is loaded enough (loading is fine).
+     * 
+     * @param newImage to check
+     * @return image or null if not loaded enough.
+     */
+    private Image getLoadedImage(final Image newImage) {
+        final ImageIcon imageLoader = new ImageIcon(newImage);
+        switch (imageLoader.getImageLoadStatus()) {
+            case MediaTracker.LOADING:
+            case MediaTracker.COMPLETE:
+                return imageLoader.getImage();
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Renders the wrapped Image, stretching it appropriately if the bounds of
+     * this PImage doesn't match the bounds of the image.
+     * 
+     * @param paintContext context into which the rendering will occur
+     */
     protected void paint(final PPaintContext paintContext) {
         if (getImage() == null) {
             return;
@@ -187,13 +206,12 @@ public class PImage extends PNode {
 
     }
 
-    // ****************************************************************
-    // Serialization
-    // ****************************************************************
-
     /**
-     * The java.awt.Image wrapped by this PImage is converted into a
-     * BufferedImage when serialized.
+     * Serializes this PImage to the stream provided. The java.awt.Image wrapped
+     * by this PImage is converted into a BufferedImage when serialized.
+     * 
+     * @param out stream into which serialized object will be serialized
+     * @throws IOException if error occurs while writing to the output stream
      */
     private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
@@ -203,19 +221,28 @@ public class PImage extends PNode {
         }
     }
 
+    /**
+     * Deserializes a PImage from the input stream provided.
+     * 
+     * @param in stream from which the PImage should be read
+     * @throws IOException if problem occurs while reading from input stream
+     * @throws ClassNotFoundException occurs is no mapping from the bytes in the
+     *             stream can be found to classes available
+     */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         image = ImageIO.read(in);
     }
 
-    // ****************************************************************
-    // Util
-    // ****************************************************************
-
     /**
-     * If alwaysCreateCopy is false then if the image is already a buffered
-     * image it will not be copied and instead the original image will just be
-     * returned.
+     * Converts the provided image into a BufferedImage. If alwaysCreateCopy is
+     * false then if the image is already a buffered image it will not be copied
+     * and instead the original image will just be returned.
+     * 
+     * @param image the image to be converted
+     * @param alwaysCreateCopy if true, will create a copy even if image is
+     *            already a BufferedImage
+     * @return a BufferedImage equivalent to the Image provided
      */
     public static BufferedImage toBufferedImage(final Image image, final boolean alwaysCreateCopy) {
         if (image == null) {

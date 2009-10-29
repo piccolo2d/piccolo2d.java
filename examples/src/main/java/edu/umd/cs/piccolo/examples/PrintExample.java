@@ -42,6 +42,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -69,9 +70,6 @@ import edu.umd.cs.piccolox.swing.PViewport;
  */
 public class PrintExample extends PFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public PrintExample() {
@@ -89,23 +87,7 @@ public class PrintExample extends PFrame {
         final PScrollDirector windowSD = viewport.getScrollDirector();
         final PScrollDirector documentSD = new DocumentScrollDirector();
 
-        // Make some rectangles on the surface so we can see where we are
-        for (int x = 0; x < 20; x++) {
-            for (int y = 0; y < 20; y++) {
-                if ((x + y) % 2 == 0) {
-                    final PPath path = PPath.createRectangle(50 * x, 50 * y, 40, 40);
-                    path.setPaint(Color.blue);
-                    path.setStrokePaint(Color.black);
-                    canvas.getLayer().addChild(path);
-                }
-                else if ((x + y) % 2 == 1) {
-                    final PPath path = PPath.createEllipse(50 * x, 50 * y, 40, 40);
-                    path.setPaint(Color.blue);
-                    path.setStrokePaint(Color.black);
-                    canvas.getLayer().addChild(path);
-                }
-            }
-        }
+        addBackgroundShapes(canvas);
 
         // Now, create the toolbar
         final JToolBar toolBar = new JToolBar();
@@ -153,6 +135,27 @@ public class PrintExample extends PFrame {
         contentPane.add("North", toolBar);
         setContentPane(contentPane);
         validate();
+    }
+
+    private void addBackgroundShapes(final PCanvas canvas) {
+        for (int shapeCount = 0; shapeCount < 440; shapeCount++) {
+            int x = shapeCount % 21;
+            int y = (shapeCount - x) / 21;
+
+            if (shapeCount % 2 == 0) {
+                final PPath path = PPath.createRectangle(50 * x, 50 * y, 40, 40);
+                path.setPaint(Color.blue);
+                path.setStrokePaint(Color.black);
+                canvas.getLayer().addChild(path);
+            }
+            else if (shapeCount % 2 == 1) {
+                final PPath path = PPath.createEllipse(50 * x, 50 * y, 40, 40);
+                path.setPaint(Color.blue);
+                path.setStrokePaint(Color.black);
+                canvas.getLayer().addChild(path);
+            }
+
+        }
     }
 
     /**
@@ -216,54 +219,55 @@ public class PrintExample extends PFrame {
          * @param y The new y position
          */
         public void setViewPosition(final double x, final double y) {
-            if (camera != null) {
-                // If a scroll is in progress - we ignore new scrolls -
-                // if we didn't, since the scrollbars depend on the camera
-                // location
-                // we can end up with an infinite loop
-                if (!scrollInProgress) {
-                    scrollInProgress = true;
+            if (camera == null)
+                return;
 
-                    // Get the union of all the layers' bounds
-                    final PBounds layerBounds = new PBounds();
-                    final java.util.List layers = camera.getLayersReference();
-                    for (final Iterator i = layers.iterator(); i.hasNext();) {
-                        final PLayer layer = (PLayer) i.next();
-                        layerBounds.add(layer.getFullBoundsReference());
-                    }
+            // If a scroll is in progress - we ignore new scrolls - if we
+            // didn't, since the scrollbars depend on the camera location
+            // we can end up with an infinite loop
+            if (scrollInProgress)
+                return;
 
-                    final PAffineTransform at = camera.getViewTransform();
-                    at.transform(layerBounds, layerBounds);
+            scrollInProgress = true;
 
-                    // Union the camera view bounds
-                    final PBounds viewBounds = camera.getBoundsReference();
-                    layerBounds.add(viewBounds);
-
-                    // Now find the new view position in view coordinates -
-                    // This is basically the distance from the lower right
-                    // corner of the window to the upper left corner of the
-                    // document
-                    // We then measure the offset from the lower right corner
-                    // of the document
-                    final Point2D newPoint = new Point2D.Double(layerBounds.getX() + layerBounds.getWidth()
-                            - (x + viewBounds.getWidth()), layerBounds.getY() + layerBounds.getHeight()
-                            - (y + viewBounds.getHeight()));
-
-                    // Now transform the new view position into global coords
-                    camera.localToView(newPoint);
-
-                    // Compute the new matrix values to put the camera at the
-                    // correct location
-                    final double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
-                    final double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
-
-                    at.setTransform(at.getScaleX(), at.getShearY(), at.getShearX(), at.getScaleY(), newX, newY);
-
-                    // Now actually set the camera's transform
-                    camera.setViewTransform(at);
-                    scrollInProgress = false;
-                }
+            // Get the union of all the layers' bounds
+            final PBounds layerBounds = new PBounds();
+            final List layers = camera.getLayersReference();
+            for (final Iterator i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = (PLayer) i.next();
+                layerBounds.add(layer.getFullBoundsReference());
             }
+
+            final PAffineTransform at = camera.getViewTransform();
+            at.transform(layerBounds, layerBounds);
+
+            // Union the camera view bounds
+            final PBounds viewBounds = camera.getBoundsReference();
+            layerBounds.add(viewBounds);
+
+            // Now find the new view position in view coordinates -
+            // This is basically the distance from the lower right
+            // corner of the window to the upper left corner of the
+            // document
+            // We then measure the offset from the lower right corner
+            // of the document
+            final Point2D newPoint = new Point2D.Double(layerBounds.getX() + layerBounds.getWidth()
+                    - (x + viewBounds.getWidth()), layerBounds.getY() + layerBounds.getHeight()
+                    - (y + viewBounds.getHeight()));
+
+            // Now transform the new view position into global coords
+            camera.localToView(newPoint);
+
+            // Compute the new matrix values to put the camera at the
+            // correct location
+            final double newX = -(at.getScaleX() * newPoint.getX() + at.getShearX() * newPoint.getY());
+            final double newY = -(at.getShearY() * newPoint.getX() + at.getScaleY() * newPoint.getY());
+
+            at.setTransform(at.getScaleX(), at.getShearY(), at.getShearX(), at.getScaleY(), newX, newY);
+
+            // Now actually set the camera's transform
+            camera.setViewTransform(at);
+            scrollInProgress = false;
         }
     }
 

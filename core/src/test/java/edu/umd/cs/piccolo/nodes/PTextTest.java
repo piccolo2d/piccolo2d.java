@@ -35,6 +35,9 @@ import java.awt.Font;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.MockPropertyChangeListener;
 
+/**
+ * Unit test for PText.
+ */
 public class PTextTest extends TestCase {
 
     private PText textNode;
@@ -50,10 +53,12 @@ public class PTextTest extends TestCase {
     }
 
     public void testClone() {
+        textNode.setTextPaint(Color.BLUE);
         textNode.setText("Boo");
         final PText clonedNode = (PText) textNode.clone();
         assertEquals("Boo", clonedNode.getText());
         assertEquals(textNode.getFont(), clonedNode.getFont());
+        assertEquals(Color.BLUE, clonedNode.getTextPaint());
     }
 
     public void testTextIsEmptyByDefault() {
@@ -101,6 +106,54 @@ public class PTextTest extends TestCase {
     public void testSetJustificationPersists() {
         textNode.setJustification(Component.RIGHT_ALIGNMENT);
         assertEquals(Component.RIGHT_ALIGNMENT, textNode.getJustification(), 0.000001);
+    }
+
+    public void testHorizontalAlignmentIsLeftByDefault() {
+        assertEquals(Component.LEFT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
+    }
+
+    public void testSetHorizontalAlignmentPersists() {
+        textNode.setHorizontalAlignment(Component.RIGHT_ALIGNMENT);
+        assertEquals(Component.RIGHT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
+    }
+
+    public void testSetHorizontalAlignmentInvalidValues() {
+        try {
+            textNode.setHorizontalAlignment(-2.0f);
+        }
+        catch (final IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(2.0f);
+        }
+        catch (final IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(-Float.MAX_VALUE);
+        }
+        catch (final IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(Float.MAX_VALUE);
+        }
+        catch (final IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(-1.00f);
+        }
+        catch (final IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            textNode.setHorizontalAlignment(1.00f);
+        }
+        catch (final IllegalArgumentException e) {
+            // expected
+        }
     }
 
     public void testTextPaintIsBlackByDefault() {

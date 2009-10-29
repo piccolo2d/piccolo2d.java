@@ -94,7 +94,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * 
      * @param items The items to populate the PComboBox list
      */
-    public PComboBox(final Object items[]) {
+    public PComboBox(final Object[] items) {
         super(items);
         init();
     }
@@ -110,7 +110,7 @@ public class PComboBox extends JComboBox implements Serializable {
     }
 
     /**
-     * Create an empty PComboBox
+     * Create an empty PComboBox.
      */
     public PComboBox() {
         super();
@@ -118,7 +118,7 @@ public class PComboBox extends JComboBox implements Serializable {
     }
 
     /**
-     * Substitue our UI for the default
+     * Substitute our UI for the default.
      */
     private void init() {
         setUI(new PBasicComboBoxUI());
@@ -128,23 +128,25 @@ public class PComboBox extends JComboBox implements Serializable {
      * Clients must set the PSwing and PSwingCanvas environment for this
      * PComboBox to work properly.
      * 
-     * @param pSwing
-     * @param canvas
+     * @param pSwingNode node that this PComboBox is attached to
+     * @param canvasEnvirnoment canvas on which the pSwing node is embedded
      */
-    public void setEnvironment(final PSwing pSwing, final PSwingCanvas canvas) {
-        this.pSwing = pSwing;
-        this.canvas = canvas;
+    public void setEnvironment(final PSwing pSwingNode, final PSwingCanvas canvasEnvirnoment) {
+        this.pSwing = pSwingNode;
+        this.canvas = canvasEnvirnoment;
     }
 
     /**
      * The substitute look and feel - used to capture the mouse events on the
      * arrowButton and the component itself and to create our PopupMenu rather
-     * than the default
+     * than the default.
      */
     protected class PBasicComboBoxUI extends BasicComboBoxUI {
 
         /**
-         * Create our Popup instead of theirs
+         * Create our Popup instead of swing's default.
+         * 
+         * @return a new ComboPopup
          */
         protected ComboPopup createPopup() {
             final PBasicComboPopup popup = new PBasicComboPopup(comboBox);
@@ -154,24 +156,23 @@ public class PComboBox extends JComboBox implements Serializable {
     }
 
     /**
-     * The substitute ComboPopupMenu that places itself correctly in Piccolo.
+     * The substitute ComboPopupMenu that places itself correctly in Piccolo2d.
      */
     protected class PBasicComboPopup extends BasicComboPopup {
-
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
 
         /**
-         * @param combo The parent ComboBox
+         * Creates a PBasicComboPopup that will position itself correctly in
+         * relation to the provided JComboBox.
+         * 
+         * @param combo The associated ComboBox
          */
         public PBasicComboPopup(final JComboBox combo) {
             super(combo);
         }
 
         /**
-         * Computes the bounds for the Popup in Piccolo if a PMouseEvent has
+         * Computes the bounds for the Popup in Piccolo2D if a PMouseEvent has
          * been received. Otherwise, it uses the default algorithm for placing
          * the popup.
          * 
@@ -200,10 +201,20 @@ public class PComboBox extends JComboBox implements Serializable {
         return r1c;
     }
 
+    /**
+     * Returns the associated PSwing node.
+     * 
+     * @return associated PSwing node
+     */
     public PSwing getPSwing() {
         return pSwing;
     }
 
+    /**
+     * Returns the canvas on which the PSwing node is embedded.
+     * 
+     * @return canvas on which the PSwing node is embedded
+     */
     public PSwingCanvas getCanvas() {
         return canvas;
     }

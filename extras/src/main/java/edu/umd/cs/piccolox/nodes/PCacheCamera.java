@@ -46,38 +46,50 @@ import edu.umd.cs.piccolo.util.PUtil;
 
 /**
  * An extension to PCamera that provides a fast image based
- * animationToCenterBounds method
+ * animationToCenterBounds method.
  * 
  * @author Lance Good
  */
 public class PCacheCamera extends PCamera {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-    private BufferedImage paintBuffer;
+    private transient BufferedImage paintBuffer;
     private boolean imageAnimate;
     private PBounds imageAnimateBounds;
 
     /**
-     * Get the buffer used to provide fast image based animation
+     * Get the buffer used to provide fast image based animation.
+     * 
+     * @return buffered image used to provide fast image based animation
      */
     protected BufferedImage getPaintBuffer() {
         final PBounds fRef = getFullBoundsReference();
-        // TODO eclipse formatting made this ugly
-        if (paintBuffer == null || paintBuffer.getWidth() < fRef.getWidth()
-                || paintBuffer.getHeight() < fRef.getHeight()) {
-            paintBuffer = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-                    .getDefaultConfiguration().createCompatibleImage((int) Math.ceil(fRef.getWidth()),
-                            (int) Math.ceil(fRef.getHeight()));
+        if (paintBuffer == null || isBufferSmallerThanBounds(fRef)) {
+            paintBuffer = buildPaintBuffer(fRef);
         }
         return paintBuffer;
     }
 
+    private boolean isBufferSmallerThanBounds(final PBounds bounds) {
+        return paintBuffer.getWidth() < bounds.getWidth() || paintBuffer.getHeight() < bounds.getHeight();
+    }
+
+    private BufferedImage buildPaintBuffer(final PBounds fRef) {
+        final int newBufferWidth = (int) Math.ceil(fRef.getWidth());
+        final int newBufferHeight = (int) Math.ceil(fRef.getHeight());
+
+        if (GraphicsEnvironment.isHeadless()) {
+            return new BufferedImage(newBufferWidth, newBufferHeight, BufferedImage.TYPE_4BYTE_ABGR);
+        }
+        else {
+            return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
+                    .createCompatibleImage(newBufferWidth, newBufferHeight);
+        }
+    }
+
     /**
      * Caches the information necessary to animate from the current view bounds
-     * to the specified centerBounds
+     * to the specified centerBounds.
      */
     private AffineTransform cacheViewBounds(final Rectangle2D centerBounds, final boolean scaleToFit) {
         final PBounds viewBounds = getViewBounds();
@@ -123,7 +135,7 @@ public class PCacheCamera extends PCamera {
     }
 
     /**
-     * Turns off the fast image animation and does any other applicable cleanup
+     * Turns off the fast image animation and does any other applicable cleanup.
      */
     private void clearViewCache() {
         imageAnimate = false;
@@ -132,7 +144,14 @@ public class PCacheCamera extends PCamera {
 
     /**
      * Mimics the standard animateViewToCenterBounds but uses a cached image for
-     * performance rather than re-rendering the scene at each step
+     * performance rather than re-rendering the scene at each step.
+     * 
+     * @param centerBounds bounds to which the view should be centered
+     * @param shouldScaleToFit whether the camera should scale to fit the bounds
+     *            so the cover as large a portion of the canvas without changing
+     *            the aspect ratio
+     * @param duration milliseconds the animation should last
+     * @return the scheduled activity, null if duration was 0
      */
     public PTransformActivity animateStaticViewToCenterBoundsFast(final Rectangle2D centerBounds,
             final boolean shouldScaleToFit, final long duration) {
@@ -147,11 +166,16 @@ public class PCacheCamera extends PCamera {
 
     /**
      * This copies the behavior of the standard animateViewToTransform but
-     * clears the cache when it is done
+     * clears the cache when it is done.
+     * 
+     * @param dest the resulting transform that the view should be
+     *            applying when the animation is complete
+     * @param duration length in milliseconds that the animation should last
+     * @return the scheduled PTransformActivity, null if duration was 0
      */
-    protected PTransformActivity animateStaticViewToTransformFast(final AffineTransform destination, final long duration) {
+    protected PTransformActivity animateStaticViewToTransformFast(final AffineTransform dest, final long duration) {
         if (duration == 0) {
-            setViewTransform(destination);
+            setViewTransform(dest);
             return null;
         }
 
@@ -165,7 +189,7 @@ public class PCacheCamera extends PCamera {
             }
         };
 
-        final PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destination) {
+        final PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, dest) {
             protected void activityFinished() {
                 clearViewCache();
                 repaint();
@@ -183,7 +207,9 @@ public class PCacheCamera extends PCamera {
 
     /**
      * Overrides the camera's full paint method to do the fast rendering when
-     * possible
+     * possible.
+     * 
+     * @param paintContext Paint Contex in which the painting is done
      */
     public void fullPaint(final PPaintContext paintContext) {
         if (imageAnimate) {

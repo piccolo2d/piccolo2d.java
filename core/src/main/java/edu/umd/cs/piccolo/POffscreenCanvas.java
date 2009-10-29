@@ -26,13 +26,11 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolox;
+package edu.umd.cs.piccolo;
 
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PComponent;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PUtil;
@@ -51,11 +49,9 @@ public final class POffscreenCanvas implements PComponent {
     /** Render quality. */
     private int renderQuality = DEFAULT_RENDER_QUALITY;
 
-    /**
-     * Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>
-     * .
-     */
+    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
     static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
+
 
     /**
      * Create a new offscreen canvas the specified width and height.
@@ -143,27 +139,27 @@ public final class POffscreenCanvas implements PComponent {
     }
 
     /** {@inheritDoc} */
-    public final void paintImmediately() {
+    public void paintImmediately() {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void popCursor() {
+    public void popCursor() {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void pushCursor(final Cursor cursor) {
+    public void pushCursor(final Cursor cursor) {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void repaint(final PBounds repaintBounds) {
+    public void repaint(final PBounds repaintBounds) {
         // empty
     }
 
     /** {@inheritDoc} */
-    public final void setInteracting(final boolean interacting) {
+    public void setInteracting(final boolean interacting) {
         // empty
     }
 }

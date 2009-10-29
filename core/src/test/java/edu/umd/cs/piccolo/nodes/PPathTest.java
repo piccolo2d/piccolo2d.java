@@ -44,6 +44,9 @@ import edu.umd.cs.piccolo.PiccoloAsserts;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PObjectOutputStream;
 
+/**
+ * Unit test for PPath.
+ */
 public class PPathTest extends TestCase {
 
     private MockPropertyChangeListener mockListener;
@@ -63,10 +66,10 @@ public class PPathTest extends TestCase {
     }
 
     public void testClone() {
-        PPath p = PPath.createEllipse(0, 0, 100, 100);
-        final PBounds b = p.getBounds();
-        p = (PPath) p.clone();
-        assertEquals(p.getBounds(), b);
+        PPath p = PPath.createEllipse(0, 0, 100, 100);        
+        PPath cloned = (PPath) p.clone();
+        assertEquals(p.getBounds(), cloned.getBounds());
+        //assertEquals(p.getPathReference()., cloned.getPathReference());
     }
 
     public void testSerialization() throws IOException, ClassNotFoundException {
@@ -76,8 +79,8 @@ public class PPathTest extends TestCase {
         final File file = File.createTempFile("test", "ser");
 
         serializeToFile(srcPath, file);
-
         final PPath resultPath = deserializeFromFile(srcBounds, file);
+        file.deleteOnExit();
 
         assertEquals(resultPath.getBounds(), srcBounds);
     }
@@ -88,7 +91,6 @@ public class PPathTest extends TestCase {
         final FileInputStream fin = new FileInputStream(file);
         final ObjectInputStream in = new ObjectInputStream(fin);
         path = (PPath) in.readObject();
-        file.delete();
 
         return path;
     }
@@ -106,7 +108,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreateEllipseReturnsValidPPath() {
@@ -114,7 +116,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreateRoundedRectReturnsValidPPath() {
@@ -122,7 +124,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreateLineReturnsValidPPath() {
@@ -130,7 +132,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 0), path.getBounds(), 1);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 0), path.getBounds(), 2.0d);
     }
 
     public void testCreatePolyLinePoint2DReturnsValidPPath() {
@@ -139,7 +141,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testCreatePolyLineFloatsReturnsValidPPath() {
@@ -147,7 +149,7 @@ public class PPathTest extends TestCase {
         assertNotNull(path);
 
         // Seems like rounding is affecting the bounds greatly
-        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2);
+        PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
 
     public void testSetStrokePaintPersists() {

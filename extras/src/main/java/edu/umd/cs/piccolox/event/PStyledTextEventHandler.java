@@ -64,21 +64,29 @@ import edu.umd.cs.piccolox.nodes.PStyledText;
  * @author Lance Good
  */
 public class PStyledTextEventHandler extends PBasicInputEventHandler {
+    private static final int TEXT_EDIT_PADDING = 3;
 
+    /** Canvas onto which this event handler is attached. */
     protected PCanvas canvas;
 
+    /** Editor used to edit a PStyledText's content when it is in edit mode. */
     protected JTextComponent editor;
 
+    /**
+     * A listener that will handle programatic changes to the underlying
+     * document and update the view accordingly.
+     */
     protected DocumentListener docListener;
 
+    /** The Styled text being edited. */
     protected PStyledText editedText;
 
     /**
-     * Basic constructor for PStyledTextEventHandler
+     * Basic constructor for PStyledTextEventHandler.
+     * 
+     * @param canvas canvas to which this handler will be attached
      */
     public PStyledTextEventHandler(final PCanvas canvas) {
-        super();
-
         final PInputEventFilter filter = new PInputEventFilter();
         filter.setOrMask(InputEvent.BUTTON1_MASK | InputEvent.BUTTON3_MASK);
         setEventFilter(filter);
@@ -88,7 +96,10 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
 
     /**
      * Constructor for PStyledTextEventHandler that allows an editor to be
-     * specified
+     * specified.
+     * 
+     * @param canvas canvas to which this handler will be attached
+     * @param editor component to display when editing a PStyledText node
      */
     public PStyledTextEventHandler(final PCanvas canvas, final JTextComponent editor) {
         super();
@@ -97,6 +108,13 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         initEditor(editor);
     }
 
+    /**
+     * Installs the editor onto the canvas. Making it the editor that will be
+     * used whenever a PStyledText node needs editing.
+     * 
+     * @param newEditor component responsible for a PStyledText node while it is
+     *            being edited.
+     */
     protected void initEditor(final JTextComponent newEditor) {
         editor = newEditor;
 
@@ -107,34 +125,23 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         docListener = createDocumentListener();
     }
 
+    /**
+     * Creates a default editor component to be used when editing a PStyledText
+     * node.
+     * 
+     * @return a freshly created JTextComponent subclass that can be used to
+     *         edit PStyledText nodes
+     */
     protected JTextComponent createDefaultEditor() {
-        final JTextPane tComp = new JTextPane() {
-
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1L;
-
-            /**
-             * Set some rendering hints - if we don't then the rendering can be
-             * inconsistent. Also, Swing doesn't work correctly with fractional
-             * metrics.
-             */
-            public void paint(final Graphics g) {
-                final Graphics2D g2 = (Graphics2D) g;
-
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-
-                super.paint(g);
-            }
-        };
-        tComp.setBorder(new CompoundBorder(new LineBorder(Color.black), new EmptyBorder(3, 3, 3, 3)));
-        return tComp;
+        return new DefaultTextEditor();
     }
 
+    /**
+     * Returns a document listener that will reshape the editor whenever a
+     * change occurs to its attached document.
+     * 
+     * @return a DocumentListener
+     */
     protected DocumentListener createDocumentListener() {
         return new DocumentListener() {
             public void removeUpdate(final DocumentEvent e) {
@@ -151,6 +158,12 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         };
     }
 
+    /**
+     * Creates a PStyledText instance and attaches a simple document to it. If
+     * possible, it configures its font information too.
+     * 
+     * @return a new PStyledText instance
+     */
     public PStyledText createText() {
         final PStyledText newText = new PStyledText();
 
@@ -173,28 +186,41 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
                 || !doc.getDefaultRootElement().getAttributes().isDefined(StyleConstants.FontSize);
     }
 
-    public void mousePressed(final PInputEvent inputEvent) {
-        final PNode pickedNode = inputEvent.getPickedNode();
+    /**
+     * A callback that is invoked any time the mouse is pressed on the canvas.
+     * If the press occurs directly on the canvas, it create a new PStyledText
+     * instance and puts it in editing mode. If the click is on a node, it marks
+     * changes it to editing mode.
+     * 
+     * @param event mouse click event that can be queried
+     */
+    public void mousePressed(final PInputEvent event) {
+        final PNode pickedNode = event.getPickedNode();
 
-        stopEditing(inputEvent);
+        stopEditing(event);
 
-        if (inputEvent.getButton() != MouseEvent.BUTTON1) {
+        if (event.getButton() != MouseEvent.BUTTON1) {
             return;
         }
 
         if (pickedNode instanceof PStyledText) {
-            startEditing(inputEvent, (PStyledText) pickedNode);
+            startEditing(event, (PStyledText) pickedNode);
         }
         else if (pickedNode instanceof PCamera) {
             final PStyledText newText = createText();
             final Insets pInsets = newText.getInsets();
-            canvas.getLayer().addChild(newText);
-            newText.translate(inputEvent.getPosition().getX() - pInsets.left, inputEvent.getPosition().getY()
-                    - pInsets.top);
-            startEditing(inputEvent, newText);
+            newText.translate(event.getPosition().getX() - pInsets.left, event.getPosition().getY() - pInsets.top);
+            startEditing(event, newText);
         }
     }
 
+    /**
+     * Begins editing the provided text node as a result of the provided event.
+     * Will swap out the text node for an editor.
+     * 
+     * @param event the event responsible for starting the editing
+     * @param text text node being edited
+     */
     public void startEditing(final PInputEvent event, final PStyledText text) {
         // Get the node's top right hand corner
         final Insets pInsets = text.getInsets();
@@ -218,6 +244,11 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         editedText = text;
     }
 
+    /**
+     * Stops editing the current text node.
+     * 
+     * @param event the event responsible for stopping the editing
+     */
     public void stopEditing(final PInputEvent event) {
         if (editedText == null) {
             return;
@@ -233,14 +264,23 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             editedText.syncWithDocument();
         }
 
-        editedText.setScale(1.0 / event.getCamera().getViewScale());
+        if (editedText.getParent() == null) {
+            editedText.setScale(1.0 / event.getCamera().getViewScale());
+            canvas.getLayer().addChild(editedText);
+        }
         editor.setVisible(false);
         canvas.repaint();
 
         editedText = null;
     }
 
-    public void dispatchEventToEditor(final PInputEvent e) {
+    /**
+     * Intercepts Piccolo2D events and dispatches the underlying swing one to
+     * the current editor.
+     * 
+     * @param event the swing event being intercepted
+     */
+    public void dispatchEventToEditor(final PInputEvent event) {
         // We have to nest the mouse press in two invoke laters so that it is
         // fired so that the component has been completely validated at the new
         // size and the mouse event has the correct offset
@@ -248,10 +288,10 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             public void run() {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        final MouseEvent me = new MouseEvent(editor, MouseEvent.MOUSE_PRESSED, e.getWhen(), e
+                        final MouseEvent me = new MouseEvent(editor, MouseEvent.MOUSE_PRESSED, event.getWhen(), event
                                 .getModifiers()
-                                | InputEvent.BUTTON1_MASK, (int) (e.getCanvasPosition().getX() - editor.getX()),
-                                (int) (e.getCanvasPosition().getY() - editor.getY()), 1, false);
+                                | InputEvent.BUTTON1_MASK, (int) (event.getCanvasPosition().getX() - editor.getX()),
+                                (int) (event.getCanvasPosition().getY() - editor.getY()), 1, false);
                         editor.dispatchEvent(me);
                     }
                 });
@@ -259,24 +299,36 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         });
     }
 
+    /**
+     * Adjusts the shape of the editor to fit the current document.
+     */
     public void reshapeEditor() {
         if (editedText != null) {
-            // Update the size to fit the new document - note that it is a 2
-            // stage process
             Dimension prefSize = editor.getPreferredSize();
 
-            final Insets pInsets = editedText.getInsets();
-            final Insets jInsets = editor.getInsets();
+            final Insets textInsets = editedText.getInsets();
+            final Insets editorInsets = editor.getInsets();
 
-            final int width = editedText.getConstrainWidthToTextWidth() ? (int) prefSize.getWidth() : (int) (editedText
-                    .getWidth()
-                    - pInsets.left - pInsets.right + jInsets.left + jInsets.right + 3.0);
+            final int width;
+            if (editedText.getConstrainWidthToTextWidth()) {
+                width = (int) prefSize.getWidth();
+            }
+            else {
+                width = (int) (editedText.getWidth() - textInsets.left - textInsets.right + editorInsets.left
+                        + editorInsets.right + TEXT_EDIT_PADDING);
+            }
             prefSize.setSize(width, prefSize.getHeight());
             editor.setSize(prefSize);
 
             prefSize = editor.getPreferredSize();
-            final int height = editedText.getConstrainHeightToTextHeight() ? (int) prefSize.getHeight()
-                    : (int) (editedText.getHeight() - pInsets.top - pInsets.bottom + jInsets.top + jInsets.bottom + 3.0);
+            final int height;
+            if (editedText.getConstrainHeightToTextHeight()) {
+                height = (int) prefSize.getHeight();
+            }
+            else {
+                height = (int) (editedText.getHeight() - textInsets.top - textInsets.bottom + editorInsets.top
+                        + editorInsets.bottom + TEXT_EDIT_PADDING);
+            }
             prefSize.setSize(width, height);
             editor.setSize(prefSize);
         }
@@ -284,7 +336,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
 
     /**
      * Sometimes we need to invoke this later because the document events seem
-     * to get fired before the text is actually incorporated into the document
+     * to get fired before the text is actually incorporated into the document.
      */
     protected void reshapeEditorLater() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -294,4 +346,33 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         });
     }
 
+    private static final class DefaultTextEditor extends JTextPane {
+        private static final long serialVersionUID = 1L;
+
+        public DefaultTextEditor() {
+            EmptyBorder padding = new EmptyBorder(TEXT_EDIT_PADDING,
+                    TEXT_EDIT_PADDING, TEXT_EDIT_PADDING, TEXT_EDIT_PADDING);
+            setBorder(new CompoundBorder(new LineBorder(Color.black), padding));
+        }
+
+        /**
+         * Set some rendering hints - if we don't then the rendering can be
+         * inconsistent. Also, Swing doesn't work correctly with fractional
+         * metrics.
+         */
+        public void paint(final Graphics graphics) {
+            if (!(graphics instanceof Graphics2D)) {
+                throw new IllegalArgumentException("Provided graphics context is not a Graphics2D object");
+            }
+            
+            final Graphics2D g2 = (Graphics2D) graphics;
+
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+
+            super.paint(graphics);
+        }
+    }
 }

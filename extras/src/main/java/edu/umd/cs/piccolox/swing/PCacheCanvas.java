@@ -35,16 +35,19 @@ import edu.umd.cs.piccolo.PRoot;
 import edu.umd.cs.piccolox.nodes.PCacheCamera;
 
 /**
- * An extension of PCanvas that automatically installs a PCacheCamera
+ * An extension of PCanvas that automatically installs a PCacheCamera.
  * 
  * @author Lance Good
  */
 public class PCacheCanvas extends PCanvas {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a default scene with 1 root, 1 layer, and 1 PCacheCamera.
+     * 
+     * @return constructed scene with PCacheCamera
+     */
     protected PCamera createDefaultCamera() {
         final PRoot r = new PRoot();
         final PLayer l = new PLayer();

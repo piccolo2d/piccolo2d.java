@@ -48,27 +48,43 @@ import edu.umd.cs.piccolo.util.PDimension;
  */
 public class PPanEventHandler extends PDragSequenceEventHandler {
 
-    private boolean autopan;
-    private double minAutopanSpeed = 250;
-    private double maxAutopanSpeed = 750;
+    private static final int DEFAULT_MAX_AUTOPAN_SPEED = 750;
+    private static final int DEFAULT_MIN_AUTOPAN_SPEED = 250;
 
+    private boolean autopan;
+    private double minAutopanSpeed = DEFAULT_MIN_AUTOPAN_SPEED;
+    private double maxAutopanSpeed = DEFAULT_MAX_AUTOPAN_SPEED;
+
+    /**
+     * Constructs a Pan Event Handler that will by default perform auto-panning.
+     */
     public PPanEventHandler() {
         super();
         setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
         setAutopan(true);
     }
 
-    protected void drag(final PInputEvent e) {
-        super.drag(e);
-        pan(e);
+    /**
+     * Updates the view in response to a user initiated drag event.
+     * 
+     * @param event event responsible for the drag
+     */
+    protected void drag(final PInputEvent event) {
+        super.drag(event);
+        pan(event);
     }
 
-    protected void pan(final PInputEvent e) {
-        final PCamera c = e.getCamera();
-        final Point2D l = e.getPosition();
+    /**
+     * Pans the camera in response to the pan event provided.
+     * 
+     * @param event contains details about the drag used to translate the view
+     */
+    protected void pan(final PInputEvent event) {
+        final PCamera c = event.getCamera();
+        final Point2D l = event.getPosition();
 
         if (c.getViewBounds().contains(l)) {
-            final PDimension d = e.getDelta();
+            final PDimension d = event.getDelta();
             c.translateView(d.getWidth(), d.getHeight());
         }
     }
@@ -77,10 +93,20 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     // Auto Pan
     // ****************************************************************
 
+    /**
+     * Determines if auto-panning will occur or not.
+     * 
+     * @param autopan true if auto-panning functionality will be active
+     */
     public void setAutopan(final boolean autopan) {
         this.autopan = autopan;
     }
 
+    /**
+     * Returns whether the auto-panning functoinality is enabled.
+     * 
+     * @return true if auto-panning is enabled
+     */
     public boolean getAutopan() {
         return autopan;
     }
@@ -88,16 +114,18 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     /**
      * Set the minAutoPan speed in pixels per second.
      * 
-     * @param minAutopanSpeed
+     * @param minAutopanSpeed number of pixels to assign as the minimum the
+     *            autopan feature can pan the view
      */
     public void setMinAutopanSpeed(final double minAutopanSpeed) {
         this.minAutopanSpeed = minAutopanSpeed;
     }
 
     /**
-     * Set the maxAutoPan speed in pixes per second.
+     * Set the maxAutoPan speed in pixels per second.
      * 
-     * @param maxAutopanSpeed
+     * @param maxAutopanSpeed number of pixels to assign as the maximum the
+     *            autopan feature can pan the view
      */
     public void setMaxAutopanSpeed(final double maxAutopanSpeed) {
         this.maxAutopanSpeed = maxAutopanSpeed;
@@ -106,7 +134,7 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     /**
      * Returns the minAutoPan speed in pixels per second.
      * 
-     * @return minAutopanSpeed in pixels
+     * @return minimum distance the autopan feature can pan the view
      */
     public double getMinAutoPanSpeed() {
         return minAutopanSpeed;
@@ -115,23 +143,25 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
     /**
      * Returns the maxAutoPan speed in pixels per second.
      * 
-     * @return maxAutopanSpeed in pixels
+     * @return max distance the autopan feature can pan the view by
      */
     public double getMaxAutoPanSpeed() {
         return maxAutopanSpeed;
     }
 
     /**
-     * Do auto panning even when the mouse is not moving.
+     * Performs auto-panning if enabled, even when the mouse is not moving.
+     * 
+     * @param event current drag relevant details about the drag activity
      */
-    protected void dragActivityStep(final PInputEvent aEvent) {
+    protected void dragActivityStep(final PInputEvent event) {
         if (!autopan) {
             return;
         }
 
-        final PCamera c = aEvent.getCamera();
+        final PCamera c = event.getCamera();
         final PBounds b = c.getBoundsReference();
-        final Point2D l = aEvent.getPositionRelativeTo(c);
+        final Point2D l = event.getPositionRelativeTo(c);
         final int outcode = b.outcode(l);
         final PDimension delta = new PDimension();
 
@@ -156,21 +186,37 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
         }
     }
 
-    protected double validatePanningSpeed(double delta) {
-        final double minDelta = minAutopanSpeed / (1000d / getDragActivity().getStepRate());
-        final double maxDelta = maxAutopanSpeed / (1000d / getDragActivity().getStepRate());
+    /**
+     * Clips the panning speed to the minimum and maximum auto-pan speeds
+     * assigned. If delta is below the threshold, it will be increased. If
+     * above, it will be decreased.
+     * 
+     * @param delta auto-pan delta to be clipped
+     * @return clipped delta value.
+     */
+    protected double validatePanningSpeed(final double delta) {
+        final double stepsPerSecond = 1000d / getDragActivity().getStepRate();
+        final double minDelta = minAutopanSpeed / stepsPerSecond;
+        final double maxDelta = maxAutopanSpeed / stepsPerSecond;
 
-        final boolean deltaNegative = delta < 0;
-        delta = Math.abs(delta);
-        if (delta < minDelta) {
-            delta = minDelta;
+        final double absDelta = Math.abs(delta);
+        
+        final double clippedDelta;
+        if (absDelta < minDelta) {
+            clippedDelta = minDelta;
         }
-        if (delta > maxDelta) {
-            delta = maxDelta;
+        else if (absDelta > maxDelta) {
+            clippedDelta = maxDelta;
         }
-        if (deltaNegative) {
-            delta = -delta;
+        else {
+            clippedDelta = delta;
         }
-        return delta;
+
+        if (delta < 0) {
+            return -clippedDelta;
+        }
+        else {
+            return clippedDelta;
+        }
     }
 }

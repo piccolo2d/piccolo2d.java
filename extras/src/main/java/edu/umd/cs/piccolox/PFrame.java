@@ -28,9 +28,11 @@
  */
 package edu.umd.cs.piccolox;
 
+import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -56,27 +58,55 @@ import edu.umd.cs.piccolo.PCanvas;
  * @author Jesse Grosjean
  */
 public class PFrame extends JFrame {
+    private static final Dimension DEFAULT_FRAME_DIMENSION = new Dimension(400, 400);
+
+    private static final Point DEFAULT_FRAME_POSITION = new Point(100, 100);
+
+    /** Used to allow versioned binary streams for serializations. */
+    private static final long serialVersionUID = 1L;
+
+    /** Canvas being displayed on this PFrame. */
+    private PCanvas canvas;
+
+    /** The graphics device onto which the PFrame is being displayed. */
+    private final GraphicsDevice graphicsDevice;
+
+    /** Listener that listens for escape key. */
+    private transient EventListener escapeFullScreenModeListener;
 
     /**
-     * 
+     * Creates a PFrame with no title, not full screen, and with the default
+     * canvas.
      */
-    private static final long serialVersionUID = 1L;
-    private PCanvas canvas;
-    private final GraphicsDevice graphicsDevice;
-    private EventListener escapeFullScreenModeListener;
-
     public PFrame() {
         this("", false, null);
     }
 
-    public PFrame(final String title, final boolean fullScreenMode, final PCanvas aCanvas) {
-        this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, aCanvas);
+    /**
+     * Creates a PFrame with the given title and with the default canvas.
+     * 
+     * @param title title to display at the top of the frame
+     * @param fullScreenMode whether to display a full screen frame or not
+     * @param canvas to embed in the frame
+     */
+    public PFrame(final String title, final boolean fullScreenMode, final PCanvas canvas) {
+        this(title, GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), fullScreenMode, canvas);
     }
 
-    public PFrame(final String title, final GraphicsDevice aDevice, final boolean fullScreenMode, final PCanvas aCanvas) {
-        super(title, aDevice.getDefaultConfiguration());
+    /**
+     * Creates a PFrame with the given title and with the default canvas being
+     * displayed on the provided device.
+     * 
+     * @param title title to display at the top of the frame
+     * @param device device onto which PFrame is to be displayed
+     * @param fullScreen whether to display a full screen frame or not
+     * @param canvas to embed in the frame, may be null. If so, it'll create a
+     *            default PCanvas
+     */
+    public PFrame(final String title, final GraphicsDevice device, final boolean fullScreen, final PCanvas canvas) {
+        super(title, device.getDefaultConfiguration());
 
-        graphicsDevice = aDevice;
+        graphicsDevice = device;
 
         setBackground(null);
         setBounds(getDefaultFrameBounds());
@@ -85,25 +115,27 @@ public class PFrame extends JFrame {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         catch (final SecurityException e) {
-        } // expected from applets
+            // expected from Applets
+            System.out.println("Ignoring security exception. Assuming Applet Context.");
+        }
 
-        if (aCanvas == null) {
-            canvas = new PCanvas();
+        if (canvas == null) {
+            this.canvas = new PCanvas();
         }
         else {
-            canvas = aCanvas;
+            this.canvas = canvas;
         }
 
-        setContentPane(canvas);
+        setContentPane(this.canvas);
         validate();
-        setFullScreenMode(fullScreenMode);
-        canvas.requestFocus();
+        setFullScreenMode(fullScreen);
+        this.canvas.requestFocus();
         beforeInitialize();
 
         // Manipulation of Piccolo's scene graph should be done from Swings
-        // event dispatch thread since Piccolo is not thread safe. This code
+        // event dispatch thread since Piccolo2D is not thread safe. This code
         // calls initialize() from that thread once the PFrame is initialized,
-        // so you are safe to start working with Piccolo in the initialize()
+        // so you are safe to start working with Piccolo2D in the initialize()
         // method.
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -113,54 +145,88 @@ public class PFrame extends JFrame {
         });
     }
 
+    /**
+     * Returns the canvas being displayed on this frame.
+     * 
+     * @return canvas being displayed on this frame
+     */
     public PCanvas getCanvas() {
         return canvas;
     }
 
+    /**
+     * Returns the default frame bounds.
+     * 
+     * @return default frame bounds
+     */
     public Rectangle getDefaultFrameBounds() {
-        return new Rectangle(100, 100, 400, 400);
+        return new Rectangle(DEFAULT_FRAME_POSITION, DEFAULT_FRAME_DIMENSION);
     }
 
-    // ****************************************************************
-    // Full Screen Display Mode
-    // ****************************************************************
-
+    /**
+     * Returns whether the frame is currently in full screen mode.
+     * 
+     * @return whether the frame is currently in full screen mode
+     */
     public boolean isFullScreenMode() {
         return graphicsDevice.getFullScreenWindow() != null;
     }
 
+    /**
+     * Switches full screen state.
+     * 
+     * @param fullScreenMode whether to place the frame in full screen mode or
+     *            not.
+     */
     public void setFullScreenMode(final boolean fullScreenMode) {
-        if (fullScreenMode) {
-            addEscapeFullScreenModeListener();
-
-            if (isDisplayable()) {
-                dispose();
+        if (fullScreenMode != isFullScreenMode() || !isVisible()) {
+            if (fullScreenMode) {
+                switchToFullScreenMode();
             }
-
-            setUndecorated(true);
-            setResizable(false);
-            graphicsDevice.setFullScreenWindow(this);
-
-            if (graphicsDevice.isDisplayChangeSupported()) {
-                chooseBestDisplayMode(graphicsDevice);
+            else {
+                switchToWindowedMode();
             }
-            validate();
-        }
-        else {
-            removeEscapeFullScreenModeListener();
-
-            if (isDisplayable()) {
-                dispose();
-            }
-
-            setUndecorated(false);
-            setResizable(true);
-            graphicsDevice.setFullScreenWindow(null);
-            validate();
-            setVisible(true);
         }
     }
 
+    private void switchToFullScreenMode() {
+        addEscapeFullScreenModeListener();
+
+        if (isDisplayable()) {
+            dispose();
+        }
+
+        setUndecorated(true);
+        setResizable(false);
+        graphicsDevice.setFullScreenWindow(this);
+
+        if (graphicsDevice.isDisplayChangeSupported()) {
+            chooseBestDisplayMode(graphicsDevice);
+        }
+        validate();
+    }
+
+    private void switchToWindowedMode() {
+        removeEscapeFullScreenModeListener();
+
+        if (isDisplayable()) {
+            dispose();
+        }
+
+        setUndecorated(false);
+        setResizable(true);
+        graphicsDevice.setFullScreenWindow(null);
+        validate();
+        setVisible(true);
+    }
+
+    /**
+     * Sets the display mode to the best device mode that can be determined.
+     * 
+     * Used in full screen mode.
+     * 
+     * @param device The graphics device being controlled.
+     */
     protected void chooseBestDisplayMode(final GraphicsDevice device) {
         final DisplayMode best = getBestDisplayMode(device);
         if (best != null) {
@@ -168,6 +234,14 @@ public class PFrame extends JFrame {
         }
     }
 
+    /**
+     * Finds the best display mode the graphics device supports. Based on the
+     * preferred modes.
+     * 
+     * @param device the device being inspected
+     * 
+     * @return best display mode the given device supports
+     */
     protected DisplayMode getBestDisplayMode(final GraphicsDevice device) {
         final Iterator itr = getPreferredDisplayModes(device).iterator();
         while (itr.hasNext()) {
@@ -187,6 +261,9 @@ public class PFrame extends JFrame {
     /**
      * By default return the current display mode. Subclasses may override this
      * method to return other modes in the collection.
+     * 
+     * @param device the device being inspected
+     * @return preferred display mode
      */
     protected Collection getPreferredDisplayModes(final GraphicsDevice device) {
         final ArrayList result = new ArrayList();
@@ -243,16 +320,23 @@ public class PFrame extends JFrame {
     }
 
     /**
-     * Subclasses should override this method and add their Piccolo
+     * Subclasses should override this method and add their Piccolo2D
      * initialization code there. This method will be called on the swing event
      * dispatch thread. Note that the constructors of PFrame subclasses may not
-     * be complete when this method is called. If you need to initailize some
+     * be complete when this method is called. If you need to initialize some
      * things in your class before this method is called place that code in
      * beforeInitialize();
      */
     public void initialize() {
     }
 
+    /**
+     * Method for testing the creating of PFrame.
+     * 
+     * @deprecated since it's not terribly useful
+     * 
+     * @param argv command line arguments
+     */
     public static void main(final String[] argv) {
         new PFrame();
     }

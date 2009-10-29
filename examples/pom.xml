@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>piccolo2d-parent</artifactId>
     <groupId>org.piccolo2d</groupId>
@@ -13,9 +13,7 @@
   <name>Piccolo2D Examples</name>
   <url>http://code.google.com/p/piccolo2d/</url>
   <description>
-    A revolutionary way to create robust, full-featured graphical
-    applications in Java and C#, with striking visual effects such
-    as zooming, animation and multiple representations.
+    A revolutionary way to create robust, full-featured graphical applications in Java and C#, with striking visual effects such as zooming, animation and multiple representations.
   </description>
   <dependencies>
     <dependency>
@@ -23,44 +21,14 @@
       <artifactId>piccolo2d-extras</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.piccolo2d</groupId>
-      <artifactId>piccolo2d-swt</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
   <scm>
-	<connection>
-		scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
-	</connection>
-	<developerConnection>
-		scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
-	</developerConnection>
-	<url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/examples</url>
-  </scm>
-  <reporting>
-    <plugins>
-      <!-- don't use UmlGraph as the current settings (see ../parent/pom.xml) cause pain with swt  -->
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <source>1.4</source>
-          <verbose>false</verbose>
-          <show>package</show>
-          <links>
-            <link>
-              http://java.sun.com/j2se/1.4.2/docs/api/
-            </link>
-          </links>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <configLocation>${basedir}/src/build/conf/checkstyle.xml</configLocation>
-          <enableRulesSummary>false</enableRulesSummary>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
+    <connection>
+      scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
+    </connection>
+    <developerConnection>
+      scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/examples
+    </developerConnection>
+    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/examples</url>
+  </scm> 
 </project>

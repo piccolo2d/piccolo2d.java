@@ -62,32 +62,50 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PStyledText extends PNode {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+
+    /** Font rendering context used for all PStyledText instances. */
     protected static FontRenderContext SWING_FRC = new FontRenderContext(null, true, false);
+
+    /** Used while painting underlines. */
     protected static Line2D paintLine = new Line2D.Double();
 
+    /**
+     * Underlying document used to handle the complexities involved with
+     * arbitrary text and formatting.
+     */
     protected Document document;
+
+    /** String contents of the document. */
     protected transient ArrayList stringContents;
+
+    /** Tracks the information about line metrics within the document. */
     protected transient LineInfo[] lines;
 
+    /** Whether this node is currently being edited. */
     protected boolean editing;
+
+    /** Insets represent how far away from the bounding box text will be drawn. */
     protected Insets insets = new Insets(0, 0, 0, 0);
+
+    /** Whether width will be forced to match containing text's height. */
     protected boolean constrainHeightToTextHeight = true;
+
+    /** Whether width will be forced to match containing text's width. */
     protected boolean constrainWidthToTextWidth = true;
 
     /**
-     * Constructor for PStyledText.
+     * Constructs an empty PStyledText element.
      */
     public PStyledText() {
-        super();
     }
 
     /**
      * Controls whether this node changes its width to fit the width of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @param constrainWidthToTextWidth whether node's width should be
+     *            constrained to the width of its text
      */
     public void setConstrainWidthToTextWidth(final boolean constrainWidthToTextWidth) {
         this.constrainWidthToTextWidth = constrainWidthToTextWidth;
@@ -97,6 +115,9 @@ public class PStyledText extends PNode {
     /**
      * Controls whether this node changes its height to fit the height of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @param constrainHeightToTextHeight whether node's height should be
+     *            constrained to the height of its text
      */
     public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
         this.constrainHeightToTextHeight = constrainHeightToTextHeight;
@@ -106,6 +127,8 @@ public class PStyledText extends PNode {
     /**
      * Controls whether this node changes its width to fit the width of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @return true if node is constrained to the width of its text
      */
     public boolean getConstrainWidthToTextWidth() {
         return constrainWidthToTextWidth;
@@ -114,20 +137,28 @@ public class PStyledText extends PNode {
     /**
      * Controls whether this node changes its height to fit the height of its
      * text. If flag is true it does; if flag is false it doesn't
+     * 
+     * @return true if node is constrained to the height of its text
      */
     public boolean getConstrainHeightToTextHeight() {
         return constrainHeightToTextHeight;
     }
 
     /**
-     * Get the document for this PStyledText
+     * Get the document for this PStyledText. Document is used as the node's
+     * model.
+     * 
+     * @return internal document used as a model of this PStyledText
      */
     public Document getDocument() {
         return document;
     }
 
     /**
-     * Set the document on this PStyledText
+     * Set the document on this PStyledText. Document is used as the node's
+     * model.
+     * 
+     * @param document to be used as the model for this PStyledText
      */
     public void setDocument(final Document document) {
         // Save the document
@@ -136,6 +167,10 @@ public class PStyledText extends PNode {
         syncWithDocument();
     }
 
+    /**
+     * Enforce that the current display matches the styling of the underlying
+     * document as closely as possible.
+     */
     public void syncWithDocument() {
         // First get the actual text and stick it in an Attributed String
         stringContents = new ArrayList();
@@ -191,7 +226,6 @@ public class PStyledText extends PNode {
                         - paragraphRange.startIndex), Math.min(paragraphRange.length(), curElement.getEndOffset()
                         - paragraphRange.startIndex));
 
-                // These are the optional attributes
                 final Font font = extractFont(styleContext, pos, rootElement, attributes);
                 applyFontAttribute(paragraphRange, attributedString, curElement, font);
                 applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
@@ -214,15 +248,10 @@ public class PStyledText extends PNode {
                             - paragraphRange.startIndex));
 
                     final Font font = extractFont(styleContext, pos, rootElement, attributes);
-                    applyFontAttribute(paragraphRange, attributedString, curElement, font);
-
-                    // These are the optional attributes
-
+                    applyFontAttribute(paragraphRange, attributedString, curElement, font);                    
                     applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
-
                     applyUnderlineAttribute(paragraphRange, attributedString, curElement, attributes);
-
-                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);
+                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);          
 
                     // And set the position to the end of the given attribute
                     pos = curElement.getEndOffset();
@@ -233,15 +262,25 @@ public class PStyledText extends PNode {
         recomputeLayout();
     }
 
+    /**
+     * Returns the first leaf encountered by drilling into the document for the
+     * given position.
+     * 
+     * @param pos position under which we're trying to find a leaf
+     * @param rootElement top most element in the document tree
+     * 
+     * @return Leaf element that corresponds to the position provided in the
+     *         document
+     */
     private Element drillDownFromRoot(final int pos, final Element rootElement) {
-        Element curElement;
         // Before each pass, start at the root
-        curElement = rootElement;
+        Element curElement = rootElement;
 
         // Now we descend the hierarchy until we get to a leaf
         while (!curElement.isLeaf()) {
             curElement = curElement.getElement(curElement.getElementIndex(pos));
         }
+
         return curElement;
     }
 
@@ -278,9 +317,8 @@ public class PStyledText extends PNode {
 
     private void applyBackgroundAttribute(final StyleContext style, final RunInfo paragraphRange,
             final AttributedString attributedString, final Element curElement, final AttributeSet attributes) {
-        final Color background = attributes.isDefined(StyleConstants.Background) ? style.getBackground(attributes)
-                : null;
-        if (background != null) {
+        if (attributes.isDefined(StyleConstants.Background)) {
+            final Color background = style.getBackground(attributes);
             attributedString.addAttribute(TextAttribute.BACKGROUND, background, Math.max(0, curElement.getStartOffset()
                     - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
                     curElement.getEndOffset() - paragraphRange.startIndex));
@@ -289,20 +327,28 @@ public class PStyledText extends PNode {
 
     private Font extractFont(final StyleContext style, final int pos, final Element rootElement,
             final AttributeSet attributes) {
-        Font font = attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily) ? style
-                .getFont(attributes)
-                : null;
+        Font font = null;
+        if (attributes.isDefined(StyleConstants.FontSize) || attributes.isDefined(StyleConstants.FontFamily)) {
+            font = style.getFont(attributes);
+        }
+
         if (font == null) {
             if (document instanceof DefaultStyledDocument) {
-                font = style.getFont(((DefaultStyledDocument) document).getCharacterElement(pos).getAttributes());
-                if (font == null) {
-                    font = style.getFont(((DefaultStyledDocument) document).getParagraphElement(pos).getAttributes());
-                }
-                if (font == null) {
-                    font = style.getFont(rootElement.getAttributes());
-                }
+                font = extractFontFromDefaultStyledDocument((DefaultStyledDocument) document, style, pos, rootElement);
             }
             else {
+                font = style.getFont(rootElement.getAttributes());
+            }
+        }
+        return font;
+    }
+
+    private Font extractFontFromDefaultStyledDocument(final DefaultStyledDocument styledDocument,
+            final StyleContext style, final int pos, final Element rootElement) {
+        Font font = style.getFont(styledDocument.getCharacterElement(pos).getAttributes());
+        if (font == null) {
+            font = style.getFont(styledDocument.getParagraphElement(pos).getAttributes());
+            if (font == null) {
                 font = style.getFont(rootElement.getAttributes());
             }
         }
@@ -324,7 +370,7 @@ public class PStyledText extends PNode {
         // is a newline
         boolean lastNewLine = true;
 
-        for (int i = 0; tokenizer.hasMoreTokens(); i++) {
+        while (tokenizer.hasMoreTokens()) {
             final String token = tokenizer.nextToken();
 
             // If the token
@@ -411,9 +457,8 @@ public class PStyledText extends PNode {
                 if (newLine) {
                     newLine = false;
 
-                    // Add in the old line dimensions
-                    final double lineHeight = lineInfo == null ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
-                            + lineInfo.leading;
+                    final double lineHeight = calculateLineHeightFromLineInfo(lineInfo);
+
                     textHeight = textHeight + lineHeight;
                     textWidth = Math.max(textWidth, lineWidth);
 
@@ -449,15 +494,29 @@ public class PStyledText extends PNode {
                 lineWidth = lineWidth + aTextLayout.getAdvance();
             }
 
-            final double lineHeight = lineInfo == null ? 0 : lineInfo.maxAscent + lineInfo.maxDescent
-                    + lineInfo.leading;
+            final double lineHeight = calculateLineHeightFromLineInfo(lineInfo);
             textHeight = textHeight + lineHeight;
             textWidth = Math.max(textWidth, lineWidth);
         }
 
-        lines = (LineInfo[]) linesList.toArray(new LineInfo[0]);
+        lines = (LineInfo[]) linesList.toArray(new LineInfo[linesList.size()]);
 
         constrainDimensionsIfNeeded(textWidth, textHeight);
+    }
+
+    /**
+     * @param lineInfo
+     * @return
+     */
+    private double calculateLineHeightFromLineInfo(final LineInfo lineInfo) {
+        final double lineHeight;
+        if (lineInfo == null) {
+            lineHeight = 0;
+        }
+        else {
+            lineHeight = lineInfo.maxAscent + lineInfo.maxDescent + lineInfo.leading;
+        }
+        return lineHeight;
     }
 
     private void constrainDimensionsIfNeeded(final double textWidth, final double textHeight) {
@@ -498,23 +557,16 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Get the height of the font at the beginning of the document
+     * Get the height of the font at the beginning of the document.
+     * 
+     * @return height of font at the start of the document.
      */
     public double getInitialFontHeight() {
 
         // Small assumption here that there is one root element - can fix
         // for more general support later
         final Element rootElement = document.getDefaultRootElement();
-
-        // The current element will be used as a temp variable while searching
-        // for the leaf element at the current position
-        Element curElement = rootElement;
-
-        // Now we descend the hierarchy until we get to a leaf
-        while (!curElement.isLeaf()) {
-            curElement = curElement.getElement(curElement.getElementIndex(0));
-        }
-
+        final Element curElement = drillDownFromRoot(0, rootElement);
         final StyleContext context = StyleContext.getDefaultStyleContext();
         final Font font = context.getFont(curElement.getAttributes());
 
@@ -523,6 +575,7 @@ public class PStyledText extends PNode {
         return curFM.getMaxAscent() + curFM.getMaxDescent() + curFM.getLeading();
     }
 
+    /** {@inheritDoc} */
     protected void paint(final PPaintContext paintContext) {
         if (lines == null || lines.length == 0) {
             return;
@@ -583,6 +636,9 @@ public class PStyledText extends PNode {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void fullPaint(final PPaintContext paintContext) {
         if (!editing) {
             super.fullPaint(paintContext);
@@ -590,21 +646,27 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Set whether this text is editing
+     * Set whether this node is current in editing mode.
+     * 
+     * @param editing value to set editing flag
      */
     public void setEditing(final boolean editing) {
         this.editing = editing;
     }
 
     /**
-     * Is this document editing
+     * Whether node is currently in editing state.
+     * 
+     * @return true if node is currently editing
      */
     public boolean isEditing() {
         return editing;
     }
 
     /**
-     * Set the insets of the text
+     * Set the insets of the text.
+     * 
+     * @param insets desired insets
      */
     public void setInsets(final Insets insets) {
         if (insets != null) {
@@ -618,17 +680,17 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Get the insets of the text
+     * Get the insets of the text.
+     * 
+     * @return current text insets
      */
     public Insets getInsets() {
         return (Insets) insets.clone();
     }
 
-    /**
-     * Add a call to recompute the layout after each bounds change
-     */
-    public boolean setBounds(final double x, final double y, final double w, final double h) {
-        if (document == null || !super.setBounds(x, y, w, h)) {
+    /** {@inheritDoc} */
+    public boolean setBounds(final double x, final double y, final double width, final double height) {
+        if (document == null || !super.setBounds(x, y, width, height)) {
             return false;
         }
 
@@ -637,64 +699,96 @@ public class PStyledText extends PNode {
     }
 
     /**
-     * Simple class to represent an range within the document
+     * Simple class to represent an range within the document.
      */
     protected static class RunInfo {
-        public int startIndex;
-        public int endIndex;
+        private int startIndex;
+        private int endIndex;
 
-        public RunInfo() {
-        }
-
+        /**
+         * Constructs a RunInfo representing the range within the document from
+         * runStart to runLimit.
+         * 
+         * @param runStart starting index of the range
+         * @param runLimit ending index of the range
+         */
         public RunInfo(final int runStart, final int runLimit) {
             startIndex = runStart;
             endIndex = runLimit;
         }
 
+        /**
+         * Returns whether the run is empty.
+         * 
+         * @return true is run is empty
+         */
         public boolean isEmpty() {
             return startIndex == endIndex;
         }
 
+        /**
+         * Returns the length of the run.
+         * 
+         * @return length of run
+         */
         public int length() {
             return endIndex - startIndex;
         }
     }
 
     /**
-     * Class to represent an integer run and the font in that run
-     */
-    protected static class MetricsRunInfo extends RunInfo {
-        public FontMetrics metrics;
-
-        public MetricsRunInfo() {
-            super();
-        }
-    }
-
-    /**
-     * The info for rendering a and computing the bounds of a line
+     * The info for rendering and computing the bounds of a line.
      */
     protected static class LineInfo {
+        /** Segments which make up this line's formatting segments. */
         public List segments;
+
+        /** Maximum of the line segments' ascents. */
         public double maxAscent;
+
+        /** Maximum of the line segments' descents. */
         public double maxDescent;
+
+        /** Leading space at front of line segment. */
         public double leading;
 
+        /**
+         * Creates a LineInfo that contains no segments.
+         */
         public LineInfo() {
             segments = new ArrayList();
         }
     }
 
+    /**
+     * Encapsulates information about a particular LineSegment.
+     */
     protected static class SegmentInfo {
+        /** Text Layout applied to the segment. */
         public TextLayout layout;
+
+        /** Font being used to render the segment. */
         public Font font;
+
+        /** Foreground (text) color of the segment. */
         public Color foreground;
+
+        /** Background color of the segment. */
         public Color background;
+
+        /** Whether the segment is underlined. */
         public Boolean underline;
 
+        /** Construct a segment with null properties. */
         public SegmentInfo() {
         }
 
+        /**
+         * Applies this particular SegmentInfo's font to the graphics object
+         * passed in.
+         * 
+         * @param g2 will have the font of this segment applied
+         */
         public void applyFont(final Graphics2D g2) {
             if (font != null) {
                 g2.setFont(font);

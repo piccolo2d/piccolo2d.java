@@ -30,6 +30,9 @@ package edu.umd.cs.piccolo.activities;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit test for PTransformActivity.
+ */
 public class PTransformActivityTest extends TestCase {
 
     public PTransformActivityTest(final String name) {

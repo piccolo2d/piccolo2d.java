@@ -41,10 +41,6 @@ import edu.umd.cs.piccolox.PFrame;
  * This example shows how create and schedule activities.
  */
 public class ActivityExample extends PFrame {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public ActivityExample() {

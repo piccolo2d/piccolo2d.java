@@ -43,7 +43,12 @@ import java.util.EventListener;
  * @author Jesse Grosjean
  */
 public interface PInputEventListener extends EventListener {
-
-    public void processEvent(PInputEvent aEvent, int type);
-
+    /**
+     * Called whenever an event is emitted. Used to notify listeners that an
+     * event is available for proecessing.
+     * 
+     * @param event event that was emitted
+     * @param type type of event
+     */
+    void processEvent(PInputEvent event, int type);
 }

@@ -29,6 +29,7 @@
 package edu.umd.cs.piccolo;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
@@ -61,6 +62,9 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 import edu.umd.cs.piccolo.util.PUtil;
 
+/**
+ * Unit test for PNode.
+ */
 public class PNodeTest extends TestCase {
 
     private MockPropertyChangeListener mockListener;
@@ -193,16 +197,69 @@ public class PNodeTest extends TestCase {
         assertEquals(node, parent.getChild(2));
     }
 
-    public void testCopy() {
+    public void testCloneCopiesAllProperties() {
+        node.setBounds(1, 2, 3, 4);
+        node.setChildPaintInvalid(true);
+        node.setChildrenPickable(false);
         node.setPaint(Color.yellow);
+        node.setPaintInvalid(true);
+        node.setPickable(false);
+        node.setPropertyChangeParentMask(PNode.PROPERTY_CODE_PAINT);
+        node.setVisible(false);
 
+        final PNode clonedNode = (PNode) node.clone();
+
+        assertEquals(1, clonedNode.getX(), Double.MIN_VALUE);
+        assertEquals(2, clonedNode.getY(), Double.MIN_VALUE);
+        assertEquals(3, clonedNode.getWidth(), Double.MIN_VALUE);
+        assertEquals(4, clonedNode.getHeight(), Double.MIN_VALUE);
+        assertTrue(clonedNode.getChildPaintInvalid());
+        assertFalse(clonedNode.getChildrenPickable());
+        assertEquals(Color.YELLOW, clonedNode.getPaint());
+
+        assertFalse(clonedNode.getPickable());
+        assertEquals(PNode.PROPERTY_CODE_PAINT, node.getPropertyChangeParentMask());
+        assertFalse(clonedNode.getVisible());
+    }
+
+    public void testCloneCopiesTransforms() {
+        node.setScale(0.5);
+        node.setRotation(Math.PI / 8d);
+        node.setOffset(5, 6);
+
+        final PNode clonedNode = (PNode) node.clone();
+
+        assertEquals(0.5, clonedNode.getScale(), 0.00001);
+        assertEquals(Math.PI / 8d, clonedNode.getRotation(), 0.00001);
+        assertEquals(5, clonedNode.getXOffset(), Double.MIN_VALUE);
+        assertEquals(6, clonedNode.getYOffset(), Double.MIN_VALUE);
+    }
+
+    public void testCloneDoesNotCopyEventListeners() {
+        node.addInputEventListener(new PBasicInputEventHandler() {});
+
+        final PNode clonedNode = (PNode) node.clone();
+
+        assertNull(clonedNode.getListenerList());               
+    }
+    
+    public void testCloneClonesChildrenAswell() {
         final PNode child = new PNode();
         node.addChild(child);
 
         final PNode clonedNode = (PNode) node.clone();
 
-        assertEquals(clonedNode.getPaint(), Color.yellow);
         assertEquals(clonedNode.getChildrenCount(), 1);
+        assertNotSame(child, clonedNode.getChild(0));
+    }
+    
+    public void testCloneDoesNotCopyParent() {
+        final PNode child = new PNode();
+        node.addChild(child);
+
+        final PNode clonedChild = (PNode) child.clone();
+
+        assertNull(clonedChild.getParent());
     }
 
     public void testLocalToGlobal() {
@@ -933,6 +990,27 @@ public class PNodeTest extends TestCase {
         assertEquals(2, paintCounts[0]);
     }
 
+    public void testSetTransparency1MeansInvisible() {
+        final PNode node = new PNode();
+        node.setBounds(0, 0, 100, 100);
+        node.setVisible(true);
+        node.setPaint(Color.RED);
+
+        final PCanvas canvas = buildCanvasContainingNode(node);
+
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics g = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
+
+        canvas.paintComponent(g);
+        node.setTransparency(1f);
+        assertEquals(Color.RED.getRGB(), img.getRGB(10, 10));
+
+        node.setTransparency(0f);
+        canvas.paintComponent(g);
+        assertEquals(Color.WHITE.getRGB(), img.getRGB(10, 10));
+
+    }
+
     private PCanvas buildCanvasContainingNode(final PNode node) {
         final PCanvas canvas = new PCanvas();
         canvas.setSize(100, 100);
@@ -967,6 +1045,28 @@ public class PNodeTest extends TestCase {
         assertEquals(Color.RED.getRGB(), img.getRGB(9, 0));
         assertEquals(Color.RED.getRGB(), img.getRGB(0, 9));
         assertEquals(Color.RED.getRGB(), img.getRGB(9, 9));
+    }
+
+    public void testToImageUsesFullBoundsWhenConvertingImage() throws IOException {
+        node.setBounds(0, 0, 50, 50);
+        PNode child1 = new PNode();
+        child1.setBounds(0, 0, 100, 50);
+        child1.setPaint(Color.RED);
+        node.addChild(child1);
+        
+        PNode child2 = new PNode();
+        child2.setBounds(0, 0, 50, 100);
+        child2.setPaint(Color.BLUE);
+        node.addChild(child2);
+        
+        BufferedImage image = (BufferedImage) node.toImage();
+        assertNotNull(image);
+        assertEquals(100, image.getWidth());
+        assertEquals(100, image.getHeight());           
+        assertEquals(Color.RED.getRGB(), image.getRGB(99, 1));
+        
+        //This line fails if PNode.toImage uses getWidth() rather than getFullBounds().getWidth()
+        assertEquals(Color.BLUE.getRGB(), image.getRGB(1, 99));
     }
 
     public void testToImageWillAcceptBackgroundPaint() {
@@ -1005,6 +1105,53 @@ public class PNodeTest extends TestCase {
         assertEquals(Color.RED.getRGB(), img.getRGB(19, 19));
         assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 20));
         assertEquals(Color.BLUE.getRGB(), img.getRGB(19, 20));
+    }
+
+    public void testToImageScalesAccordingToExactFitStrategy() throws IOException {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
+                Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 39));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 39));
+
+    }
+
+    public void testToImageScalesAccordingToAspectCoverStrategy() throws IOException {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        PNode blueSquare = new PNode();
+        blueSquare.setPaint(Color.BLUE);
+        blueSquare.setBounds(0, 0, 5, 5);
+        node.addChild(blueSquare);
+
+        PNode greenSquare = new PNode();
+        greenSquare.setPaint(Color.GREEN);
+        greenSquare.setBounds(5, 5, 5, 5);
+        node.addChild(greenSquare);
+
+        final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
+                Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(11, 19));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 20));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 20));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 39));
+
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 0));
+
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 20));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 20));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 39));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 39));
     }
 
     public void testGetPickableShouldDefaultToTrue() {
@@ -1289,5 +1436,26 @@ public class PNodeTest extends TestCase {
     public void testSetOccludedPersistes() {
         node.setOccluded(true);
         assertTrue(node.getOccluded());
+    }
+
+    public void testHiddenNodesAreNotPickable() {
+        final PCanvas canvas = new PCanvas();
+        canvas.setBounds(0, 0, 400, 400);
+        canvas.setPreferredSize(new Dimension(400, 400));
+        final PNode node1 = new PNode();
+        node1.setBounds(0, 0, 100, 100);
+        node1.setPaint(Color.RED);
+        canvas.getLayer().addChild(node1);
+
+        final PNode node2 = (PNode) node1.clone();
+        node2.setPaint(Color.BLUE);
+
+        final PLayer layer2 = new PLayer();
+        layer2.addChild(node2);
+        layer2.setVisible(false);
+        canvas.getCamera().addLayer(layer2);
+
+        final PPickPath path = canvas.getCamera().pick(5, 5, 5);
+        assertSame(node1, path.getPickedNode());
     }
 }

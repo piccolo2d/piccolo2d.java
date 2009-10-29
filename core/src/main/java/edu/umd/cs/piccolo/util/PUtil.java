@@ -53,13 +53,26 @@ import edu.umd.cs.piccolo.PRoot;
  * @author Jesse Grosjean
  */
 public class PUtil {
-
+    /**
+     * PActivities are broken into steps, this is how many milliseconds should
+     * pass between steps.
+     */
     public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
-    public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
-    private static final int PATH_IS_DONE = -1;
 
-    public static final Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
-    public static final Enumeration NULL_ENUMERATION = new Enumeration() {
+    /** Rate in milliseconds at which the activity timer will get invoked. */
+    public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
+
+    /** An iterator that iterates over an empty collection. */
+    public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
+
+    /**
+     * Used when persisting paths to an object stream. Used to mark the end of
+     * the path.
+     */
+    private static final int PATH_TERMINATOR = -1;
+
+    /** A utility enumeration with no elements. */
+    public static Enumeration NULL_ENUMERATION = new Enumeration() {
         public boolean hasMoreElements() {
             return false;
         }
@@ -69,7 +82,11 @@ public class PUtil {
         }
     };
 
-    public static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
+    /**
+     * @deprecated This has been moved into a private static class of
+     *             PObjectOutputStream
+     */
+    public static OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
         public void close() {
         }
 
@@ -86,18 +103,32 @@ public class PUtil {
         }
     };
 
+    /**
+     * Creates the simplest possible scene graph. 1 Camera, 1 Layer, 1 Root
+     * 
+     * @return a basic scene with 1 camera, layer and root
+     */
     public static PCamera createBasicScenegraph() {
-        final PRoot r = new PRoot();
-        final PLayer l = new PLayer();
-        final PCamera c = new PCamera();
+        final PRoot root = new PRoot();
+        final PLayer layer = new PLayer();
+        final PCamera camera = new PCamera();
 
-        r.addChild(c);
-        r.addChild(l);
-        c.addLayer(l);
+        root.addChild(camera);
+        root.addChild(layer);
+        camera.addLayer(layer);
 
-        return c;
+        return camera;
     }
 
+    /**
+     * Serializes the given stroke object to the object output stream provided.
+     * By default strokes are not serializable. This method solves that problem.
+     * 
+     * @param stroke stroke to be serialize
+     * @param out stream to which the stroke is to be serialized
+     * @throws IOException can occur if exception occurs with underlying output
+     *             stream
+     */
     public static void writeStroke(final Stroke stroke, final ObjectOutputStream out) throws IOException {
         if (stroke instanceof Serializable) {
             out.writeBoolean(true);
@@ -135,6 +166,17 @@ public class PUtil {
         out.writeFloat(basicStroke.getDashPhase());
     }
 
+    /**
+     * Reconstitutes a stroke from the provided Object Input Stream. According
+     * to the scheme found in writeStroke. By default strokes are not
+     * serializable.
+     * 
+     * @param in stream from which Stroke is to be read
+     * @return a stroke object
+     * @throws IOException occurs if an exception occurs reading from in stream
+     * @throws ClassNotFoundException should never happen, but can if somehow
+     *             the stroke class is not on the classpath
+     */
     public static Stroke readStroke(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         final boolean wroteStroke = in.readBoolean();
         if (!wroteStroke) {
@@ -169,6 +211,16 @@ public class PUtil {
         return new BasicStroke(lineWidth, endCap, lineJoin, miterLimit, dash, dashPhase);
     }
 
+    /**
+     * Reads a path from the provided inputStream in accordance with the
+     * serialization policy defined in writePath.
+     * 
+     * @param in stream from which to read the path.
+     * @return reconstituted path
+     * @throws IOException if an unknown path type is read from the stream
+     * @throws ClassNotFoundException should never happen, but can if somehow
+     *             the classpath is seriously messed up
+     */
     public static GeneralPath readPath(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         final GeneralPath path = new GeneralPath();
 
@@ -197,15 +249,23 @@ public class PUtil {
                     path.closePath();
                     break;
 
-                case PATH_IS_DONE:
+                case PATH_TERMINATOR:
                     return path;
 
                 default:
-                    throw new IOException();
+                    throw new IOException("Unknown path type encountered while deserializing path.");
             }
         }
     }
 
+    /**
+     * Serializes the given path to the provided Object Output Stream.
+     * 
+     * @param path path to be serialized
+     * @param out stream to which the path should be serialized
+     * @throws IOException if unknown path segment type is encountered, or an
+     *             exception occurs writing to the output stream
+     */
     public static void writePath(final GeneralPath path, final ObjectOutputStream out) throws IOException {
         final PathIterator i = path.getPathIterator(null);
         final float[] data = new float[6];
@@ -247,12 +307,12 @@ public class PUtil {
                     break;
 
                 default:
-                    throw new IOException();
+                    throw new IOException("Unknown path type encountered while serializing path.");
             }
 
             i.next();
         }
 
-        out.writeInt(PATH_IS_DONE);
+        out.writeInt(PATH_TERMINATOR);
     }
 }

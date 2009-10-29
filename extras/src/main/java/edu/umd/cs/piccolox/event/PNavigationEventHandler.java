@@ -59,12 +59,21 @@ import edu.umd.cs.piccolo.util.PDimension;
  * @author Jesse Grosjean
  */
 public class PNavigationEventHandler extends PBasicInputEventHandler {
-
+    /** Minum size under which two scales are considered the same. */
+    private static final double SCALING_THRESHOLD = 0.0001;
+    /** Amount of time it takes to animation view from one location to another. */
+    private static final int NAVIGATION_DURATION = 500;
+    /** The UP direction on the screen. */
     public static final int NORTH = 0;
+    /** The DOWN direction on the screen. */
     public static final int SOUTH = 1;
+    /** The RIGHT direction on the screen. */
     public static final int EAST = 2;
+    /** The LEFT direction on the screen. */
     public static final int WEST = 3;
+    /** The IN direction on the scene. */
     public static final int IN = 4;
+    /** The OUT direction on the scene. */
     public static final int OUT = 5;
 
     private static Hashtable NODE_TO_GLOBAL_NODE_CENTER_MAPPING = new Hashtable();
@@ -72,6 +81,10 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     private PNode focusNode;
     private PTransformActivity navigationActivity;
 
+    /**
+     * Constructs a Navigation Event Handler that will only accepts left mouse
+     * clicks.
+     */
     public PNavigationEventHandler() {
         super();
         setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
@@ -81,50 +94,62 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     // Focus Change Events.
     // ****************************************************************
 
-    public void keyPressed(final PInputEvent e) {
+    /**
+     * Processes key pressed events.
+     * 
+     * @param event event representing the key press
+     */
+    public void keyPressed(final PInputEvent event) {
         final PNode oldLocation = focusNode;
 
-        switch (e.getKeyCode()) {
+        switch (event.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-                moveFocusLeft(e);
+                moveFocusLeft(event);
                 break;
 
             case KeyEvent.VK_RIGHT:
-                moveFocusRight(e);
+                moveFocusRight(event);
                 break;
 
             case KeyEvent.VK_UP:
             case KeyEvent.VK_PAGE_UP:
-                if (e.isAltDown()) {
-                    moveFocusOut(e);
+                if (event.isAltDown()) {
+                    moveFocusOut(event);
                 }
                 else {
-                    moveFocusUp(e);
+                    moveFocusUp(event);
                 }
                 break;
 
             case KeyEvent.VK_DOWN:
             case KeyEvent.VK_PAGE_DOWN:
-                if (e.isAltDown()) {
-                    moveFocusIn(e);
+                if (event.isAltDown()) {
+                    moveFocusIn(event);
                 }
                 else {
-                    moveFocusDown(e);
+                    moveFocusDown(event);
                 }
                 break;
+            default:
+                // Pressed key is not a navigation key.
         }
 
         if (focusNode != null && oldLocation != focusNode) {
-            directCameraViewToFocus(e.getCamera(), focusNode, 500);
+            directCameraViewToFocus(event.getCamera(), focusNode, NAVIGATION_DURATION);
         }
     }
 
-    public void mousePressed(final PInputEvent aEvent) {
-        moveFocusToMouseOver(aEvent);
+    /**
+     * Animates the camera to the node that has been pressed.
+     * 
+     * @param event event representing the mouse press
+     */
+    public void mousePressed(final PInputEvent event) {
+        moveFocusToMouseOver(event);
 
         if (focusNode != null) {
-            directCameraViewToFocus(aEvent.getCamera(), focusNode, 500);
-            aEvent.getInputManager().setKeyboardFocus(aEvent.getPath());
+            directCameraViewToFocus(event.getCamera(), focusNode, NAVIGATION_DURATION);
+            event.getInputManager().setKeyboardFocus(event.getPath());
         }
     }
 
@@ -136,30 +161,69 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     // move the focus to the parent of the current focus.
     // ****************************************************************
 
-    public void moveFocusDown(final PInputEvent e) {
+    /**
+     * Moves the focus in the downward direction. Animating the camera
+     * accordingly.
+     * 
+     * @param event ignored
+     */
+    public void moveFocusDown(final PInputEvent event) {
         moveFocusInDirection(SOUTH);
     }
 
-    public void moveFocusIn(final PInputEvent e) {
+    /**
+     * Moves the focus "into" the scene. So smaller nodes appear larger on
+     * screen. Animates the camera accordingly.
+     * 
+     * @param event ignored
+     */
+    public void moveFocusIn(final PInputEvent event) {
         moveFocusInDirection(IN);
     }
 
-    public void moveFocusLeft(final PInputEvent e) {
+    /**
+     * Moves the focus in the left direction. Animating the camera accordingly.
+     * 
+     * @param event ignored
+     */
+    public void moveFocusLeft(final PInputEvent event) {
         moveFocusInDirection(WEST);
     }
 
-    public void moveFocusOut(final PInputEvent e) {
+    /**
+     * Moves the focus "out" of scene. So larger nodes appear smaller on screen.
+     * Animates the camera accordingly.
+     * 
+     * @param event ignored
+     */
+    public void moveFocusOut(final PInputEvent event) {
         moveFocusInDirection(OUT);
     }
 
-    public void moveFocusRight(final PInputEvent e) {
+    /**
+     * Moves the focus in the right direction. Animating the camera accordingly.
+     * 
+     * @param event ignored
+     */
+    public void moveFocusRight(final PInputEvent event) {
         moveFocusInDirection(EAST);
     }
 
-    public void moveFocusUp(final PInputEvent e) {
+    /**
+     * Moves the focus in the up direction. Animating the camera accordingly.
+     * 
+     * @param event ignored
+     */
+    public void moveFocusUp(final PInputEvent event) {
         moveFocusInDirection(NORTH);
     }
 
+    /**
+     * Moves the focus to the nearest node in the direction specified. Animating
+     * the camera appropriately.
+     * 
+     * @param direction one of NORTH, SOUTH, EAST, WEST, IN, OUT
+     */
     private void moveFocusInDirection(final int direction) {
         final PNode n = getNeighborInDirection(direction);
 
@@ -168,14 +232,27 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         }
     }
 
-    public void moveFocusToMouseOver(final PInputEvent e) {
-        final PNode focus = e.getPickedNode();
+    /**
+     * Moves the focus to the mouse under the mouse. Animating the camera
+     * appropriately.
+     * 
+     * @param event mouse event
+     */
+    public void moveFocusToMouseOver(final PInputEvent event) {
+        final PNode focus = event.getPickedNode();
         if (!(focus instanceof PCamera)) {
             focusNode = focus;
         }
     }
 
-    public PNode getNeighborInDirection(final int aDirection) {
+    /**
+     * Returns the nearest node in the given direction.
+     * 
+     * @param direction direction in which to look the nearest node
+     * 
+     * @return nearest node in the given direction
+     */
+    public PNode getNeighborInDirection(final int direction) {
         if (focusNode == null) {
             return null;
         }
@@ -191,7 +268,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         final Iterator i = l.iterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
-            if (nodeIsNeighborInDirection(each, aDirection)) {
+            if (nodeIsNeighborInDirection(each, direction)) {
                 return each;
             }
         }
@@ -199,6 +276,12 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         return null;
     }
 
+    /**
+     * Returns all pickable nodes that are 1 hop away from the currently focused
+     * node. This includes, parent, children, and siblings.
+     * 
+     * @return list of nodes that are 1 hop away from the current focusNode
+     */
     public List getNeighbors() {
         final ArrayList result = new ArrayList();
         if (focusNode == null || focusNode.getParent() == null) {
@@ -221,54 +304,66 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         return result;
     }
 
-    public boolean nodeIsNeighborInDirection(final PNode aNode, final int aDirection) {
-        switch (aDirection) {
-            case IN: {
-                return aNode.isDescendentOf(focusNode);
-            }
+    /**
+     * Returns true if the given node is a neighbor in the given direction
+     * relative to the current focus.
+     * 
+     * @param node the node being tested
+     * @param direction the direction in which we're testing
+     * 
+     * @return true if node is a neighbor in the direction provided
+     */
+    public boolean nodeIsNeighborInDirection(final PNode node, final int direction) {
+        switch (direction) {
+            case IN:
+                return node.isDescendentOf(focusNode);
 
-            case OUT: {
-                return aNode.isAncestorOf(focusNode);
-            }
+            case OUT:
+                return node.isAncestorOf(focusNode);
 
-            default: {
-                if (aNode.isAncestorOf(focusNode) || aNode.isDescendentOf(focusNode)) {
+            default:
+                if (node.isAncestorOf(focusNode) || node.isDescendentOf(focusNode)) {
                     return false;
                 }
-            }
         }
 
         final Point2D highlightCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(focusNode);
-        final Point2D nodeCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(aNode);
+        final Point2D nodeCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(node);
 
         final double ytest1 = nodeCenter.getX() - highlightCenter.getX() + highlightCenter.getY();
         final double ytest2 = -nodeCenter.getX() + highlightCenter.getX() + highlightCenter.getY();
 
-        switch (aDirection) {
-            case NORTH: {
+        switch (direction) {
+            case NORTH:
                 return nodeCenter.getY() < highlightCenter.getY() && nodeCenter.getY() < ytest1
                         && nodeCenter.getY() < ytest2;
-            }
 
-            case EAST: {
+            case EAST:
                 return nodeCenter.getX() > highlightCenter.getX() && nodeCenter.getY() < ytest1
                         && nodeCenter.getY() > ytest2;
-            }
 
-            case SOUTH: {
+            case SOUTH:
                 return nodeCenter.getY() > highlightCenter.getY() && nodeCenter.getY() > ytest1
                         && nodeCenter.getY() > ytest2;
-            }
-            case WEST: {
+
+            case WEST:
                 return nodeCenter.getX() < highlightCenter.getX() && nodeCenter.getY() > ytest1
                         && nodeCenter.getY() < ytest2;
-            }
+
+            default:
+                return false;
         }
-        return false;
     }
 
-    public void sortNodesByDistanceFromPoint(final List aNodesList, final Point2D aPoint) {
-        Collections.sort(aNodesList, new Comparator() {
+    /**
+     * Modifies the array so that it's sorted in ascending order based on the
+     * distance from the given point.
+     * 
+     * @param nodes list of nodes to be sorted
+     * @param point point from which distance is being computed
+     */
+    public void sortNodesByDistanceFromPoint(final List nodes, final Point2D point) {
+        Collections.sort(nodes, new Comparator() {
             public int compare(final Object o1, final Object o2) {
                 return compare((PNode) o1, (PNode) o2);
             }
@@ -280,7 +375,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
                 NODE_TO_GLOBAL_NODE_CENTER_MAPPING.put(each1, center1);
                 NODE_TO_GLOBAL_NODE_CENTER_MAPPING.put(each2, center2);
 
-                return Double.compare(aPoint.distance(center1), aPoint.distance(center2));
+                return Double.compare(point.distance(center1), point.distance(center2));
             }
         });
     }
@@ -290,7 +385,18 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     // focus remains visible on the screen at 100 percent scale.
     // ****************************************************************
 
-    protected PActivity animateCameraViewTransformTo(final PCamera aCamera, final AffineTransform aTransform,
+    /**
+     * Animates the camera's view transform into the provided one over the
+     * duration provided.
+     * 
+     * @param camera camera being animated
+     * @param targetTransform the transform to which the camera's transform will
+     *            be animated
+     * @param duration the number of milliseconds the animation should last
+     * 
+     * @return an activity object that represents the animation
+     */
+    protected PActivity animateCameraViewTransformTo(final PCamera camera, final AffineTransform targetTransform,
             final int duration) {
         boolean wasOldAnimation = false;
 
@@ -301,67 +407,81 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         }
 
         if (duration == 0) {
-            aCamera.setViewTransform(aTransform);
+            camera.setViewTransform(targetTransform);
             return null;
         }
 
-        final AffineTransform source = aCamera.getViewTransformReference();
+        final AffineTransform source = camera.getViewTransformReference();
 
-        if (source.equals(aTransform)) {
+        if (source.equals(targetTransform)) {
             return null;
         }
 
-        navigationActivity = aCamera.animateViewToTransform(aTransform, duration);
+        navigationActivity = camera.animateViewToTransform(targetTransform, duration);
         navigationActivity.setSlowInSlowOut(!wasOldAnimation);
         return navigationActivity;
     }
 
-    public PActivity directCameraViewToFocus(final PCamera aCamera, final PNode aFocusNode, final int duration) {
-        focusNode = aFocusNode;
-        final AffineTransform originalViewTransform = aCamera.getViewTransform();
+    /**
+     * Animates the Camera's view so that it contains the new focus node.
+     * 
+     * @param camera The camera to be animated
+     * @param newFocus the node that will gain focus
+     * @param duration number of milliseconds that animation should last for
+     * 
+     * @return an activity object representing the scheduled animation
+     */
+    public PActivity directCameraViewToFocus(final PCamera camera, final PNode newFocus, final int duration) {
+        focusNode = newFocus;
+        final AffineTransform originalViewTransform = camera.getViewTransform();
 
-        // Scale the canvas to include
         final PDimension d = new PDimension(1, 0);
         focusNode.globalToLocal(d);
 
-        final double scaleFactor = d.getWidth() / aCamera.getViewScale();
+        final double scaleFactor = d.getWidth() / camera.getViewScale();
         final Point2D scalePoint = focusNode.getGlobalFullBounds().getCenter2D();
-        if (scaleFactor != 1) {
-            aCamera.scaleViewAboutPoint(scaleFactor, scalePoint.getX(), scalePoint.getY());
+        if (Math.abs(1f - scaleFactor) < SCALING_THRESHOLD) {
+            camera.scaleViewAboutPoint(scaleFactor, scalePoint.getX(), scalePoint.getY());
         }
 
         // Pan the canvas to include the view bounds with minimal canvas
         // movement.
-        aCamera.animateViewToPanToBounds(focusNode.getGlobalFullBounds(), 0);
+        camera.animateViewToPanToBounds(focusNode.getGlobalFullBounds(), 0);
 
         // Get rid of any white space. The canvas may be panned and
         // zoomed in to do this. But make sure not stay constrained by max
         // magnification.
         // fillViewWhiteSpace(aCamera);
 
-        final AffineTransform resultingTransform = aCamera.getViewTransform();
-        aCamera.setViewTransform(originalViewTransform);
+        final AffineTransform resultingTransform = camera.getViewTransform();
+        camera.setViewTransform(originalViewTransform);
 
         // Animate the canvas so that it ends up with the given
         // view transform.
-        return animateCameraViewTransformTo(aCamera, resultingTransform, duration);
+        return animateCameraViewTransformTo(camera, resultingTransform, duration);
     }
 
-    protected void fillViewWhiteSpace(final PCamera aCamera) {
-        final PBounds rootBounds = aCamera.getRoot().getFullBoundsReference();
-        PBounds viewBounds = aCamera.getViewBounds();
+    /**
+     * Instantaneously transforms the provided camera so that it does not
+     * contain any extra white space.
+     * 
+     * @param camera the camera to be transformed
+     */
+    protected void fillViewWhiteSpace(final PCamera camera) {
+        final PBounds rootBounds = camera.getRoot().getFullBoundsReference();        
 
-        if (rootBounds.contains(aCamera.getViewBounds())) {
+        if (rootBounds.contains(camera.getViewBounds())) {
             return;
         }
 
-        aCamera.animateViewToPanToBounds(rootBounds, 0);
-        aCamera.animateViewToPanToBounds(focusNode.getGlobalFullBounds(), 0);
+        camera.animateViewToPanToBounds(rootBounds, 0);
+        camera.animateViewToPanToBounds(focusNode.getGlobalFullBounds(), 0);
 
         // center content.
         double dx = 0;
         double dy = 0;
-        viewBounds = aCamera.getViewBounds();
+        
+        PBounds viewBounds = camera.getViewBounds();
 
         if (viewBounds.getWidth() > rootBounds.getWidth()) {
             // then center along x axis.
@@ -373,6 +493,6 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
             dy = rootBounds.getCenterX() - viewBounds.getCenterX();
         }
 
-        aCamera.translateView(dx, dy);
+        camera.translateView(dx, dy);
     }
 }

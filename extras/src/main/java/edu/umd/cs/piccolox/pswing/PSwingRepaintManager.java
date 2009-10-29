@@ -78,7 +78,7 @@ public class PSwingRepaintManager extends RepaintManager {
     private final Vector paintingComponents = new Vector();
 
     /**
-     * Locks repaint for a particular (Swing) component displayed by PCanvas
+     * Locks repaint for a particular (Swing) component displayed by PCanvas.
      * 
      * @param c The component for which the repaint is to be locked
      */
@@ -87,7 +87,7 @@ public class PSwingRepaintManager extends RepaintManager {
     }
 
     /**
-     * Unlocks repaint for a particular (Swing) component displayed by PCanvas
+     * Unlocks repaint for a particular (Swing) component displayed by PCanvas.
      * 
      * @param c The component for which the repaint is to be unlocked
      */
@@ -97,7 +97,7 @@ public class PSwingRepaintManager extends RepaintManager {
 
     /**
      * Returns true if repaint is currently locked for a component and false
-     * otherwise
+     * otherwise.
      * 
      * @param c The component for which the repaint status is desired
      * @return Whether the component is currently painting

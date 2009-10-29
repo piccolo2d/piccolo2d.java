@@ -497,7 +497,7 @@ public class PSwingExample2 extends JFrame {
         message.translate(0, -50);
         canvas.getLayer().addChild(message);
 
-        canvas.getCamera().animateViewToCenterBounds(message.getFullBounds(), false, 1200);
+        canvas.getCamera().animateViewToCenterBounds(canvas.getLayer().getFullBounds(), true, 1200);
     }
 
     public static void main(final String[] args) {

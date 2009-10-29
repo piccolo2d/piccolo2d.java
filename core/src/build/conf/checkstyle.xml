@@ -45,9 +45,16 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocMethod">
+        	<property name="scope" value="protected"/>
+        	<property name="allowUndeclaredRTE" value="true"/>
+        </module>
+        <module name="JavadocType">
+        	<property name="scope" value="public"/>        
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="protected" />
+        </module>
         <module name="JavadocStyle"/>
 
 
@@ -92,7 +99,9 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="FileLength"/>
+        <module name="FileLength">
+        	<property name="max" value="4000"/>
+        </module>
         <module name="LineLength">
             <property name="max" value="120"/>
         </module>
@@ -137,22 +146,31 @@
         <module name="DoubleCheckedLocking"/>    <!-- MY FAVOURITE -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+          <property name="ignoreSetter" value="true" />
+          <property name="ignoreConstructorParameter" value="true" />
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <!-- 2.0:  Lots of enums are defined using constants, so until 2.0 this needs to stay disabled. -->
+        <!-- 
+        <module name="MagicNumber">        	            	    
+    		<property name="ignoreNumbers" value="0, 0.5, 2, 1, -1, 1000, 2, 3, 4, 5, 6, 7, 8" />
+        </module>
+    	-->        	
+
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
 
         <!-- Checks for class design                         -->
-        <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
+        <!-- See http://checkstyle.sf.net/config_design.html -->        
+        <!-- For P2d 2.0: <module name="DesignForExtension"/> -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <!-- For P2d 2.0: <module name="VisibilityModifier"/> -->
 
 
         <!-- Miscellaneous other checks.                   -->

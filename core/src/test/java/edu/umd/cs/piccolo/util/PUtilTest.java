@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2008-2009, Piccolo2D project, http://piccolo2d.org
- * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,47 +25,44 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolo.examples.swt;
+package edu.umd.cs.piccolo.util;
 
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.Iterator;
 
-import edu.umd.cs.piccolox.swt.PSWTCanvas;
-import edu.umd.cs.piccolox.swt.PSWTText;
+import junit.framework.TestCase;
 
 /**
- * @author good
+ * Unit test for PUtil.
  */
-public class SWTHelloWorld {
+public class PUtilTest extends TestCase {
 
-    /**
-     * Constructor for SWTBasicExample.
-     */
-    public SWTHelloWorld() {
-        super();
-    }
-
-    public static void main(final String[] args) {
-        final Display display = new Display();
-        final Shell shell = open(display);
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
+    // see http://code.google.com/p/piccolo2d/issues/detail?id=116
+    public void testPreventCodeCleanFinal() {
+        final Enumeration ne = PUtil.NULL_ENUMERATION;
+        try {
+            PUtil.NULL_ENUMERATION = null;
         }
-        display.dispose();
+        finally {
+            PUtil.NULL_ENUMERATION = ne;
+        }
+
+        final Iterator ni = PUtil.NULL_ITERATOR;
+        try {
+            PUtil.NULL_ITERATOR = null;
+        }
+        finally {
+            PUtil.NULL_ITERATOR = ni;
+        }
+
+        final OutputStream no = PUtil.NULL_OUTPUT_STREAM;
+        try {
+            PUtil.NULL_OUTPUT_STREAM = null;
+        }
+        finally {
+            PUtil.NULL_OUTPUT_STREAM = no;
+        }
     }
 
-    public static Shell open(final Display display) {
-        final Shell shell = new Shell(display);
-        shell.setLayout(new FillLayout());
-        final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
-
-        final PSWTText text = new PSWTText("Hello World");
-        canvas.getLayer().addChild(text);
-
-        shell.open();
-        return shell;
-    }
 }

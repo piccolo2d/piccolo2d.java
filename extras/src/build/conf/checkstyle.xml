@@ -45,9 +45,15 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+         <module name="JavadocMethod">
+        	<property name="scope" value="protected"/>        
+        </module>
+        <module name="JavadocType">
+        	<property name="scope" value="public"/>        
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="protected" />
+        </module>
         <module name="JavadocStyle"/>
 
 
@@ -137,10 +143,17 @@
         <module name="DoubleCheckedLocking"/>    <!-- MY FAVOURITE -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+        	<property name="ignoreConstructorParameter" value="true"/>
+        	<property name="ignoreSetter" value="true"/>        	        	
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <!-- In 2.0 roll this back out
+        <module name="MagicNumber">        	        	
+    		<property name="ignoreNumbers" value="0, 0.5, 2, 1, -1" />        	
+        </module>
+         -->
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
@@ -148,11 +161,11 @@
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
+        <!-- For P2d 2.0: <module name="DesignForExtension"/> -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <!-- For P2d 2.0: <module name="VisibilityModifier"/> -->
 
 
         <!-- Miscellaneous other checks.                   -->

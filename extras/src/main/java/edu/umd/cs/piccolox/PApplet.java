@@ -41,13 +41,15 @@ import edu.umd.cs.piccolo.PCanvas;
  * @author Jesse Grosjean
  */
 public class PApplet extends JApplet {
-
-    /**
-     * 
-     */
+    /** Used to allow versioned binary streams for serializations. */
     private static final long serialVersionUID = 1L;
+
+    /** Canvas being displayed by this applet. */
     private PCanvas canvas;
 
+    /**
+     * Initializes the applet with a canvas and no background.
+     */
     public void init() {
         setBackground(null);
 
@@ -70,17 +72,24 @@ public class PApplet extends JApplet {
         });
     }
 
+    /**
+     * Returns the canvas this PApplet is displaying.
+     * 
+     * @return canvas this applet is displaying
+     */
     public PCanvas getCanvas() {
         return canvas;
     }
 
+    /**
+     * Provides an extension point for subclasses so that they can control
+     * what's on the canvas by default.
+     * 
+     * @return a built canvas
+     */
     public PCanvas createCanvas() {
         return new PCanvas();
     }
-
-    // ****************************************************************
-    // Initialize
-    // ****************************************************************
 
     /**
      * This method will be called before the initialize() method and will be
@@ -90,7 +99,7 @@ public class PApplet extends JApplet {
     }
 
     /**
-     * Subclasses should override this method and add their Piccolo
+     * Subclasses should override this method and add their Piccolo2d
      * initialization code there. This method will be called on the swing event
      * dispatch thread. Note that the constructors of PFrame subclasses may not
      * be complete when this method is called. If you need to initailize some

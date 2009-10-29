@@ -30,6 +30,7 @@ package edu.umd.cs.piccolo.activities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,25 +53,42 @@ import edu.umd.cs.piccolo.util.PUtil;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PActivityScheduler {
-
+public class PActivityScheduler implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private transient Timer activityTimer = null;
     private final PRoot root;
-    private final List activities;
-    private Timer activityTimer;
+    private final List activities;    
     private boolean activitiesChanged;
     private boolean animating;
     private final ArrayList processingActivities;
 
-    public PActivityScheduler(final PRoot rootNode) {
+    /**
+     * Constructs an instance of PActivityScheduler. All activities it will
+     * schedule will take place on children of the rootNode provided.
+     * 
+     * @param rootNode root node of all activities to be performed. All nodes
+     *            being animated should have this node as an ancestor.
+     */
+    public PActivityScheduler(final PRoot rootNode) {        
         root = rootNode;
         activities = new ArrayList();
         processingActivities = new ArrayList();
     }
 
+    /**
+     * Returns the node from which all activities will be attached.
+     * 
+     * @return this scheduler's associated root node
+     */
     public PRoot getRoot() {
         return root;
     }
 
+    /**
+     * Adds the given activity to the scheduler if not already found.
+     * 
+     * @param activity activity to be scheduled
+     */
     public void addActivity(final PActivity activity) {
         addActivity(activity, false);
     }
@@ -79,6 +97,10 @@ public class PActivityScheduler {
      * Add this activity to the scheduler. Sometimes it's useful to make sure
      * that an activity is run after all other activities have been run. To do
      * this set processLast to true when adding the activity.
+     * 
+     * @param activity activity to be scheduled
+     * @param processLast whether or not this activity should be performed after
+     *            all other scheduled activities
      */
     public void addActivity(final PActivity activity, final boolean processLast) {
         if (activities.contains(activity)) {
@@ -101,6 +123,12 @@ public class PActivityScheduler {
         }
     }
 
+    /**
+     * Removes the given activity from the scheduled activities. Does nothing if
+     * it's not found.
+     * 
+     * @param activity the activity to be removed
+     */
     public void removeActivity(final PActivity activity) {
         if (!activities.contains(activity)) {
             return;
@@ -114,12 +142,20 @@ public class PActivityScheduler {
         }
     }
 
+    /**
+     * Removes all activities from the list of scheduled activities.
+     */
     public void removeAllActivities() {
         activitiesChanged = true;
         activities.clear();
         stopActivityTimer();
     }
 
+    /**
+     * Returns a reference to the current activities list. Handle with care.
+     * 
+     * @return reference to the current activities list.
+     */
     public List getActivitiesReference() {
         return activities;
     }
@@ -127,6 +163,8 @@ public class PActivityScheduler {
     /**
      * Process all scheduled activities for the given time. Each activity is
      * given one "step", equivalent to one frame of animation.
+     * 
+     * @param currentTime the current unix time in milliseconds.
      */
     public void processActivities(final long currentTime) {
         final int size = activities.size();
@@ -141,8 +179,9 @@ public class PActivityScheduler {
     }
 
     /**
-     * Return true if any of the scheduled activities return true to the message
-     * isAnimation();
+     * Return true if any of the scheduled activities are animations.
+     * 
+     * @return true if any of the scheduled activities are animations.
      */
     public boolean getAnimating() {
         if (activitiesChanged) {
@@ -156,14 +195,26 @@ public class PActivityScheduler {
         return animating;
     }
 
+    /**
+     * Starts the current activity timer. Multiple calls to this method are
+     * ignored.
+     */
     protected void startActivityTimer() {
         getActivityTimer().start();
     }
 
+    /**
+     * Stops the current activity timer.
+     */
     protected void stopActivityTimer() {
         getActivityTimer().stop();
     }
 
+    /**
+     * Returns the activity timer. Creating it if necessary.
+     * 
+     * @return a Timer instance.
+     */
     protected Timer getActivityTimer() {
         if (activityTimer == null) {
             activityTimer = root.createTimer(PUtil.ACTIVITY_SCHEDULER_FRAME_DELAY, new ActionListener() {

@@ -57,56 +57,44 @@ import edu.umd.cs.piccolo.util.PBounds;
  */
 public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeListener {
 
-    /**
-     * The viewport that signals this scroll director
-     */
+    /** The viewport that signals this scroll director. */
     protected PViewport viewPort;
 
-    /**
-     * The scrollpane that contains the viewport
-     */
+    /** The scrollpane that contains the viewport. */
     protected PScrollPane scrollPane;
 
-    /**
-     * The canvas that this class directs
-     */
+    /** The canvas that this class directs. */
     protected PCanvas view;
 
-    /**
-     * The canvas' camera
-     */
+    /** The canvas' camera. */
     protected PCamera camera;
 
-    /**
-     * The canvas' root
-     */
+    /** The canvas' root. */
     protected PRoot root;
 
-    /**
-     * Flag to indicate when scrolling is currently in progress
-     */
+    /** Flag to indicate when scrolling is currently in progress. */
     protected boolean scrollInProgress = false;
 
     /**
-     * The default constructor
+     * The default constructor.
      */
     public PDefaultScrollDirector() {
     }
 
     /**
-     * Installs the scroll director and adds the appropriate listeners
+     * Installs the scroll director and adds the appropriate listeners.
      * 
-     * @param viewPort The viewport on which this director directs
-     * @param view The ZCanvas that the viewport looks at
+     * @param targetViewPort viewport on which this director directs
+     * @param targetView PCanvas that the viewport looks at
      */
-    public void install(final PViewport viewPort, final PCanvas view) {
-        scrollPane = (PScrollPane) viewPort.getParent();
-        this.viewPort = viewPort;
-        this.view = view;
+    public void install(final PViewport targetViewPort, final PCanvas targetView) {
+        scrollPane = (PScrollPane) targetViewPort.getParent();
+        this.viewPort = targetViewPort;
+        this.view = targetView;
 
-        if (view != null) {
-            camera = view.getCamera();
-            root = view.getRoot();
+        if (targetView != null) {
+            camera = targetView.getCamera();
+            root = targetView.getRoot();
         }
 
         if (camera != null) {
@@ -122,7 +110,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     /**
-     * Uninstall the scroll director from the viewport
+     * Uninstall the scroll director from the viewport.
      */
     public void unInstall() {
         viewPort = null;
@@ -140,7 +128,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     /**
-     * Get the View position given the specified camera bounds
+     * Get the View position given the specified camera bounds.
      * 
      * @param viewBounds The bounds for which the view position will be computed
      * @return The view position
@@ -169,7 +157,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     /**
-     * Get the size of the view based on the specified camera bounds
+     * Get the size of the view based on the specified camera bounds.
      * 
      * @param viewBounds The view bounds for which the view size will be
      *            computed
@@ -200,7 +188,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     /**
-     * Set the view position in a manner consistent with standardized scrolling
+     * Set the view position in a manner consistent with standardized scrolling.
      * 
      * @param x The new x position
      * @param y The new y position
@@ -249,10 +237,12 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
 
     /**
      * Invoked when the camera's view changes, or the bounds of the root or
-     * camera changes
+     * camera changes.
+     * 
+     * @param pce property change event to examine
      */
     public void propertyChange(final PropertyChangeEvent pce) {
-        final boolean isRelevantViewEvent = PCamera.PROPERTY_VIEW_TRANSFORM == pce.getPropertyName();
+        final boolean isRelevantViewEvent = PCamera.PROPERTY_VIEW_TRANSFORM.equals(pce.getPropertyName());
         final boolean isRelevantBoundsEvent = isBoundsChangedEvent(pce)
                 && (pce.getSource() == camera || pce.getSource() == view.getRoot());
 
@@ -267,13 +257,13 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     private boolean isBoundsChangedEvent(final PropertyChangeEvent pce) {
-        return PNode.PROPERTY_BOUNDS == pce.getPropertyName() || PNode.PROPERTY_FULL_BOUNDS == pce.getPropertyName();
+        return PNode.PROPERTY_BOUNDS.equals(pce.getPropertyName()) || PNode.PROPERTY_FULL_BOUNDS.equals(pce.getPropertyName());
     }
 
     /**
-     * Should the ScrollPane be revalidated. This occurs when either the
-     * scrollbars are showing and should be remove or are not showing and should
-     * be added.
+     * Should the ScrollPane be revalidated. This occurs when either the scroll
+     * bars are showing and should be remove or are not showing and should be
+     * added.
      * 
      * @return Whether the scroll pane should be revalidated
      */

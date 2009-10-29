@@ -43,12 +43,18 @@ public interface PNodeFilter {
 
     /**
      * Return true if the filter should accept the given node.
+     * 
+     * @param aNode node under test
+     * @return true if node should be accepted
      */
-    public boolean accept(PNode aNode);
+    boolean accept(PNode aNode);
 
     /**
      * Return true if the filter should test the children of the given node for
      * acceptance.
+     * 
+     * @param aNode parent being tested
+     * @return true if children should be tested for acceptance
      */
-    public boolean acceptChildrenOf(PNode aNode);
+    boolean acceptChildrenOf(PNode aNode);
 }

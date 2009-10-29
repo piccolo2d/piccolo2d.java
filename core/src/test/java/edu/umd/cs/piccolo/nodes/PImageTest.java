@@ -37,6 +37,9 @@ import javax.imageio.ImageIO;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
+/**
+ * Unit test for PImage.
+ */
 public class PImageTest extends TestCase {
 
     public void testClone() {
@@ -47,7 +50,7 @@ public class PImageTest extends TestCase {
         assertEquals(srcNode.getImage().getWidth(null), clonedNode.getImage().getWidth(null));
         assertEquals(srcNode.getImage().getHeight(null), clonedNode.getImage().getHeight(null));
 
-        assertEquals(srcNode.getBounds(), clonedNode.getBounds());
+        assertEquals(srcNode.getBounds(), clonedNode.getBounds());        
     }
 
     public void testToString() {
@@ -64,10 +67,10 @@ public class PImageTest extends TestCase {
     public void testCanBeCreatedFromFile() throws IOException {
         final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         final File imgFile = File.createTempFile("test", ".jpeg");
-        imgFile.deleteOnExit();
         ImageIO.write(img, "JPEG", imgFile);
-
+        imgFile.deleteOnExit();
         final PImage imageNode = new PImage(imgFile.getAbsolutePath());
+        assertNotNull(imageNode.getImage());
         assertEquals(100, imageNode.getImage().getWidth(null));
         assertEquals(100, imageNode.getImage().getHeight(null));
     }

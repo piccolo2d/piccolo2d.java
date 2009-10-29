@@ -38,14 +38,15 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
+ * SWT shape manager.
+ * 
  * @author Lance Good
  */
 public class SWTShapeManager {
-
-    static AffineTransform IDENTITY_XFORM = new AffineTransform();
-    static Point2D aPoint = new Point2D.Double();
-    static ArrayList segList = new ArrayList();
-    static double[] pts = new double[8];
+    private static AffineTransform IDENTITY_XFORM = new AffineTransform();
+    private static Point2D aPoint = new Point2D.Double();
+    private static ArrayList segList = new ArrayList();
+    private static double[] pts = new double[8];
 
     /**
      * Apply the specified transform to the specified rectangle, modifying the
@@ -89,6 +90,13 @@ public class SWTShapeManager {
         rect.setRect(minX, minY, maxX - minX, maxY - minY);
     }
 
+    /**
+     * Populates the SWT rectangle with the provided Swing Rectangle2D's
+     * coordinates. Rounding up to the nearest integer.
+     * 
+     * @param aRect awt rectangle to extract coordinates from
+     * @param sRect swt rectangle to populate
+     */
     public static void awtToSWT(final Rectangle2D aRect, final Rectangle sRect) {
         sRect.x = (int) (aRect.getX() + 0.5);
         sRect.y = (int) (aRect.getY() + 0.5);
@@ -96,11 +104,19 @@ public class SWTShapeManager {
         sRect.height = (int) (aRect.getHeight() + 0.5);
     }
 
-    public static double[] shapeToPolyline(final Shape s) {
+    /**
+     * Converts the provided shape into an array of point coordinates given as
+     * one dimensional array with this format: x1,y1,x2,y3,....
+     * 
+     * @param shape shape to convert
+     * @return point coordinates given as one dimensional array with this
+     *         format: x1,y1,x2,y3,...
+     */
+    public static double[] shapeToPolyline(final Shape shape) {
         segList.clear();
         aPoint.setLocation(0, 0);
 
-        final PathIterator pi = s.getPathIterator(IDENTITY_XFORM, 0.000000001);
+        final PathIterator pi = shape.getPathIterator(IDENTITY_XFORM, 0.000000001);
         while (!pi.isDone()) {
             final int segType = pi.currentSegment(pts);
             switch (segType) {
@@ -114,6 +130,7 @@ public class SWTShapeManager {
                 case PathIterator.SEG_CLOSE:
                     segList.add(new Point2D.Double(aPoint.getX(), aPoint.getY()));
                     break;
+                default:
             }
             pi.next();
         }
@@ -128,10 +145,18 @@ public class SWTShapeManager {
         return polyObj;
     }
 
-    public static int[] transform(final double[] pts, final AffineTransform at) {
-        final int[] intPts = new int[pts.length];
-        for (int i = 0; i < pts.length / 2; i++) {
-            aPoint.setLocation(pts[2 * i], pts[2 * i + 1]);
+    /**
+     * Transforms the given points by the transform provided, leaving the
+     * original points untouched.
+     * 
+     * @param points points to transform
+     * @param at transform to apply
+     * @return transformed coordinates given in format x1,y2,x2,y2,...
+     */
+    public static int[] transform(final double[] points, final AffineTransform at) {
+        final int[] intPts = new int[points.length];
+        for (int i = 0; i < points.length / 2; i++) {
+            aPoint.setLocation(points[2 * i], points[2 * i + 1]);
             at.transform(aPoint, aPoint);
             intPts[2 * i] = (int) (aPoint.getX() + 0.5);
             intPts[2 * i + 1] = (int) (aPoint.getY() + 0.5);

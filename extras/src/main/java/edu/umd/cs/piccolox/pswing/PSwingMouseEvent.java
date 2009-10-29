@@ -31,7 +31,7 @@ package edu.umd.cs.piccolox.pswing;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
@@ -47,11 +47,13 @@ import edu.umd.cs.piccolo.util.PPickPath;
  * <ul>
  * <li>Mouse Events
  * <ul>
- * <li>a mouse button is pressed
- * <li>a mouse button is released
- * <li>a mouse button is clicked (pressed and released)
- * <li>the mouse cursor enters a node
- * <li>the mouse cursor exits a node
+ * <li>a mouse button is pressed</li>
+ * <li>a mouse button is released</li>
+ * <li>a mouse button is clicked (pressed and released)</li>
+ * <li>the mouse cursor enters a node</li>
+ * <li>the mouse cursor exits a node</li>
+ * </ul>
+ * </li>
  * </ul>
  * </p>
  * <p>
@@ -64,36 +66,35 @@ import edu.umd.cs.piccolo.util.PPickPath;
  * </p>
  * <p>
  * <b>Warning:</b> Serialized objects of this class will not be compatible with
- * future Piccolo releases. The current serialization support is appropriate for
- * short term storage or RMI between applications running the same version of
- * Piccolo. A future release of Piccolo will provide support for long term
- * persistence.
+ * future Piccolo2d releases. The current serialization support is appropriate
+ * for short term storage or RMI between applications running the same version
+ * of Piccolo2d. A future release of Piccolo2d will provide support for long
+ * term persistence.
  * </p>
  * 
  * @author Benjamin B. Bederson
  * @author Sam R. Reid
  * @author Lance E. Good
  */
-public class PSwingMouseEvent extends MouseEvent implements Serializable {
-    /**
-     * 
-     */
+public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwingEvent {
     private static final long serialVersionUID = 1L;
     private final int id;
-    private final PInputEvent event;
+    private final transient PInputEvent event;
 
     /**
      * Constructs a new PMouse event from a Java MouseEvent.
      * 
      * @param id The event type (MOUSE_PRESSED, MOUSE_RELEASED, MOUSE_CLICKED,
      *            MOUSE_ENTERED, MOUSE_EXITED)
-     * @param e The original Java mouse event when in MOUSE_RELEASED events.
+     * @param swingEvent The original swing mouse event when in MOUSE_RELEASED
+     *            events.
+     * @param piccoloEvent used to query about the event's Piccolo context
      */
-    protected PSwingMouseEvent(final int id, final MouseEvent e, final PInputEvent event) {
-        super((Component) e.getSource(), e.getID(), e.getWhen(), e.getModifiers(), e.getX(), e.getY(), e
-                .getClickCount(), e.isPopupTrigger());
+    protected PSwingMouseEvent(final int id, final MouseEvent swingEvent, final PInputEvent piccoloEvent) {
+        super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiers(),
+                swingEvent.getX(), swingEvent.getY(), swingEvent.getClickCount(), swingEvent.isPopupTrigger());
         this.id = id;
-        this.event = event;
+        this.event = piccoloEvent;
     }
 
     /**
@@ -101,15 +102,25 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * 
      * @param id The event type (MOUSE_PRESSED, MOUSE_RELEASED, MOUSE_CLICKED,
      *            MOUSE_ENTERED, MOUSE_EXITED, MOUSE_MOVED, MOUSE_DRAGGED)
-     * @param e The original Java mouse event when in MOUSE_DRAGGED and
-     *            MOUSE_RELEASED events.
+     * @param swingEvent The original swing mouse event when in
+     *            MOUSE_DRAGGED and MOUSE_RELEASED events.
+     * @param pEvent used to query about the event's Piccolo2d context
+     * 
+     * @return the constructed PSwingEvent
      */
-    public static PSwingMouseEvent createMouseEvent(final int id, final MouseEvent e, final PInputEvent pEvent) {
+    public static PSwingEvent createMouseEvent(final int id, final MouseEvent swingEvent, final PInputEvent pEvent) {
+        if (pEvent == null) {
+            throw new IllegalArgumentException("PInputEvent associated with PSwingEvent may not be null");
+        }
+        
         if (id == MouseEvent.MOUSE_MOVED || id == MouseEvent.MOUSE_DRAGGED) {
-            return new PSwingMouseMotionEvent(id, e, pEvent);
+            return new PSwingMouseMotionEvent(id, swingEvent, pEvent);
+        }
+        else if (id == MouseEvent.MOUSE_WHEEL) {
+            return new PSwingMouseWheelEvent(id, (MouseWheelEvent) swingEvent, pEvent);
         }
         else {
-            return new PSwingMouseEvent(id, e, pEvent);
+            return new PSwingMouseEvent(id, swingEvent, pEvent);
         }
     }
 
@@ -228,40 +239,25 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * @param listener the MouseListener or MouseMotionListener to dispatch to.
      */
     public void dispatchTo(final Object listener) {
-        if (listener instanceof MouseListener) {
-            final MouseListener mouseListener = (MouseListener) listener;
-            switch (getID()) {
-                case MouseEvent.MOUSE_CLICKED:
-                    mouseListener.mouseClicked(this);
-                    break;
-                case MouseEvent.MOUSE_ENTERED:
-                    mouseListener.mouseEntered(this);
-                    break;
-                case MouseEvent.MOUSE_EXITED:
-                    mouseListener.mouseExited(this);
-                    break;
-                case MouseEvent.MOUSE_PRESSED:
-                    mouseListener.mousePressed(this);
-                    break;
-                case MouseEvent.MOUSE_RELEASED:
-                    mouseListener.mouseReleased(this);
-                    break;
-                default:
-                    throw new RuntimeException("PMouseEvent with bad ID");
-            }
-        }
-        else {
-            final MouseMotionListener mouseMotionListener = (MouseMotionListener) listener;
-            switch (getID()) {
-                case MouseEvent.MOUSE_DRAGGED:
-                    mouseMotionListener.mouseDragged(this);
-                    break;
-                case MouseEvent.MOUSE_MOVED:
-                    mouseMotionListener.mouseMoved(this);
-                    break;
-                default:
-                    throw new RuntimeException("PMouseMotionEvent with bad ID");
-            }
+        final MouseListener mouseListener = (MouseListener) listener;
+        switch (getID()) {
+            case MouseEvent.MOUSE_CLICKED:
+                mouseListener.mouseClicked(this);
+                break;
+            case MouseEvent.MOUSE_ENTERED:
+                mouseListener.mouseEntered(this);
+                break;
+            case MouseEvent.MOUSE_EXITED:
+                mouseListener.mouseExited(this);
+                break;
+            case MouseEvent.MOUSE_PRESSED:
+                mouseListener.mousePressed(this);
+                break;
+            case MouseEvent.MOUSE_RELEASED:
+                mouseListener.mouseReleased(this);
+                break;
+            default:
+                throw new RuntimeException("PMouseEvent with bad ID");
         }
     }
 
@@ -270,9 +266,19 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable {
      * of the event will keep changing to reflect the scenegraph object that is
      * firing the event.
      * 
-     * @param aSource
+     * @param newSource the currently reported source of the event (will change
+     *            as event is bubbled up)
      */
-    public void setSource(final Object aSource) {
-        source = aSource;
+    public void setSource(final Object newSource) {
+        source = newSource;
+    }
+
+    /**
+     * Returns this PSwingMouseEvent's MouseEvent.
+     * 
+     * @return underlying mouse event of this PSwingMouseEvent
+     */
+    public MouseEvent asMouseEvent() {
+        return this;
     }
 }

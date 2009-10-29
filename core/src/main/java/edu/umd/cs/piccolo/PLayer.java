@@ -68,10 +68,24 @@ public class PLayer extends PNode {
      * of cameras, but old value will always be null.
      */
     public static final String PROPERTY_CAMERAS = "cameras";
+
+    /**
+     * The property code that identifies a change in the set of this layer's
+     * cameras (see {@link #getCamera getCamera}, {@link #getCameraCount
+     * getCameraCount}, {@link #getCamerasReference getCamerasReference}). In
+     * any property change event the new value will be a reference to the list
+     * of cameras, but old value will always be null.
+     */
     public static final int PROPERTY_CODE_CAMERAS = 1 << 13;
 
+    /**
+     * Cameras which are registered as viewers of this PLayer.
+     */
     private transient List cameras;
 
+    /**
+     * Creates a PLayer without any cameras attached to it.
+     */
     public PLayer() {
         super();
         cameras = new ArrayList();
@@ -84,6 +98,8 @@ public class PLayer extends PNode {
 
     /**
      * Get the list of cameras viewing this layer.
+     * 
+     * @return direct reference to registered cameras
      */
     public List getCamerasReference() {
         return cameras;
@@ -91,6 +107,8 @@ public class PLayer extends PNode {
 
     /**
      * Get the number of cameras viewing this layer.
+     * 
+     * @return the number of cameras attached to this layer
      */
     public int getCameraCount() {
         if (cameras == null) {
@@ -101,6 +119,9 @@ public class PLayer extends PNode {
 
     /**
      * Get the camera in this layer's camera list at the specified index.
+     * 
+     * @param index index of camera to fetch
+     * @return camera at the given index
      */
     public PCamera getCamera(final int index) {
         return (PCamera) cameras.get(index);
@@ -109,6 +130,8 @@ public class PLayer extends PNode {
     /**
      * Add a camera to this layer's camera list. This method it called
      * automatically when a layer is added to a camera.
+     * 
+     * @param camera the camera to add to this layer
      */
     public void addCamera(final PCamera camera) {
         addCamera(cameras.size(), camera);
@@ -117,6 +140,9 @@ public class PLayer extends PNode {
     /**
      * Add a camera to this layer's camera list at the specified index. This
      * method it called automatically when a layer is added to a camera.
+     * 
+     * @param index index at which the camera should be inserted
+     * @param camera Camera to add to layer
      */
     public void addCamera(final int index, final PCamera camera) {
         cameras.add(index, camera);
@@ -126,6 +152,10 @@ public class PLayer extends PNode {
 
     /**
      * Remove the camera from this layer's camera list.
+     * 
+     * @param camera the camera to remove from the layer, does nothing if not
+     *            found
+     * @return camera that was passed in
      */
     public PCamera removeCamera(final PCamera camera) {
         if (cameras.remove(camera)) {
@@ -137,6 +167,10 @@ public class PLayer extends PNode {
 
     /**
      * Remove the camera at the given index from this layer's camera list.
+     * 
+     * @param index the index of the camera we wish to remove
+     * 
+     * @return camera that was removed
      */
     public PCamera removeCamera(final int index) {
         final PCamera result = (PCamera) cameras.remove(index);
@@ -154,19 +188,27 @@ public class PLayer extends PNode {
     /**
      * Override repaints and forward them to the cameras that are viewing this
      * layer.
+     * 
+     * @param localBounds bounds flagged as needing repainting
+     * @param repaintSource the source of the repaint notification
      */
-    public void repaintFrom(final PBounds localBounds, final PNode childOrThis) {
-        if (childOrThis != this) {
+    public void repaintFrom(final PBounds localBounds, final PNode repaintSource) {
+        if (repaintSource != this) {
             localToParent(localBounds);
         }
 
         notifyCameras(localBounds);
 
         if (getParent() != null) {
-            getParent().repaintFrom(localBounds, childOrThis);
+            getParent().repaintFrom(localBounds, repaintSource);
         }
     }
 
+    /**
+     * Dispatches repaint notification to all registered cameras.
+     * 
+     * @param parentBounds bounds needing repainting in parent coordinate system
+     */
     protected void notifyCameras(final PBounds parentBounds) {
         final int count = getCameraCount();
         for (int i = 0; i < count; i++) {
@@ -187,8 +229,14 @@ public class PLayer extends PNode {
      * the layer writes out any cameras that are viewing it conditionally, so
      * they will only get written out if someone else writes them
      * unconditionally.
+     * 
+     * @param out object to which the layer should be streamed
+     * @throws IOException may occur while serializing to stream
      */
     private void writeObject(final ObjectOutputStream out) throws IOException {
+        if (!(out instanceof PObjectOutputStream)) {
+            throw new RuntimeException("May not serialize PLayer to a non PObjectOutputStream");
+        }
         out.defaultWriteObject();
 
         final int count = getCameraCount();
@@ -199,6 +247,15 @@ public class PLayer extends PNode {
         out.writeObject(Boolean.FALSE);
     }
 
+    /**
+     * Deserializes PLayer from the provided ObjectInputStream.
+     * 
+     * @param in stream from which PLayer should be read
+     * 
+     * @throws IOException since it involves quite a bit of IO
+     * @throws ClassNotFoundException may occur is serialized stream has been
+     *             renamed after serialization
+     */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 

@@ -45,18 +45,31 @@ import edu.umd.cs.piccolo.util.PBounds;
  * @author Jesse Grosjean
  */
 public class PZoomToEventHandler extends PBasicInputEventHandler {
+    private static final int ZOOM_SPEED = 500;
 
+    /**
+     * Constructs a PZoomToEventHandler that only recognizes BUTTON1 events.
+     */
     public PZoomToEventHandler() {
         setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
     }
 
-    public void mousePressed(final PInputEvent aEvent) {
-        zoomTo(aEvent);
+    /**
+     * Zooms the camera's view to the pressed node when button 1 is pressed.
+     * 
+     * @param event event representing the mouse press
+     */
+    public void mousePressed(final PInputEvent event) {
+        zoomTo(event);
     }
 
-    protected void zoomTo(final PInputEvent aEvent) {
+    /**
+     * Zooms the camera to the picked node of the event.
+     * @param event Event from which to extract the zoom target
+     */
+    protected void zoomTo(final PInputEvent event) {
         PBounds zoomToBounds;
-        final PNode picked = aEvent.getPickedNode();
+        final PNode picked = event.getPickedNode();
 
         if (picked instanceof PCamera) {
             final PCamera c = (PCamera) picked;
@@ -66,6 +79,6 @@ public class PZoomToEventHandler extends PBasicInputEventHandler {
             zoomToBounds = picked.getGlobalFullBounds();
         }
 
-        aEvent.getCamera().animateViewToCenterBounds(zoomToBounds, true, 500);
+        event.getCamera().animateViewToCenterBounds(zoomToBounds, true, ZOOM_SPEED);
     }
 }

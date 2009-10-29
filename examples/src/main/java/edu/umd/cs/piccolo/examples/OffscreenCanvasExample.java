@@ -38,10 +38,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 
+import edu.umd.cs.piccolo.POffscreenCanvas;
 import edu.umd.cs.piccolo.activities.PActivity;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.nodes.PText;
-import edu.umd.cs.piccolox.POffscreenCanvas;
 
 /**
  * Offscreen canvas example.
@@ -93,8 +93,8 @@ public final class OffscreenCanvasExample {
         final PActivity toRight = canvas.getCamera().animateViewToCenterBounds(right, true, 5000);
         final PActivity toLeft = canvas.getCamera().animateViewToCenterBounds(left, true, 5000);
         final PActivity toStart = canvas.getCamera().animateViewToCenterBounds(start, true, 5000);
-        toLeft.setStartTime(toLeft.getStartTime() + 5000);
-        toStart.setStartTime(toStart.getStartTime() + 10000);
+        toLeft.startAfter(toRight);
+        toStart.startAfter(toLeft);
     }
 
     /**
@@ -125,7 +125,7 @@ public final class OffscreenCanvasExample {
         final GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice device = environment.getDefaultScreenDevice();
         final OffscreenCanvasExample example = new OffscreenCanvasExample(device);
-
+        
         final boolean done = false;
         while (!done) {
             example.render();

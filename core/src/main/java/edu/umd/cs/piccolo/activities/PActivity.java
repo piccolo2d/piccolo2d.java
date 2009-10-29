@@ -44,33 +44,43 @@ import edu.umd.cs.piccolo.util.PUtil;
  * @author Jesse Grosjean
  */
 public class PActivity {
-
+    /**
+     * Parameter for terminate that signifies that activity should bail out
+     * immediately without flagging activity as finished.
+     */
     public static final int TERMINATE_WITHOUT_FINISHING = 0;
-    public static final int TERMINATE_AND_FINISH = 1;
-    public static final int TERMINATE_AND_FINISH_IF_STEPPING = 2;
-
-    private PActivityScheduler scheduler;
-
-    private long startTime;
-    private long duration;
-    private long stepRate;
-    private PActivityDelegate delegate;
-
-    private boolean stepping;
-    private long nextStepTime;
 
     /**
-     * <b>PActivityDelegate</b> is used by classes to learn about and act on the
-     * different states that a PActivity goes through, such as when the activity
-     * starts and stops stepping.
+     * Parameter for terminate that signifies that activity should bail out
+     * immediately, but flag activity as finished.
      */
-    public interface PActivityDelegate {
-        public void activityStarted(PActivity activity);
+    public static final int TERMINATE_AND_FINISH = 1;
 
-        public void activityStepped(PActivity activity);
+    /**
+     * Parameter for terminate that signifies that activity should bail out
+     * immediately, if currently active.
+     */
+    public static final int TERMINATE_AND_FINISH_IF_STEPPING = 2;
 
-        public void activityFinished(PActivity activity);
-    }
+    /** Activity scheduler that this activity is bound to. */
+    private PActivityScheduler scheduler;
+
+    /** Time at which this activity should start in PRoot global time. */
+    private long startTime;
+
+    /** Duration in milliseconds that this activity should last. */
+    private long duration;
+
+    /** How many milliseconds should pass between steps. */
+    private long stepRate;
+
+    private PActivityDelegate delegate;
+
+    /** Whether this activity is currently active. */
+    private boolean stepping;
+
+    /** Next time at which step should occur. */
+    private long nextStepTime;
 
     /**
      * Constructs a new PActivity.
@@ -120,6 +130,8 @@ public class PActivity {
      * Return the time that this activity should start running in PRoot global
      * time. When this time is reached (or soon after) this activity will have
      * its startStepping() method called.
+     * 
+     * @return time at which this activity should start in PRoot global time.
      */
     public long getStartTime() {
         return startTime;
@@ -129,6 +141,9 @@ public class PActivity {
      * Set the time that this activity should start running in PRoot global
      * time. When this time is reached (or soon after) this activity will have
      * its startStepping() method called.
+     * 
+     * @param aTriggerTime time at which you want this activity to begin in
+     *            PRoot global time
      */
     public void setStartTime(final long aTriggerTime) {
         startTime = aTriggerTime;
@@ -136,6 +151,8 @@ public class PActivity {
 
     /**
      * Return the amount of time that this activity should delay between steps.
+     * 
+     * @return the desired milliseconds between steps
      */
     public long getStepRate() {
         return stepRate;
@@ -143,11 +160,19 @@ public class PActivity {
 
     /**
      * Set the amount of time that this activity should delay between steps.
+     * 
+     * @param aStepRate desired step rate in milliseconds between steps
      */
     public void setStepRate(final long aStepRate) {
         stepRate = aStepRate;
     }
 
+    /**
+     * Gets the next step time desired for this activity. Exists since some
+     * steps might eat into the step rate otherwise.
+     * 
+     * @return next calculated step time
+     */
     public long getNextStepTime() {
         return nextStepTime;
     }
@@ -155,6 +180,8 @@ public class PActivity {
     /**
      * Return the amount of time that this activity should take to complete,
      * after the startStepping method is called.
+     * 
+     * @return time that this activity should take to complete
      */
     public long getDuration() {
         return duration;
@@ -163,15 +190,29 @@ public class PActivity {
     /**
      * Set the amount of time that this activity should take to complete, after
      * the startStepping method is called.
+     * 
+     * @param aDuration desired duration this activity should take (-1 for
+     *            infinite) once it begins stepping
      */
     public void setDuration(final long aDuration) {
         duration = aDuration;
     }
 
+    /**
+     * Returns the activity scheduler associated with this activity.
+     * 
+     * @return associated scheduler
+     */
     public PActivityScheduler getActivityScheduler() {
         return scheduler;
     }
 
+    /**
+     * Informs the activity of the scheduler that will be responsible for
+     * scheduling it.
+     * 
+     * @param aScheduler scheduler to associate with this activity
+     */
     public void setActivityScheduler(final PActivityScheduler aScheduler) {
         scheduler = aScheduler;
     }
@@ -182,6 +223,8 @@ public class PActivity {
 
     /**
      * Return true if this activity is stepping.
+     * 
+     * @return whether this activity is stepping
      */
     public boolean isStepping() {
         return stepping;
@@ -191,6 +234,9 @@ public class PActivity {
      * Return true if this activity is performing an animation. This is used by
      * the PCanvas to determine if it should set the render quality to
      * PCanvas.animatingRenderQuality or not for each frame it renders.
+     * 
+     * @return whether this activity is an animation, subclasses can override
+     *         this.
      */
     protected boolean isAnimation() {
         return false;
@@ -233,6 +279,8 @@ public class PActivity {
     /**
      * Get the delegate for this activity. The delegate is notified when the
      * activity starts and stops stepping.
+     * 
+     * @return delegate of this activity, may be null
      */
     public PActivityDelegate getDelegate() {
         return delegate;
@@ -241,6 +289,8 @@ public class PActivity {
     /**
      * Set the delegate for this activity. The delegate is notified when the
      * activity starts and stops stepping.
+     * 
+     * @param delegate delegate that should be informed of activity events
      */
     public void setDelegate(final PActivityDelegate delegate) {
         this.delegate = delegate;
@@ -255,6 +305,8 @@ public class PActivity {
      * Note that no link is created between these activities, if the startTime
      * or duration of the first activity is later changed this activities start
      * time will not be updated to reflect that change.
+     * 
+     * @param first activity after which this activity should be scheduled
      */
     public void startAfter(final PActivity first) {
         setStartTime(first.getStartTime() + first.getDuration());
@@ -283,6 +335,9 @@ public class PActivity {
      * the activity has not yet started the method activityStarted will also be
      * called. TERMINATE_AND_FINISH_IF_STEPPING - The method activityFinished
      * will only be called if the activity has previously started.
+     * 
+     * @param terminationBehavior behavior to use regarding delegate
+     *            notification and event firing
      */
     public void terminate(final int terminationBehavior) {
         if (scheduler != null) {
@@ -312,12 +367,18 @@ public class PActivity {
                     activityFinished();
                 }
                 break;
+            default:
+                throw new RuntimeException("Invalid termination behaviour provided to PActivity.terminate");
         }
     }
 
     /**
      * The activity scheduler calls this method and it is here that the activity
      * decides if it should do a step or not for the given time.
+     * 
+     * @param currentTime in global root time
+     * @return number of milliseconds in global root time before processStep
+     *         should be called again, -1 if never
      */
     public long processStep(final long currentTime) {
         // if before start time
@@ -357,6 +418,8 @@ public class PActivity {
     /**
      * Return the time when this activity should finish running. At this time
      * (or soon after) the stoppedStepping method will be called
+     * 
+     * @return time at which this activity should be stopped
      */
     public long getStopTime() {
         if (duration == -1) {
@@ -367,8 +430,39 @@ public class PActivity {
 
     /**
      * @deprecated see http://code.google.com/p/piccolo2d/issues/detail?id=99
+     * 
+     * @return string representation of this activity
      */
     protected String paramString() {
         return "";
     }
+    
+    /**
+     * <b>PActivityDelegate</b> is used by classes to learn about and act on the
+     * different states that a PActivity goes through, such as when the activity
+     * starts and stops stepping.
+     */
+    public interface PActivityDelegate {
+        /**
+         * Gets called when the activity starts.
+         * 
+         * @param activity activity that started
+         */
+        void activityStarted(PActivity activity);
+
+        /**
+         * Gets called for each step of the activity.
+         * 
+         * @param activity activity that is stepping
+         */
+        void activityStepped(PActivity activity);
+
+        /**
+         * Gets called when the activity finishes.
+         * 
+         * @param activity activity that finished
+         */
+        void activityFinished(PActivity activity);
+    }
+
 }

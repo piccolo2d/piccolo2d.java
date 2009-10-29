@@ -26,30 +26,54 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolo.examples.swt;
-
-import java.awt.Color;
+package edu.umd.cs.piccolox.swt.examples;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import edu.umd.cs.piccolox.swt.PSWTCanvas;
-import edu.umd.cs.piccolox.swt.PSWTPath;
 import edu.umd.cs.piccolox.swt.PSWTText;
 
 /**
- * @author good
+ * Piccolo2D SWT Hello World example.
  */
-public class SWTBasicExample {
+public class SWTHelloWorld {
 
     /**
-     * Constructor for SWTBasicExample.
+     * Create a new Piccolo2D SWT Hello World example.
      */
-    public SWTBasicExample() {
+    public SWTHelloWorld() {
         super();
     }
 
+
+    /**
+     * Create and open a new shell on the specified display.
+     *
+     * @param display display
+     * @return a new shell on the specified display
+     */
+    public static Shell open(final Display display) {
+        final Shell shell = new Shell(display);
+        shell.setLayout(new FillLayout());
+
+        // create a new SWT canvas
+        final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
+        // create a new SWT text node
+        final PSWTText text = new PSWTText("Hello World");
+        // add it as a child of the canvas' camera's first layer
+        canvas.getLayer().addChild(text);
+
+        shell.open();
+        return shell;
+    }
+
+    /**
+     * Main.
+     *
+     * @param args command line arguments, ignored
+     */
     public static void main(final String[] args) {
         final Display display = new Display();
         final Shell shell = open(display);
@@ -59,40 +83,5 @@ public class SWTBasicExample {
             }
         }
         display.dispose();
-    }
-
-    public static Shell open(final Display display) {
-        final Shell shell = new Shell(display);
-        shell.setLayout(new FillLayout());
-        final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
-
-        PSWTPath rect = PSWTPath.createRectangle(25, 25, 50, 50);
-        rect.setPaint(Color.red);
-        canvas.getLayer().addChild(rect);
-
-        rect = PSWTPath.createRectangle(300, 25, 100, 50);
-        rect.setPaint(Color.blue);
-        canvas.getLayer().addChild(rect);
-
-        PSWTPath circle = PSWTPath.createEllipse(100, 200, 50, 50);
-        circle.setPaint(Color.green);
-        canvas.getLayer().addChild(circle);
-
-        circle = PSWTPath.createEllipse(400, 400, 75, 150);
-        circle.setPaint(Color.yellow);
-        canvas.getLayer().addChild(circle);
-
-        PSWTText text = new PSWTText("Hello World");
-        text.translate(350, 150);
-        text.setPenColor(Color.gray);
-        canvas.getLayer().addChild(text);
-
-        text = new PSWTText("Goodbye World");
-        text.translate(50, 400);
-        text.setPenColor(Color.magenta);
-        canvas.getLayer().addChild(text);
-
-        shell.open();
-        return shell;
     }
 }
