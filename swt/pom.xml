@@ -270,7 +270,7 @@
     </profile>
 <!--
 
-    must manually enable this profile to override macosx_carbon_ppc
+    must manually enable this profile to override macosx_carbon
     <profile>
       <id>macosx_cocoa</id>
       <activation>
