@@ -49,7 +49,8 @@
     <dependency>
       <groupId>${swt.groupId}</groupId>
       <artifactId>${swt.artifactId}</artifactId>
-      <version>[3.3.0-v3346,)</version>
+<!--      <version>[3.3.0-v3346,)</version> -->
+      <version>[3.5.1,)</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
@@ -261,7 +262,7 @@
       <activation>
         <os>
           <name>mac os x</name>
-          <arch></arch>
+<!--          <arch></arch> -->
         </os>
       </activation>
       <properties>
@@ -284,13 +285,14 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
--->
+
+    this fails many unit tests, see Issue 126, comment #16
     <profile>
       <id>macosx_cocoa_intel</id>
       <activation>
         <os>
           <name>mac os x</name>
-          <arch></arch>
+          <arch>x86_64</arch>
         </os>
       </activation>
       <properties>
@@ -298,5 +300,6 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
+-->
   </profiles>
 </project>
