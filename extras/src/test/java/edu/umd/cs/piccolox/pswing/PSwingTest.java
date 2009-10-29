@@ -252,6 +252,7 @@ public class PSwingTest extends TestCase {
         PSwingCanvas canvas1 = new PSwingCanvas();
         PSwing label = new PSwing(new JLabel("Hello"));
         canvas1.getLayer().addChild(label);
+        assertEquals(1, canvas1.getSwingWrapper().getComponentCount());
         label.removeFromParent();
         assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
     }
@@ -272,7 +273,7 @@ public class PSwingTest extends TestCase {
 
         public MockPaintingPSwing(JComponent component) {
             super(component);
-        }
+        }       
 
         public void paintOnto(BufferedImage image) {
             PPaintContext paintContext = new PPaintContext(image.createGraphics());
@@ -292,16 +293,16 @@ public class PSwingTest extends TestCase {
         }
 
         public void paintComponentOnto(BufferedImage image) {            
-            paintComponent(image.createGraphics());
+            paint(image.createGraphics());
         }
 
-        protected void paintComponent(Graphics2D paintContext) {
-            super.paintComponent(paintContext);
+        public void paint(Graphics2D paintContext) {
+            super.paint(paintContext);
             paintedComponent = true;
         }
 
-        protected void paintGreek(Graphics2D paintContext) {
-            super.paintGreek(paintContext);
+        public void paintAsGreek(Graphics2D paintContext) {
+            super.paintAsGreek(paintContext);
             paintedGreek = true;
         }
 
