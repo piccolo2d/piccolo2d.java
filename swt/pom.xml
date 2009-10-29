@@ -49,8 +49,8 @@
     <dependency>
       <groupId>${swt.groupId}</groupId>
       <artifactId>${swt.artifactId}</artifactId>
-<!--      <version>[3.3.0-v3346,)</version> -->
-      <version>[3.5.1,)</version>
+      <version>[3.3.0-v3346,)</version>
+<!--      <version>[3.5.1,)</version> -->
       <scope>compile</scope>
     </dependency>
   </dependencies>
