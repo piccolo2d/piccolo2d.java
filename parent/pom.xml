@@ -117,11 +117,13 @@
     </developer>
     <developer>
       <id>bederson</id>
-      <name>bederson</name>
+      <name>Ben Bederson</name>
       <roles>
-        <role>developer</role>
+        <role>founder, original architect</role>
       </roles>
-      <timezone>-9</timezone>
+      <timezone>-5</timezone>
+      <organization>University of Maryland / Human-Computer Interaction Lab</organization>
+      <url>http://www.cs.umd.edu/~bederson</url>
     </developer>
     <developer>
       <id>heuermh</id>
@@ -137,7 +139,7 @@
       <roles>
         <role>developer</role>
       </roles>
-      <timezone>-9</timezone>
+      <timezone>-5</timezone>
     </developer>
     <developer>
       <id>mr0738@mro.name</id>
@@ -148,23 +150,53 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <id>reids@colorado.edu</id>
-      <name>reids@colorado.edu</name>
+      <id>reids</id>
+      <name>Sam Reid</name>
       <roles>
         <role>developer</role>
       </roles>
-      <timezone>-8</timezone>
+      <url>http://www.machete.ca</url>
+      <timezone>-7</timezone>
     </developer>
     <developer>
       <id>sjc@browsecode.org</id>
-      <name>sjc@browsecode.org</name>
+      <name>Stephen Chin</name>
       <roles>
         <role>developer</role>
       </roles>
+      <email>sjc@browsecode.org</email>
+      <url>http://steveonjava.com/</url>
       <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <id>aclamage</id>
+      <name>Aaron Clamage</name>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <email>aclamage@gmail.com</email>
+      <timezone>-5</timezone>
+    </developer>
+    <developer>
+      <id>lgood</id>
+      <name>Lance Good</name>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <email>lance@goodle.org</email>
+      <timezone>-5</timezone>
     </developer>
   </developers>
   <contributors>
+    <contributor>
+      <name>Chris Malley</name>
+      <email>cmalley@pixelzoom.com</email>
+      <url>http://www.pixelzoom.com</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-7</timezone>
+    </contributor>
     <contributor>
       <name>Alexander Kurtakov</name>
       <email>akurtakov@gmail.com</email>
