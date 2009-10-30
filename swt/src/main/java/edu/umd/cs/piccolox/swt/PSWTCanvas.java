@@ -501,9 +501,6 @@ public class PSWTCanvas extends Composite implements PComponent {
         if (backBuffer != null) {
             backBuffer.dispose();
         }
-
-        System.out.println("new size: " + newWidth);
-
         backBuffer = new Image(getDisplay(), newWidth, newHeight);
     }
 
