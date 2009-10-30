@@ -111,6 +111,44 @@ public class ToImageExample
         exactFit100x200.setOffset(418.0, 174.0);
         exactFit200x100.setOffset(418.0, 378.0);
 
+        PImage texture = new PImage(getClass().getResource("texture.png"));
+
+        PImage textureAspectFit100x100 = new PImage(texture.toImage(
+                new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB), Color.LIGHT_GRAY,
+                PNode.FILL_STRATEGY_ASPECT_FIT));
+        PImage textureAspectFit100x200 = new PImage(texture.toImage(
+                new BufferedImage(100, 200, BufferedImage.TYPE_INT_ARGB), Color.LIGHT_GRAY,
+                PNode.FILL_STRATEGY_ASPECT_FIT));
+        PImage textureAspectFit200x100 = new PImage(texture.toImage(
+                new BufferedImage(200, 100, BufferedImage.TYPE_INT_ARGB), Color.LIGHT_GRAY,
+                PNode.FILL_STRATEGY_ASPECT_FIT));
+
+        textureAspectFit100x100.setOffset(10.0, 482.0);
+        textureAspectFit100x200.setOffset(10.0, 586.0);
+        textureAspectFit200x100.setOffset(10.0, 790.0);
+
+        PImage textureAspectCover100x100 = new PImage(texture.toImage(new BufferedImage(100, 100,
+                BufferedImage.TYPE_INT_ARGB), Color.YELLOW, PNode.FILL_STRATEGY_ASPECT_COVER));
+        PImage textureAspectCover100x200 = new PImage(texture.toImage(new BufferedImage(100, 200,
+                BufferedImage.TYPE_INT_ARGB), Color.YELLOW, PNode.FILL_STRATEGY_ASPECT_COVER));
+        PImage textureAspectCover200x100 = new PImage(texture.toImage(new BufferedImage(200, 100,
+                BufferedImage.TYPE_INT_ARGB), Color.YELLOW, PNode.FILL_STRATEGY_ASPECT_COVER));
+
+        textureAspectCover100x100.setOffset(214.0, 482.0);
+        textureAspectCover100x200.setOffset(214.0, 586.0);
+        textureAspectCover200x100.setOffset(214.0, 790.0);
+
+        PImage textureExactFit100x100 = new PImage(texture.toImage(new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB),
+                Color.PINK, PNode.FILL_STRATEGY_EXACT_FIT));
+        PImage textureExactFit100x200 = new PImage(texture.toImage(new BufferedImage(100, 200, BufferedImage.TYPE_INT_ARGB),
+                Color.PINK, PNode.FILL_STRATEGY_EXACT_FIT));
+        PImage textureExactFit200x100 = new PImage(texture.toImage(new BufferedImage(200, 100, BufferedImage.TYPE_INT_ARGB),
+                Color.PINK, PNode.FILL_STRATEGY_EXACT_FIT));
+
+        textureExactFit100x100.setOffset(418.0, 482.0);
+        textureExactFit100x200.setOffset(418.0, 586.0);
+        textureExactFit200x100.setOffset(418.0, 790.0);
+
         PLayer layer = getCanvas().getLayer();
         layer.addChild(aspectFit);
         layer.addChild(aspectCover);
@@ -124,8 +162,16 @@ public class ToImageExample
         layer.addChild(exactFit100x100);
         layer.addChild(exactFit100x200);
         layer.addChild(exactFit200x100);
+        layer.addChild(textureAspectFit100x100);
+        layer.addChild(textureAspectFit100x200);
+        layer.addChild(textureAspectFit200x100);
+        layer.addChild(textureAspectCover100x100);
+        layer.addChild(textureAspectCover100x200);
+        layer.addChild(textureAspectCover200x100);
+        layer.addChild(textureExactFit100x100);
+        layer.addChild(textureExactFit100x200);
+        layer.addChild(textureExactFit200x100);
 
-        // manual window resize is req'd, see Issue 141
         setSize(650, 510);
     }
 
