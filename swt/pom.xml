@@ -257,11 +257,10 @@
       </properties>
     </profile>
     <profile>
-      <id>macosx_carbon_ppc</id>
+      <id>macosx_carbon</id>
       <activation>
         <os>
           <name>mac os x</name>
-          <arch>ppc</arch>
         </os>
       </activation>
       <properties>
@@ -269,26 +268,28 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
-    <profile>
-      <id>macosx_carbon_x86_64</id>
-      <activation>
-        <jdk>1.5</jdk>
-        <os>
-          <name>mac os x</name>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.groupId>org.eclipse.swt.carbon</swt.groupId>
-        <swt.artifactId>macosx</swt.artifactId>
-      </properties>
-    </profile>
+<!--
 
-    <!-- this profile requires the user to set MAVEN_OPTS="-Dd64", or unit tests will fail -->
+    must manually enable this profile to override macosx_carbon
     <profile>
-      <id>macosx_cocoa_x86_64</id>
+      <id>macosx_cocoa</id>
       <activation>
-        <jdk>[1.6,)</jdk>
+        <os>
+          <name>mac os x</name>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.cocoa</swt.groupId>
+        <swt.artifactId>macosx</swt.artifactId>
+      </properties>
+    </profile>
+-->
+<!--
+
+    this profile requires the user to set MAVEN_OPTS="-Dd64", or unit tests will fail
+    <profile>
+      <id>macosx_cocoa_intel</id>
+      <activation>
         <os>
           <name>mac os x</name>
           <arch>x86_64</arch>
@@ -299,5 +300,6 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
+-->
   </profiles>
 </project>
