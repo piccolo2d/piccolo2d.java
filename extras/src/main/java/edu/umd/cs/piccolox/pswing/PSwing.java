@@ -39,6 +39,9 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -274,6 +277,37 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     };
 
     /**
+     * Listens to container nodes for changes to its contents. Any additions
+     * will automatically have double buffering turned off.
+     */
+    private final ContainerListener doubleBufferRemover = new ContainerAdapter() {
+        public void componentAdded(ContainerEvent e) {
+            Component childComponent = e.getChild();
+            if (childComponent != null && childComponent instanceof JComponent) {
+                disableDoubleBuffering(((JComponent) childComponent));
+            }
+        };
+
+        /**
+         * Disables double buffering on every component in the hierarchy of the
+         * targetComponent.
+         * 
+         * I'm assuming that the intent of the is method is that it should be
+         * called explicitly by anyone making changes to the hierarchy of the
+         * Swing component graph.
+         */
+        private void disableDoubleBuffering(final JComponent targetComponent) {
+            targetComponent.setDoubleBuffered(false);
+            for (int i = 0; i < targetComponent.getComponentCount(); i++) {
+                final Component c = targetComponent.getComponent(i);
+                if (c instanceof JComponent) {
+                    disableDoubleBuffering((JComponent) c);
+                }
+            }
+        }
+    };
+
+    /**
      * Create a new visual component wrapper for the specified Swing component.
      * 
      * @param component Swing component to be wrapped
@@ -287,7 +321,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         component.addPropertyChangeListener(new PropertyChangeListener() {
             /** {@inheritDoc} */
             public void propertyChange(final PropertyChangeEvent evt) {
-                reshape();
+                updateBounds();
             }
         });
 
@@ -303,7 +337,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             }
         });
 
-        reshape();
+        updateBounds();
         listenForCanvas(this);
     }
 
@@ -321,7 +355,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * Ensures the bounds of the underlying component are accurate, and sets the
      * bounds of this PNode.
      */
-    void reshape() {
+    public void updateBounds() {
         // Avoid setBounds if it is unnecessary
         // TODO: should we make sure this is called at least once
         // TODO: does this sometimes need to be called when size already equals
@@ -470,33 +504,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         return component;
     }
 
-    // TODO: make this private and internal by listenening for componentAdded on
-    // known components
-    // This disables double buffering on any new components; if you add
-    // components to the target jcomponent without disabling double buffering,
-    // then there may be many graphical artifacts.
-    /**
-     * Disables double buffering on the wrapped component and all of its
-     * children.
-     * 
-     * I'm assuming that the intent of the is method is that it should be called
-     * explicitly by anyone making changes to the hierarchy of the Swing
-     * component graph.
-     */
-    private void componentHierarchyChanged() {
-        disableDoubleBuffering(component);
-    }
-
-    private void disableDoubleBuffering(final JComponent targetComponent) {
-        targetComponent.setDoubleBuffered(false);
-        for (int i = 0; i < targetComponent.getComponentCount(); i++) {
-            final Component c = targetComponent.getComponent(i);
-            if (c instanceof JComponent) {
-                disableDoubleBuffering((JComponent) c);
-            }
-        }
-    }
-
     /**
      * We need to turn off double buffering of Swing components within Piccolo
      * since all components contained within a native container use the same
@@ -521,16 +528,17 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
         c.addComponentListener(new ComponentAdapter() {
             public void componentResized(final ComponentEvent e) {
-                reshape();
+                updateBounds();
             }
 
             public void componentShown(final ComponentEvent e) {
-                reshape();
+                updateBounds();
             }
         });
 
         if (c instanceof Container) {
             initializeChildren((Container) c);
+            ((Container) c).addContainerListener(doubleBufferRemover);
         }
 
         if (c instanceof JComponent) {
@@ -646,7 +654,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         if (newCanvas != null) {
             canvas = newCanvas;
             canvas.addPSwing(this);
-            reshape();
+            updateBounds();
             repaint();
             canvas.invalidate();
             canvas.revalidate();

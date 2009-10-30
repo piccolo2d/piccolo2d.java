@@ -191,7 +191,7 @@ public class PSwingRepaintManager extends RepaintManager {
                 public void run() {
                     capturedComponent.validate();
                     final PSwing pSwing = (PSwing) capturedComponent.getClientProperty(PSwing.PSWING_PROPERTY);
-                    pSwing.reshape();
+                    pSwing.updateBounds();
                 }
             });
         }

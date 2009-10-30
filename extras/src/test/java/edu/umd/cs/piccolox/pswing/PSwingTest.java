@@ -75,8 +75,8 @@ public class PSwingTest extends TestCase {
         final JPanel panel = new JPanel();
 
         new PSwing(panel) {
-            protected void reshape() {
-                super.reshape();
+            public void updateBounds() {
+                super.updateBounds();
 
                 reshaped[0] = true;
             }
@@ -115,6 +115,15 @@ public class PSwingTest extends TestCase {
                     }
                 });
 
+    }
+    
+    public void testAddingSwingComponentToWrappedHierarchyMakesItNotDoubleBuffer() {
+        final JPanel panel = new JPanel();
+        final PSwing pSwing = new PSwing(panel);
+        final JComponent child = new JLabel("Test Component");
+        child.setDoubleBuffered(true);
+        panel.add(child);
+        assertFalse(child.isDoubleBuffered());
     }
 
     public void assertDelayedSuccess(String message, int delay, Predicate p) {
