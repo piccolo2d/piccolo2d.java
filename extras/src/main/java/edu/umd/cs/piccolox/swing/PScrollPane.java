@@ -33,14 +33,19 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.ScrollPaneUI;
+
+import edu.umd.cs.piccolo.PCanvas;
 
 /**
  * A simple extension to a standard scroll pane that uses the jazz version of
@@ -50,335 +55,407 @@ import javax.swing.plaf.ScrollPaneUI;
  */
 public class PScrollPane extends JScrollPane {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /** A reusable null action. */
-    protected PNullAction nullAction = null;
+	/** A reusable null action. */
+	protected PNullAction nullAction = null;
 
-    /** Controls whether key actions are disabled on this component. */
-    protected boolean disableKeyActions = false;
+	/** Controls whether key actions are disabled on this component. */
+	protected boolean disableKeyActions = false;
 
-    /**
-     * Constructs a scollpane for the provided component with the specified
-     * scrollbar policies.
-     * 
-     * @param view component being viewed through the scrollpane
-     * @param vsbPolicy vertical scroll bar policy
-     * @param hsbPolicy horizontal scroll bar policy
-     */
-    public PScrollPane(final Component view, final int vsbPolicy, final int hsbPolicy) {
-        super(view, vsbPolicy, hsbPolicy);
+	private final AdjustmentListener scrollAdjustmentListener = new AdjustmentListener() {
+		private boolean lastAdjustingState = false;
 
-        // Set the layout and sync it with the scroll pane
-        final PScrollPaneLayout layout = new PScrollPaneLayout.UIResource();
-        setLayout(layout);
-        layout.syncWithScrollPane(this);
-    }
+		public void adjustmentValueChanged(AdjustmentEvent e) {
+			if (e.getSource() instanceof JScrollBar) {
+				JScrollBar scrollBar = (JScrollBar) e.getSource();
+				
+				setAdjusting(scrollBar.getValueIsAdjusting());
+			}
+		}
 
-    /**
-     * Constructs a scollpane for the provided component.
-     * 
-     * @param view component being viewed through the scrollpane
-     */
-    public PScrollPane(final Component view) {
-        this(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    }
+		/**
+		 * Updates the underlying PCanvas' interacting flag depending on whether
+		 * scroll bar adjustments are still taking place.
+		 * 
+		 * @param isAdjusting
+		 *          true if the scroll bar is still being interacted with
+		 */
+		private void setAdjusting(final boolean isAdjusting) {
+			if (isAdjusting != lastAdjustingState) {
+				Component c = getViewport().getView();
+				if (c instanceof PCanvas) {
+					((PCanvas) c).setInteracting(isAdjusting);
+				}
+				lastAdjustingState = isAdjusting;
+			}
+		}
+	};
 
-    /**
-     * Constructs a scollpane not attached to any component with the specified
-     * scroll bar policies.
-     * 
-     * @param vsbPolicy vertical scroll bar policy
-     * @param hsbPolicy horizontal scroll bar policy
-     */
-    public PScrollPane(final int vsbPolicy, final int hsbPolicy) {
-        this(null, vsbPolicy, hsbPolicy);
-    }
+	/**
+	 * Constructs a scollpane for the provided component with the specified
+	 * scrollbar policies.
+	 * 
+	 * @param view
+	 *          component being viewed through the scrollpane
+	 * @param vsbPolicy
+	 *          vertical scroll bar policy
+	 * @param hsbPolicy
+	 *          horizontal scroll bar policy
+	 */
+	public PScrollPane(final Component view, final int vsbPolicy, final int hsbPolicy) {
+		super(view, vsbPolicy, hsbPolicy);
 
-    /**
-     * Constructs a scollpane not attached to any component.
-     */
-    public PScrollPane() {
-        this(null, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    }
+		// Set the layout and sync it with the scroll pane
+		final PScrollPaneLayout layout = new PScrollPaneLayout.UIResource();
+		setLayout(layout);
+		layout.syncWithScrollPane(this);
 
-    /**
-     * Disable or enable key actions on this PScrollPane.
-     * 
-     * @param disable true disables key actions, false enables key actions
-     */
-    public void setKeyActionsDisabled(final boolean disable) {
-        if (disable && disableKeyActions != disable) {
-            disableKeyActions = disable;
-            disableKeyActions();
-        }
-        else if (!disable && disableKeyActions != disable) {
-            disableKeyActions = disable;
-            installCustomKeyActions();
-        }
-    }
+		horizontalScrollBar.addAdjustmentListener(scrollAdjustmentListener);
+		verticalScrollBar.addAdjustmentListener(scrollAdjustmentListener);
+	}
 
-    /**
-     * Sets the UI.
-     * 
-     * @param ui the scroll pane ui to associate with this PScollPane
-     */
-    public void setUI(final ScrollPaneUI ui) {
-        super.setUI(ui);
+	public void setVerticalScrollBar(javax.swing.JScrollBar newVerticalScrollBar) {
+		if (verticalScrollBar != null) {
+			verticalScrollBar.removeAdjustmentListener(scrollAdjustmentListener);
+		}
 
-        if (!disableKeyActions) {
-            installCustomKeyActions();
-        }
-        else {
-            disableKeyActions();
-        }
-    }
+		super.setVerticalScrollBar(newVerticalScrollBar);
+		newVerticalScrollBar.addAdjustmentListener(scrollAdjustmentListener);
+	}
 
-    /**
-     * Install custom key actions (in place of the Swing defaults) to correctly
-     * scroll the view.
-     */
-    protected void installCustomKeyActions() {
-        final ActionMap map = getActionMap();
+	public void setHorizontalScrollBar(javax.swing.JScrollBar newHorizontalScrollBar) {
+		if (horizontalScrollBar != null) {
+			horizontalScrollBar.removeAdjustmentListener(scrollAdjustmentListener);
+		}
+		
+		super.setHorizontalScrollBar(newHorizontalScrollBar);
+		newHorizontalScrollBar.addAdjustmentListener(scrollAdjustmentListener);
+	}
 
-        map.put("scrollUp", new PScrollAction("scrollUp", SwingConstants.VERTICAL, -1, true));
-        map.put("scrollDown", new PScrollAction("scrollDown", SwingConstants.VERTICAL, 1, true));
-        map.put("scrollLeft", new PScrollAction("scrollLeft", SwingConstants.HORIZONTAL, -1, true));
+	/**
+	 * Constructs a scollpane for the provided component.
+	 * 
+	 * @param view
+	 *          component being viewed through the scrollpane
+	 */
+	public PScrollPane(final Component view) {
+		this(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	}
 
-        map.put("scrollRight", new PScrollAction("ScrollRight", SwingConstants.HORIZONTAL, 1, true));
-        map.put("unitScrollRight", new PScrollAction("UnitScrollRight", SwingConstants.HORIZONTAL, 1, false));
-        map.put("unitScrollLeft", new PScrollAction("UnitScrollLeft", SwingConstants.HORIZONTAL, -1, false));
-        map.put("unitScrollUp", new PScrollAction("UnitScrollUp", SwingConstants.VERTICAL, -1, false));
-        map.put("unitScrollDown", new PScrollAction("UnitScrollDown", SwingConstants.VERTICAL, 1, false));
+	/**
+	 * Constructs a scollpane not attached to any component with the specified
+	 * scroll bar policies.
+	 * 
+	 * @param vsbPolicy
+	 *          vertical scroll bar policy
+	 * @param hsbPolicy
+	 *          horizontal scroll bar policy
+	 */
+	public PScrollPane(final int vsbPolicy, final int hsbPolicy) {
+		this(null, vsbPolicy, hsbPolicy);
+	}
 
-        map.put("scrollEnd", new PScrollEndAction("ScrollEnd"));
-        map.put("scrollHome", new PScrollHomeAction("ScrollHome"));
-    }
+	/**
+	 * Constructs a scollpane not attached to any component.
+	 */
+	public PScrollPane() {
+		this(null, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	}
 
-    /**
-     * Disables key actions on this PScrollPane.
-     */
-    protected void disableKeyActions() {
-        final ActionMap map = getActionMap();
+	/**
+	 * Disable or enable key actions on this PScrollPane.
+	 * 
+	 * @param disable
+	 *          true disables key actions, false enables key actions
+	 */
+	public void setKeyActionsDisabled(final boolean disable) {
+		if (disable && disableKeyActions != disable) {
+			disableKeyActions = disable;
+			disableKeyActions();
+		} else if (!disable && disableKeyActions != disable) {
+			disableKeyActions = disable;
+			installCustomKeyActions();
+		}
+	}
 
-        if (nullAction == null) {
-            nullAction = new PNullAction();
-        }
+	/**
+	 * Sets the UI.
+	 * 
+	 * @param ui
+	 *          the scroll pane ui to associate with this PScollPane
+	 */
+	public void setUI(final ScrollPaneUI ui) {
+		super.setUI(ui);
 
-        map.put("scrollUp", nullAction);
-        map.put("scrollDown", nullAction);
-        map.put("scrollLeft", nullAction);
-        map.put("scrollRight", nullAction);
-        map.put("unitScrollRight", nullAction);
-        map.put("unitScrollLeft", nullAction);
-        map.put("unitScrollUp", nullAction);
-        map.put("unitScrollDown", nullAction);
-        map.put("scrollEnd", nullAction);
-        map.put("scrollHome", nullAction);
-    }
+		if (!disableKeyActions) {
+			installCustomKeyActions();
+		} else {
+			disableKeyActions();
+		}
+	}
 
-    /**
-     * Overridden to create the Piccolo2D viewport.
-     * 
-     * @return the Piccolo2D version of the viewport
-     */
-    protected JViewport createViewport() {
-        return new PViewport();
-    }
+	/**
+	 * Install custom key actions (in place of the Swing defaults) to correctly
+	 * scroll the view.
+	 */
+	protected void installCustomKeyActions() {
+		final ActionMap map = getActionMap();
 
-    /**
-     * Action to scroll left/right/up/down. Modified from
-     * javax.swing.plaf.basic.BasicScrollPaneUI.ScrollAction.
-     * 
-     * Gets the view parameters (position and size) from the Viewport rather
-     * than directly from the view - also only performs its actions when the
-     * relevant scrollbar is visible.
-     */
-    protected static class PScrollAction extends AbstractAction {
-        private static final int MINIMUM_SCROLL_SIZE = 10;
-        private static final long serialVersionUID = 1L;
-        /** Direction to scroll. */
-        protected int orientation;
-        /** 1 indicates scroll down, -1 up. */
-        protected int direction;
-        /** True indicates a block scroll, otherwise a unit scroll. */
-        private final boolean block;
+		map.put("scrollUp", new PScrollAction("scrollUp", SwingConstants.VERTICAL, -1, true));
+		map.put("scrollDown", new PScrollAction("scrollDown", SwingConstants.VERTICAL, 1,
+				true));
+		map.put("scrollLeft", new PScrollAction("scrollLeft", SwingConstants.HORIZONTAL, -1,
+				true));
 
-        /**
-         * Constructs a scroll action with the given name in the given
-         * orientiation stated and in the direction provided.
-         * 
-         * @param name arbitrary name of action
-         * @param orientation horizontal or vertical
-         * @param direction 1 indicates scroll down, -1 up
-         * @param block true if block scroll as opposed to unit
-         */
-        protected PScrollAction(final String name, final int orientation, final int direction, final boolean block) {
-            super(name);
-            this.orientation = orientation;
-            this.direction = direction;
-            this.block = block;
-        }
+		map.put("scrollRight", new PScrollAction("ScrollRight", SwingConstants.HORIZONTAL, 1,
+				true));
+		map.put("unitScrollRight", new PScrollAction("UnitScrollRight",
+				SwingConstants.HORIZONTAL, 1, false));
+		map.put("unitScrollLeft", new PScrollAction("UnitScrollLeft",
+				SwingConstants.HORIZONTAL, -1, false));
+		map.put("unitScrollUp", new PScrollAction("UnitScrollUp", SwingConstants.VERTICAL,
+				-1, false));
+		map.put("unitScrollDown", new PScrollAction("UnitScrollDown",
+				SwingConstants.VERTICAL, 1, false));
 
-        /**
-         * Performs the scroll action if the action was performed on visible
-         * scrollbars and if the viewport is valid.
-         * 
-         * @param event the event responsible for this action being performed
-         */
-        public void actionPerformed(final ActionEvent event) {
-            final JScrollPane scrollpane = (JScrollPane) event.getSource();
-            if (!isScrollEventOnVisibleScrollbars(scrollpane)) {
-                return;
-            }
+		map.put("scrollEnd", new PScrollEndAction("ScrollEnd"));
+		map.put("scrollHome", new PScrollHomeAction("ScrollHome"));
+	}
 
-            final JViewport vp = scrollpane.getViewport();
-            if (vp == null) {
-                return;
-            }
+	/**
+	 * Disables key actions on this PScrollPane.
+	 */
+	protected void disableKeyActions() {
+		final ActionMap map = getActionMap();
 
-            Component view = vp.getView();
-            if (view == null) {
-                return;
-            }
+		if (nullAction == null) {
+			nullAction = new PNullAction();
+		}
 
-            final Rectangle visRect = vp.getViewRect();
-            // LEG: Modification to query the viewport for the
-            // view size rather than going directly to the view
-            final Dimension vSize = vp.getViewSize();
-            final int amount;
+		map.put("scrollUp", nullAction);
+		map.put("scrollDown", nullAction);
+		map.put("scrollLeft", nullAction);
+		map.put("scrollRight", nullAction);
+		map.put("unitScrollRight", nullAction);
+		map.put("unitScrollLeft", nullAction);
+		map.put("unitScrollUp", nullAction);
+		map.put("unitScrollDown", nullAction);
+		map.put("scrollEnd", nullAction);
+		map.put("scrollHome", nullAction);
+	}
 
-            if (view instanceof Scrollable) {
-                if (block) {
-                    amount = ((Scrollable) view).getScrollableBlockIncrement(visRect, orientation, direction);
-                }
-                else {
-                    amount = ((Scrollable) view).getScrollableUnitIncrement(visRect, orientation, direction);
-                }
-            }
-            else {
-                if (block) {
-                    if (orientation == SwingConstants.VERTICAL) {
-                        amount = visRect.height;
-                    }
-                    else {
-                        amount = visRect.width;
-                    }
-                }
-                else {
-                    amount = MINIMUM_SCROLL_SIZE;
-                }
-            }
+	/**
+	 * Overridden to create the Piccolo2D viewport.
+	 * 
+	 * @return the Piccolo2D version of the viewport
+	 */
+	protected JViewport createViewport() {
+		return new PViewport();
+	}
 
-            if (orientation == SwingConstants.VERTICAL) {
-                visRect.y += amount * direction;
-                if (visRect.y + visRect.height > vSize.height) {
-                    visRect.y = Math.max(0, vSize.height - visRect.height);
-                }
-                else if (visRect.y < 0) {
-                    visRect.y = 0;
-                }
-            }
-            else {
-                visRect.x += amount * direction;
-                if (visRect.x + visRect.width > vSize.width) {
-                    visRect.x = Math.max(0, vSize.width - visRect.width);
-                }
-                else if (visRect.x < 0) {
-                    visRect.x = 0;
-                }
-            }
-            vp.setViewPosition(visRect.getLocation());
-        }
+	/**
+	 * Action to scroll left/right/up/down. Modified from
+	 * javax.swing.plaf.basic.BasicScrollPaneUI.ScrollAction.
+	 * 
+	 * Gets the view parameters (position and size) from the Viewport rather than
+	 * directly from the view - also only performs its actions when the relevant
+	 * scrollbar is visible.
+	 */
+	protected static class PScrollAction extends AbstractAction {
+		private static final int MINIMUM_SCROLL_SIZE = 10;
+		private static final long serialVersionUID = 1L;
+		/** Direction to scroll. */
+		protected int orientation;
+		/** 1 indicates scroll down, -1 up. */
+		protected int direction;
+		/** True indicates a block scroll, otherwise a unit scroll. */
+		private final boolean block;
 
-        private boolean isScrollEventOnVisibleScrollbars(final JScrollPane scrollpane) {
-            return orientation == SwingConstants.VERTICAL && scrollpane.getVerticalScrollBar().isShowing()
-                    || orientation == SwingConstants.HORIZONTAL && scrollpane.getHorizontalScrollBar().isShowing();
-        }
-    }
+		/**
+		 * Constructs a scroll action with the given name in the given orientiation
+		 * stated and in the direction provided.
+		 * 
+		 * @param name
+		 *          arbitrary name of action
+		 * @param orientation
+		 *          horizontal or vertical
+		 * @param direction
+		 *          1 indicates scroll down, -1 up
+		 * @param block
+		 *          true if block scroll as opposed to unit
+		 */
+		protected PScrollAction(final String name, final int orientation,
+				final int direction, final boolean block) {
+			super(name);
+			this.orientation = orientation;
+			this.direction = direction;
+			this.block = block;
+		}
 
-    /**
-     * Action to scroll to x,y location of 0,0. Modified from
-     * javax.swing.plaf.basic.BasicScrollPaneUI.ScrollEndAction.
-     * 
-     * Only performs the event if a scrollbar is visible.
-     */
-    private static class PScrollHomeAction extends AbstractAction {
-        private static final long serialVersionUID = 1L;
+		/**
+		 * Performs the scroll action if the action was performed on visible
+		 * scrollbars and if the viewport is valid.
+		 * 
+		 * @param event
+		 *          the event responsible for this action being performed
+		 */
+		public void actionPerformed(final ActionEvent event) {
+			final JScrollPane scrollpane = (JScrollPane) event.getSource();
+			if (!isScrollEventOnVisibleScrollbars(scrollpane)) {
+				return;
+			}
 
-        protected PScrollHomeAction(final String name) {
-            super(name);
-        }
+			final JViewport vp = scrollpane.getViewport();
+			if (vp == null) {
+				return;
+			}
 
-        public void actionPerformed(final ActionEvent e) {
-            final JScrollPane scrollpane = (JScrollPane) e.getSource();
-            // LEG: Modification to only perform these actions if one of the
-            // scrollbars is actually showing
-            if (scrollpane.getVerticalScrollBar().isShowing() || scrollpane.getHorizontalScrollBar().isShowing()) {
-                final JViewport vp = scrollpane.getViewport();
-                if (vp != null && vp.getView() != null) {
-                    vp.setViewPosition(new Point(0, 0));
-                }
-            }
-        }
-    }
+			Component view = vp.getView();
+			if (view == null) {
+				return;
+			}
 
-    /**
-     * Action to scroll to last visible location. Modified from
-     * javax.swing.plaf.basic.BasicScrollPaneUI.ScrollEndAction.
-     * 
-     * Gets the view size from the viewport rather than directly from the view -
-     * also only performs the event if a scrollbar is visible.
-     */
-    protected static class PScrollEndAction extends AbstractAction {
-        private static final long serialVersionUID = 1L;
+			final Rectangle visRect = vp.getViewRect();
+			// LEG: Modification to query the viewport for the
+			// view size rather than going directly to the view
+			final Dimension vSize = vp.getViewSize();
+			final int amount;
 
-        /**
-         * Constructs a scroll to end action with the given name.
-         * 
-         * @param name name to assign to this action
-         */
-        protected PScrollEndAction(final String name) {
-            super(name);
-        }
+			if (view instanceof Scrollable) {
+				if (block) {
+					amount = ((Scrollable) view).getScrollableBlockIncrement(visRect, orientation,
+						direction);
+				} else {
+					amount = ((Scrollable) view).getScrollableUnitIncrement(visRect, orientation,
+						direction);
+				}
+			} else {
+				if (block) {
+					if (orientation == SwingConstants.VERTICAL) {
+						amount = visRect.height;
+					} else {
+						amount = visRect.width;
+					}
+				} else {
+					amount = MINIMUM_SCROLL_SIZE;
+				}
+			}
 
-        /**
-         * Scrolls to the end of the viewport if there are visible scrollbars.
-         * 
-         * @param event event responsible for the scroll event
-         */
-        public void actionPerformed(final ActionEvent event) {
-            final JScrollPane scrollpane = (JScrollPane) event.getSource();
-            // LEG: Modification to only perform these actions if one of the
-            // scrollbars is actually showing
-            if (scrollpane.getVerticalScrollBar().isShowing() || scrollpane.getHorizontalScrollBar().isShowing()) {
+			if (orientation == SwingConstants.VERTICAL) {
+				visRect.y += amount * direction;
+				if (visRect.y + visRect.height > vSize.height) {
+					visRect.y = Math.max(0, vSize.height - visRect.height);
+				} else if (visRect.y < 0) {
+					visRect.y = 0;
+				}
+			} else {
+				visRect.x += amount * direction;
+				if (visRect.x + visRect.width > vSize.width) {
+					visRect.x = Math.max(0, vSize.width - visRect.width);
+				} else if (visRect.x < 0) {
+					visRect.x = 0;
+				}
+			}
+			vp.setViewPosition(visRect.getLocation());
+		}
 
-                final JViewport vp = scrollpane.getViewport();
-                if (vp != null && vp.getView() != null) {
+		private boolean isScrollEventOnVisibleScrollbars(final JScrollPane scrollpane) {
+			return orientation == SwingConstants.VERTICAL
+					&& scrollpane.getVerticalScrollBar().isShowing()
+					|| orientation == SwingConstants.HORIZONTAL
+					&& scrollpane.getHorizontalScrollBar().isShowing();
+		}
+	}
 
-                    final Rectangle visRect = vp.getViewRect();
-                    // LEG: Modification to query the viewport for the
-                    // view size rather than going directly to the view
-                    final Dimension size = vp.getViewSize();
-                    vp.setViewPosition(new Point(size.width - visRect.width, size.height - visRect.height));
-                }
-            }
-        }
-    }
+	/**
+	 * Action to scroll to x,y location of 0,0. Modified from
+	 * javax.swing.plaf.basic.BasicScrollPaneUI.ScrollEndAction.
+	 * 
+	 * Only performs the event if a scrollbar is visible.
+	 */
+	private static class PScrollHomeAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
 
-    /**
-     * An action to do nothing - put into an action map to keep it from looking
-     * to its parent.
-     */
-    protected static class PNullAction extends AbstractAction {
-        private static final long serialVersionUID = 1L;
+		protected PScrollHomeAction(final String name) {
+			super(name);
+		}
 
-        /**
-         * Does nothing.
-         * 
-         * @param e Event responsible for this action
-         */
-        public void actionPerformed(final ActionEvent e) {
-        }
-    }
+		public void actionPerformed(final ActionEvent e) {
+			final JScrollPane scrollpane = (JScrollPane) e.getSource();
+			// LEG: Modification to only perform these actions if one of the
+			// scrollbars is actually showing
+			if (scrollpane.getVerticalScrollBar().isShowing()
+					|| scrollpane.getHorizontalScrollBar().isShowing()) {
+				final JViewport vp = scrollpane.getViewport();
+				if (vp != null && vp.getView() != null) {
+					vp.setViewPosition(new Point(0, 0));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Action to scroll to last visible location. Modified from
+	 * javax.swing.plaf.basic.BasicScrollPaneUI.ScrollEndAction.
+	 * 
+	 * Gets the view size from the viewport rather than directly from the view -
+	 * also only performs the event if a scrollbar is visible.
+	 */
+	protected static class PScrollEndAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructs a scroll to end action with the given name.
+		 * 
+		 * @param name
+		 *          name to assign to this action
+		 */
+		protected PScrollEndAction(final String name) {
+			super(name);
+		}
+
+		/**
+		 * Scrolls to the end of the viewport if there are visible scrollbars.
+		 * 
+		 * @param event
+		 *          event responsible for the scroll event
+		 */
+		public void actionPerformed(final ActionEvent event) {
+			final JScrollPane scrollpane = (JScrollPane) event.getSource();
+			// LEG: Modification to only perform these actions if one of the
+			// scrollbars is actually showing
+			if (scrollpane.getVerticalScrollBar().isShowing()
+					|| scrollpane.getHorizontalScrollBar().isShowing()) {
+
+				final JViewport vp = scrollpane.getViewport();
+				if (vp != null && vp.getView() != null) {
+
+					final Rectangle visRect = vp.getViewRect();
+					// LEG: Modification to query the viewport for the
+					// view size rather than going directly to the view
+					final Dimension size = vp.getViewSize();
+					vp.setViewPosition(new Point(size.width - visRect.width, size.height
+							- visRect.height));
+				}
+			}
+		}
+	}
+
+	/**
+	 * An action to do nothing - put into an action map to keep it from looking to
+	 * its parent.
+	 */
+	protected static class PNullAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Does nothing.
+		 * 
+		 * @param e
+		 *          Event responsible for this action
+		 */
+		public void actionPerformed(final ActionEvent e) {
+		}
+	}
 }
