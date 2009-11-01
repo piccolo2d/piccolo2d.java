@@ -262,6 +262,7 @@ public class PAffineTransform extends AffineTransform {
     /**
      * Applies the inverse of this transform to the source point if possible.
      * 
+     * @since 1.3
      * @param ptSrc point to be transformed
      * @param ptDst result of transform will be placed in this point
      * 

@@ -37,6 +37,8 @@ import edu.umd.cs.piccolo.util.PUtil;
 
 /**
  * Offscreen canvas.
+ *
+ * @since 1.3
  */
 public final class POffscreenCanvas implements PComponent {
 

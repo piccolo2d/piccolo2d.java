@@ -77,12 +77,16 @@ public class PRoot extends PNode {
     /**
      * The property name that identifies a change in this node's interacting
      * state.
+     *
+     * @since 1.3
      */
     public static final String PROPERTY_INTERACTING_CHANGED = "INTERACTING_CHANGED_NOTIFICATION";
 
     /**
      * The property code that identifies a change in this node's interacting
      * state.
+     *
+     * @since 1.3
      */
     public static final int PROPERTY_CODE_INTERACTING_CHANGED = 1 << 13;
 
@@ -205,7 +209,8 @@ public class PRoot extends PNode {
      * Return true if this root has been marked as interacting. If so the root
      * will normally render at a lower quality that is faster.
      * 
-     * @return True if this root has user interaction taking place
+     * @since 1.3
+     * @return true if this root has user interaction taking place
      */
     public boolean getInteracting() {
         return interacting > 0;
@@ -220,6 +225,7 @@ public class PRoot extends PNode {
      * but this is the appropriate place to mark interactions that may occur in
      * multiple canvases if this Root is shared.
      * 
+     * @since 1.3
      * @param isInteracting True if this root has user interaction taking place
      * @see PCanvas#setInteracting(boolean)
      */

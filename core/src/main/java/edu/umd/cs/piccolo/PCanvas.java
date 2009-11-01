@@ -86,12 +86,15 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * The property name that identifies a change in the interacting state.
      * 
+     * @since 1.3
      * @deprecated in favor of PROPERTY_INTERACTING
      */
     public static final String INTERACTING_CHANGED_NOTIFICATION = "INTERACTING_CHANGED_NOTIFICATION";
 
     /**
      * The property name that identifies a change in the interacting state.
+     *
+     * @since 1.3
      */
     public static final String PROPERTY_INTERACTING = "INTERACTING_CHANGED_NOTIFICATION";
 
@@ -648,6 +651,7 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Returns the quality to use when not animating or interacting.
      * 
+     * @since 1.3
      * @deprecated in favor or getNormalRenderQuality
      * @return the render quality to use when not animating or interacting
      */
@@ -658,6 +662,7 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Returns the quality to use when not animating or interacting.
      * 
+     * @since 1.3
      * @return the render quality to use when not animating or interacting
      */
     public int getNormalRenderQuality() {
@@ -667,6 +672,7 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Returns the quality to use when animating.
      * 
+     * @since 1.3
      * @return Returns the quality to use when animating
      */
     public int getAnimatingRenderQuality() {
@@ -676,6 +682,7 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Returns the quality to use when interacting.
      * 
+     * @since 1.3
      * @return Returns the quality to use when interacting
      */
     public int getInteractingRenderQuality() {
@@ -685,6 +692,7 @@ public class PCanvas extends JComponent implements PComponent {
     /**
      * Returns the input event listeners registered to receive input events.
      * 
+     * @since 1.3
      * @return array or input event listeners
      */
     public PInputEventListener[] getInputEventListeners() {

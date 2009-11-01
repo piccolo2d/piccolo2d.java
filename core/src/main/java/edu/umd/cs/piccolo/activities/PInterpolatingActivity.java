@@ -74,6 +74,7 @@ public class PInterpolatingActivity extends PActivity {
     /**
      * Constructs an interpolating activity that will last the duration given.
      * 
+     * @since 1.3
      * @param duration duration in milliseconds of the entire activity
      */
     public PInterpolatingActivity(final long duration) {

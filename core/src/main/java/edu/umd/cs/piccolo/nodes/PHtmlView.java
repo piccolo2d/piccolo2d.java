@@ -48,6 +48,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * the hood so you have the same restrictions regarding HTML as you have when
  * using standard Swing components (HTML 3.2 + subset of CSS 1.0).
  * 
+ * @since 1.3
  * @author Chris Malley (cmal...@pixelzoom.com)
  * @author Sam Reid
  * @author Allain Lalonde

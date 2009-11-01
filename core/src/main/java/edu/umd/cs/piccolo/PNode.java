@@ -363,12 +363,16 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * toImage fill strategy that stretches the node be as large as possible
      * while still retaining its aspect ratio.
+     *
+     * @since 1.3
      */
     public static final int FILL_STRATEGY_ASPECT_FIT = 1;
 
     /**
      * toImage fill strategy that stretches the node be large enough to cover
      * the image, and centers it.
+     *
+     * @since 1.3
      */
     public static final int FILL_STRATEGY_ASPECT_COVER = 2;
 
@@ -376,12 +380,15 @@ public class PNode implements Cloneable, Serializable, Printable {
      * toImage fill strategy that stretches the node to be exactly the
      * dimensions of the image. Will result in distortion if the aspect ratios
      * are different.
+     *
+     * @since 1.3
      */
     public static final int FILL_STRATEGY_EXACT_FIT = 4;
 
     /**
      * Creates a new PNode with the given name.
      * 
+     * @since 1.3
      * @param newName name to assign to node
      */
     public PNode(final String newName) {
@@ -2356,6 +2363,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * same place as the upper-left corner of B, and the transition will be
      * smoothly animated over a period of 750 milliseconds.
      * 
+     * @since 1.3
      * @param srcPt The anchor point on this transform's node (normalized to a
      *            unit square)
      * @param destPt The anchor point on destination bounds (normalized to a
@@ -2890,6 +2898,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * background, paint is null, then the image will not be filled with a color
      * prior to rendering
      * 
+     * @since 1.3
      * @param image Image onto which this node will be painted
      * @param backGroundPaint will fill background of image with this. May be
      *            null.
@@ -3511,6 +3520,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Sets the name of this null, may be null.
      * 
+     * @since 1.3
      * @param name new name for this node
      */
     public void setName(final String name) {
@@ -3520,6 +3530,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Returns the name given to this node.
      * 
+     * @since 1.3
      * @return name given to this node, may be null
      */
     public String getName() {
@@ -3684,6 +3695,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Returns an array of input event listeners that are attached to this node.
      * 
+     * @since 1.3
      * @return event listeners attached to this node
      */
     public PInputEventListener[] getInputEventListeners() {

@@ -173,6 +173,8 @@ public class PPaintContext {
 
     /**
      * Removes the camera at the top of the camera stack.
+     *
+     * @since 1.3
      */
     public void popCamera() {
         cameraStack.pop();

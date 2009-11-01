@@ -196,6 +196,7 @@ public class PCamera extends PNode {
      * in Piccolo2D this one must not modify the <code>viewBounds</code>
      * parameter.
      * 
+     * @since 1.3
      * @param viewBounds bounds that require repainting, in view coordinates
      * @param repaintedLayer layer dispatching the repaint notification
      */

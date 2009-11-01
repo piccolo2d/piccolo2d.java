@@ -90,6 +90,8 @@ public class PText extends PNode {
      * The property name that identifies a change of this node's text paint (see
      * {@link #getTextPaint getTextPaint}). Both old and new value will be set
      * in any property change event.
+     *
+     * @since 1.3
      */
     public static final String PROPERTY_TEXT_PAINT = "text  paint";
 
@@ -97,6 +99,8 @@ public class PText extends PNode {
      * The property code that identifies a change of this node's text paint (see
      * {@link #getTextPaint getTextPaint}). Both old and new value will be set
      * in any property change event.
+     *
+     * @since 1.3
      */
     public static final int PROPERTY_CODE_TEXT_PAINT = 1 << 21;
 
@@ -114,13 +118,25 @@ public class PText extends PNode {
      */
     public static double DEFAULT_GREEK_THRESHOLD = 5.5d;
 
-    /** Default horizontal alignment, <code>Component.LEFT_ALIGNMENT</code>. */
+    /**
+     * Default horizontal alignment, <code>Component.LEFT_ALIGNMENT</code>.
+     *
+     * @since 1.3
+     */
     public static final float DEFAULT_HORIZONTAL_ALIGNMENT = Component.LEFT_ALIGNMENT;
 
-    /** Default text, <code>""</code>. */
+    /**
+     * Default text, <code>""</code>.
+     *
+     * @since 1.3
+     */
     public static final String DEFAULT_TEXT = "";
 
-    /** Default text paint, <code>Color.BLACK</code>. */
+    /**
+     * Default text paint, <code>Color.BLACK</code>.
+     *
+     * @since 1.3
+     */
     public static final Paint DEFAULT_TEXT_PAINT = Color.BLACK;
 
     /** Empty text layout array. */
@@ -202,6 +218,7 @@ public class PText extends PNode {
      * <code>Component.RIGHT_ALIGNMENT</code>. Defaults to
      * {@link #DEFAULT_HORIZONTAL_ALIGNMENT}.
      * 
+     * @since 1.3
      * @return the horizontal alignment for this text node
      */
     public float getHorizontalAlignment() {
@@ -212,6 +229,7 @@ public class PText extends PNode {
      * Set the horizontal alignment for this text node to
      * <code>horizontalAlignment</code>.
      * 
+     * @since 1.3
      * @param horizontalAlignment horizontal alignment, must be one of
      *            <code>Component.LEFT_ALIGNMENT</code>,
      *            <code>Component.CENTER_ALIGNMENT</code>, or
@@ -505,6 +523,7 @@ public class PText extends PNode {
     /**
      * Paint greek with the specified paint context.
      * 
+     * @since 1.3
      * @param paintContext paint context
      */
     protected void paintGreek(final PPaintContext paintContext) {
@@ -514,6 +533,7 @@ public class PText extends PNode {
     /**
      * Paint text with the specified paint context.
      * 
+     * @since 1.3
      * @param paintContext paint context
      */
     protected void paintText(final PPaintContext paintContext) {
