@@ -143,11 +143,12 @@
     </developer>
     <developer>
       <id>mr0738@mro.name</id>
-      <name>mr0738@mro.name</name>
+      <name>Marcus Rohrmoser</name>
       <roles>
         <role>developer</role>
       </roles>
       <timezone>+1</timezone>
+      <url>http://blog.mro.name</url>
     </developer>
     <developer>
       <id>reids</id>
