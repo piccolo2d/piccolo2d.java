@@ -56,7 +56,6 @@ import java.io.Serializable;
  * @see BasicStroke
  * @version 1.0
  * @author Jesse Grosjean
- * @author Marcus Rohrmoser
  */
 public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
