@@ -154,27 +154,36 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     }
 
     /**
-     * Returns the array used for specifying dash style.
+     * Returns the array representing the lengths of the dash segments.
+     * Alternate entries in the array represent the user space lengths of the
+     * opaque and transparent segments of the dashes. As the pen moves along the
+     * outline of the Shape to be stroked, the user space distance that the pen
+     * travels is accumulated. The distance value is used to index into the dash
+     * array. The pen is opaque when its current cumulative distance maps to an
+     * even element of the dash array and transparent otherwise.
      * 
-     * @return array used to specify dash style
+     * @return the dash array
      */
     public float[] getDashArray() {
         return ((BasicStroke) stroke).getDashArray();
     }
 
     /**
-     * Returns the dash phase of the current stroke.
+     * Returns the current dash phase. The dash phase is a distance specified in
+     * user coordinates that represents an offset into the dashing pattern. In
+     * other words, the dash phase defines the point in the dashing pattern that
+     * will correspond to the beginning of the stroke.
      * 
-     * @return dash phase of stroke
+     * @return the dash phase as a float value.
      */
     public float getDashPhase() {
         return ((BasicStroke) stroke).getDashPhase();
     }
 
     /**
-     * Returns the cap to be used at the end of open segments.
+     * Returns the end cap style. 
      * 
-     * @return cap style to use at end of segments
+     * @return the end cap style of this BasicStroke as one of the static int values that define possible end cap styles.
      */
     public int getEndCap() {
         return ((BasicStroke) stroke).getEndCap();
@@ -182,18 +191,21 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
 
     /**
      * Returns the line join style.
-     * @return the line join style of the <code>BasicStroke</code> as one
-     * of the static <code>int</code> values that define possible line
-     * join styles.
+     * 
+     * @return the line join style of the <code>PFixedWidthStroke</code> as one
+     *         of the static <code>int</code> values that define possible line
+     *         join styles.
      */
     public int getLineJoin() {
         return ((BasicStroke) stroke).getLineJoin();
     }
 
     /**
-     * Returns the width of the line.
+     * Returns the line width. Line width is represented in user space, which is
+     * the default-coordinate space used by Java 2D. See the Graphics2D class
+     * comments for more information on the user space coordinate system.
      * 
-     * @return stroke width
+     * @return the line width of this BasicStroke.
      */
     public float getLineWidth() {
         return ((BasicStroke) stroke).getLineWidth();
@@ -202,7 +214,7 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     /**
      * Returns the miter limit of this node.
      * 
-     * @return miter limit of this node
+     * @return the limit of miter joins of the PFixedWidthStroke
      */
     public float getMiterLimit() {
         return ((BasicStroke) stroke).getMiterLimit();
