@@ -37,6 +37,8 @@ import edu.umd.cs.piccolox.util.ShadowUtils;
 
 /**
  * Shadow node.
+ *
+ * @since 1.3
  */
 public final class PShadow extends PImage {
 

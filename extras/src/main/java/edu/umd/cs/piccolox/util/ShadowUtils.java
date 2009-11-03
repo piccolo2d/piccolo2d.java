@@ -39,6 +39,8 @@ import java.awt.image.Kernel;
 
 /**
  * Static utility methods for creating shadows.
+ *
+ * @since 1.3
  */
 public final class ShadowUtils {
 
