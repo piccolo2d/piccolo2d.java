@@ -281,8 +281,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * will automatically have double buffering turned off.
      */
     private final ContainerListener doubleBufferRemover = new ContainerAdapter() {
-        public void componentAdded(ContainerEvent e) {
-            Component childComponent = e.getChild();
+        public void componentAdded(final ContainerEvent event) {
+            Component childComponent = event.getChild();
             if (childComponent != null && childComponent instanceof JComponent) {
                 disableDoubleBuffering(((JComponent) childComponent));
             }
