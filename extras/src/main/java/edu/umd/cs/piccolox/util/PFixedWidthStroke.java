@@ -181,6 +181,12 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
         return ((BasicStroke) stroke).getEndCap();
     }
 
+    /**
+     * Returns the line join style.
+     * @return the line join style of the <code>BasicStroke</code> as one
+     * of the static <code>int</code> values that define possible line
+     * join styles.
+     */
     public int getLineJoin() {
         return ((BasicStroke) stroke).getLineJoin();
     }
