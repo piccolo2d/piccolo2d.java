@@ -52,7 +52,6 @@ public final class SWTBasicExample {
 
         // create a new SWT canvas
         final PSWTCanvas canvas = new PSWTCanvas(shell, 0);
-        canvas.setDoubleBuffered(false);
 
         // create some SWT nodes
         //    and add them as child nodes to the canvas' camera's first layer
