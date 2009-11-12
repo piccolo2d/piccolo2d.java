@@ -53,11 +53,13 @@ public class MultiplePSwingCanvasesExample extends JFrame {
         container.setLayout(new BorderLayout());
         
         PSwingCanvas canvas1 = buildPSwingCanvas("Canvas 1", Color.RED);
+        canvas1.setPreferredSize(new Dimension(350, 350));
         container.add(canvas1, BorderLayout.WEST);
-        PSwingCanvas canvas2 = buildPSwingCanvas("Canvas 2", Color.BLUE);
-        container.add(canvas2, BorderLayout.EAST);
         
-        container.setPreferredSize(new Dimension(700, 350));
+        PSwingCanvas canvas2 = buildPSwingCanvas("Canvas 2", Color.BLUE);
+        container.add(canvas2, BorderLayout.EAST);              
+        canvas2.setPreferredSize(new Dimension(350, 350));
+        
         frame.pack();
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
