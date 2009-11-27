@@ -17,11 +17,6 @@ PMD	1	0
 Unit test coverage has been increased from 0% (Piccolo2D.Java 1.2.1) to 0% (Piccolo2D.Java 1.3).
 
 
-All changes:
-
-[clirr reports]
-
-
 Fixed and verified issues:
 
 Issue	Summary
@@ -109,6 +104,71 @@ Issue	Summary
 143	SWTException: Failed to execute runnable (Invalid thread access) for PSWTCanvasTest on Mac OSX
 144	Updates for PSwing
 145	build broken (pom, swt)
+
+
+API changes to core:
+
+edu.umd.cs.piccolo.PCamera: Method 'public void repaintFromLayer(edu.umd.cs.piccolo.util.PBounds, edu.umd.cs.piccolo.PNode)' has been deprecated
+edu.umd.cs.piccolo.PCamera: Method 'public void repaintFromLayer(edu.umd.cs.piccolo.util.PBounds, edu.umd.cs.piccolo.PLayer)' has been added
+edu.umd.cs.piccolo.PCanvas: Added public field INTERACTING_CHANGED_NOTIFICATION
+edu.umd.cs.piccolo.PCanvas: Added public field PROPERTY_INTERACTING
+edu.umd.cs.piccolo.PCanvas: Method 'public int getAnimatingRenderQuality()' has been added
+edu.umd.cs.piccolo.PCanvas: Method 'public int getDefaultRenderQuality()' has been added
+edu.umd.cs.piccolo.PCanvas: Method 'public edu.umd.cs.piccolo.event.PInputEventListener[] getInputEventListeners()' has been added
+edu.umd.cs.piccolo.PCanvas: Method 'public int getInteractingRenderQuality()' has been added
+edu.umd.cs.piccolo.PCanvas: Method 'public int getNormalRenderQuality()' has been added
+edu.umd.cs.piccolo.PCanvas: Method 'public void printAll(java.awt.Graphics)' has been added
+edu.umd.cs.piccolo.PNode: Added public field FILL_STRATEGY_ASPECT_COVER
+edu.umd.cs.piccolo.PNode: Added public field FILL_STRATEGY_ASPECT_FIT
+edu.umd.cs.piccolo.PNode: Added public field FILL_STRATEGY_EXACT_FIT
+edu.umd.cs.piccolo.PNode: Method 'public PNode(java.lang.String)' has been added
+edu.umd.cs.piccolo.PNode: Method 'public edu.umd.cs.piccolo.activities.PActivity animateToRelativePosition(java.awt.geom.Point2D, java.awt.geom.Point2D, java.awt.geom.Rectangle2D, int)' has been added
+edu.umd.cs.piccolo.PNode: Method 'public edu.umd.cs.piccolo.event.PInputEventListener[] getInputEventListeners()' has been added
+edu.umd.cs.piccolo.PNode: Method 'public java.lang.String getName()' has been added
+edu.umd.cs.piccolo.PNode: Method 'protected java.lang.String paramString()' has been deprecated
+edu.umd.cs.piccolo.PNode: Method 'public void position(java.awt.geom.Point2D, java.awt.geom.Point2D, java.awt.geom.Rectangle2D, int)' has been deprecated
+edu.umd.cs.piccolo.PNode: Method 'public void setName(java.lang.String)' has been added
+edu.umd.cs.piccolo.PNode: Method 'public java.awt.Image toImage(java.awt.image.BufferedImage, java.awt.Paint, int)' has been added
+edu.umd.cs.piccolo.PNode: Method 'public java.lang.String toString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.POffscreenCanvas: Class edu.umd.cs.piccolo.POffscreenCanvas added
+edu.umd.cs.piccolo.PRoot: Added public field PROPERTY_CODE_INTERACTING_CHANGED
+edu.umd.cs.piccolo.PRoot: Added public field PROPERTY_INTERACTING_CHANGED
+edu.umd.cs.piccolo.PRoot: Method 'public boolean getInteracting()' has been added
+edu.umd.cs.piccolo.PRoot: Method 'public void setInteracting(boolean)' has been added
+edu.umd.cs.piccolo.activities.PActivity: Method 'protected java.lang.String paramString()' has been deprecated
+edu.umd.cs.piccolo.activities.PActivity: Method 'public java.lang.String toString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.activities.PActivityScheduler: Added java.io.Serializable to the set of implemented interfaces
+edu.umd.cs.piccolo.activities.PColorActivity: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.activities.PInterpolatingActivity: Method 'public PInterpolatingActivity(long)' has been added
+edu.umd.cs.piccolo.activities.PInterpolatingActivity: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.activities.PTransformActivity: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.event.PBasicInputEventHandler: Method 'protected java.lang.String paramString()' has been deprecated
+edu.umd.cs.piccolo.event.PBasicInputEventHandler: Method 'public java.lang.String toString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.event.PDragEventHandler: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.event.PDragSequenceEventHandler: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.event.PPanEventHandler: Method 'public double getMaxAutoPanSpeed()' has been added
+edu.umd.cs.piccolo.event.PPanEventHandler: Method 'public double getMinAutoPanSpeed()' has been added
+edu.umd.cs.piccolo.event.PPanEventHandler: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.event.PZoomEventHandler: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.nodes.PHtmlView: Class edu.umd.cs.piccolo.nodes.PHtmlView added
+edu.umd.cs.piccolo.nodes.PImage: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.nodes.PPath: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.nodes.PText: Added public field DEFAULT_HORIZONTAL_ALIGNMENT
+edu.umd.cs.piccolo.nodes.PText: Added public field DEFAULT_TEXT
+edu.umd.cs.piccolo.nodes.PText: Added public field DEFAULT_TEXT_PAINT
+edu.umd.cs.piccolo.nodes.PText: Added public field PROPERTY_CODE_TEXT_PAINT
+edu.umd.cs.piccolo.nodes.PText: Added public field PROPERTY_TEXT_PAINT
+edu.umd.cs.piccolo.nodes.PText: Method 'public float getHorizontalAlignment()' has been added
+edu.umd.cs.piccolo.nodes.PText: Method 'public float getJustification()' has been deprecated
+edu.umd.cs.piccolo.nodes.PText: Method 'protected void paintGreek(edu.umd.cs.piccolo.util.PPaintContext)' has been added
+edu.umd.cs.piccolo.nodes.PText: Method 'protected void paintText(edu.umd.cs.piccolo.util.PPaintContext)' has been added
+edu.umd.cs.piccolo.nodes.PText: Method 'protected java.lang.String paramString()' has been removed, but an inherited definition exists.
+edu.umd.cs.piccolo.nodes.PText: Method 'public void setHorizontalAlignment(float)' has been added
+edu.umd.cs.piccolo.nodes.PText: Method 'public void setJustification(float)' has been deprecated
+edu.umd.cs.piccolo.util.PAffineTransform: Method 'public java.awt.geom.Point2D inverseTransform(java.awt.geom.Point2D, java.awt.geom.Point2D)' has been added
+edu.umd.cs.piccolo.util.PAffineTransformException: Class edu.umd.cs.piccolo.util.PAffineTransformException added
+edu.umd.cs.piccolo.util.PPaintContext: Method 'public void popCamera(edu.umd.cs.piccolo.PCamera)' has been deprecated
+edu.umd.cs.piccolo.util.PPaintContext: Method 'public void popCamera()' has been added
 
 
 Developers and contributors:
