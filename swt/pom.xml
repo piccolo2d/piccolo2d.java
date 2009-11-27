@@ -226,6 +226,11 @@
         <swt.artifactId>x86</swt.artifactId>
       </properties>
     </profile>
+<!--
+
+    disable this profile to build on mac osx, jdk 1.6, x86_64
+
+-->
     <profile>
       <id>macosx_carbon</id>
       <activation>
@@ -240,23 +245,9 @@
     </profile>
 <!--
 
-    must manually enable this profile to override macosx_carbon
-    <profile>
-      <id>macosx_cocoa</id>
-      <activation>
-        <os>
-          <name>mac os x</name>
-        </os>
-      </activation>
-      <properties>
-        <swt.groupId>org.eclipse.swt.cocoa</swt.groupId>
-        <swt.artifactId>macosx</swt.artifactId>
-      </properties>
-    </profile>
--->
-<!--
+    enable this profile to build on mac osx, jdk 1.6, x86_64
+      set MAVEN_OPTS="-Dd64", or unit tests will fail
 
-    this profile requires the user to set MAVEN_OPTS="-Dd64", or unit tests will fail
     <profile>
       <id>macosx_cocoa_intel</id>
       <activation>
