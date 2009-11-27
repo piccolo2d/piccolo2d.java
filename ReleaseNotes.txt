@@ -1,3 +1,131 @@
+=Piccolo2D 1.3 Release Notes=
+------------------
+
+Major changes:
+
+Piccolo2D.Java now builds with Apache Maven instead of Apache Ant.  See Issues 6, 28, 29, 38, 44, 51, 52, 98, 104, 108, 109, 126, 128.
+
+SWT support was refactored from extras into its own module and SWT examples were refactored from examples into their own module.  See Issues 68, 125, 126, 143, 145.
+
+Many Checkstyle, PMD, and FindBugs errors and warnings have been fixed.
+
+Tool	Piccolo2D.Java 1.2.1	Piccolo2D.Java 1.3
+Checkstyle	1	0
+FindBugs	1	0
+PMD	1	0
+
+Unit test coverage has been increased from 0% (Piccolo2D.Java 1.2.1) to 0% (Piccolo2D.Java 1.3).
+
+
+All changes:
+
+[clirr reports]
+
+
+Fixed and verified issues:
+
+Issue	Summary
+2	Multiple project entries at ohloh.net
+6	Migrate ant build to maven2
+8	PSwing nodes prevent proper garbage collection
+9	PComboBox does not work when nested in a Panel
+10	PComboBox doesn't use Metal, Windows, and Motif look and feels
+13	PSwing components cause extraneous redraws
+14	PSwing components cause full page re-rendering on add/remove operations
+17	PCanvas looses keyboard events when a child PSwing node has focus
+20	Double-buffering not disabled on child PSwing components added after creation
+21	Cannot turn off interacting at the PRoot level
+22	Name property for PNodes
+23	remove child on PNode fails with NPE
+25	Multiple PSwingCanvases can't be used together
+27	Animation quality change redraws the entire screen
+28	Add checkstyle configuration and reporting to maven build
+29	Configure checkstyle maven plug-in to enforce our source code conventions
+30	Extra mouse movement events fired on mouse exit
+31	PActivity activityFinished gets called multiple times
+32	PSwing mouse wheel support
+38	Relocate svn root from piccolo to piccolo2d
+41	Rephrase javadoc package comments
+42	Transfer the documentation from http://www.cs.umd.edu/hcil/jazz/ here.
+44	Rename piccolo subprojects and binaries to *2d
+46	PFrameTest unit test fails on linux
+47	Remove println to stdout/stderr in unit tests
+48	Eliminate dependency on sun.* classes in PFixedWidthStroke
+49	PFixedWidthStrokes are not fixed width on Mac OSX
+51	Unit tests should reside in the same package as the classes under test
+52	Compiler errors with jre 1.3 and 1.4
+55	ohloh.net stats broken by repository layout changes
+56	Infinite rendering loop caused by setOffset/Bounds/Scale in layoutChildren
+59	Clarify copyright and license statements
+63	JSlider fails to render knob icon under Intel Macs in Java 1.5
+64	Add shadow nodes to extras
+66	Full print doesn't work
+67	ScrollingExample.java doesn't work 
+68	move SWT dependant classes to a new subproject (piccolo2d-swt)
+69	Add integration with Processing (http://processing.org)
+70	Patch: Proper Shape and Text Support in the SWT Part
+71	PStyledTextEventHandler does not scale 
+72	PSelectionEventHandler grip points do not scale with zoom
+73	Helloworld from piccolo2d.org relies on piccolox
+74	Memory leak with PSwingRepaintManager
+79	PSwingTest unit test failure on linux
+80	PCanvas button handling code doesn't dispatch multi-button presses.
+82	JComboBox visibility doesn't affect visiblity of PSwing node
+83	PSwing are fuzzy when scale!=1, due to buffering of the PSwing
+88	toImage doesn't return an image of the proper size
+89	Low Test Coverage of PNode
+90	Binary incompatible change from 1.2.1 in PInputEvent
+93	PCanvas needs accessors for render qualities
+94	PLayer should do nothing when removing a camera that isn't attached
+95	@deprecated broke the mvn build
+96	More consistent handling of NonInvertible transforms in PCamera
+97	TestPSwing.java and TestPSwingFull.java Should be moved
+98	Refactor edu.umd.cs.piccolo.pswingexamples and ...swtexamples to examples.pswing and examples.swt
+99	PNode.toString refactoring
+100	PInputEvent doesn't filter by modifier
+101	Eliminate printStackTrace
+104	Current maven multi-module build doesn't install the parent pom
+106	toImage array is too simple in its fill behaviour
+108	Set up hudson CI build
+109	examples module should create a runnable jar
+110	Syntactical code clean
+111	Piccolo is missing HTML support
+112	OSX: "Error: custom stroke not implemented"
+113	Invisible nodes are reported to be picked by InputEventHandler
+115	Discontinue .Net
+116	New round of clirr errors, as of r624
+123	PiccoloX uses Sun classes (sun.dc.path) that aren't in OpenJDK
+124	Add additional constructors to PSWTImage
+125	Compilation failure in swt module under linux 
+127	Unit tests fail on linux with OpenJDK version IcedTea6 1.4.1
+128	Add osgi manifest to the builded jars
+129	Use umlgraph 5.1 in the build process
+131	PScrollPane does not use setInteracting() on the canvas
+132	Refactor SWT examples from examples module to new swt-examples module
+133	Javadoc in SWT package is completely unusable
+137	Calling toImage() on a composite node often returns an empty image.
+138	Unecessary memory usage when not double buffering PSWTCanvas
+142	P3DRectTest test failure on Mac OSX PPC
+143	SWTException: Failed to execute runnable (Invalid thread access) for PSWTCanvasTest on Mac OSX
+144	Updates for PSwing
+145	build broken (pom, swt)
+
+
+Developers and contributors:
+
+Ben Bederson
+Stephen Chin <sjc at browsecode.org>
+Aaron Clamage
+Lance Good
+Michael L Heuer
+Allain Lalonde <allain at machete.ca>
+Chris Malley <cmalley at pixelzoom.com>
+jesse
+Alexander Kurtakov <akurtakov at gmail.com>
+Marcus Rohrmoser
+Sam Reid
+
+
 =Piccolo2D 1.2.1 Release Notes=
 ------------------
 
