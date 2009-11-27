@@ -39,6 +39,7 @@
   </parent>
   <artifactId>piccolo2d-swt-examples</artifactId>
   <packaging>bundle</packaging>
+<!--  <packaging>jar</packaging> -->
   <name>Piccolo2D SWT Examples</name>
   <scm>
     <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/swt-examples</connection>
@@ -53,23 +54,21 @@
     </dependency>
   </dependencies>
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <archive>
-              <manifest>
-                <mainClass>edu.umd.cs.piccolox.swt.examples.SWTBasicExample</mainClass>
-              </manifest>
-            </archive>
-            <descriptorRefs>
-              <descriptorRef>jar-with-dependencies</descriptorRef>
-            </descriptorRefs>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>edu.umd.cs.piccolox.swt.examples.SWTBasicExample</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>
