@@ -489,7 +489,7 @@ public class SwingLayoutNode extends PNode {
          */
 
         /** Anchors the node's center as the point used when laying it out. */
-        public static final Anchor CENTER = new AbstractAnchor() {
+        static final Anchor CENTER = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(centerX(node, x, w), centerY(node, y, h));
@@ -497,7 +497,7 @@ public class SwingLayoutNode extends PNode {
         };
 
         /** Anchors the node's top center as the point used when laying it out. */
-        public static final Anchor NORTH = new AbstractAnchor() {
+        static final Anchor NORTH = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(centerX(node, x, w), north(node, y, h));
@@ -505,7 +505,7 @@ public class SwingLayoutNode extends PNode {
         };
 
         /** Anchors the node's top right as the point used when laying it out. */
-        public static final Anchor NORTHEAST = new AbstractAnchor() {
+        static final Anchor NORTHEAST = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(east(node, x, w), north(node, y, h));
@@ -515,7 +515,7 @@ public class SwingLayoutNode extends PNode {
         /**
          * Anchors the node's middle right as the point used when laying it out.
          */
-        public static final Anchor EAST = new AbstractAnchor() {
+        static final Anchor EAST = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(east(node, x, w), centerY(node, y, h));
@@ -525,7 +525,7 @@ public class SwingLayoutNode extends PNode {
         /**
          * Anchors the node's bottom right as the point used when laying it out.
          */
-        public static final Anchor SOUTHEAST = new AbstractAnchor() {
+        static final Anchor SOUTHEAST = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(east(node, x, w), south(node, y, h));
@@ -536,7 +536,7 @@ public class SwingLayoutNode extends PNode {
          * Anchors the node's center bottom as the point used when laying it
          * out.
          */
-        public static final Anchor SOUTH = new AbstractAnchor() {
+        static final Anchor SOUTH = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(centerX(node, x, w), south(node, y, h));
@@ -544,7 +544,7 @@ public class SwingLayoutNode extends PNode {
         };
 
         /** Anchors the node's bottom left as the point used when laying it out. */
-        public static final Anchor SOUTHWEST = new AbstractAnchor() {
+        static final Anchor SOUTHWEST = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(west(node, x, w), south(node, y, h));
@@ -552,7 +552,7 @@ public class SwingLayoutNode extends PNode {
         };
 
         /** Anchors the node's middle left as the point used when laying it out. */
-        public static final Anchor WEST = new AbstractAnchor() {
+        static final Anchor WEST = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(west(node, x, w), centerY(node, y, h));
@@ -560,14 +560,14 @@ public class SwingLayoutNode extends PNode {
         };
 
         /** Anchors the node's top left as the point used when laying it out. */
-        public static final Anchor NORTHWEST = new AbstractAnchor() {
+        static final Anchor NORTHWEST = new AbstractAnchor() {
             /** {@inheritDoc} */
             public void positionNode(final PNode node, final double x, final double y, final double w, final double h) {
                 node.setOffset(west(node, x, w), north(node, y, h));
             }
         };
 
-        public static abstract class AbstractAnchor implements Anchor {
+        static abstract class AbstractAnchor implements Anchor {
             /**
              * Returns the x at which the given node would need to be placed so
              * that its center was in the middle of the horizontal segment
