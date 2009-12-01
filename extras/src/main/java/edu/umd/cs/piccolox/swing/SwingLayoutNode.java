@@ -61,11 +61,14 @@ public class SwingLayoutNode extends PNode {
      * (Anchors.WEST) seems to make the most sense for PNodes.
      */
     private static final Anchor DEFAULT_ANCHOR = Anchor.WEST;
+
     /** Container for ProxyComponents. */
     private final JPanel container;
 
     private final PropertyChangeListener propertyChangeListener;
-    private Anchor anchor;
+
+    /** Anchor to use when adding child nodes and they don't specify one. */
+    private Anchor defaultAnchor;
 
     /**
      * Construct a SwingLayoutNode that uses FlowLayout.
@@ -91,7 +94,7 @@ public class SwingLayoutNode extends PNode {
                 }
             }
         };
-        anchor = DEFAULT_ANCHOR;
+        defaultAnchor = DEFAULT_ANCHOR;
     }
 
     /**
@@ -99,10 +102,11 @@ public class SwingLayoutNode extends PNode {
      * then the default anchor determines where the node is positioned in the
      * space allocated by the Swing layout manager.
      * 
-     * @param anchor
+     * @param anchor anchor to use when a node is added but its anchor is not
+     *            specified
      */
     public void setAnchor(final Anchor anchor) {
-        this.anchor = anchor;
+        this.defaultAnchor = anchor;
     }
 
     /**
@@ -111,7 +115,7 @@ public class SwingLayoutNode extends PNode {
      * @return anchor currently being used when laying out children.
      */
     public Anchor getAnchor() {
-        return anchor;
+        return defaultAnchor;
     }
 
     /**
@@ -138,7 +142,7 @@ public class SwingLayoutNode extends PNode {
      * specified to addChild aren't compatible with the new layout manager, or
      * if the new layout manager requires constraints.
      * 
-     * @param layoutManager
+     * @param layoutManager layout manager to use when laying out nodes
      */
     public void setLayout(final LayoutManager layoutManager) {
         container.setLayout(layoutManager);
@@ -153,9 +157,9 @@ public class SwingLayoutNode extends PNode {
      * @param child child to be added
      * @param constraints constraints the layout manager uses when laying out
      *            the child
-     * @param anchor specifies the location from which layout takes place
+     * @param childAnchor specifies the location from which layout takes place
      */
-    public void addChild(final int index, final PNode child, final Object constraints, final Anchor anchor) {
+    public void addChild(final int index, final PNode child, final Object constraints, final Anchor childAnchor) {
         /*
          * NOTE: This must be the only super.addChild call that we make in our
          * entire implementation, because all PNode.addChild methods are
@@ -164,12 +168,12 @@ public class SwingLayoutNode extends PNode {
          * StackOverflowException.
          */
         super.addChild(index, child);
-        addProxyComponent(child, constraints, anchor);
+        addProxyComponent(child, constraints, childAnchor);
     }
 
     /** {@inheritDoc} */
     public void addChild(final int index, final PNode child) {
-        addChild(index, child, null, anchor);
+        addChild(index, child, null, defaultAnchor);
     }
 
     /**
@@ -182,7 +186,7 @@ public class SwingLayoutNode extends PNode {
      *            the child
      */
     public void addChild(final int index, final PNode child, final Object constraints) {
-        addChild(index, child, constraints, anchor);
+        addChild(index, child, constraints, defaultAnchor);
     }
 
     /**
@@ -222,7 +226,7 @@ public class SwingLayoutNode extends PNode {
      * @param child child to be added
      */
     public void addChild(final PNode child) {
-        addChild(child, null, anchor);
+        addChild(child, null, defaultAnchor);
     }
 
     /**
@@ -234,7 +238,7 @@ public class SwingLayoutNode extends PNode {
      *            the child
      */
     public void addChild(final PNode child, final Object constraints) {
-        addChild(child, constraints, anchor);
+        addChild(child, constraints, defaultAnchor);
     }
 
     /**
@@ -265,7 +269,7 @@ public class SwingLayoutNode extends PNode {
 
     /** {@inheritDoc} */
     public void addChildren(final Collection nodes) {
-        addChildren(nodes, null, anchor);
+        addChildren(nodes, null, defaultAnchor);
     }
 
     /**
@@ -276,7 +280,7 @@ public class SwingLayoutNode extends PNode {
      *            the child
      */
     public void addChildren(final Collection nodes, final Object constraints) {
-        addChildren(nodes, constraints, anchor);
+        addChildren(nodes, constraints, defaultAnchor);
     }
 
     /**
@@ -634,8 +638,8 @@ public class SwingLayoutNode extends PNode {
              * @return x at which node would need to be placed so that its right
              *         side touched the right side of the range defined.
              */
-            protected static double east(final PNode node, final double x, final double w) {
-                return x + w - node.getFullBoundsReference().getWidth();
+            protected static double east(final PNode node, final double x, final double width) {
+                return x + width - node.getFullBoundsReference().getWidth();
             }
 
             /**
@@ -649,7 +653,7 @@ public class SwingLayoutNode extends PNode {
              * @return x at which node would need to be placed so that its left
              *         side touched the left side of the range defined (x)
              */
-            protected static double west(final PNode node, final double x, final double w) {
+            protected static double west(final PNode node, final double x, final double width) {
                 return x;
             }
         };
