@@ -121,8 +121,9 @@ public class SwingLayoutExample {
         gridBagLayoutNode.setOffset(400, 250);
         rootNode.addChild(gridBagLayoutNode);
 
-        final SwingLayoutNode boxLayoutNode = new SwingLayoutNode();
-        boxLayoutNode.setLayout(new BoxLayout(boxLayoutNode.getContainer(), BoxLayout.Y_AXIS));
+        JPanel container = new JPanel();        
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        final SwingLayoutNode boxLayoutNode = new SwingLayoutNode(container);
         boxLayoutNode.addChild(new MyPPath(new Rectangle2D.Double(0, 0, 50, 50), Color.yellow, new BasicStroke(2),
                 Color.red));
         boxLayoutNode.addChild(new MyPPath(new Rectangle2D.Double(0, 0, 100, 50), Color.orange, new BasicStroke(2),

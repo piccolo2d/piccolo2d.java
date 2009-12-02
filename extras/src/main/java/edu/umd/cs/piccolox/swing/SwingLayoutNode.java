@@ -38,6 +38,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -63,7 +64,7 @@ public class SwingLayoutNode extends PNode {
     private static final Anchor DEFAULT_ANCHOR = Anchor.WEST;
 
     /** Container for ProxyComponents. */
-    private final JPanel container;
+    private final Container container;
 
     private final PropertyChangeListener propertyChangeListener;
 
@@ -85,7 +86,21 @@ public class SwingLayoutNode extends PNode {
      *            not be null.
      */
     public SwingLayoutNode(final LayoutManager layoutManager) {
-        container = new JPanel(layoutManager);
+        this(new JPanel(layoutManager));
+    }
+
+    /**
+     * Constructs a SwingLayoutNode that lays out its children as though they
+     * were children of the provided Container.
+     * 
+     * Whatever LayoutManager is being used by the container will be used when
+     * laying out nodes.
+     * 
+     * @param container Container in which child nodes will effectively be laid
+     *            out
+     */
+    public SwingLayoutNode(Container container) {
+        this.container = container;
         propertyChangeListener = new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent event) {
                 final String propertyName = event.getPropertyName();
@@ -131,7 +146,7 @@ public class SwingLayoutNode extends PNode {
      */
     public Container getContainer() {
         return container;
-    }   
+    }
 
     /**
      * Adds a child at the specified index. Like Swing, bad things can happen if
