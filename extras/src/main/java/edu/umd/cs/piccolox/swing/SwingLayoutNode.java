@@ -131,23 +131,7 @@ public class SwingLayoutNode extends PNode {
      */
     public Container getContainer() {
         return container;
-    }
-
-    /**
-     * Sets the layout manager.
-     * <p>
-     * It's recommended that you avoid using this method, it's a can of worms.
-     * Like Swing, if you call this after adding nodes, the results may be
-     * unpredictable. You'll also have problems if the constraints that you
-     * specified to addChild aren't compatible with the new layout manager, or
-     * if the new layout manager requires constraints.
-     * 
-     * @param layoutManager layout manager to use when laying out nodes
-     */
-    public void setLayout(final LayoutManager layoutManager) {
-        container.setLayout(layoutManager);
-        updateContainerLayout();
-    }
+    }   
 
     /**
      * Adds a child at the specified index. Like Swing, bad things can happen if
