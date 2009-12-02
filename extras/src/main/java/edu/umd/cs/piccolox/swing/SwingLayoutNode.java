@@ -38,7 +38,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -51,10 +50,6 @@ import edu.umd.cs.piccolo.PNode;
  * @author Chris Malley (cmalley@pixelzoom.com)
  */
 public class SwingLayoutNode extends PNode {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     /*
      * How the space allocated by the Swing layout manager is used differs
