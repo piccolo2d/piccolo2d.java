@@ -3,18 +3,11 @@
 
 Major changes:
 
-Piccolo2D.Java now builds with Apache Maven instead of Apache Ant.  See Issues 6, 28, 29, 38, 44, 51, 52, 98, 104, 108, 109, 126, 128.
+Piccolo2D.Java now builds with Apache Maven instead of Apache Ant.  See Issues 6, 28, 29, 38, 44, 51, 52, 98, 104, 108, 109, 126, 128, 146.
 
 SWT support was refactored from extras into its own module and SWT examples were refactored from examples into their own module.  See Issues 68, 125, 126, 143, 145.
 
-Many Checkstyle, PMD, and FindBugs errors and warnings have been fixed.
-
-Tool	Piccolo2D.Java 1.2.1	Piccolo2D.Java 1.3
-Checkstyle	1	0
-FindBugs	1	0
-PMD	1	0
-
-Unit test coverage has been increased from 0% (Piccolo2D.Java 1.2.1) to 0% (Piccolo2D.Java 1.3).
+Many Checkstyle, PMD, and FindBugs errors and warnings have been fixed.  Unit test line coverage has been increased to 48%.
 
 
 Fixed and verified issues:
@@ -27,6 +20,7 @@ Issue	Summary
 10	PComboBox doesn't use Metal, Windows, and Motif look and feels
 13	PSwing components cause extraneous redraws
 14	PSwing components cause full page re-rendering on add/remove operations
+15	Events from PSwing components are not consumed, and cause other interactions on the canvas
 17	PCanvas looses keyboard events when a child PSwing node has focus
 20	Double-buffering not disabled on child PSwing components added after creation
 21	Cannot turn off interacting at the PRoot level
@@ -104,6 +98,7 @@ Issue	Summary
 143	SWTException: Failed to execute runnable (Invalid thread access) for PSWTCanvasTest on Mac OSX
 144	Updates for PSwing
 145	build broken (pom, swt)
+150	Prepare SwingLayoutNode for distribution
 
 
 API changes to core:
