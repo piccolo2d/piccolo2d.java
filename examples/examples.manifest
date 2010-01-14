@@ -1,3 +1,3 @@
-Main-Class: edu.umd.cs.piccolo.examples.ExampleRunner
-Class-Path: piccolox.jar
+Main-Class: org.piccolo2d.examples.ExampleRunner
+Class-Path: piccolo2d-extras.jar
 Created-By: Jesse Grosjean
