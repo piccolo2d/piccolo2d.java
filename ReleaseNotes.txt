@@ -99,6 +99,7 @@ Issue	Summary
 144	Updates for PSwing
 145	build broken (pom, swt)
 150	Prepare SwingLayoutNode for distribution
+155	If width or height is zero, the rest of bounds are reset.
 
 
 API changes to core:
