@@ -48,7 +48,7 @@ public class PSWTMouseEvent extends MouseEvent {
 
     private static final long serialVersionUID = 1L;
 
-    private static Component fakeSrc = new Component() {
+    private static final Component fakeSrc = new Component() {
     };
 
     /** Event being wrapped. */

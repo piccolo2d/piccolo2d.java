@@ -57,10 +57,10 @@ public class PPaintContext {
     public static final int HIGH_QUALITY_RENDERING = 1;
 
     /** Font context to use while in low quality rendering. */
-    public static FontRenderContext RENDER_QUALITY_LOW_FRC = new FontRenderContext(null, false, true);
+    public static final FontRenderContext RENDER_QUALITY_LOW_FRC = new FontRenderContext(null, false, true);
 
     /** Font context to use while in high quality rendering. */
-    public static FontRenderContext RENDER_QUALITY_HIGH_FRC = new FontRenderContext(null, true, true);   
+    public static final FontRenderContext RENDER_QUALITY_HIGH_FRC = new FontRenderContext(null, true, true);   
 
     /** Used while calculating scale at which rendering is occurring. */
     private static final double[] PTS = new double[4];

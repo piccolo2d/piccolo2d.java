@@ -53,7 +53,7 @@ public final class POffscreenCanvas implements PComponent {
     private int renderQuality = DEFAULT_RENDER_QUALITY;
 
     /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
-    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
+    public static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
 
 
     /**

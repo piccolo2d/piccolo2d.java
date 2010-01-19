@@ -80,7 +80,7 @@ public class PSwingCanvas extends PCanvas {
     }
 
     /**
-     * JComponent wrapper for a PSwingCanvas. Used by PSwingRepaintManager.
+     * JComponent wrapper for a PSwingCanvas. Used by PSwingRepaintManager. So, do not make it private.
      */
     static class ChildWrapper extends JComponent {
         /**

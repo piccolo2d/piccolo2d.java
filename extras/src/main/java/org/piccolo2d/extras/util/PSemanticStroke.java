@@ -30,8 +30,6 @@ package org.piccolo2d.extras.util;
 import java.awt.Shape;
 import java.awt.Stroke;
 
-import org.piccolo2d.util.PDebug;
-import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
 
 /**

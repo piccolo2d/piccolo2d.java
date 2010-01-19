@@ -53,9 +53,9 @@ import java.awt.event.MouseWheelEvent;
  */
 public class PInputEventFilter {
     /** Mask representing all possible modifiers. */
-    public static int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK
-            | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK
-            | InputEvent.META_MASK;
+    public static final int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK
+            | InputEvent.BUTTON3_MASK | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK
+            | InputEvent.ALT_GRAPH_MASK | InputEvent.META_MASK;
 
     /** If event modifiers don't match this exactly, event it filtered. */
     private int andMask;
@@ -429,9 +429,11 @@ public class PInputEventFilter {
     }
 
     /**
-     * Sets the number of clicks that an incoming event must have to be accepted.
+     * Sets the number of clicks that an incoming event must have to be
+     * accepted.
      * 
-     * @param aClickCount number clicks that an incoming event must have to be accepted
+     * @param aClickCount number clicks that an incoming event must have to be
+     *            accepted
      */
     public void setAcceptClickCount(final short aClickCount) {
         clickCount = aClickCount;

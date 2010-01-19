@@ -92,29 +92,38 @@ public class SWTGraphics2D extends Graphics2D {
      * incrementGCCount and decrementGCCount.
      */
     protected static int CACHE_COUNT = 0;
+    
     /** Map from font names to Fonts. */
-    protected static HashMap FONT_CACHE = new HashMap();
+    protected static final HashMap FONT_CACHE = new HashMap();
+    
     /** Map from awt colors to swt colors. */
-    protected static HashMap COLOR_CACHE = new HashMap();
+    protected static final HashMap COLOR_CACHE = new HashMap();
+    
     /** Map from awt shapess to swt Paths. */
-    protected static HashMap SHAPE_CACHE = new HashMap();
+    protected static final HashMap SHAPE_CACHE = new HashMap();
+    
     /** Buffer used to extract the graphics device. */
-    protected static BufferedImage BUFFER = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    protected static final BufferedImage BUFFER = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
-    private static Point TEMP_POINT = new Point();
-    private static Rectangle2D TEMP_RECT = new Rectangle2D.Double();
-    private static Rectangle2D TEMP_LINE_RECT = new Rectangle2D.Double();
-    private static org.eclipse.swt.graphics.Rectangle SWT_RECT = new org.eclipse.swt.graphics.Rectangle(0, 0, 0, 0);
+    private static final Point TEMP_POINT = new Point();
+    private static final Rectangle2D TEMP_RECT = new Rectangle2D.Double();
+    private static final Rectangle2D TEMP_LINE_RECT = new Rectangle2D.Double();
+    private static final org.eclipse.swt.graphics.Rectangle SWT_RECT = new org.eclipse.swt.graphics.Rectangle(0, 0, 0, 0);
 
     /** The Underlying GraphicsContext provided by swt. */
     protected GC gc;
+    
     /** Device onto which all graphics operations will ultimately take place. */
     protected Device device;
+    
     /** The current transform to apply to drawing operations. */
     protected AffineTransform transform = new AffineTransform();
+    
     private final Transform swtTransform;
+    
     /** The current font to use when drawing text. */
     protected org.eclipse.swt.graphics.Font curFont;
+    
     /** The current stroke width to use when drawing lines. */
     protected double lineWidth = 1.0;
 
@@ -345,7 +354,7 @@ public class SWTGraphics2D extends Graphics2D {
 
     /** {@inheritDoc} */
     public void setFont(final Font font) {
-        // TODO:  prevent NPE
+        // TODO: prevent NPE
         final String fontString = "name=" + font.getFamily() + ";bold=" + font.isBold() + ";italic=" + font.isItalic()
                 + ";size=" + font.getSize();
 
@@ -354,7 +363,7 @@ public class SWTGraphics2D extends Graphics2D {
 
     /**
      * Set the font for this SWTGraphics2D to <code>font</code>.
-     *
+     * 
      * @param font font for this SWTGraphics2D
      */
     public void setFont(final org.eclipse.swt.graphics.Font font) {
@@ -393,7 +402,7 @@ public class SWTGraphics2D extends Graphics2D {
             FONT_CACHE.put(fontString, cachedFont);
         }
         return cachedFont;
-    }    
+    }
 
     // /////////////////////////
     // AFFINE TRANSFORM METHODS
@@ -585,7 +594,7 @@ public class SWTGraphics2D extends Graphics2D {
 
     /**
      * Draw a polyline from the specified double array of points.
-     *
+     * 
      * @param pts double array of points
      */
     public void drawPolyline(final double[] pts) {
@@ -608,7 +617,7 @@ public class SWTGraphics2D extends Graphics2D {
 
     /**
      * Fill a polyline from the specified double array of points.
-     *
+     * 
      * @param pts double array of points
      */
     public void fillPolygon(final double[] pts) {
@@ -1179,7 +1188,7 @@ public class SWTGraphics2D extends Graphics2D {
         SWTShapeManager.awtToSWT(TEMP_RECT, SWT_RECT);
 
         gc.fillGradientRectangle(SWT_RECT.x, SWT_RECT.y, SWT_RECT.width, SWT_RECT.height, vertical);
-    }   
+    }
 
     /**
      * Returns the advance width of the character provided in the current font.

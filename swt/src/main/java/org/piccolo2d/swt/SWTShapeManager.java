@@ -43,10 +43,10 @@ import org.eclipse.swt.graphics.Rectangle;
  * @author Lance Good
  */
 public class SWTShapeManager {
-    private static AffineTransform IDENTITY_XFORM = new AffineTransform();
-    private static Point2D aPoint = new Point2D.Double();
-    private static ArrayList segList = new ArrayList();
-    private static double[] pts = new double[8];
+    private static final AffineTransform IDENTITY_XFORM = new AffineTransform();
+    private static final Point2D aPoint = new Point2D.Double();
+    private static final ArrayList segList = new ArrayList();
+    private static final double[] pts = new double[8];
 
     /**
      * Apply the specified transform to the specified rectangle, modifying the

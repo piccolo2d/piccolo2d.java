@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Widget;
 public class PSWTKeyEvent extends KeyEvent {
     private static final long serialVersionUID = 1L;
 
-    private static Component fakeSrc = new Component() {
+    private static final Component fakeSrc = new Component() {
     };
 
     private org.eclipse.swt.events.KeyEvent swtEvent;

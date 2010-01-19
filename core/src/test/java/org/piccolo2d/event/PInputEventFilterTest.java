@@ -47,18 +47,7 @@ public class PInputEventFilterTest extends TestCase {
 
     public void setUp() {
         filter = new PInputEventFilter();
-    }
-
-    // http://code.google.com/p/piccolo2d/issues/detail?id=116
-    public void testPreventCodeCleanFinal() {
-        final int pre = PInputEventFilter.ALL_MODIFIERS_MASK;
-        try {
-            PInputEventFilter.ALL_MODIFIERS_MASK = 0;
-        }
-        finally {
-            PInputEventFilter.ALL_MODIFIERS_MASK = pre;
-        }
-    }
+    }    
 
     public void testAcceptsAlreadyHandledEventsFalseByDefault() {
         assertFalse(filter.getAcceptsAlreadyHandledEvents());

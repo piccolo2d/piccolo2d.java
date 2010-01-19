@@ -57,13 +57,13 @@ public class PUtil {
      * PActivities are broken into steps, this is how many milliseconds should
      * pass between steps.
      */
-    public static long DEFAULT_ACTIVITY_STEP_RATE = 20;
+    public static final long DEFAULT_ACTIVITY_STEP_RATE = 20;
 
     /** Rate in milliseconds at which the activity timer will get invoked. */
-    public static int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
+    public static final int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
 
     /** An iterator that iterates over an empty collection. */
-    public static Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
+    public static final Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
 
     /**
      * Used when persisting paths to an object stream. Used to mark the end of
@@ -72,7 +72,7 @@ public class PUtil {
     private static final int PATH_TERMINATOR = -1;
 
     /** A utility enumeration with no elements. */
-    public static Enumeration NULL_ENUMERATION = new Enumeration() {
+    public static final Enumeration NULL_ENUMERATION = new Enumeration() {
         public boolean hasMoreElements() {
             return false;
         }

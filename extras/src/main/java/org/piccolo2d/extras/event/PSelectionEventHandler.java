@@ -71,9 +71,9 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
     public static final String SELECTION_CHANGED_NOTIFICATION = "SELECTION_CHANGED_NOTIFICATION";
 
     /** The default dash width when displaying selection rectangle. */
-    static final int DASH_WIDTH = 5;
+    private static final int DASH_WIDTH = 5;
 
-    static final int NUM_STROKES = 10;
+    private static final int NUM_STROKES = 10;
 
     /** The current selection. */
     private HashMap selection = null;
