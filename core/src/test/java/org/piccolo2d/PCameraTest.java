@@ -40,11 +40,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PCanvas;
-import org.piccolo2d.PComponent;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
+import junit.framework.TestCase;
+
 import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PTransformActivity;
 import org.piccolo2d.util.PAffineTransform;
@@ -53,8 +50,6 @@ import org.piccolo2d.util.PDebug;
 import org.piccolo2d.util.PNodeFilter;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
-
-import junit.framework.TestCase;
 
 /**
  * Unit test for PCamera.
@@ -475,17 +470,7 @@ public class PCameraTest extends TestCase {
         PLayer layer = new PLayer();
         // todo:  layer is not contained in list of layers viewed by camera, should complain
         camera.repaintFromLayer(new PBounds(0, 0, 1, 1), layer);
-    }
-
-    public void testRepaintFromLayerNotALayer() {
-        try {
-            camera.repaintFromLayer(new PBounds(0, 0, 1, 1), new PNode());
-            fail("repaintFromLayer(PBounds, PNode) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
+    }    
 
     public void testRemoveLayerAtIndex() {
         PLayer layer = new PLayer();

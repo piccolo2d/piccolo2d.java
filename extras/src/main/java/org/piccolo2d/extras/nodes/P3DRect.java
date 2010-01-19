@@ -212,15 +212,5 @@ public class P3DRect extends PNode {
         topLeftInnerColor = topLeftOuterColor.darker();
         bottomRightInnerColor = color.brighter();
         bottomRightOuterColor = bottomRightInnerColor.brighter();
-    }
-
-    /**
-     * TODO can we remove this?
-     * 
-     * @deprecated since it has been moved to P3DRectExample.
-     * 
-     * @param args Command line arguments
-     */
-    public static void main(final String[] args) {
-    }
+    }    
 }

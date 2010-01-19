@@ -192,25 +192,7 @@ public class PText extends PNode {
     public PText(final String text) {
         this();
         setText(text);
-    }
-
-    /**
-     * @deprecated by {@link #getHorizontalAlignment()}
-     * 
-     * @return the horizontal alignment value of this node
-     */
-    public float getJustification() {
-        return getHorizontalAlignment();
-    }
-
-    /**
-     * @deprecated by {@link #setHorizontalAlignment(float)}
-     * 
-     * @param justification horizontal alignment value to assign to this node
-     */
-    public void setJustification(final float justification) {
-        setHorizontalAlignment(justification);
-    }
+    }   
 
     /**
      * Return the horizontal alignment for this text node. The horizontal

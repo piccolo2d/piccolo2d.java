@@ -393,28 +393,7 @@ public class SWTGraphics2D extends Graphics2D {
             FONT_CACHE.put(fontString, cachedFont);
         }
         return cachedFont;
-    }
-
-    /**
-     * Deprecated since SWT now handles this.
-     * 
-     * @deprecated
-     * @return font that's been transformed by the current transform
-     */
-    protected org.eclipse.swt.graphics.Font getTransformedFont() {
-        if (curFont != null) {
-            final FontData fontData = curFont.getFontData()[0];
-            int height = fontData.getHeight();
-            TEMP_RECT.setRect(0, 0, height, height);
-            SWTShapeManager.transform(TEMP_RECT, transform);
-            height = (int) (TEMP_RECT.getHeight() + 0.5);
-
-            final String fontString = "name=" + fontData.getName() + ";bold=" + ((fontData.getStyle() & SWT.BOLD) != 0)
-                    + ";italic=" + ((fontData.getStyle() & SWT.ITALIC) != 0) + ";size=" + height;
-            return getFont(fontString);
-        }
-        return null;
-    }
+    }    
 
     // /////////////////////////
     // AFFINE TRANSFORM METHODS
@@ -1200,15 +1179,7 @@ public class SWTGraphics2D extends Graphics2D {
         SWTShapeManager.awtToSWT(TEMP_RECT, SWT_RECT);
 
         gc.fillGradientRectangle(SWT_RECT.x, SWT_RECT.y, SWT_RECT.width, SWT_RECT.height, vertical);
-    }
-
-    /**
-     * @deprecated since underlying method has been deprecated
-     * @param xOr whether to be in xOr mode
-     */
-    public void setXORMode(final boolean xOr) {
-        gc.setXORMode(xOr);
-    }
+    }   
 
     /**
      * Returns the advance width of the character provided in the current font.

@@ -41,14 +41,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 import javax.swing.text.MutableAttributeSet;
 
-import org.piccolo2d.PCanvas;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
+import junit.framework.TestCase;
+
 import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PColorActivity;
 import org.piccolo2d.activities.PInterpolatingActivity;
@@ -63,8 +61,6 @@ import org.piccolo2d.util.PNodeFilter;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
 import org.piccolo2d.util.PUtil;
-
-import junit.framework.TestCase;
 
 /**
  * Unit test for PNode.
@@ -595,31 +591,7 @@ public class PNodeTest extends TestCase {
     public void testGetDoubleAttributeReturnsValueIfFoundWhenDefaultProvided() {
         node.addAttribute("Found", new Double(5));
         assertEquals(5, node.getIntegerAttribute("Found", 10), 0.001);
-    }
-
-    public void testGetAddClienProperty() {
-        assertNull(node.getClientProperty("Testing"));
-        node.addClientProperty("Testing", "Hello");
-        assertEquals("Hello", node.getClientProperty("Testing"));
-    }
-
-    public void testGetClientPropertyKeysIteratorIsNotNullOnEmptyClientProperties() {
-        final Iterator iterator = node.getClientPropertyKeysIterator();
-        assertNotNull(iterator);
-        assertFalse(iterator.hasNext());
-    }
-
-    public void testGetClientPropertyKeysIteratorReturnsValidIteraotOnPropertiesExist() {
-        node.addClientProperty("A", "Aval");
-        node.addClientProperty("B", "Bval");
-        final Iterator iterator = node.getClientPropertyKeysIterator();
-        assertNotNull(iterator);
-        assertTrue(iterator.hasNext());
-        assertEquals("A", iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals("B", iterator.next());
-        assertFalse(iterator.hasNext());
-    }
+    }    
 
     public void testLocalToParentModifiesGivenPoint() {
         final PNode parent = new PNode();

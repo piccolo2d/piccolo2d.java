@@ -300,14 +300,5 @@ public class PBasicInputEventHandler implements PInputEventListener {
      *            details
      */
     public void keyboardFocusLost(final PInputEvent event) {
-    }
-
-    /**
-     * @deprecated see http://code.google.com/p/piccolo2d/issues/detail?id=99
-     * 
-     * @return empty string since this method is deprecated
-     */
-    protected String paramString() {
-        return "";
-    }
+    }    
 }

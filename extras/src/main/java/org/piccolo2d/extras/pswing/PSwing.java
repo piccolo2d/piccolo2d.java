@@ -340,17 +340,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
         updateBounds();
         listenForCanvas(this);
-    }
-
-    /**
-     * @deprecated by {@link #PSwing(JComponent)}
-     * 
-     * @param swingCanvas canvas on which the PSwing node will be embedded
-     * @param component not used
-     */
-    public PSwing(final PSwingCanvas swingCanvas, final JComponent component) {
-        this(component);
-    }
+    }   
 
     /**
      * Ensures the bounds of the underlying component are accurate, and sets the

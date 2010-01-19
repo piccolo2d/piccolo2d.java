@@ -426,16 +426,7 @@ public class PActivity {
             return Long.MAX_VALUE;
         }
         return startTime + duration;
-    }
-
-    /**
-     * @deprecated see http://code.google.com/p/piccolo2d/issues/detail?id=99
-     * 
-     * @return string representation of this activity
-     */
-    protected String paramString() {
-        return "";
-    }
+    }    
     
     /**
      * <b>PActivityDelegate</b> is used by classes to learn about and act on the

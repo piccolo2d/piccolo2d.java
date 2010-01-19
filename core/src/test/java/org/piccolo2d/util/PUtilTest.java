@@ -27,11 +27,8 @@
  */
 package org.piccolo2d.util;
 
-import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
-
-import org.piccolo2d.util.PUtil;
 
 import junit.framework.TestCase;
 
@@ -56,15 +53,7 @@ public class PUtilTest extends TestCase {
         }
         finally {
             PUtil.NULL_ITERATOR = ni;
-        }
-
-        final OutputStream no = PUtil.NULL_OUTPUT_STREAM;
-        try {
-            PUtil.NULL_OUTPUT_STREAM = null;
-        }
-        finally {
-            PUtil.NULL_OUTPUT_STREAM = no;
-        }
+        } 
     }
 
 }

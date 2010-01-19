@@ -35,7 +35,6 @@ import java.awt.geom.PathIterator;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -81,28 +80,7 @@ public class PUtil {
         public Object nextElement() {
             return null;
         }
-    };
-
-    /**
-     * @deprecated This has been moved into a private static class of
-     *             PObjectOutputStream
-     */
-    public static OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
-        public void close() {
-        }
-
-        public void flush() {
-        }
-
-        public void write(final byte[] b) {
-        }
-
-        public void write(final byte[] b, final int off, final int len) {
-        }
-
-        public void write(final int b) {
-        }
-    };
+    };    
 
     /**
      * Creates the simplest possible scene graph. 1 Camera, 1 Layer, 1 Root
