@@ -59,7 +59,7 @@ public class PNotification {
     /** The Object associated with this notification. */
     protected Object source;
     /** A free form map of properties to attach to this notification. */
-    protected Map properties;
+    protected Map<Object, Object> properties;
 
     /**
      * Creates a notification.
@@ -68,7 +68,7 @@ public class PNotification {
      * @param source object associated with this notification
      * @param properties free form map of information about the notification
      */
-    public PNotification(final String name, final Object source, final Map properties) {
+    public PNotification(final String name, final Object source, final Map<Object, Object> properties) {
         this.name = name;
         this.source = source;
         this.properties = properties;

@@ -60,7 +60,7 @@ import org.piccolo2d.util.PDimension;
  * @author Jesse Grosjean
  */
 public class PNavigationEventHandler extends PBasicInputEventHandler {
-    /** Minum size under which two scales are considered the same. */
+    /** Minimum size under which two scales are considered the same. */
     private static final double SCALING_THRESHOLD = 0.0001;
     /** Amount of time it takes to animation view from one location to another. */
     private static final int NAVIGATION_DURATION = 500;
@@ -77,7 +77,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
     /** The OUT direction on the scene. */
     public static final int OUT = 5;
 
-    private static Hashtable NODE_TO_GLOBAL_NODE_CENTER_MAPPING = new Hashtable();
+    private static Hashtable<PNode, Point2D> NODE_TO_GLOBAL_NODE_CENTER_MAPPING = new Hashtable<PNode, Point2D>();
 
     private PNode focusNode;
     private PTransformActivity navigationActivity;
@@ -263,12 +263,12 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         final Point2D highlightCenter = focusNode.getGlobalFullBounds().getCenter2D();
         NODE_TO_GLOBAL_NODE_CENTER_MAPPING.put(focusNode, highlightCenter);
 
-        final List l = getNeighbors();
+        final List<PNode> l = getNeighbors();
         sortNodesByDistanceFromPoint(l, highlightCenter);
 
-        final Iterator i = l.iterator();
+        final Iterator<PNode> i = l.iterator();
         while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+            final PNode each = i.next();
             if (nodeIsNeighborInDirection(each, direction)) {
                 return each;
             }
@@ -283,18 +283,18 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
      * 
      * @return list of nodes that are 1 hop away from the current focusNode
      */
-    public List getNeighbors() {
-        final ArrayList result = new ArrayList();
+    public List<PNode> getNeighbors() {
+        final ArrayList<PNode> result = new ArrayList<PNode>();
         if (focusNode == null || focusNode.getParent() == null) {
             return result;
         }
 
         final PNode focusParent = focusNode.getParent();
-
-        final Iterator i = focusParent.getChildrenIterator();
+        
+        final Iterator<PNode> i = focusParent.getChildrenIterator();
 
         while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+            final PNode each = i.next();
             if (each != focusNode && each.getPickable()) {
                 result.add(each);
             }
@@ -363,13 +363,9 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
      * @param nodes list of nodes to be sorted
      * @param point point from which distance is being computed
      */
-    public void sortNodesByDistanceFromPoint(final List nodes, final Point2D point) {
-        Collections.sort(nodes, new Comparator() {
-            public int compare(final Object o1, final Object o2) {
-                return compare((PNode) o1, (PNode) o2);
-            }
-
-            private int compare(final PNode each1, final PNode each2) {
+    public void sortNodesByDistanceFromPoint(final List<PNode> nodes, final Point2D point) {
+        Collections.sort(nodes, new Comparator<PNode>() {           
+            public int compare(final PNode each1, final PNode each2) {
                 final Point2D center1 = each1.getGlobalFullBounds().getCenter2D();
                 final Point2D center2 = each2.getGlobalFullBounds().getCenter2D();
 

@@ -48,7 +48,7 @@ public class PComboBoxTest extends TestCase {
     }
 
     public void testConstructsWithVector() {
-        final Vector items = new Vector();
+        final Vector<String> items = new Vector<String>();
         items.add("A");
         items.add("B");
         final PComboBox combo = new PComboBox(items);

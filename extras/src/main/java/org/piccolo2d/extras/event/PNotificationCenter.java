@@ -69,10 +69,10 @@ public class PNotificationCenter {
     protected  static volatile PNotificationCenter DEFAULT_CENTER;
 
     /** A map of listeners keyed by NotificationKey objects. */
-    protected HashMap listenersMap;
+    protected HashMap<NotificationKey, List<NotificationTarget>> listenersMap;
 
     /** A queue of NotificationKeys that are available to be garbage collected. */
-    protected ReferenceQueue keyQueue;
+    protected ReferenceQueue<NotificationKey> keyQueue;
 
     /**
      * Singleton accessor for the PNotificationCenter.
@@ -87,8 +87,8 @@ public class PNotificationCenter {
     }
 
     private PNotificationCenter() {
-        listenersMap = new HashMap();
-        keyQueue = new ReferenceQueue();
+        listenersMap = new HashMap<NotificationKey, List<NotificationTarget>>();
+        keyQueue = new ReferenceQueue<NotificationKey>();
     }
 
     /**
@@ -122,9 +122,9 @@ public class PNotificationCenter {
         final NotificationKey key = new NotificationKey(name, sanitizedObject);
         final NotificationTarget notificationTarget = new NotificationTarget(listener, method);
 
-        List list = (List) listenersMap.get(key);
+        List<NotificationTarget> list = listenersMap.get(key);
         if (list == null) {
-            list = new ArrayList();
+            list = new ArrayList<NotificationTarget>();
             listenersMap.put(new NotificationKey(name, sanitizedObject, keyQueue), list);
         }
 
@@ -138,7 +138,7 @@ public class PNotificationCenter {
     private Method extractCallbackMethod(final Object listener, final String methodName) {
         Method method = null;
         try {
-            Class[] classes = new Class[1];
+            Class<?>[] classes = new Class<?>[1];
             classes[0] = PNotification.class;
             method = listener.getClass().getMethod(methodName, classes);
         }
@@ -183,7 +183,7 @@ public class PNotificationCenter {
     public void removeListener(final Object listener) {
         processKeyQueue();
 
-        final Iterator i = new LinkedList(listenersMap.keySet()).iterator();
+        final Iterator<NotificationKey> i = new LinkedList<NotificationKey>(listenersMap.keySet()).iterator();
         while (i.hasNext()) {
             removeListener(listener, i.next());
         }
@@ -209,10 +209,9 @@ public class PNotificationCenter {
     public void removeListener(final Object listener, final String notificationName, final Object object) {
         processKeyQueue();
 
-        final List keys = matchingKeys(notificationName, object);
-        final Iterator it = keys.iterator();
-        while (it.hasNext()) {
-            removeListener(listener, it.next());
+        final List<NotificationKey> keys = matchingKeys(notificationName, object);
+        for (NotificationKey key : keys) {
+            removeListener(listener, key);
         }
     }
 
@@ -253,7 +252,7 @@ public class PNotificationCenter {
      *            listeners
      */
     public void postNotification(final PNotification notification) {
-        final List mergedListeners = new LinkedList();
+        final List<NotificationTarget> mergedListeners = new LinkedList<NotificationTarget>();
 
         final Object name = notification.getName();
         final Object object = notification.getObject();
@@ -283,17 +282,17 @@ public class PNotificationCenter {
      * @param object source of the notification
      * @param listeners list to append listeners to
      */
-    private void fillWithMatchingListeners(final Object notificationName, final Object object, final List listeners) {
+    private void fillWithMatchingListeners(final Object notificationName, final Object object, final List<NotificationTarget> listeners) {
         final Object key = new NotificationKey(nullify(notificationName), nullify(object));
-        final List globalListeners = (List) listenersMap.get(key);
+        final List<NotificationTarget> globalListeners = listenersMap.get(key);
         if (globalListeners != null) {
             listeners.addAll(globalListeners);
         }
     }
 
-    private void dispatchNotifications(final PNotification notification, final List listeners) {
+    private void dispatchNotifications(final PNotification notification, final List<NotificationTarget> listeners) {
         NotificationTarget listener;
-        final Iterator listenerIterator = listeners.iterator();
+        final Iterator<NotificationTarget> listenerIterator = listeners.iterator();
 
         while (listenerIterator.hasNext()) {
             listener = (NotificationTarget) listenerIterator.next();
@@ -328,11 +327,11 @@ public class PNotificationCenter {
      * 
      * @return list of matching keys
      */
-    protected List matchingKeys(final String name, final Object object) {
-        final List result = new LinkedList();
+    protected List<NotificationKey> matchingKeys(final String name, final Object object) {
+        final List<NotificationKey> result = new LinkedList<NotificationKey>();
 
         final NotificationKey searchKey = new NotificationKey(name, object);
-        final Iterator it = listenersMap.keySet().iterator();
+        final Iterator<NotificationKey> it = listenersMap.keySet().iterator();
         while (it.hasNext()) {
             final NotificationKey key = (NotificationKey) it.next();
             if (searchKey.equals(key)) {
@@ -356,14 +355,14 @@ public class PNotificationCenter {
             return;
         }
 
-        final List list = (List) listenersMap.get(key);
+        final List<NotificationTarget> list = listenersMap.get(key);
         if (list == null) {
             return;
         }
 
-        final Iterator it = list.iterator();
+        final Iterator<NotificationTarget> it = list.iterator();
         while (it.hasNext()) {
-            final Object observer = ((NotificationTarget) it.next()).get();
+            final Object observer = it.next().get();
             if (observer == null || listener == observer) {
                 it.remove();
             }

@@ -34,8 +34,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.ScrollPaneConstants;
 
@@ -46,7 +44,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
-
 
 /**
  * The default scroll director implementation. This default implementation
@@ -139,9 +136,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
         if (camera != null) {
             // First we compute the union of all the layers
             final PBounds layerBounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+
+            for (PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
@@ -169,9 +165,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
         if (camera != null) {
             // First we compute the union of all the layers
             final PBounds bounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+
+            for (PLayer layer : camera.getLayersReference()) {
                 bounds.add(layer.getFullBoundsReference());
             }
 
@@ -205,9 +200,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
 
         // Get the union of all the layers' bounds
         final PBounds layerBounds = new PBounds();
-        final List layers = camera.getLayersReference();
-        for (final Iterator i = layers.iterator(); i.hasNext();) {
-            final PLayer layer = (PLayer) i.next();
+
+        for (PLayer layer : camera.getLayersReference()) {
             layerBounds.add(layer.getFullBoundsReference());
         }
 
@@ -258,7 +252,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
     }
 
     private boolean isBoundsChangedEvent(final PropertyChangeEvent pce) {
-        return PNode.PROPERTY_BOUNDS.equals(pce.getPropertyName()) || PNode.PROPERTY_FULL_BOUNDS.equals(pce.getPropertyName());
+        return PNode.PROPERTY_BOUNDS.equals(pce.getPropertyName())
+                || PNode.PROPERTY_FULL_BOUNDS.equals(pce.getPropertyName());
     }
 
     /**
@@ -277,9 +272,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            for (PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 

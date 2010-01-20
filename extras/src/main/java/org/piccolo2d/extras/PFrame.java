@@ -244,7 +244,7 @@ public class PFrame extends JFrame {
      * @return best display mode the given device supports
      */
     protected DisplayMode getBestDisplayMode(final GraphicsDevice device) {
-        final Iterator itr = getPreferredDisplayModes(device).iterator();
+        final Iterator<DisplayMode> itr = getPreferredDisplayModes(device).iterator();
         while (itr.hasNext()) {
             final DisplayMode each = (DisplayMode) itr.next();
             final DisplayMode[] modes = device.getDisplayModes();
@@ -266,8 +266,8 @@ public class PFrame extends JFrame {
      * @param device the device being inspected
      * @return preferred display mode
      */
-    protected Collection getPreferredDisplayModes(final GraphicsDevice device) {
-        final ArrayList result = new ArrayList();
+    protected Collection<DisplayMode> getPreferredDisplayModes(final GraphicsDevice device) {
+        final ArrayList<DisplayMode> result = new ArrayList<DisplayMode>();
 
         result.add(device.getDisplayMode());
         /*

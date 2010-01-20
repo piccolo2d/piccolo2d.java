@@ -104,7 +104,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * 
      * @param items The items to populate the PComboBox list
      */
-    public PComboBox(final Vector items) {
+    public PComboBox(final Vector<?> items) {
         super(items);
         init();
     }

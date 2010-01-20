@@ -31,7 +31,6 @@ package org.piccolo2d.extras.handles;
 import java.awt.Cursor;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.SwingConstants;
 
@@ -104,13 +103,11 @@ public class PBoundsHandle extends PHandle {
      * @param node node having its handles removed from
      */
     public static void removeBoundsHandlesFrom(final PNode node) {
-        final ArrayList handles = new ArrayList();
+        final ArrayList<PBoundsHandle> handles = new ArrayList<PBoundsHandle>();
 
-        final Iterator i = node.getChildrenIterator();
-        while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+        for (PNode each : node.getChildrenReference()) {
             if (each instanceof PBoundsHandle) {
-                handles.add(each);
+                handles.add((PBoundsHandle)each);
             }
         }
         node.removeChildren(handles);
@@ -259,11 +256,9 @@ public class PBoundsHandle extends PHandle {
      * @param flipY whether to allow flipping along the y direction
      */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
-        final Iterator i = getParent().getChildrenIterator();
-        while (i.hasNext()) {
-            final Object each = i.next();
-            if (each instanceof PBoundsHandle) {
-                ((PBoundsHandle) each).flipHandleIfNeeded(flipX, flipY);
+        for (PNode child : getParent().getChildrenReference()) {
+            if (child instanceof PBoundsHandle) {
+                ((PBoundsHandle) child).flipHandleIfNeeded(flipX, flipY);
             }
         }
     }
