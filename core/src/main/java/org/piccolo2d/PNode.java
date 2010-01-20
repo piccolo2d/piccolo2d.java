@@ -28,6 +28,8 @@
  */
 package org.piccolo2d;
 
+import static org.piccolo2d.util.PUtil.reverse;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -59,6 +61,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -384,6 +387,19 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public static final int FILL_STRATEGY_EXACT_FIT = 4;
 
+    /** A utility enumeration with no elements for use with ClientProperties. */
+    private static final Enumeration<?> NULL_ENUMERATION = new Enumeration<Object>() {
+        public boolean hasMoreElements() {
+            return false;
+        }
+
+        public Object nextElement() {
+            return null;
+        }
+    };
+    
+    private static final List<PNode> EMPTY_CHILDREN = Collections.<PNode>emptyList();
+
     /**
      * Creates a new PNode with the given name.
      * 
@@ -409,6 +425,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         pickable = true;
         childrenPickable = true;
         visible = true;
+
+        children = EMPTY_CHILDREN;
     }
 
     // ****************************************************************
@@ -749,7 +767,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public Enumeration<?> getClientPropertyKeysEnumeration() {
         if (clientProperties == null) {
-            return PUtil.NULL_ENUMERATION;
+            return NULL_ENUMERATION;
         }
         else {
             return clientProperties.getAttributeNames();
@@ -1654,10 +1672,8 @@ public class PNode implements Cloneable, Serializable, Printable {
             resultBounds.resetToZero();
         }
 
-        if (children != null) {
-            for (PNode each : children) {
-                resultBounds.add(each.getFullBoundsReference());
-            }
+        for (PNode each : children) {
+            resultBounds.add(each.getFullBoundsReference());
         }
 
         return resultBounds;
@@ -1800,10 +1816,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         setBoundsChanged(true);
         firePropertyChange(PROPERTY_CODE_BOUNDS, PROPERTY_BOUNDS, null, bounds);
 
-        if (children != null) {
-            for (PNode each : children) {
-                each.parentBoundsChanged();
-            }
+        for (PNode each : children) {
+            each.parentBoundsChanged();
         }
     }
 
@@ -1871,10 +1885,8 @@ public class PNode implements Cloneable, Serializable, Printable {
             if (childBoundsInvalid || childBoundsVolatile) {
                 childBoundsVolatile = false;
 
-                if (children != null) {
-                    for (PNode each : children) {
-                        childBoundsVolatile |= each.validateFullBounds();
-                    }
+                for (PNode each : children) {
+                    childBoundsVolatile |= each.validateFullBounds();
                 }
             }
 
@@ -2540,10 +2552,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (getChildPaintInvalid()) {
-            if (children != null) {
-                for (PNode each : children) {
-                    each.validateFullPaint();
-                }
+            for (PNode each : children) {
+                each.validateFullPaint();
             }
 
             setChildPaintInvalid(false);
@@ -2746,10 +2756,8 @@ public class PNode implements Cloneable, Serializable, Printable {
                 paint(paintContext);
             }
 
-            if (children != null) {
-                for (PNode each : children) {
-                    each.fullPaint(paintContext);
-                }
+            for (PNode each : children) {
+                each.fullPaint(paintContext);
             }
 
             paintAfterChildren(paintContext);
@@ -3073,9 +3081,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             }
 
             if (getChildrenPickable()) {
-                final int count = getChildrenCount();
-                for (int i = count - 1; i >= 0; i--) {
-                    final PNode each = (PNode) children.get(i);
+                for (PNode each : reverse(children)) {
                     if (each.fullPick(pickPath)) {
                         return true;
                     }
@@ -3108,9 +3114,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 results.add(this);
             }
 
-            final int count = getChildrenCount();
-            for (int i = count - 1; i >= 0; i--) {
-                final PNode each = (PNode) children.get(i);
+            for (PNode each : reverse(children)) {
                 each.findIntersectingNodes(localBounds, results);
             }
         }
@@ -3170,6 +3174,9 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         child.setParent(this);
+        if (children == Collections.EMPTY_LIST) {
+            children = new LinkedList<PNode>();
+        }
         getChildrenReference().add(index, child);
         child.invalidatePaint();
         invalidateFullBounds();
@@ -3315,9 +3322,6 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return index of child or -1 if not found
      */
     public int indexOfChild(final PNode child) {
-        if (children == null) {
-            return -1;
-        }
         return children.indexOf(child);
     }
 
@@ -3346,13 +3350,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the removed child
      */
     public PNode removeChild(final int index) {
-        if (children == null) {
-            return null;
-        }
         final PNode child = (PNode) children.remove(index);
 
         if (children.size() == 0) {
-            children = null;
+            children = EMPTY_CHILDREN;
         }
 
         child.repaint();
@@ -3381,17 +3382,15 @@ public class PNode implements Cloneable, Serializable, Printable {
      * efficient then removing each child individually.
      */
     public void removeAllChildren() {
-        if (children != null) {
-            for (PNode each : children) {
-                each.setParent(null);
-            }
-            children = null;
-
-            invalidatePaint();
-            invalidateFullBounds();
-
-            firePropertyChange(PROPERTY_CODE_CHILDREN, PROPERTY_CHILDREN, null, children);
+        for (PNode each : children) {
+            each.setParent(null);
         }
+        children = EMPTY_CHILDREN;
+
+        invalidatePaint();
+        invalidateFullBounds();
+
+        firePropertyChange(PROPERTY_CODE_CHILDREN, PROPERTY_CHILDREN, null, children);
     }
 
     /**
@@ -3467,9 +3466,6 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the number of children
      */
     public int getChildrenCount() {
-        if (children == null) {
-            return 0;
-        }
         return children.size();
     }
 
@@ -3490,9 +3486,6 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return reference to the children list
      */
     public List<PNode> getChildrenReference() {
-        if (children == null) {
-            children = new ArrayList<PNode>();
-        }
         return children;
     }
 
@@ -3502,10 +3495,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return iterator over this nodes children
      */
     public ListIterator<PNode> getChildrenIterator() {
-        if (children == null) {
-            return Collections.<PNode>emptyList().listIterator();
-        }
-        return Collections.<PNode>unmodifiableList(children).listIterator();
+        return Collections.<PNode> unmodifiableList(children).listIterator();
     }
 
     /**
@@ -3556,10 +3546,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (filter == null || filter.acceptChildrenOf(this)) {
-            if (children != null) {
-                for (PNode each : children) {
-                    each.getAllNodes(filter, results);
-                }
+            for (PNode each : children) {
+                each.getAllNodes(filter, results);
             }
         }
 

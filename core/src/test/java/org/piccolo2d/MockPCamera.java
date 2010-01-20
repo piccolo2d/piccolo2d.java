@@ -42,7 +42,7 @@ import org.piccolo2d.util.PBounds;
  */
 class MockPCamera extends PCamera {
     private static final long serialVersionUID = 1L;
-    private final List notifications = new ArrayList();
+    private final List<Notification> notifications = new ArrayList<Notification>();
 
     public void repaintFromLayer(final PBounds bounds, final PLayer layer) {
         notifications.add(new Notification("repaintFromLayer", bounds, layer));
@@ -75,7 +75,7 @@ class MockPCamera extends PCamera {
     }
 
     public Notification getNotification(final int i) {
-        return (Notification) notifications.get(i);
+        return notifications.get(i);
     }
 
 }

@@ -38,7 +38,7 @@ import javax.swing.Timer;
 
 import org.piccolo2d.PRoot;
 import org.piccolo2d.util.PUtil;
-
+import static org.piccolo2d.util.PUtil.reverse;
 
 /**
  * <b>PActivityScheduler</b> is responsible for maintaining a list of
@@ -58,10 +58,10 @@ public class PActivityScheduler implements Serializable {
     private static final long serialVersionUID = 1L;
     private transient Timer activityTimer = null;
     private final PRoot root;
-    private final List activities;    
+    private final List<PActivity> activities;
     private boolean activitiesChanged;
     private boolean animating;
-    private final ArrayList processingActivities;
+    private final List<PActivity> processingActivities;
 
     /**
      * Constructs an instance of PActivityScheduler. All activities it will
@@ -70,10 +70,10 @@ public class PActivityScheduler implements Serializable {
      * @param rootNode root node of all activities to be performed. All nodes
      *            being animated should have this node as an ancestor.
      */
-    public PActivityScheduler(final PRoot rootNode) {        
+    public PActivityScheduler(final PRoot rootNode) {
         root = rootNode;
-        activities = new ArrayList();
-        processingActivities = new ArrayList();
+        activities = new ArrayList<PActivity>();
+        processingActivities = new ArrayList<PActivity>();
     }
 
     /**
@@ -157,7 +157,7 @@ public class PActivityScheduler implements Serializable {
      * 
      * @return reference to the current activities list.
      */
-    public List getActivitiesReference() {
+    public List<PActivity> getActivitiesReference() {
         return activities;
     }
 
@@ -172,8 +172,7 @@ public class PActivityScheduler implements Serializable {
         if (size > 0) {
             processingActivities.clear();
             processingActivities.addAll(activities);
-            for (int i = size - 1; i >= 0; i--) {
-                final PActivity each = (PActivity) processingActivities.get(i);
+            for (PActivity each : reverse(processingActivities)) {
                 each.processStep(currentTime);
             }
         }
@@ -187,8 +186,7 @@ public class PActivityScheduler implements Serializable {
     public boolean getAnimating() {
         if (activitiesChanged) {
             animating = false;
-            for (int i = 0; i < activities.size(); i++) {
-                final PActivity each = (PActivity) activities.get(i);
+            for (PActivity each : activities) {
                 animating |= each.isAnimation();
             }
             activitiesChanged = false;

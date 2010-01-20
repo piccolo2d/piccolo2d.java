@@ -92,7 +92,7 @@ public class PCanvas extends JComponent implements PComponent {
      * Stack of cursors used to keep track of cursors as they change through
      * interactions.
      */
-    private final PStack cursorStack;
+    private final PStack<Cursor> cursorStack;
 
     /**
      * Whether the canvas is considered to be interacting, will probably mean
@@ -144,7 +144,7 @@ public class PCanvas extends JComponent implements PComponent {
      * camera, and layer. Zooming and panning are automatically installed.
      */
     public PCanvas() {        
-        cursorStack = new PStack();
+        cursorStack = new PStack<Cursor>();
         setCamera(createDefaultCamera());
         setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         setAnimatingRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
@@ -428,7 +428,7 @@ public class PCanvas extends JComponent implements PComponent {
      */
     public void popCursor() {
         if (!cursorStack.isEmpty()) {
-            setCursor((Cursor) cursorStack.pop());
+            setCursor(cursorStack.pop());
         }
     }
 

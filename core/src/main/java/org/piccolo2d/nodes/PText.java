@@ -39,6 +39,7 @@ import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PPaintContext;
@@ -425,7 +426,8 @@ public class PText extends PNode {
      * wrapped based on the bounds of this node.
      */
     public void recomputeLayout() {
-        final ArrayList linesList = new ArrayList();
+        final List<TextLayout> linesList = new ArrayList<TextLayout>();
+        
         double textWidth = 0;
         double textHeight = 0;
 
@@ -470,7 +472,7 @@ public class PText extends PNode {
             }
         }
 
-        lines = (TextLayout[]) linesList.toArray(EMPTY_TEXT_LAYOUT_ARRAY);
+        lines = linesList.toArray(EMPTY_TEXT_LAYOUT_ARRAY);
 
         if (constrainWidthToTextWidth || constrainHeightToTextHeight) {
             double newWidth = getWidth();

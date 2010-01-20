@@ -32,7 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <b>PObjectOutputStream</b> is an extension of ObjectOutputStream to handle
@@ -68,7 +69,7 @@ import java.util.HashMap;
 public class PObjectOutputStream extends ObjectOutputStream {
 
     private boolean writingRoot;
-    private final HashMap unconditionallyWritten;
+    private final Set<Object> unconditionallyWritten;
 
     /**
      * Transform the given object into an array of bytes.
@@ -94,7 +95,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
      */
     public PObjectOutputStream(final OutputStream out) throws IOException {
         super(out);
-        unconditionallyWritten = new HashMap();
+        unconditionallyWritten = new HashSet<Object>();
     }
 
     /**
@@ -125,7 +126,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
                     "writeConditionalObject() may only be called when a root object has been written.");
         }
 
-        if (unconditionallyWritten.containsKey(object)) {
+        if (unconditionallyWritten.contains(object)) {
             writeObject(object);
         }
         else {
@@ -158,7 +159,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
             }
 
             public Object replaceObject(final Object object) {
-                unconditionallyWritten.put(object, Boolean.TRUE);
+                unconditionallyWritten.add(object);
                 return object;
             }
 

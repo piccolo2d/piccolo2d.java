@@ -47,7 +47,7 @@ public class PLayerTest extends TestCase {
     }
 
     public void testLayerHasEmptyCamerasCollectionByDefault() {
-        final Collection cameras = layer.getCamerasReference();
+        final Collection<PCamera> cameras = layer.getCamerasReference();
         assertNotNull(cameras);
         assertTrue(cameras.isEmpty());
         assertEquals(0, layer.getCameraCount());

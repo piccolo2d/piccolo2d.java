@@ -31,7 +31,8 @@ package org.piccolo2d;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.piccolo2d.util.PBounds;
@@ -82,14 +83,15 @@ public class PLayer extends PNode {
     /**
      * Cameras which are registered as viewers of this PLayer.
      */
-    private transient List cameras;
+    private transient List<PCamera> cameras;
+    
+    private static final List<PCamera> EMPTY_CAMERAS = Collections.<PCamera>emptyList();
 
     /**
      * Creates a PLayer without any cameras attached to it.
      */
-    public PLayer() {
-        super();
-        cameras = new ArrayList();
+    public PLayer() {        
+        cameras = EMPTY_CAMERAS;
     }
 
     // ****************************************************************
@@ -102,7 +104,7 @@ public class PLayer extends PNode {
      * 
      * @return direct reference to registered cameras
      */
-    public List getCamerasReference() {
+    public List<PCamera> getCamerasReference() {
         return cameras;
     }
 
@@ -111,10 +113,7 @@ public class PLayer extends PNode {
      * 
      * @return the number of cameras attached to this layer
      */
-    public int getCameraCount() {
-        if (cameras == null) {
-            return 0;
-        }
+    public int getCameraCount() {        
         return cameras.size();
     }
 
@@ -125,7 +124,7 @@ public class PLayer extends PNode {
      * @return camera at the given index
      */
     public PCamera getCamera(final int index) {
-        return (PCamera) cameras.get(index);
+        return cameras.get(index);
     }
 
     /**
@@ -146,6 +145,9 @@ public class PLayer extends PNode {
      * @param camera Camera to add to layer
      */
     public void addCamera(final int index, final PCamera camera) {
+        if (cameras == EMPTY_CAMERAS) {
+            cameras = new LinkedList<PCamera>();
+        }
         cameras.add(index, camera);
         invalidatePaint();
         firePropertyChange(PROPERTY_CODE_CAMERAS, PROPERTY_CAMERAS, null, cameras);
@@ -211,10 +213,8 @@ public class PLayer extends PNode {
      * @param parentBounds bounds needing repainting in parent coordinate system
      */
     protected void notifyCameras(final PBounds parentBounds) {
-        final int count = getCameraCount();
-        for (int i = 0; i < count; i++) {
-            final PCamera each = (PCamera) cameras.get(i);
-            each.repaintFromLayer(parentBounds, this);
+        for (PCamera camera : cameras) {
+            camera.repaintFromLayer(parentBounds, this);
         }
     }
 
@@ -240,9 +240,8 @@ public class PLayer extends PNode {
         }
         out.defaultWriteObject();
 
-        final int count = getCameraCount();
-        for (int i = 0; i < count; i++) {
-            ((PObjectOutputStream) out).writeConditionalObject(cameras.get(i));
+        for (PCamera camera : cameras) {
+            ((PObjectOutputStream) out).writeConditionalObject(camera);
         }
 
         out.writeObject(Boolean.FALSE);
@@ -260,7 +259,7 @@ public class PLayer extends PNode {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        cameras = new ArrayList();
+        cameras = new LinkedList<PCamera>();
 
         while (true) {
             final Object each = in.readObject();
@@ -269,7 +268,7 @@ public class PLayer extends PNode {
                     break;
                 }
                 else {
-                    cameras.add(each);
+                    cameras.add((PCamera)each);
                 }
             }
         }

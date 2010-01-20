@@ -31,7 +31,8 @@ package org.piccolo2d.util;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.event.EventListenerList;
 
@@ -39,6 +40,8 @@ import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventListener;
+
+import static org.piccolo2d.util.PUtil.reverse;
 
 
 /**
@@ -71,13 +74,13 @@ public class PPickPath implements PInputEventListener {
     private static final double[] PTS = new double[4];
 
     /** Stack of nodes representing all picked nodes. */
-    private PStack nodeStack;
+    private PStack<PNode> nodeStack;
 
     private final PCamera topCamera;
-    private PStack transformStack;
-    private PStack pickBoundsStack;
+    private PStack<PTuple> transformStack;
+    private PStack<Rectangle2D> pickBoundsStack;
     private PCamera bottomCamera;
-    private HashMap excludedNodes;
+    private Set<PNode> excludedNodes;
 
     /**
      * Creates a pick pack originating from the provided camera and with the
@@ -88,10 +91,12 @@ public class PPickPath implements PInputEventListener {
      */
     public PPickPath(final PCamera camera, final PBounds aScreenPickBounds) {
         super();
-        pickBoundsStack = new PStack();
+        
         topCamera = camera;
-        nodeStack = new PStack();
-        transformStack = new PStack();
+                
+        pickBoundsStack = new PStack<Rectangle2D>();
+        nodeStack = new PStack<PNode>();
+        transformStack = new PStack<PTuple>();
         pickBoundsStack.push(aScreenPickBounds);
 
         CURRENT_PICK_PATH = this;
@@ -114,7 +119,7 @@ public class PPickPath implements PInputEventListener {
      * @return true if node is acceptable to the path
      */
     public boolean acceptsNode(final PNode node) {
-        return excludedNodes == null || !excludedNodes.containsKey(node);
+        return excludedNodes == null || !excludedNodes.contains(node);
     }
 
     // ****************************************************************
@@ -168,20 +173,20 @@ public class PPickPath implements PInputEventListener {
         if (picked == topCamera) {
             return null;
         }
+        
         if (excludedNodes == null) {
-            excludedNodes = new HashMap();
+            excludedNodes = new HashSet<PNode>();
         }
 
         // exclude current picked node
-        excludedNodes.put(picked, picked);
+        excludedNodes.add(picked);
 
-        final Object screenPickBounds = pickBoundsStack.get(0);
+        final Rectangle2D screenPickBounds = pickBoundsStack.get(0);
 
         // reset path state
-        pickBoundsStack = new PStack();
-        nodeStack = new PStack();
-        transformStack = new PStack();
-        pickBoundsStack = new PStack();
+        pickBoundsStack = new PStack<Rectangle2D>();
+        nodeStack = new PStack<PNode>();
+        transformStack = new PStack<PTuple>();        
 
         pickBoundsStack.push(screenPickBounds);
 
@@ -221,12 +226,12 @@ public class PPickPath implements PInputEventListener {
     }
 
     private PCamera calculateBottomCamera() {
-        for (int i = nodeStack.size() - 1; i >= 0; i--) {
-            final PNode each = (PNode) nodeStack.get(i);
+        for (PNode each : reverse(nodeStack)) {
             if (each instanceof PCamera) {
                 return (PCamera) each;
             }
         }
+       
         return null;
     }
 
@@ -235,7 +240,7 @@ public class PPickPath implements PInputEventListener {
      * 
      * @return the node stack
      */
-    public PStack getNodeStackReference() {
+    public PStack<PNode> getNodeStackReference() {
         return nodeStack;
     }
 
@@ -257,11 +262,10 @@ public class PPickPath implements PInputEventListener {
         PTS[2] = 1;
         PTS[3] = 0;
 
-        final int count = transformStack.size();
-        for (int i = 0; i < count; i++) {
-            final PAffineTransform each = ((PTuple) transformStack.get(i)).transform;
-            if (each != null) {
-                each.transform(PTS, 0, PTS, 0, 2);
+        for (PTuple tuple : transformStack) {
+            final PAffineTransform transform = tuple.transform;
+            if (transform != null) {
+                transform.transform(PTS, 0, PTS, 0, 2);
             }
         }
 
@@ -306,12 +310,11 @@ public class PPickPath implements PInputEventListener {
     public PAffineTransform getPathTransformTo(final PNode nodeOnPath) {
         final PAffineTransform aTransform = new PAffineTransform();
 
-        final int count = transformStack.size();
-        for (int i = 0; i < count; i++) {
-            final PTuple each = (PTuple) transformStack.get(i);
+        for (PTuple each : transformStack) {
             if (each.transform != null) {
                 aTransform.concatenate(each.transform);
             }
+            
             if (nodeOnPath == each.node) {
                 return aTransform;
             }
@@ -329,17 +332,14 @@ public class PPickPath implements PInputEventListener {
      */
     public void processEvent(final PInputEvent event, final int eventType) {
         event.setPath(this);
-
-        for (int i = nodeStack.size() - 1; i >= 0; i--) {
-            final PNode each = (PNode) nodeStack.get(i);
-
+        
+        for (PNode each : reverse(nodeStack)) {
             final EventListenerList list = each.getListenerList();
 
             if (list != null) {
-                final Object[] listeners = list.getListeners(PInputEventListener.class);
-
-                for (int j = 0; j < listeners.length; j++) {
-                    final PInputEventListener listener = (PInputEventListener) listeners[j];
+                final PInputEventListener[] listeners = list.getListeners(PInputEventListener.class);
+                
+                for (PInputEventListener listener : listeners) {
                     listener.processEvent(event, eventType);
                     if (event.isHandled()) {
                         return;

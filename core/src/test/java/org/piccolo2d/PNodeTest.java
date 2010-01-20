@@ -541,7 +541,7 @@ public class PNodeTest extends TestCase {
 
     public void testGetClientPropertyKeysEnumerationShouldReturnCorrectEnumWhenPropertiesExist() {
         node.addAttribute("Testing", "Hello");
-        final Enumeration enumeration = node.getClientPropertyKeysEnumeration();
+        final Enumeration<?> enumeration = node.getClientPropertyKeysEnumeration();
         assertNotNull(enumeration);
         assertTrue(enumeration.hasMoreElements());
         assertEquals("Testing", enumeration.nextElement());

@@ -30,7 +30,6 @@ package org.piccolo2d;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -40,7 +39,6 @@ import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PActivityScheduler;
 import org.piccolo2d.util.PDebug;
 import org.piccolo2d.util.PNodeFilter;
-
 
 /**
  * <b>PRoot</b> serves as the top node in Piccolo2D's runtime structure. The
@@ -78,7 +76,7 @@ public class PRoot extends PNode {
     /**
      * The property name that identifies a change in this node's interacting
      * state.
-     *
+     * 
      * @since 1.3
      */
     public static final String PROPERTY_INTERACTING_CHANGED = "INTERACTING_CHANGED_NOTIFICATION";
@@ -86,7 +84,7 @@ public class PRoot extends PNode {
     /**
      * The property code that identifies a change in this node's interacting
      * state.
-     *
+     * 
      * @since 1.3
      */
     public static final int PROPERTY_CODE_INTERACTING_CHANGED = 1 << 13;
@@ -106,7 +104,7 @@ public class PRoot extends PNode {
     private transient PInputManager defaultInputManager;
 
     /** The Input Sources that are registered to this node. */
-    private final transient List inputSources;
+    private final transient List<InputSource> inputSources;
 
     /**
      * Used to provide a consistent clock time to activities as they are being
@@ -130,7 +128,7 @@ public class PRoot extends PNode {
      */
     public PRoot() {
         super();
-        inputSources = new ArrayList();
+        inputSources = new ArrayList<InputSource>();
         globalTime = System.currentTimeMillis();
         activityScheduler = new PActivityScheduler(this);
     }
@@ -173,10 +171,8 @@ public class PRoot extends PNode {
 
         while (activityScheduler.getActivitiesReference().size() > 0) {
             processInputs();
-            final Iterator i = getAllNodes(cameraWithCanvas, null).iterator();
-            while (i.hasNext()) {
-                final PCamera each = (PCamera) i.next();
-                each.getComponent().paintImmediately();
+            for (PNode each : getAllNodes(cameraWithCanvas, null)) {
+                ((PCamera) each).getComponent().paintImmediately();
             }
         }
     }
@@ -322,12 +318,8 @@ public class PRoot extends PNode {
         processingInputs = true;
 
         globalTime = System.currentTimeMillis();
-        if (inputSources.size() > 0) {
-            final Iterator inputSourceIterator = inputSources.iterator();
-            while (inputSourceIterator.hasNext()) {
-                final InputSource each = (InputSource) inputSourceIterator.next();
-                each.processInput();
-            }
+        for (InputSource inputSource : inputSources) {
+            inputSource.processInput();
         }
 
         activityScheduler.processActivities(globalTime);

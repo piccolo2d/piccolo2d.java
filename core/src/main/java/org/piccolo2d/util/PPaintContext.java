@@ -69,19 +69,19 @@ public class PPaintContext {
     private final Graphics2D graphics;
 
     /** Used while computing transparency. */
-    protected PStack compositeStack;
+    protected PStack<Composite> compositeStack;
 
     /** Used to optimize clipping region. */
-    protected PStack clipStack;
+    protected PStack<Shape> clipStack;
 
     /** Tracks clipping region in local coordinate system. */
-    protected PStack localClipStack;
+    protected PStack<Rectangle2D> localClipStack;
 
     /** Stack of cameras through which the node being painted is being viewed. */
-    protected PStack cameraStack;
+    protected PStack<PCamera> cameraStack;
 
     /** Stack of transforms being applied to the drawing context. */
-    protected PStack transformStack;
+    protected PStack<AffineTransform> transformStack;
 
     /** The current render quality that all rendering should be done in. */
     protected int renderQuality;
@@ -93,11 +93,11 @@ public class PPaintContext {
      */
     public PPaintContext(final Graphics2D graphics) {
         this.graphics = graphics;
-        compositeStack = new PStack();
-        clipStack = new PStack();
-        localClipStack = new PStack();
-        cameraStack = new PStack();
-        transformStack = new PStack();
+        compositeStack = new PStack<Composite>();
+        clipStack = new PStack<Shape>();
+        localClipStack = new PStack<Rectangle2D>();
+        cameraStack = new PStack<PCamera>();
+        transformStack = new PStack<AffineTransform>();
         renderQuality = HIGH_QUALITY_RENDERING;
 
         Shape clip = graphics.getClip();
@@ -179,9 +179,8 @@ public class PPaintContext {
      * 
      * @param clip clip to be pushed
      */
-    public void pushClip(final Shape clip) {
-        final Shape currentClip = graphics.getClip();
-        clipStack.push(currentClip);
+    public void pushClip(final Shape clip) {        
+        clipStack.push(graphics.getClip());
         graphics.clip(clip);
         final Rectangle2D newLocalClip = clip.getBounds2D();
         Rectangle2D.intersect(getLocalClip(), newLocalClip, newLocalClip);
@@ -194,7 +193,7 @@ public class PPaintContext {
      * @param clip not used in this method
      */
     public void popClip(final Shape clip) {
-        final Shape newClip = (Shape) clipStack.pop();
+        final Shape newClip = clipStack.pop();
         graphics.setClip(newClip);
         localClipStack.pop();
     }
@@ -231,8 +230,8 @@ public class PPaintContext {
         if (transparency == 1.0f) {
             return;
         }
-        final Composite c = (Composite) compositeStack.pop();
-        graphics.setComposite(c);
+        
+        graphics.setComposite(compositeStack.pop());
     }
 
     /**

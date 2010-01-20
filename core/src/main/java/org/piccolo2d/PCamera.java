@@ -28,6 +28,8 @@
  */
 package org.piccolo2d;
 
+import static org.piccolo2d.util.PUtil.reverse;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -39,7 +41,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.piccolo2d.activities.PTransformActivity;
@@ -121,7 +122,7 @@ public class PCamera extends PNode {
     private transient PComponent component;
 
     /** List of layers viewed by this camera. */
-    private transient List/*<PLayer>*/ layers;
+    private transient List<PLayer> layers;
 
     /**
      * Transform applied to layers before they are rendered. This transform
@@ -143,7 +144,7 @@ public class PCamera extends PNode {
     public PCamera() {
         super();
         viewTransform = new PAffineTransform();
-        layers = new ArrayList/*<PLayer>*/();
+        layers = new ArrayList<PLayer>();
         viewConstraint = VIEW_CONSTRAINT_NONE;
     }
 
@@ -215,7 +216,7 @@ public class PCamera extends PNode {
      * 
      * @return the list of layers viewed by this camera
      */
-    public List/*<PLayer>*/ getLayersReference() {
+    public List<PLayer> getLayersReference() {
         return layers;
     }
 
@@ -377,7 +378,8 @@ public class PCamera extends PNode {
             final Graphics2D g2 = paintContext.getGraphics();
             paintContext.setRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
             g2.setStroke(new BasicStroke(0));
-            final ArrayList nodes = new ArrayList();
+            final ArrayList<PNode> nodes = new ArrayList<PNode>();
+           
             final PBounds nodeBounds = new PBounds();
 
             final Color boundsColor = Color.red;
@@ -388,11 +390,7 @@ public class PCamera extends PNode {
                 ((PLayer) layers.get(i)).getAllNodes(null, nodes);
             }
 
-            final Iterator i = getAllNodes(null, nodes).iterator();
-
-            while (i.hasNext()) {
-                final PNode each = (PNode) i.next();
-
+            for (PNode each :  getAllNodes(null, nodes)) {
                 if (PDebug.debugBounds) {
                     g2.setPaint(boundsColor);
                     nodeBounds.setRect(each.getBoundsReference());
@@ -503,9 +501,7 @@ public class PCamera extends PNode {
      *    camera were picked
      */
     protected boolean pickCameraView(final PPickPath pickPath) {
-        final int size = layers.size();
-        for (int i = size - 1; i >= 0; i--) {
-            final PLayer each = (PLayer) layers.get(i);
+        for (PLayer each : reverse(layers)) {
             if (each.fullPick(pickPath)) {
                 return true;
             }
@@ -953,16 +949,16 @@ public class PCamera extends PNode {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        layers = new ArrayList();
+        layers = new ArrayList<PLayer>();
 
         while (true) {
-            final Object each = in.readObject();
+            final Object each =  in.readObject();
             if (each != null) {
                 if (each.equals(Boolean.FALSE)) {
                     break;
                 }
                 else {
-                    layers.add(each);
+                    layers.add((PLayer)each);
                 }
             }
         }

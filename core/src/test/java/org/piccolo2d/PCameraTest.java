@@ -685,7 +685,7 @@ public class PCameraTest extends TestCase {
         }
 
         /** {@inheritDoc} */
-        public Collection getAllNodes(final PNodeFilter filter, final Collection nodes) {
+        public Collection<PNode> getAllNodes(final PNodeFilter filter, final Collection<PNode> nodes) {
             getAllNodesCalled = true;
             return super.getAllNodes(filter, nodes);
         }

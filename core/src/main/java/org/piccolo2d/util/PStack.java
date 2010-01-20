@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PStack extends ArrayList {
+public class PStack<T> extends ArrayList<T> {
     /**
      * Allows for future serialization code to understand versioned binary
      * formats.
@@ -56,7 +56,7 @@ public class PStack extends ArrayList {
      * 
      * @param o object to add to the stack
      */
-    public void push(final Object o) {
+    public void push(final T o) {
         add(o);
     }
 
@@ -64,8 +64,8 @@ public class PStack extends ArrayList {
      * Returns  topmost element on the stack, or null if stack is empty.
      * 
      * @return topmost element on the stack, or null if empty
-     */
-    public Object peek() {
+     */   
+    public T peek() {
         final int s = size();
         if (s == 0) {
             return null;
@@ -80,7 +80,7 @@ public class PStack extends ArrayList {
      * 
      * @return topmost element on stack.
      */
-    public Object pop() {
+    public T pop() {
         return remove(size() - 1);
     }
 }

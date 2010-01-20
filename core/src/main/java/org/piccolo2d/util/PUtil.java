@@ -36,9 +36,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PLayer;
@@ -61,26 +61,12 @@ public class PUtil {
 
     /** Rate in milliseconds at which the activity timer will get invoked. */
     public static final int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
-
-    /** An iterator that iterates over an empty collection. */
-    public static final Iterator NULL_ITERATOR = Collections.EMPTY_LIST.iterator();
-
+    
     /**
      * Used when persisting paths to an object stream. Used to mark the end of
      * the path.
      */
-    private static final int PATH_TERMINATOR = -1;
-
-    /** A utility enumeration with no elements. */
-    public static final Enumeration NULL_ENUMERATION = new Enumeration() {
-        public boolean hasMoreElements() {
-            return false;
-        }
-
-        public Object nextElement() {
-            return null;
-        }
-    };    
+    private static final int PATH_TERMINATOR = -1;     
 
     /**
      * Creates the simplest possible scene graph. 1 Camera, 1 Layer, 1 Root
@@ -293,5 +279,36 @@ public class PUtil {
         }
 
         out.writeInt(PATH_TERMINATOR);
+    }
+    
+    public static <T> Iterable<T> reverse(List<T> wrapped) {
+        return new ListReverser<T>(wrapped);
+    }
+    
+    private static class ListReverser<T> implements Iterable<T> {
+        private ListIterator<T> listIterator;        
+        
+        public ListReverser(List<T> wrappedList) {
+            this.listIterator = wrappedList.listIterator(wrappedList.size());            
+        }               
+
+        public Iterator<T> iterator() {
+            return new Iterator<T>() {
+
+                public boolean hasNext() {
+                    return listIterator.hasPrevious();
+                }
+
+                public T next() {
+                    return listIterator.previous();
+                }
+
+                public void remove() {
+                    listIterator.remove();
+                }
+                
+            };
+        }
+        
     }
 }
