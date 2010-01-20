@@ -113,7 +113,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * The property name that identifies a change in this node's client
-     * propertie (see {@link #getClientProperty getClientProperty}). In an
+     * property (see {@link #getClientProperty getClientProperty}). In an
      * property change event the new value will be a reference to the map of
      * client properties but old value will always be null.
      */
@@ -121,7 +121,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * The property code that identifies a change in this node's client
-     * propertie (see {@link #getClientProperty getClientProperty}). In an
+     * property (see {@link #getClientProperty getClientProperty}). In an
      * property change event the new value will be a reference to the map of
      * client properties but old value will always be null.
      */
@@ -3177,7 +3177,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (children == Collections.EMPTY_LIST) {
             children = new LinkedList<PNode>();
         }
-        getChildrenReference().add(index, child);
+        children.add(index, child);
         child.invalidatePaint();
         invalidateFullBounds();
 
@@ -3352,7 +3352,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     public PNode removeChild(final int index) {
         final PNode child = (PNode) children.remove(index);
 
-        if (children.size() == 0) {
+        if (children.isEmpty()) {
             children = EMPTY_CHILDREN;
         }
 
@@ -3371,7 +3371,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param childrenNodes the collection of children to remove
      */
-    public void removeChildren(final Collection<PNode> childrenNodes) {
+    public void removeChildren(final Collection<? extends PNode> childrenNodes) {
         for (PNode each : childrenNodes) {
             removeChild(each);
         }
@@ -3434,7 +3434,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     public void replaceWith(final PNode replacementNode) {
         if (parent != null) {
             final PNode p = parent;
-            final int index = p.getChildrenReference().indexOf(this);
+            final int index = p.children.indexOf(this);
             p.removeChild(this);
             p.addChild(index, replacementNode);
         }
