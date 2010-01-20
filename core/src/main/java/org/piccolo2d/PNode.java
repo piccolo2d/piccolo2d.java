@@ -59,7 +59,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -81,7 +80,6 @@ import org.piccolo2d.util.PObjectOutputStream;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
 import org.piccolo2d.util.PUtil;
-
 
 /**
  * <b>PNode</b> is the central abstraction in Piccolo2d. All objects that are
@@ -289,7 +287,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     private transient PNode parent;
 
     /** Tracks all immediate child nodes. */
-    private List children;
+    private List<PNode> children;
 
     /** Bounds of the PNode. */
     private final PBounds bounds;
@@ -364,7 +362,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * toImage fill strategy that stretches the node be as large as possible
      * while still retaining its aspect ratio.
-     *
+     * 
      * @since 1.3
      */
     public static final int FILL_STRATEGY_ASPECT_FIT = 1;
@@ -372,7 +370,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * toImage fill strategy that stretches the node be large enough to cover
      * the image, and centers it.
-     *
+     * 
      * @since 1.3
      */
     public static final int FILL_STRATEGY_ASPECT_COVER = 2;
@@ -381,7 +379,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * toImage fill strategy that stretches the node to be exactly the
      * dimensions of the image. Will result in distortion if the aspect ratios
      * are different.
-     *
+     * 
      * @since 1.3
      */
     public static final int FILL_STRATEGY_EXACT_FIT = 4;
@@ -467,7 +465,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             public void setRelativeTargetValue(final float zeroToOne) {
                 PNode.this.setBounds(src.x + zeroToOne * (dst.x - src.x), src.y + zeroToOne * (dst.y - src.y),
                         src.width + zeroToOne * (dst.width - src.width), src.height + zeroToOne
-                        * (dst.height - src.height));
+                                * (dst.height - src.height));
             }
 
             protected void activityFinished() {
@@ -749,7 +747,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return an Enumeration over attribute keys
      */
-    public Enumeration getClientPropertyKeysEnumeration() {
+    public Enumeration<?> getClientPropertyKeysEnumeration() {
         if (clientProperties == null) {
             return PUtil.NULL_ENUMERATION;
         }
@@ -1656,10 +1654,10 @@ public class PNode implements Cloneable, Serializable, Printable {
             resultBounds.resetToZero();
         }
 
-        final int count = getChildrenCount();
-        for (int i = 0; i < count; i++) {
-            final PNode each = (PNode) children.get(i);
-            resultBounds.add(each.getFullBoundsReference());
+        if (children != null) {
+            for (PNode each : children) {
+                resultBounds.add(each.getFullBoundsReference());
+            }
         }
 
         return resultBounds;
@@ -1802,10 +1800,10 @@ public class PNode implements Cloneable, Serializable, Printable {
         setBoundsChanged(true);
         firePropertyChange(PROPERTY_CODE_BOUNDS, PROPERTY_BOUNDS, null, bounds);
 
-        final int count = getChildrenCount();
-        for (int i = 0; i < count; i++) {
-            final PNode each = (PNode) children.get(i);
-            each.parentBoundsChanged();
+        if (children != null) {
+            for (PNode each : children) {
+                each.parentBoundsChanged();
+            }
         }
     }
 
@@ -1868,14 +1866,15 @@ public class PNode implements Cloneable, Serializable, Printable {
                 signalBoundsChanged();
             }
 
-            // 3. If the bounds of on of my decendents are invalidate then
+            // 3. If the bounds of on of my descendants are invalidate then
             // validate the bounds of all of my children.
             if (childBoundsInvalid || childBoundsVolatile) {
                 childBoundsVolatile = false;
-                final int count = getChildrenCount();
-                for (int i = 0; i < count; i++) {
-                    final PNode each = (PNode) children.get(i);
-                    childBoundsVolatile |= each.validateFullBounds();
+
+                if (children != null) {
+                    for (PNode each : children) {
+                        childBoundsVolatile |= each.validateFullBounds();
+                    }
                 }
             }
 
@@ -2376,7 +2375,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             at.translate(dx, dy);
             return animateToTransform(at, millis);
         }
-    }    
+    }
 
     /**
      * Return a copy of the transform associated with this node.
@@ -2541,11 +2540,12 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (getChildPaintInvalid()) {
-            final int count = getChildrenCount();
-            for (int i = 0; i < count; i++) {
-                final PNode each = (PNode) children.get(i);
-                each.validateFullPaint();
+            if (children != null) {
+                for (PNode each : children) {
+                    each.validateFullPaint();
+                }
             }
+
             setChildPaintInvalid(false);
         }
     }
@@ -2746,10 +2746,10 @@ public class PNode implements Cloneable, Serializable, Printable {
                 paint(paintContext);
             }
 
-            final int count = getChildrenCount();
-            for (int i = 0; i < count; i++) {
-                final PNode each = (PNode) children.get(i);
-                each.fullPaint(paintContext);
+            if (children != null) {
+                for (PNode each : children) {
+                    each.fullPaint(paintContext);
+                }
             }
 
             paintAfterChildren(paintContext);
@@ -2879,8 +2879,8 @@ public class PNode implements Cloneable, Serializable, Printable {
                 }
                 else {
                     scale = image.getHeight() / nodeHeight;
-                }                           
-                g2.scale(scale, scale);               
+                }
+                g2.scale(scale, scale);
                 break;
             case FILL_STRATEGY_EXACT_FIT:
                 // scale the node so that it covers then entire image,
@@ -2936,11 +2936,10 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (pageIndex != 0) {
             return NO_SUCH_PAGE;
         }
-        
+
         if (!(graphics instanceof Graphics2D)) {
             throw new IllegalArgumentException("Provided graphics context is not a Graphics2D object");
         }
-        
 
         final Graphics2D g2 = (Graphics2D) graphics;
         final PBounds imageBounds = getFullBounds();
@@ -3101,7 +3100,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param fullBounds bounds to compare against
      * @param results array into which to add matches
      */
-    public void findIntersectingNodes(final Rectangle2D fullBounds, final ArrayList results) {
+    public void findIntersectingNodes(final Rectangle2D fullBounds, final Collection<PNode> results) {
         if (fullIntersects(fullBounds)) {
             final Rectangle2D localBounds = parentToLocal((Rectangle2D) fullBounds.clone());
 
@@ -3184,10 +3183,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param nodes a collection of nodes to be added to this node
      */
-    public void addChildren(final Collection nodes) {
-        final Iterator i = nodes.iterator();
-        while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+    public void addChildren(final Collection<PNode> nodes) {
+        for (PNode each : nodes) {
             addChild(each);
         }
     }
@@ -3373,10 +3370,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param childrenNodes the collection of children to remove
      */
-    public void removeChildren(final Collection childrenNodes) {
-        final Iterator i = childrenNodes.iterator();
-        while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+    public void removeChildren(final Collection<PNode> childrenNodes) {
+        for (PNode each : childrenNodes) {
             removeChild(each);
         }
     }
@@ -3387,12 +3382,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public void removeAllChildren() {
         if (children != null) {
-            final int count = children.size();
-            for (int i = 0; i < count; i++) {
-                final PNode each = (PNode) children.get(i);
+            for (PNode each : children) {
                 each.setParent(null);
             }
             children = null;
+
             invalidatePaint();
             invalidateFullBounds();
 
@@ -3495,9 +3489,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return reference to the children list
      */
-    public List getChildrenReference() {
+    public List<PNode> getChildrenReference() {
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<PNode>();
         }
         return children;
     }
@@ -3507,11 +3501,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return iterator over this nodes children
      */
-    public ListIterator getChildrenIterator() {
+    public ListIterator<PNode> getChildrenIterator() {
         if (children == null) {
-            return Collections.EMPTY_LIST.listIterator();
+            return Collections.<PNode>emptyList().listIterator();
         }
-        return Collections.unmodifiableList(children).listIterator();
+        return Collections.<PNode>unmodifiableList(children).listIterator();
     }
 
     /**
@@ -3533,7 +3527,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return a new collection containing this node and all descendants
      */
-    public Collection getAllNodes() {
+    public Collection<PNode> getAllNodes() {
         return getAllNodes(null, null);
     }
 
@@ -3548,10 +3542,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param resultantNodes where matching nodes should be added
      * @return a collection containing this node and all descendants
      */
-    public Collection getAllNodes(final PNodeFilter filter, final Collection resultantNodes) {
-        Collection results;
+    public Collection<PNode> getAllNodes(final PNodeFilter filter, final Collection<PNode> resultantNodes) {
+        Collection<PNode> results;
         if (resultantNodes == null) {
-            results = new ArrayList();
+            results = new ArrayList<PNode>();
         }
         else {
             results = resultantNodes;
@@ -3562,10 +3556,10 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (filter == null || filter.acceptChildrenOf(this)) {
-            final int count = getChildrenCount();
-            for (int i = 0; i < count; i++) {
-                final PNode each = (PNode) children.get(i);
-                each.getAllNodes(filter, results);
+            if (children != null) {
+                for (PNode each : children) {
+                    each.getAllNodes(filter, results);
+                }
             }
         }
 
@@ -3611,7 +3605,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         parent = (PNode) in.readObject();
-    }    
+    }
 
     /**
      * Returns an array of input event listeners that are attached to this node.
@@ -3631,7 +3625,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             result[i] = (PInputEventListener) listeners[i];
         }
         return result;
-    }    
+    }
 
     /**
      * <b>PSceneGraphDelegate</b> is an interface to receive low level node

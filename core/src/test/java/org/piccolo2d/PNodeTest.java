@@ -144,13 +144,13 @@ public class PNodeTest extends TestCase {
         c.setBounds(0, 0, 100, 100);
         c.scale(200);
 
-        ArrayList found = new ArrayList();
+        ArrayList<PNode> found = new ArrayList<PNode>();
         final Rectangle2D rect2d = new Rectangle2D.Double(50, 50, 10, 10);
         n.findIntersectingNodes(rect2d, found);
 
         assertEquals(found.size(), 2);
         assertEquals(rect2d.getHeight(), 10, 0);
-        found = new ArrayList();
+        found = new ArrayList<PNode>();
 
         final PBounds bounds = new PBounds(50, 50, 10, 10);
         n.findIntersectingNodes(bounds, found);
@@ -534,7 +534,7 @@ public class PNodeTest extends TestCase {
     }
 
     public void testGetClientPropertyKeysEnumerationShouldReturnEnumarationOnNewNode() {
-        final Enumeration enumeration = node.getClientPropertyKeysEnumeration();
+        final Enumeration<?> enumeration = node.getClientPropertyKeysEnumeration();
         assertNotNull(enumeration);
         assertFalse(enumeration.hasMoreElements());
     }
@@ -1183,7 +1183,7 @@ public class PNodeTest extends TestCase {
     }
 
     public void testAddChildrenAddsAllChildren() {
-        final Collection newChildren = new ArrayList();
+        final Collection<PNode> newChildren = new ArrayList<PNode>();
         newChildren.add(new PNode());
         newChildren.add(new PNode());
         newChildren.add(new PNode());
@@ -1194,7 +1194,7 @@ public class PNodeTest extends TestCase {
     }
 
     public void testRemoveChildrenWorks() {
-        final Collection newChildren = new ArrayList();
+        final Collection<PNode> newChildren = new ArrayList<PNode>();
         newChildren.add(new PNode());
         newChildren.add(new PNode());
         newChildren.add(new PNode());
@@ -1206,7 +1206,7 @@ public class PNodeTest extends TestCase {
     }
 
     public void testGetAllNodesUnrollsTheNodeGraph() {
-        final Collection newChildren = new ArrayList();
+        final Collection<PNode> newChildren = new ArrayList<PNode>();
         newChildren.add(new PNode());
         newChildren.add(new PNode());
         newChildren.add(new PNode());
@@ -1246,7 +1246,7 @@ public class PNodeTest extends TestCase {
     }
 
     public void testGetChildrenIteratorReturnsIteratorEvenWithNoChildren() {
-        final ListIterator iterator = node.getChildrenIterator();
+        final ListIterator<PNode> iterator = node.getChildrenIterator();
         assertNotNull(iterator);
         assertFalse(iterator.hasNext());
     }
@@ -1255,7 +1255,7 @@ public class PNodeTest extends TestCase {
         final PNode child = new PNode();
         node.addChild(child);
 
-        final ListIterator iterator = node.getChildrenIterator();
+        final ListIterator<PNode> iterator = node.getChildrenIterator();
         assertNotNull(iterator);
         assertTrue(iterator.hasNext());
         assertEquals(child, iterator.next());
@@ -1277,7 +1277,7 @@ public class PNodeTest extends TestCase {
         node.addChild(new PNode());
         node.addChild(new PNode());
         node.addChild(new PNode());
-        final Collection nodes = node.getAllNodes(nullFilter, null);
+        final Collection<PNode> nodes = node.getAllNodes(nullFilter, null);
         assertNotNull(nodes);
         assertTrue(nodes.isEmpty());
     }
