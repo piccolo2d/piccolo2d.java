@@ -141,17 +141,8 @@
             <format>html</format>
           </formats>
           <instrumentation>
-            <ignores>
-              <ignore>org.piccolo2d.examples.*</ignore>
-              <ignore>org.piccolo2d.examples.pswing.*</ignore>
-              <ignore>org.piccolo2d.examples.swt.*</ignore>
-              <ignore>org.piccolo2d.tutorial.*</ignore>              
-            </ignores>
             <excludes>
-              <exclude>org/piccolo2d/examples/**</exclude>              
-              <exclude>org/piccolo2d/extras/**/*Test.class</exclude>
               <exclude>org/piccolo2d/**/*Test.class</exclude>
-              <exclude>org/piccolo2d/extras/**/Mock*.class</exclude>
               <exclude>org/piccolo2d/**/Mock*.class</exclude>
             </excludes>
           </instrumentation>
