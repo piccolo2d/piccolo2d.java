@@ -112,18 +112,18 @@ public class PNode implements Cloneable, Serializable, Printable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The property name that identifies a change in this node's client
-     * property (see {@link #getClientProperty getClientProperty}). In an
-     * property change event the new value will be a reference to the map of
-     * client properties but old value will always be null.
+     * The property name that identifies a change in this node's client property
+     * (see {@link #getClientProperty getClientProperty}). In an property change
+     * event the new value will be a reference to the map of client properties
+     * but old value will always be null.
      */
     public static final String PROPERTY_CLIENT_PROPERTIES = "clientProperties";
 
     /**
-     * The property code that identifies a change in this node's client
-     * property (see {@link #getClientProperty getClientProperty}). In an
-     * property change event the new value will be a reference to the map of
-     * client properties but old value will always be null.
+     * The property code that identifies a change in this node's client property
+     * (see {@link #getClientProperty getClientProperty}). In an property change
+     * event the new value will be a reference to the map of client properties
+     * but old value will always be null.
      */
     public static final int PROPERTY_CODE_CLIENT_PROPERTIES = 1 << 0;
 
@@ -397,8 +397,8 @@ public class PNode implements Cloneable, Serializable, Printable {
             return null;
         }
     };
-    
-    private static final List<PNode> EMPTY_CHILDREN = Collections.<PNode>emptyList();
+
+    private static final List<PNode> EMPTY_CHILDREN = Collections.<PNode> emptyList();
 
     /**
      * Creates a new PNode with the given name.
@@ -493,6 +493,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         };
 
         addActivity(interpolatingActivity);
+
         return interpolatingActivity;
     }
 
@@ -570,22 +571,21 @@ public class PNode implements Cloneable, Serializable, Printable {
             setTransform(destTransform);
             return null;
         }
-        else {
-            final PTransformActivity.Target t = new PTransformActivity.Target() {
-                public void setTransform(final AffineTransform aTransform) {
-                    PNode.this.setTransform(aTransform);
-                }
 
-                public void getSourceMatrix(final double[] aSource) {
-                    PNode.this.getTransformReference(true).getMatrix(aSource);
-                }
-            };
+        final PTransformActivity.Target t = new PTransformActivity.Target() {
+            public void setTransform(final AffineTransform aTransform) {
+                PNode.this.setTransform(aTransform);
+            }
 
-            final PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t,
-                    destTransform);
-            addActivity(ta);
-            return ta;
-        }
+            public void getSourceMatrix(final double[] aSource) {
+                PNode.this.getTransformReference(true).getMatrix(aSource);
+            }
+        };
+
+        final PTransformActivity ta = new PTransformActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t,
+                destTransform);
+        addActivity(ta);
+        return ta;
     }
 
     /**
@@ -607,21 +607,20 @@ public class PNode implements Cloneable, Serializable, Printable {
             setPaint(destColor);
             return null;
         }
-        else {
-            final PColorActivity.Target t = new PColorActivity.Target() {
-                public Color getColor() {
-                    return (Color) getPaint();
-                }
 
-                public void setColor(final Color color) {
-                    setPaint(color);
-                }
-            };
+        final PColorActivity.Target t = new PColorActivity.Target() {
+            public Color getColor() {
+                return (Color) getPaint();
+            }
 
-            final PColorActivity ca = new PColorActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destColor);
-            addActivity(ca);
-            return ca;
-        }
+            public void setColor(final Color color) {
+                setPaint(color);
+            }
+        };
+
+        final PColorActivity ca = new PColorActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE, t, destColor);
+        addActivity(ca);
+        return ca;
     }
 
     /**
@@ -643,25 +642,24 @@ public class PNode implements Cloneable, Serializable, Printable {
             setTransparency(zeroToOne);
             return null;
         }
-        else {
-            final float dest = zeroToOne;
 
-            final PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
-                private float source;
+        final float dest = zeroToOne;
 
-                protected void activityStarted() {
-                    source = getTransparency();
-                    super.activityStarted();
-                }
+        final PInterpolatingActivity ta = new PInterpolatingActivity(duration, PUtil.DEFAULT_ACTIVITY_STEP_RATE) {
+            private float source;
 
-                public void setRelativeTargetValue(final float zeroToOne) {
-                    PNode.this.setTransparency(source + zeroToOne * (dest - source));
-                }
-            };
+            protected void activityStarted() {
+                source = getTransparency();
+                super.activityStarted();
+            }
 
-            addActivity(ta);
-            return ta;
-        }
+            public void setRelativeTargetValue(final float zeroToOne) {
+                PNode.this.setTransparency(source + zeroToOne * (dest - source));
+            }
+        };
+
+        addActivity(ta);
+        return ta;
     }
 
     /**
@@ -674,10 +672,11 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public boolean addActivity(final PActivity activity) {
         final PRoot r = getRoot();
-        if (r != null) {
-            return r.addActivity(activity);
+        if (r == null) {
+            return false;
         }
-        return false;
+
+        return r.addActivity(activity);
     }
 
     // ****************************************************************
@@ -715,9 +714,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         if (clientProperties == null || key == null) {
             return null;
         }
-        else {
-            return clientProperties.getAttribute(key);
-        }
+
+        return clientProperties.getAttribute(key);
     }
 
     /**
@@ -733,31 +731,33 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param value value to associate to the new attribute
      */
     public void addAttribute(final Object key, final Object value) {
-        if (value == null && clientProperties == null) {
-            return;
+        if (value != null || clientProperties != null) {
+            final Object oldValue = getAttribute(key);
+
+            if (value != oldValue) {
+                addOrChangeAttribute(key, value, oldValue);
+            }
+        }
+    }
+
+    private void addOrChangeAttribute(final Object key, final Object value, final Object oldValue) {
+        if (clientProperties == null) {
+            clientProperties = new SimpleAttributeSet();
         }
 
-        final Object oldValue = getAttribute(key);
-
-        if (value != oldValue) {
-            if (clientProperties == null) {
-                clientProperties = new SimpleAttributeSet();
-            }
-
-            if (value == null) {
-                clientProperties.removeAttribute(key);
-            }
-            else {
-                clientProperties.addAttribute(key, value);
-            }
-
-            if (clientProperties.getAttributeCount() == 0 && clientProperties.getResolveParent() == null) {
-                clientProperties = null;
-            }
-
-            firePropertyChange(PROPERTY_CODE_CLIENT_PROPERTIES, PROPERTY_CLIENT_PROPERTIES, null, clientProperties);
-            firePropertyChange(PROPERTY_CODE_CLIENT_PROPERTIES, key.toString(), oldValue, value);
+        if (value == null) {
+            clientProperties.removeAttribute(key);
         }
+        else {
+            clientProperties.addAttribute(key, value);
+        }
+
+        if (clientProperties.getAttributeCount() == 0 && clientProperties.getResolveParent() == null) {
+            clientProperties = null;
+        }
+
+        firePropertyChange(PROPERTY_CODE_CLIENT_PROPERTIES, PROPERTY_CLIENT_PROPERTIES, null, clientProperties);
+        firePropertyChange(PROPERTY_CODE_CLIENT_PROPERTIES, key.toString(), oldValue, value);
     }
 
     /**
@@ -773,8 +773,6 @@ public class PNode implements Cloneable, Serializable, Printable {
             return clientProperties.getAttributeNames();
         }
     }
-
-    // convenience methods for attributes
 
     /**
      * Fetches the value of the requested attribute, returning defaultValue is
@@ -1014,10 +1012,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public Point2D localToGlobal(final Point2D localPoint) {
         PNode n = this;
-        while (n != null) {
+
+        do {
             n.localToParent(localPoint);
             n = n.parent;
-        }
+        } while (n != null);
+
         return localPoint;
     }
 
@@ -1032,10 +1032,12 @@ public class PNode implements Cloneable, Serializable, Printable {
      */
     public Dimension2D localToGlobal(final Dimension2D localDimension) {
         PNode n = this;
-        while (n != null) {
+
+        do {
             n.localToParent(localDimension);
             n = n.parent;
-        }
+        } while (n != null);
+
         return localDimension;
     }
 
@@ -1533,7 +1535,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Return the height (in local coords) of this node's bounds.
+     * Return the height (in local coordinates) of this node.
      * 
      * @return local width of bounds
      */
@@ -3151,7 +3153,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param child the new child to add to this node
      */
     public void addChild(final PNode child) {
-        int insertIndex = getChildrenCount();
+        int insertIndex = children.size();
         if (child.parent == this) {
             insertIndex--;
         }
@@ -3167,16 +3169,14 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param child the new child to add to this node
      */
     public void addChild(final int index, final PNode child) {
-        final PNode oldParent = child.getParent();
-
-        if (oldParent != null) {
-            oldParent.removeChild(child);
-        }
+        child.removeFromParent();
 
         child.setParent(this);
+
         if (children == Collections.EMPTY_LIST) {
             children = new LinkedList<PNode>();
         }
+
         children.add(index, child);
         child.invalidatePaint();
         invalidateFullBounds();
