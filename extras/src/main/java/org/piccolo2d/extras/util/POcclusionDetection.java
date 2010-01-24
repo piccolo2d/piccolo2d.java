@@ -31,6 +31,7 @@ package org.piccolo2d.extras.util;
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPickPath;
+import static org.piccolo2d.util.PUtil.reverse;
 
 
 /**
@@ -69,9 +70,7 @@ public class POcclusionDetection {
 
         pickPath.pushTransform(node.getTransformReference(false));
 
-        final int count = node.getChildrenCount();
-        for (int i = count - 1; i >= 0; i--) {
-            final PNode each = node.getChild(i);
+        for (PNode each: reverse(node.getChildrenReference())) {
             if (node.getOccluded()) {
                 // if n has been occluded by a previous descendant then
                 // this child must also be occluded
