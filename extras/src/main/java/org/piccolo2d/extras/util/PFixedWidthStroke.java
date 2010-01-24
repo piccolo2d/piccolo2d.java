@@ -181,9 +181,10 @@ public class PFixedWidthStroke extends PSemanticStroke implements Serializable {
     }
 
     /**
-     * Returns the end cap style. 
+     * Returns the end cap style.
      * 
-     * @return the end cap style of this BasicStroke as one of the static int values that define possible end cap styles.
+     * @return the end cap style of this BasicStroke as one of the static int
+     *         values that define possible end cap styles.
      */
     public int getEndCap() {
         return ((BasicStroke) stroke).getEndCap();

@@ -43,7 +43,6 @@ import javax.swing.JPanel;
 
 import org.piccolo2d.PNode;
 
-
 /**
  * Uses Swing layout managers to position PNodes.
  * 
@@ -382,8 +381,8 @@ public class SwingLayoutNode extends PNode {
      * @return true property name relates to layout.
      */
     private boolean isLayoutProperty(final String propertyName) {
-        return propertyName.equals(PNode.PROPERTY_VISIBLE) || propertyName.equals(PNode.PROPERTY_FULL_BOUNDS) ||
-                propertyName.equals(PNode.PROPERTY_BOUNDS) || propertyName.equals(PNode.PROPERTY_TRANSFORM);
+        return propertyName.equals(PNode.PROPERTY_VISIBLE) || propertyName.equals(PNode.PROPERTY_FULL_BOUNDS)
+                || propertyName.equals(PNode.PROPERTY_BOUNDS) || propertyName.equals(PNode.PROPERTY_TRANSFORM);
     }
 
     /**
