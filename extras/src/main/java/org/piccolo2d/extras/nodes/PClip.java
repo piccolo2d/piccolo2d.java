@@ -37,6 +37,7 @@ import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
+import static org.piccolo2d.util.PUtil.reverse;
 
 
 /**
@@ -138,9 +139,7 @@ public class PClip extends PPath {
             }
 
             if (getChildrenPickable() && getPathReference().intersects(pickPath.getPickBounds())) {
-                final int count = getChildrenCount();
-                for (int i = count - 1; i >= 0; i--) {
-                    final PNode each = getChild(i);
+                for (PNode each : reverse(getChildrenReference())) {
                     if (each.fullPick(pickPath)) {
                         return true;
                     }
