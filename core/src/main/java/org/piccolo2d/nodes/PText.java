@@ -112,13 +112,13 @@ public class PText extends PNode {
      */
     // public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF,
     // Font.PLAIN, 12); jdk 1.6+
-    public static Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
+    public static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12);
 
     /**
      * Default greek threshold, <code>5.5d</code>. Will be made final in version
      * 2.0.
      */
-    public static double DEFAULT_GREEK_THRESHOLD = 5.5d;
+    public static final double DEFAULT_GREEK_THRESHOLD = 5.5d;
 
     /**
      * Default horizontal alignment, <code>Component.LEFT_ALIGNMENT</code>.

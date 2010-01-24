@@ -238,13 +238,13 @@ public class PRoot extends PNode {
 
         if (!isInteracting && !getInteracting()) {
             // force all the child cameras to repaint
-        	for (PNode child : getChildrenReference()) {
+            for (PNode child : getChildrenReference()) {
                 if (child instanceof PCamera) {
                     child.repaint();
                 }
             }
         }
-        
+
         if (wasInteracting != isInteracting) {
             firePropertyChange(PROPERTY_CODE_INTERACTING_CHANGED, PROPERTY_INTERACTING_CHANGED, Boolean
                     .valueOf(wasInteracting), Boolean.valueOf(isInteracting));

@@ -53,7 +53,6 @@ import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
 import org.piccolo2d.util.PUtil;
 
-
 /**
  * <b>PCamera</b> represents a viewport onto a list of layer nodes. Each camera
  * maintains a view transform through which it views these layers. Translating
@@ -137,7 +136,6 @@ public class PCamera extends PNode {
     /** Temporary bounds used as an optimization during repaint. */
     private static final PBounds TEMP_REPAINT_RECT = new PBounds();
 
-
     /**
      * Create a new camera with an empy list of layers.
      */
@@ -148,14 +146,13 @@ public class PCamera extends PNode {
         viewConstraint = VIEW_CONSTRAINT_NONE;
     }
 
-
     /**
      * Return the component for this camera, or <code>null</code> if no
      * component has been associated with this camera, as may be the case for
      * internal cameras.
      * 
      * @return the component for this camera, or <code>null</code> if no such
-     *    component exists
+     *         component exists
      */
     public PComponent getComponent() {
         return component;
@@ -173,12 +170,12 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Repaint this camera and forward the repaint request to the component
-     * for this camera, if it is non-null.
+     * Repaint this camera and forward the repaint request to the component for
+     * this camera, if it is non-null.
      * 
      * @param localBounds bounds that require repainting, in local coordinates
-     * @param sourceNode node from which the repaint message originates, may
-     *    be the camera itself
+     * @param sourceNode node from which the repaint message originates, may be
+     *            the camera itself
      */
     public void repaintFrom(final PBounds localBounds, final PNode sourceNode) {
         if (getParent() != null) {
@@ -209,7 +206,7 @@ public class PCamera extends PNode {
             Rectangle2D.intersect(TEMP_REPAINT_RECT, getBoundsReference(), TEMP_REPAINT_RECT);
             repaintFrom(TEMP_REPAINT_RECT, repaintedLayer);
         }
-    }    
+    }
 
     /**
      * Return a reference to the list of layers viewed by this camera.
@@ -230,12 +227,14 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Return the layer at the specified position in the list of layers viewed by this camera.
+     * Return the layer at the specified position in the list of layers viewed
+     * by this camera.
      * 
      * @param index index of the layer to return
-     * @return the layer at the specified position in the list of layers viewed by this camera
+     * @return the layer at the specified position in the list of layers viewed
+     *         by this camera
      * @throws IndexOutOfBoundsException if the specified index is out of range
-     *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
+     *             (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
      */
     public PLayer getLayer(final int index) {
         return (PLayer) layers.get(index);
@@ -243,21 +242,22 @@ public class PCamera extends PNode {
 
     /**
      * Return the index of the first occurrence of the specified layer in the
-     * list of layers viewed by this camera, or <code>-1</code> if the list of layers
-     * viewed by this camera does not contain the specified layer.
+     * list of layers viewed by this camera, or <code>-1</code> if the list of
+     * layers viewed by this camera does not contain the specified layer.
      * 
      * @param layer layer to search for
      * @return the index of the first occurrence of the specified layer in the
-     *    list of layers viewed by this camera, or <code>-1</code> if the list of
-     *    layers viewed by this camera does not contain the specified layer
+     *         list of layers viewed by this camera, or <code>-1</code> if the
+     *         list of layers viewed by this camera does not contain the
+     *         specified layer
      */
     public int indexOfLayer(final PLayer layer) {
         return layers.indexOf(layer);
     }
 
     /**
-     * Inserts the specified layer at the end of the list of layers viewed by this camera.
-     * Layers may be viewed by multiple cameras at once.
+     * Inserts the specified layer at the end of the list of layers viewed by
+     * this camera. Layers may be viewed by multiple cameras at once.
      * 
      * @param layer layer to add
      */
@@ -266,13 +266,14 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Inserts the specified layer at the specified position in the list of layers viewed by this camera.
-     * Layers may be viewed by multiple cameras at once.
+     * Inserts the specified layer at the specified position in the list of
+     * layers viewed by this camera. Layers may be viewed by multiple cameras at
+     * once.
      * 
      * @param index index at which the specified layer is to be inserted
      * @param layer layer to add
      * @throws IndexOutOfBoundsException if the specified index is out of range
-     *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
+     *             (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
      */
     public void addLayer(final int index, final PLayer layer) {
         layers.add(index, layer);
@@ -304,7 +305,7 @@ public class PCamera extends PNode {
      * @param index index of the layer to remove
      * @return the layer previously at the specified position
      * @throws IndexOutOfBoundsException if the specified index is out of range
-     *    (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
+     *             (<code>index &lt; 0 || index &gt;= getLayerCount()</code>)
      */
     public PLayer removeLayer(final int index) {
         final PLayer layer = (PLayer) layers.remove(index);
@@ -320,8 +321,8 @@ public class PCamera extends PNode {
      * this camera is empty.
      * 
      * @return the union of the full bounds of each layer in the list of layers
-     *    viewed by this camera, or empty bounds if the list of layers viewed
-     *    by this camera is empty
+     *         viewed by this camera, or empty bounds if the list of layers
+     *         viewed by this camera is empty
      */
     public PBounds getUnionOfLayerFullBounds() {
         final PBounds result = new PBounds();
@@ -353,9 +354,9 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Paint all the layers in the list of layers viewed by this camera. This method
-     * is called after the view transform and clip have been applied to the
-     * specified paint context.
+     * Paint all the layers in the list of layers viewed by this camera. This
+     * method is called after the view transform and clip have been applied to
+     * the specified paint context.
      * 
      * @param paintContext context in which painting occurs
      */
@@ -379,7 +380,7 @@ public class PCamera extends PNode {
             paintContext.setRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
             g2.setStroke(new BasicStroke(0));
             final ArrayList<PNode> nodes = new ArrayList<PNode>();
-           
+
             final PBounds nodeBounds = new PBounds();
 
             final Color boundsColor = Color.red;
@@ -390,7 +391,7 @@ public class PCamera extends PNode {
                 ((PLayer) layers.get(i)).getAllNodes(null, nodes);
             }
 
-            for (PNode each :  getAllNodes(null, nodes)) {
+            for (PNode each : getAllNodes(null, nodes)) {
                 if (PDebug.debugBounds) {
                     g2.setPaint(boundsColor);
                     nodeBounds.setRect(each.getBoundsReference());
@@ -428,8 +429,8 @@ public class PCamera extends PNode {
      * {@inheritDoc}
      * 
      * <p>
-     * Pushes this camera onto the specified paint context so that it
-     * can be accessed later by {@link PPaintContext#getCamera}.
+     * Pushes this camera onto the specified paint context so that it can be
+     * accessed later by {@link PPaintContext#getCamera}.
      * </p>
      */
     public void fullPaint(final PPaintContext paintContext) {
@@ -475,7 +476,7 @@ public class PCamera extends PNode {
      * </p>
      * 
      * @return true if any of the layers in the list of layers viewed by this
-     *    camera were picked
+     *         camera were picked
      */
     protected boolean pickAfterChildren(final PPickPath pickPath) {
         if (intersects(pickPath.getPickBounds())) {
@@ -498,7 +499,7 @@ public class PCamera extends PNode {
      * 
      * @param pickPath pick path
      * @return true if any of the layers in the list of layers viewed by this
-     *    camera were picked
+     *         camera were picked
      */
     protected boolean pickCameraView(final PPickPath pickPath) {
         for (PLayer each : reverse(layers)) {
@@ -543,7 +544,7 @@ public class PCamera extends PNode {
      * viewed by this camera.
      * 
      * @return the scale applied by the view transform to the list of layers
-     *    viewed by this camera
+     *         viewed by this camera
      */
     public double getViewScale() {
         return viewTransform.getScale();
@@ -576,8 +577,8 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Set the scale applied by the view transform to the list of layers
-     * viewed by this camera to <code>scale</code>.
+     * Set the scale applied by the view transform to the list of layers viewed
+     * by this camera to <code>scale</code>.
      * 
      * @param scale view transform scale
      */
@@ -600,18 +601,20 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Offset the view transform applied to the list of layers viewed by this camera by <code>[dx, dy]</code>. This is
-     * NOT effected by the view transform's current scale or rotation. This is implemented by directly adding dx to the
-     * m02 position and dy to the m12 position in the affine transform.
+     * Offset the view transform applied to the list of layers viewed by this
+     * camera by <code>[dx, dy]</code>. This is NOT effected by the view
+     * transform's current scale or rotation. This is implemented by directly
+     * adding dx to the m02 position and dy to the m12 position in the affine
+     * transform.
      * 
      * @param dx offset delta x
      * @param dy offset delta y
      */
     /*
-    public void offsetView(final double dx, final double dy) {
-        setViewOffset(viewTransform.getTranslateX() + dx, viewTransform.getTranslateY() + dy);
-    }
-    */
+     * public void offsetView(final double dx, final double dy) {
+     * setViewOffset(viewTransform.getTranslateX() + dx,
+     * viewTransform.getTranslateY() + dy); }
+     */
 
     /**
      * Set the offset for the view transform applied to the list of layers
@@ -628,11 +631,11 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Return a copy of the view transform applied to the list of layers
-     * viewed by this camera.
+     * Return a copy of the view transform applied to the list of layers viewed
+     * by this camera.
      * 
-     * @return a copy of the view transform applied to the list of layers
-     *    viewed by this camera
+     * @return a copy of the view transform applied to the list of layers viewed
+     *         by this camera
      */
     public PAffineTransform getViewTransform() {
         return (PAffineTransform) viewTransform.clone();
@@ -642,19 +645,19 @@ public class PCamera extends PNode {
      * Return a reference to the view transform applied to the list of layers
      * viewed by this camera.
      * 
-     * @return the view transform applied to the list of layers
-     *    viewed by this camera
+     * @return the view transform applied to the list of layers viewed by this
+     *         camera
      */
     public PAffineTransform getViewTransformReference() {
         return viewTransform;
     }
 
     /**
-     * Set the view transform applied to the list of layers
-     * viewed by this camera to <code>viewTransform</code>.
+     * Set the view transform applied to the list of layers viewed by this
+     * camera to <code>viewTransform</code>.
      * 
-     * @param viewTransform  view transform applied to the list of layers
-     *    viewed by this camera
+     * @param viewTransform view transform applied to the list of layers viewed
+     *            by this camera
      */
     public void setViewTransform(final AffineTransform viewTransform) {
         this.viewTransform.setTransform(viewTransform);
@@ -666,8 +669,8 @@ public class PCamera extends PNode {
     /**
      * Animate the camera's view from its current transform when the activity
      * starts to a new transform that centers the given bounds in the camera
-     * layer's coordinate system into the cameras view bounds. If the duration is
-     * 0 then the view will be transformed immediately, and null will be
+     * layer's coordinate system into the cameras view bounds. If the duration
+     * is 0 then the view will be transformed immediately, and null will be
      * returned. Else a new PTransformActivity will get returned that is set to
      * animate the camera's view transform to the new bounds. If shouldScale is
      * true, then the camera will also scale its view so that the given bounds
@@ -730,7 +733,7 @@ public class PCamera extends PNode {
         }
 
         return null;
-    }    
+    }
 
     /**
      * Animate the cameras view transform from its current value when the
@@ -777,8 +780,10 @@ public class PCamera extends PNode {
     // ****************************************************************
 
     /**
-     * Return the constraint applied to the view. The view constraint will be one of {@link #VIEW_CONSTRAINT_NONE},
-     * {@link #VIEW_CONSTRAINT_CENTER}, or {@link #VIEW_CONSTRAINT_CENTER}. Defaults to {@link #VIEW_CONSTRAINT_NONE}.
+     * Return the constraint applied to the view. The view constraint will be
+     * one of {@link #VIEW_CONSTRAINT_NONE}, {@link #VIEW_CONSTRAINT_CENTER}, or
+     * {@link #VIEW_CONSTRAINT_CENTER}. Defaults to
+     * {@link #VIEW_CONSTRAINT_NONE}.
      * 
      * @return the view constraint being applied to the view
      */
@@ -787,12 +792,16 @@ public class PCamera extends PNode {
     }
 
     /**
-     * Set the view constraint to apply to the view to <code>viewConstraint</code>. The view constraint must be one of
-     * {@link #VIEW_CONSTRAINT_NONE}, {@link #VIEW_CONSTRAINT_CENTER}, or {@link #VIEW_CONSTRAINT_CENTER}.
+     * Set the view constraint to apply to the view to
+     * <code>viewConstraint</code>. The view constraint must be one of
+     * {@link #VIEW_CONSTRAINT_NONE}, {@link #VIEW_CONSTRAINT_CENTER}, or
+     * {@link #VIEW_CONSTRAINT_CENTER}.
      * 
      * @param viewConstraint constraint to apply to the view
-     * @throws IllegalArgumentException if <code>viewConstraint</code> is not one of {@link #VIEW_CONSTRAINT_NONE},
-     *         {@link #VIEW_CONSTRAINT_CENTER}, or {@link #VIEW_CONSTRAINT_CENTER}
+     * @throws IllegalArgumentException if <code>viewConstraint</code> is not
+     *             one of {@link #VIEW_CONSTRAINT_NONE},
+     *             {@link #VIEW_CONSTRAINT_CENTER}, or
+     *             {@link #VIEW_CONSTRAINT_CENTER}
      */
     public void setViewConstraint(final int viewConstraint) {
         if (viewConstraint != VIEW_CONSTRAINT_NONE && viewConstraint != VIEW_CONSTRAINT_CENTER
@@ -815,7 +824,7 @@ public class PCamera extends PNode {
         final PBounds layerBounds = (PBounds) globalToLocal(getUnionOfLayerFullBounds());
 
         if (VIEW_CONSTRAINT_CENTER == viewConstraint) {
-            layerBounds.setRect(layerBounds.getCenterX(), layerBounds.getCenterY(), 0, 0);            
+            layerBounds.setRect(layerBounds.getCenterX(), layerBounds.getCenterY(), 0, 0);
         }
         PDimension constraintDelta = viewBounds.deltaRequiredToContain(layerBounds);
         viewTransform.translate(-constraintDelta.width, -constraintDelta.height);
@@ -952,13 +961,13 @@ public class PCamera extends PNode {
         layers = new ArrayList<PLayer>();
 
         while (true) {
-            final Object each =  in.readObject();
+            final Object each = in.readObject();
             if (each != null) {
                 if (each.equals(Boolean.FALSE)) {
                     break;
                 }
                 else {
-                    layers.add((PLayer)each);
+                    layers.add((PLayer) each);
                 }
             }
         }

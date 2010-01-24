@@ -38,7 +38,6 @@ import java.util.List;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PObjectOutputStream;
 
-
 /**
  * <b>PLayer</b> is a node that can be viewed directly by multiple camera nodes.
  * Generally child nodes are added to a layer to give the viewing cameras
@@ -84,13 +83,13 @@ public class PLayer extends PNode {
      * Cameras which are registered as viewers of this PLayer.
      */
     private transient List<PCamera> cameras;
-    
-    private static final List<PCamera> EMPTY_CAMERAS = Collections.<PCamera>emptyList();
+
+    private static final List<PCamera> EMPTY_CAMERAS = Collections.<PCamera> emptyList();
 
     /**
      * Creates a PLayer without any cameras attached to it.
      */
-    public PLayer() {        
+    public PLayer() {
         cameras = EMPTY_CAMERAS;
     }
 
@@ -113,7 +112,7 @@ public class PLayer extends PNode {
      * 
      * @return the number of cameras attached to this layer
      */
-    public int getCameraCount() {        
+    public int getCameraCount() {
         return cameras.size();
     }
 
@@ -268,7 +267,7 @@ public class PLayer extends PNode {
                     break;
                 }
                 else {
-                    cameras.add((PCamera)each);
+                    cameras.add((PCamera) each);
                 }
             }
         }

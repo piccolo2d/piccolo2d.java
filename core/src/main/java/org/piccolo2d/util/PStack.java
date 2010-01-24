@@ -37,6 +37,8 @@ import java.util.ArrayList;
  * 
  * @version 1.0
  * @author Jesse Grosjean
+ * 
+ * @param <T> Type of element this tack holds
  */
 public class PStack<T> extends ArrayList<T> {
     /**

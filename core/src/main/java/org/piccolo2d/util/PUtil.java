@@ -44,7 +44,6 @@ import org.piccolo2d.PCamera;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PRoot;
 
-
 /**
  * <b>PUtil</b> util methods for the Piccolo framework.
  * <P>
@@ -61,12 +60,12 @@ public class PUtil {
 
     /** Rate in milliseconds at which the activity timer will get invoked. */
     public static final int ACTIVITY_SCHEDULER_FRAME_DELAY = 10;
-    
+
     /**
      * Used when persisting paths to an object stream. Used to mark the end of
      * the path.
      */
-    private static final int PATH_TERMINATOR = -1;     
+    private static final int PATH_TERMINATOR = -1;
 
     /**
      * Creates the simplest possible scene graph. 1 Camera, 1 Layer, 1 Root
@@ -280,17 +279,25 @@ public class PUtil {
 
         out.writeInt(PATH_TERMINATOR);
     }
-    
+
+    /**
+     * Returns an iterable instance that can be used to iterate over the
+     * provided list in reverse order.
+     * 
+     * @param <T> Type of object the list contains
+     * @param wrapped list for which we desire a reverse iterable
+     * @return an iterable that iterates the provided list in reverse order
+     */
     public static <T> Iterable<T> reverse(List<T> wrapped) {
         return new ListReverser<T>(wrapped);
     }
-    
+
     private static class ListReverser<T> implements Iterable<T> {
-        private ListIterator<T> listIterator;        
-        
+        private ListIterator<T> listIterator;
+
         public ListReverser(List<T> wrappedList) {
-            this.listIterator = wrappedList.listIterator(wrappedList.size());            
-        }               
+            this.listIterator = wrappedList.listIterator(wrappedList.size());
+        }
 
         public Iterator<T> iterator() {
             return new Iterator<T>() {
@@ -306,9 +313,9 @@ public class PUtil {
                 public void remove() {
                     listIterator.remove();
                 }
-                
+
             };
         }
-        
+
     }
 }
