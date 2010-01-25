@@ -41,7 +41,7 @@ import javax.swing.SwingUtilities;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PDebug {
+public final class PDebug {
     /** Set to true to display clip bounds boxes. */
     public static boolean debugRegionManagement = false;
 
@@ -106,8 +106,8 @@ public class PDebug {
      */
     public static void processRepaint() {
         if (processingOutput && debugPaintCalls) {
-            System.err
-                    .println("Got repaint while painting scene. This can result in a recursive process that degrades performance.");
+            System.err.println("Got repaint while painting scene. This can result in a recursive "
+                    + "process that degrades performance.");
         }
 
         if (debugThreads && !SwingUtilities.isEventDispatchThread()) {

@@ -2633,11 +2633,12 @@ public class PNode implements Cloneable, Serializable, Printable {
     // 
     // The default painting behavior is to first paint the node, and
     // then paint the node's children on top of the node. If a node
-    // needs wants specialised painting behavior it can override:
+    // needs wants specialized painting behavior it can override:
     // 
     // paint() - Painting here will happen before the children
     // are painted, so the children will be painted on top of painting done
     // here.
+    //
     // paintAfterChildren() - Painting here will happen after the children
     // are painted, so it will paint on top of them.
     // 
@@ -2663,14 +2664,17 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param isVisible true if this node and its descendants are visible
      */
     public void setVisible(final boolean isVisible) {
-        if (getVisible() != isVisible) {
-            if (!isVisible) {
-                repaint();
-            }
-            visible = isVisible;
-            firePropertyChange(PROPERTY_CODE_VISIBLE, PROPERTY_VISIBLE, null, null);
-            invalidatePaint();
+        if (getVisible() == isVisible) {
+            return;
         }
+
+        if (!isVisible) {
+            repaint();
+        }
+
+        visible = isVisible;
+        firePropertyChange(PROPERTY_CODE_VISIBLE, PROPERTY_VISIBLE, null, null);
+        invalidatePaint();
     }
 
     /**
@@ -2717,13 +2721,14 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            transparent, 1f = fully opaque
      */
     public void setTransparency(final float newTransparency) {
-        if (Math.abs(transparency - newTransparency) > TRANSPARENCY_RESOLUTION) {
-            final float oldTransparency = transparency;
-            transparency = newTransparency;
-            invalidatePaint();
-            firePropertyChange(PROPERTY_CODE_TRANSPARENCY, PROPERTY_TRANSPARENCY, new Float(oldTransparency),
-                    new Float(newTransparency));
+        if (Math.abs(transparency - newTransparency) <= TRANSPARENCY_RESOLUTION) {
+            return;
         }
+
+        final float oldTransparency = transparency;
+        transparency = newTransparency;
+        invalidatePaint();
+        firePropertyChange(PROPERTY_CODE_TRANSPARENCY, PROPERTY_TRANSPARENCY, oldTransparency, newTransparency);
     }
 
     /**
@@ -2734,11 +2739,13 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param paintContext the paint context to use for painting the node
      */
     protected void paint(final PPaintContext paintContext) {
-        if (paint != null) {
-            final Graphics2D g2 = paintContext.getGraphics();
-            g2.setPaint(paint);
-            g2.fill(getBoundsReference());
+        if (paint == null) {
+            return;
         }
+
+        final Graphics2D g2 = paintContext.getGraphics();
+        g2.setPaint(paint);
+        g2.fill(getBoundsReference());
     }
 
     /**
@@ -2750,23 +2757,25 @@ public class PNode implements Cloneable, Serializable, Printable {
      *            its children
      */
     public void fullPaint(final PPaintContext paintContext) {
-        if (getVisible() && fullIntersects(paintContext.getLocalClip())) {
-            paintContext.pushTransform(transform);
-            paintContext.pushTransparency(transparency);
-
-            if (!getOccluded()) {
-                paint(paintContext);
-            }
-
-            for (PNode each : children) {
-                each.fullPaint(paintContext);
-            }
-
-            paintAfterChildren(paintContext);
-
-            paintContext.popTransparency(transparency);
-            paintContext.popTransform(transform);
+        if (!getVisible() || !fullIntersects(paintContext.getLocalClip())) {
+            return;
         }
+
+        paintContext.pushTransform(transform);
+        paintContext.pushTransparency(transparency);
+
+        if (!getOccluded()) {
+            paint(paintContext);
+        }
+
+        for (PNode each : children) {
+            each.fullPaint(paintContext);
+        }
+
+        paintAfterChildren(paintContext);
+
+        paintContext.popTransparency(transparency);
+        paintContext.popTransform(transform);
     }
 
     /**
@@ -2911,8 +2920,11 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Constructs a new PrinterJob, allows the user to select which printer to
      * print to, And then prints the node.
+     * 
+     * @throws PrinterException if a problem occurs with the underlying printing
+     *             system
      */
-    public void print() {
+    public void print() throws PrinterException {
         final PrinterJob printJob = PrinterJob.getPrinterJob();
         final PageFormat pageFormat = printJob.defaultPage();
         final Book book = new Book();
@@ -2920,12 +2932,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         printJob.setPageable(book);
 
         if (printJob.printDialog()) {
-            try {
-                printJob.print();
-            }
-            catch (final PrinterException e) {
-                throw new RuntimeException("Error Printing", e);
-            }
+            printJob.print();
         }
     }
 
@@ -2943,21 +2950,24 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return Either NO_SUCH_PAGE or PAGE_EXISTS
      */
     public int print(final Graphics graphics, final PageFormat pageFormat, final int pageIndex) {
-        if (pageIndex != 0) {
-            return NO_SUCH_PAGE;
-        }
-
         if (!(graphics instanceof Graphics2D)) {
             throw new IllegalArgumentException("Provided graphics context is not a Graphics2D object");
         }
 
-        final Graphics2D g2 = (Graphics2D) graphics;
+        return print((Graphics2D) graphics, pageFormat, pageIndex);
+    }
+
+    private int print(final Graphics2D graphics, final PageFormat pageFormat, final int pageIndex) {
+        if (pageIndex != 0) {
+            return NO_SUCH_PAGE;
+        }
+
         final PBounds imageBounds = getFullBounds();
 
         imageBounds.expandNearestIntegerDimensions();
 
-        g2.setClip(0, 0, (int) pageFormat.getWidth(), (int) pageFormat.getHeight());
-        g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+        graphics.setClip(0, 0, (int) pageFormat.getWidth(), (int) pageFormat.getHeight());
+        graphics.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
         // scale the graphics so node's full bounds fit in the imageable bounds.
         double scale = pageFormat.getImageableWidth() / imageBounds.getWidth();
@@ -2965,10 +2975,10 @@ public class PNode implements Cloneable, Serializable, Printable {
             scale = pageFormat.getImageableHeight() / imageBounds.getHeight();
         }
 
-        g2.scale(scale, scale);
-        g2.translate(-imageBounds.x, -imageBounds.y);
+        graphics.scale(scale, scale);
+        graphics.translate(-imageBounds.x, -imageBounds.y);
 
-        final PPaintContext pc = new PPaintContext(g2);
+        final PPaintContext pc = new PPaintContext(graphics);
         pc.setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         fullPaint(pc);
 
@@ -3072,33 +3082,37 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return true if this node or one of its descendants was picked.
      */
     public boolean fullPick(final PPickPath pickPath) {
-        if (getVisible() && (getPickable() || getChildrenPickable()) && fullIntersects(pickPath.getPickBounds())) {
-            pickPath.pushNode(this);
-            pickPath.pushTransform(transform);
+        if (shouldBailOnFullPick(pickPath)) {
+            return false;
+        }
+        pickPath.pushNode(this);
+        pickPath.pushTransform(transform);
 
-            final boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
+        final boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
 
-            if (thisPickable && pick(pickPath)) {
+        if ((thisPickable && pick(pickPath)) || (getChildrenPickable() && pickChild(pickPath))
+                || (thisPickable && pickAfterChildren(pickPath))) {
+            return true;
+        }
+
+        pickPath.popTransform(transform);
+        pickPath.popNode(this);
+
+        return false;
+    }
+
+    private boolean pickChild(final PPickPath pickPath) {
+        for (PNode each : reverse(children)) {
+            if (each.fullPick(pickPath)) {
                 return true;
             }
-
-            if (getChildrenPickable()) {
-                for (PNode each : reverse(children)) {
-                    if (each.fullPick(pickPath)) {
-                        return true;
-                    }
-                }
-            }
-
-            if (thisPickable && pickAfterChildren(pickPath)) {
-                return true;
-            }
-
-            pickPath.popTransform(transform);
-            pickPath.popNode(this);
         }
 
         return false;
+    }
+
+    private boolean shouldBailOnFullPick(final PPickPath pickPath) {
+        return !getVisible() || !(getPickable() || getChildrenPickable()) && !fullIntersects(pickPath.getPickBounds());
     }
 
     /**
