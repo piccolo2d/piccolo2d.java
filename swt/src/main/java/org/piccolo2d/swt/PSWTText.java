@@ -11,7 +11,7 @@ import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -80,7 +80,7 @@ public class PSWTText extends PNode {
     protected int padding = DEFAULT_PADDING;
 
     /** Each element is one line of text. */
-    protected ArrayList lines = new ArrayList();
+    protected List<String> lines = new ArrayList<String>();
 
     /** Translation offset X. */
     protected double translateX = 0.0;
@@ -231,9 +231,8 @@ public class PSWTText extends PNode {
     public String getText() {
         StringBuffer result = new StringBuffer();
 
-        final Iterator lineIterator = lines.iterator();
-        while (lineIterator.hasNext()) {
-            result.append(lineIterator.next());
+        for (String line : lines) {
+            result.append(line);
             result.append('\n');
         }
 
@@ -439,14 +438,11 @@ public class PSWTText extends PNode {
         sg2.setColor(penColor);
         sg2.setFont(font);
 
-        String line;
         double y = 0;
 
         final FontMetrics fontMetrics = sg2.getSWTFontMetrics();
 
-        final Iterator lineIterator = lines.iterator();
-        while (lineIterator.hasNext()) {
-            line = (String) lineIterator.next();
+        for (String line : lines) {
             if (line.length() != 0) {
                 sg2.drawString(line, 0, y, true);
             }
@@ -484,7 +480,7 @@ public class PSWTText extends PNode {
      * @return true if the text is the empty string
      */
     private boolean isTextEmpty() {
-        return lines.isEmpty() || lines.size() == 1 && ((String) lines.get(0)).equals("");
+        return lines.isEmpty() || lines.size() == 1 && "".equals(lines.get(0));
     }
 
     /**
@@ -502,9 +498,7 @@ public class PSWTText extends PNode {
 
         boolean firstLine = true;
 
-        final Iterator lineIterator = lines.iterator();
-        while (lineIterator.hasNext()) {
-            String line = (String) lineIterator.next();
+        for (String line : lines) {
             Point lineBounds = gc.stringExtent(line);
             if (firstLine) {
                 textBounds.x = lineBounds.x;

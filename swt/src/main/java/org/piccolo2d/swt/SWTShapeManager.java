@@ -34,6 +34,7 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -45,7 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 public class SWTShapeManager {
     private static final AffineTransform IDENTITY_XFORM = new AffineTransform();
     private static final Point2D aPoint = new Point2D.Double();
-    private static final ArrayList segList = new ArrayList();
+    private static final List<Point2D> segList = new ArrayList<Point2D>();
     private static final double[] pts = new double[8];
 
     /**
@@ -137,7 +138,7 @@ public class SWTShapeManager {
 
         final double[] polyObj = new double[2 * segList.size()];
         for (int i = 0; i < segList.size(); i++) {
-            final Point2D p2 = (Point2D) segList.get(i);
+            final Point2D p2 = segList.get(i);
             polyObj[2 * i] = (int) (p2.getX() + 0.5);
             polyObj[2 * i + 1] = (int) (p2.getY() + 0.5);
         }
