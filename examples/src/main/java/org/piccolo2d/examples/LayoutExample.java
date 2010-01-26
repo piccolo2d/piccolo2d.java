@@ -29,14 +29,12 @@
 package org.piccolo2d.examples;
 
 import java.awt.Color;
-import java.util.Iterator;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.extras.handles.PBoundsHandle;
 import org.piccolo2d.nodes.PPath;
-
 
 /**
  * This example shows how to create a node that will automatically layout its
@@ -71,9 +69,7 @@ public class LayoutExample extends PFrame {
                 double xOffset = 0;
                 final double yOffset = 0;
 
-                final Iterator i = getChildrenIterator();
-                while (i.hasNext()) {
-                    final PNode each = (PNode) i.next();
+                for (PNode each : getChildrenReference()) {
                     each.setOffset(xOffset - each.getX(), yOffset);
                     xOffset += each.getWidth();
                 }

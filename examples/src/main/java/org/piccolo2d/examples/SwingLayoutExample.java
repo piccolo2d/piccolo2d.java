@@ -63,7 +63,7 @@ import org.piccolo2d.nodes.PHtmlView;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
-
+@SuppressWarnings("serial")
 public class SwingLayoutExample {
 
     public static class MyPPath extends PPath {
@@ -122,7 +122,7 @@ public class SwingLayoutExample {
         gridBagLayoutNode.setOffset(400, 250);
         rootNode.addChild(gridBagLayoutNode);
 
-        JPanel container = new JPanel();        
+        JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         final SwingLayoutNode boxLayoutNode = new SwingLayoutNode(container);
         boxLayoutNode.addChild(new MyPPath(new Rectangle2D.Double(0, 0, 50, 50), Color.yellow, new BasicStroke(2),

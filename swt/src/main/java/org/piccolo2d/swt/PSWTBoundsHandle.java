@@ -31,7 +31,6 @@ package org.piccolo2d.swt;
 import java.awt.Cursor;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.SwingConstants;
 
@@ -44,10 +43,9 @@ import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
- * <b>PSWTBoundsHandle</b> a handle for resizing the bounds of another node. If a
- * bounds handle is dragged such that the other node's width or height becomes
+ * <b>PSWTBoundsHandle</b> a handle for resizing the bounds of another node. If
+ * a bounds handle is dragged such that the other node's width or height becomes
  * negative then the each drag handle's locator assciated with that other node
  * is "flipped" so that they are attached to and dragging a different corner of
  * the nodes bounds.
@@ -286,9 +284,7 @@ public class PSWTBoundsHandle extends PSWTHandle {
      * @param flipY whether to allow flipping in the vertical direction
      */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
-        final Iterator i = getParent().getChildrenIterator();
-        while (i.hasNext()) {
-            final Object each = i.next();
+        for (PNode each : getParent().getChildrenReference()) {
             if (each instanceof PSWTBoundsHandle) {
                 ((PSWTBoundsHandle) each).flipHandleIfNeeded(flipX, flipY);
             }

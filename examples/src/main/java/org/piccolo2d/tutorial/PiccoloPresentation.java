@@ -33,6 +33,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
@@ -42,15 +43,11 @@ import org.piccolo2d.nodes.PImage;
 
 
 public class PiccoloPresentation extends PFrame {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     protected PNode slideBar;
     protected PNode currentSlide;
     protected PBasicInputEventHandler eventHandler;
-    protected ArrayList slides = new ArrayList();
+    protected List<PNode> slides = new ArrayList<PNode>();
 
     public PiccoloPresentation() {
         super();
@@ -65,7 +62,7 @@ public class PiccoloPresentation extends PFrame {
                 if (event.getKeyCode() == KeyEvent.VK_SPACE) {
                     final int newIndex = slides.indexOf(currentSlide) + 1;
                     if (newIndex < slides.size()) {
-                        goToSlide((PNode) slides.get(newIndex));
+                        goToSlide(slides.get(newIndex));
                     }
                 }
             }
@@ -131,7 +128,7 @@ public class PiccoloPresentation extends PFrame {
             slides.add(slide);
         }
 
-        goToSlide((PNode) slides.get(0));
+        goToSlide(slides.get(0));
     }
 
     public static void main(final String[] argv) {

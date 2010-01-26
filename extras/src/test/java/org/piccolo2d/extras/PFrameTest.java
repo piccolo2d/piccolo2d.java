@@ -40,8 +40,7 @@ import junit.framework.TestCase;
  * Unit test for PFrame.
  */
 public class PFrameTest extends TestCase {
-    private PFrame frame;   
-
+    @SuppressWarnings("serial")
     public void testCanvasIsValidWithDefaultConstructor() {
         PFrame frame = new PFrame() {
             public void setVisible(boolean visible) {
@@ -55,6 +54,7 @@ public class PFrameTest extends TestCase {
         assertSame(canvas.getLayer(), canvas.getCamera().getLayer(0));
     }
 
+    @SuppressWarnings("serial")
     public void testDefaultsToWindowed() {
         PFrame frame = new PFrame() {
             public void setVisible(boolean visible) {

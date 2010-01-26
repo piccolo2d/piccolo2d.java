@@ -75,7 +75,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.extras.pswing.PSwing;
 import org.piccolo2d.extras.pswing.PSwingCanvas;
 
-
 /**
  * User: Sam Reid Date: Jul 11, 2005 Time: 12:15:55 PM
  */
@@ -218,7 +217,7 @@ public class PSwingExample2 extends JFrame {
         panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "A JList", TitledBorder.LEFT,
                 TitledBorder.TOP));
         panel.setPreferredSize(new Dimension(200, 200));
-        final Vector data = new Vector();
+        final Vector<String> data = new Vector<String>();
         data.addElement("Choice 1");
         data.addElement("Choice 2");
         data.addElement("Choice 3");
@@ -298,65 +297,15 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(transform);
 
         // JTable Example
-        final Vector columns = new Vector();
-        columns.addElement("Check Number");
-        columns.addElement("Description");
-        columns.addElement("Amount");
-        final Vector rows = new Vector();
-        Vector row = new Vector();
-        row.addElement("101");
-        row.addElement("Sandwich");
-        row.addElement("$20.00");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("102");
-        row.addElement("Monkey Wrench");
-        row.addElement("$100.00");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("214");
-        row.addElement("Ant farm");
-        row.addElement("$55.00");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("215");
-        row.addElement("Self-esteem tapes");
-        row.addElement("$37.99");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("216");
-        row.addElement("Tube Socks");
-        row.addElement("$7.45");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("220");
-        row.addElement("Ab Excerciser");
-        row.addElement("$56.95");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("319");
-        row.addElement("Y2K Supplies");
-        row.addElement("$4624.33");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("332");
-        row.addElement("Tie Rack");
-        row.addElement("$15.20");
-        rows.addElement(row);
-        row = new Vector();
-        row.addElement("344");
-        row.addElement("Swing Set");
-        row.addElement("$146.59");
-        rows.addElement(row);
-        final JTable table = new JTable(rows, columns);
+        final JTable table = new JTable(buildTableRows(), buildColumnNames());
+        
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(30);
-        TableColumn c = table.getColumn(table.getColumnName(0));
-        c.setPreferredWidth(150);
-        c = table.getColumn(table.getColumnName(1));
-        c.setPreferredWidth(150);
-        c = table.getColumn(table.getColumnName(2));
-        c.setPreferredWidth(150);
+        for (int tableIndex = 0; tableIndex < 3; tableIndex ++) {
+            TableColumn c = table.getColumn(table.getColumnName(tableIndex));
+            c.setPreferredWidth(150);
+        }
+        
         pane = new JScrollPane(table);
         pane.setPreferredSize(new Dimension(200, 200));
         table.setDoubleBuffered(false);
@@ -369,7 +318,6 @@ public class PSwingExample2 extends JFrame {
 
         // JEditorPane - HTML example
         try {
-
             final JEditorPane editorPane = new JEditorPane(loader.getResource("csdept.html"));
             editorPane.setDoubleBuffered(false);
             editorPane.setEditable(false);
@@ -499,6 +447,73 @@ public class PSwingExample2 extends JFrame {
         canvas.getLayer().addChild(message);
 
         canvas.getCamera().animateViewToCenterBounds(canvas.getLayer().getFullBounds(), true, 1200);
+    }
+
+    private Vector<String> buildColumnNames() {
+        final Vector<String> columns = new Vector<String>();
+        columns.addElement("Check Number");
+        columns.addElement("Description");
+        columns.addElement("Amount");
+        return columns;
+    }
+
+    private Vector<Vector<String>> buildTableRows() {
+        final Vector<Vector<String>> rows = new Vector<Vector<String>>();
+        
+        Vector<String> row = new Vector<String>();
+        row.addElement("101");
+        row.addElement("Sandwich");
+        row.addElement("$20.00");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("102");
+        row.addElement("Monkey Wrench");
+        row.addElement("$100.00");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("214");
+        row.addElement("Ant farm");
+        row.addElement("$55.00");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("215");
+        row.addElement("Self-esteem tapes");
+        row.addElement("$37.99");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("216");
+        row.addElement("Tube Socks");
+        row.addElement("$7.45");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("220");
+        row.addElement("Ab Excerciser");
+        row.addElement("$56.95");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("319");
+        row.addElement("Y2K Supplies");
+        row.addElement("$4624.33");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("332");
+        row.addElement("Tie Rack");
+        row.addElement("$15.20");
+        rows.addElement(row);
+        
+        row = new Vector<String>();
+        row.addElement("344");
+        row.addElement("Swing Set");
+        row.addElement("$146.59");
+        rows.addElement(row);
+        return rows;
     }
 
     public static void main(final String[] args) {

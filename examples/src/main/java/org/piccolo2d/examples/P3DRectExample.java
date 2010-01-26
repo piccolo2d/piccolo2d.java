@@ -6,7 +6,7 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.extras.nodes.P3DRect;
 
-
+@SuppressWarnings("serial")
 public class P3DRectExample extends PFrame {
 
     public P3DRectExample() {
@@ -26,7 +26,7 @@ public class P3DRectExample extends PFrame {
         rect2.setPaint(new Color(239, 235, 222));
         rect2.translate(110, 0);
         rect2.setRaised(false);
-        getCanvas().getLayer().addChild(rect2);               
+        getCanvas().getLayer().addChild(rect2);
     }
 
     public static void main(String[] args) {

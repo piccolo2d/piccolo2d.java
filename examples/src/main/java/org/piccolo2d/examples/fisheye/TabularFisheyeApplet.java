@@ -31,6 +31,7 @@ package org.piccolo2d.examples.fisheye;
 import javax.swing.JApplet;
 
 public class TabularFisheyeApplet extends JApplet {
+    private static final long serialVersionUID = 1L;
 
     public void init() {
         getContentPane().add(new TabularFisheye());        

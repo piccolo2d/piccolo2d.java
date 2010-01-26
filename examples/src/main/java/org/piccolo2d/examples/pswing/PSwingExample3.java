@@ -51,6 +51,7 @@ import org.piccolo2d.nodes.PText;
 /**
  * User: Sam Reid Date: Jul 11, 2005 Time: 12:15:55 PM
  */
+@SuppressWarnings("serial")
 public class PSwingExample3 extends JFrame {
     private static final long serialVersionUID = 1L;
 

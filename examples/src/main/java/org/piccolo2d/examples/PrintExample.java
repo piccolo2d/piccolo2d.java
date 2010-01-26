@@ -41,8 +41,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -61,7 +59,6 @@ import org.piccolo2d.extras.swing.PViewport;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
-
 
 /**
  * Adding print action to scrolling example.
@@ -185,9 +182,7 @@ public class PrintExample extends PFrame {
             if (camera != null) {
                 // First we compute the union of all the layers
                 final PBounds layerBounds = new PBounds();
-                final java.util.List layers = camera.getLayersReference();
-                for (final Iterator i = layers.iterator(); i.hasNext();) {
-                    final PLayer layer = (PLayer) i.next();
+                for (PLayer layer : camera.getLayersReference()) {
                     layerBounds.add(layer.getFullBoundsReference());
                 }
 
@@ -233,9 +228,7 @@ public class PrintExample extends PFrame {
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            for (final PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 

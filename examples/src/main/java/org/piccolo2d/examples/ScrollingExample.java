@@ -35,7 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
@@ -52,7 +51,6 @@ import org.piccolo2d.extras.swing.PViewport;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
-
 
 /**
  * This creates a simple scene and allows switching between traditional
@@ -155,9 +153,7 @@ public class ScrollingExample extends PFrame {
 
             // First we compute the union of all the layers
             final PBounds layerBounds = new PBounds();
-            final java.util.List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            for (PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
@@ -202,9 +198,7 @@ public class ScrollingExample extends PFrame {
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            final java.util.List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            for (PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 

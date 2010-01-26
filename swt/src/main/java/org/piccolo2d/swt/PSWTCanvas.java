@@ -84,7 +84,7 @@ public class PSWTCanvas extends Composite implements PComponent {
     private Image backBuffer;
     private boolean doubleBuffered = true;
     private PCamera camera;
-    private final PStack cursorStack;
+    private final PStack<Cursor> cursorStack;
     private Cursor curCursor;
     private int interacting;
     private int defaultRenderQuality;
@@ -111,7 +111,7 @@ public class PSWTCanvas extends Composite implements PComponent {
         super(parent, style | SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE);
 
         CURRENT_CANVAS = this;
-        cursorStack = new PStack();
+        cursorStack = new PStack<Cursor>();
         setCamera(createBasicSceneGraph());
         installInputSources();
         setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);

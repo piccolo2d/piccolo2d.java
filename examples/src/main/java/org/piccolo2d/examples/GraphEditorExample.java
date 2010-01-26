@@ -31,6 +31,7 @@ package org.piccolo2d.examples;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.piccolo2d.PCanvas;
@@ -63,6 +64,7 @@ public class GraphEditorExample extends PFrame {
         super("GraphEditorExample", false, aCanvas);
     }
 
+    @SuppressWarnings("unchecked")
     public void initialize() {
         final int numNodes = 50;
         final int numEdges = 50;
@@ -73,13 +75,13 @@ public class GraphEditorExample extends PFrame {
         final PLayer edgeLayer = new PLayer();
         getCanvas().getCamera().addLayer(0, edgeLayer);
         final Random rnd = new Random();
-        ArrayList tmp;
+        
         for (int i = 0; i < numNodes; i++) {
             final float x = (float) (300. * rnd.nextDouble());
             final float y = (float) (400. * rnd.nextDouble());
             final PPath path = PPath.createEllipse(x, y, 20, 20);
-            tmp = new ArrayList();
-            path.addAttribute("edges", tmp);
+            
+            path.addAttribute("edges", new ArrayList<PPath>());
             nodeLayer.addChild(path);
         }
 
@@ -98,15 +100,13 @@ public class GraphEditorExample extends PFrame {
             edge.moveTo((float) bound1.getX(), (float) bound1.getY());
             edge.lineTo((float) bound2.getX(), (float) bound2.getY());
 
-            tmp = (ArrayList) node1.getAttribute("edges");
-            tmp.add(edge);
-            tmp = (ArrayList) node2.getAttribute("edges");
-            tmp.add(edge);
-
-            tmp = new ArrayList();
-            tmp.add(node1);
-            tmp.add(node2);
-            edge.addAttribute("nodes", tmp);
+            ((List<PPath>) node1.getAttribute("edges")).add(edge);
+            ((List<PPath>) node2.getAttribute("edges")).add(edge);
+            
+            List<PNode> nodes = new ArrayList<PNode>();
+            nodes.add(node1);
+            nodes.add(node2);
+            edge.addAttribute("nodes", nodes);
 
             edgeLayer.addChild(edge);
         }
@@ -149,6 +149,7 @@ public class GraphEditorExample extends PFrame {
             }
         }
 
+        @SuppressWarnings("unchecked")
         public void drag(final PInputEvent e) {
             final PNode node = e.getPickedNode();
             node.translate(e.getDelta().width, e.getDelta().height);
@@ -158,7 +159,7 @@ public class GraphEditorExample extends PFrame {
             int i;
             for (i = 0; i < edges.size(); i++) {
                 final PPath edge = (PPath) edges.get(i);
-                final ArrayList nodes = (ArrayList) edge.getAttribute("nodes");
+                final List<PNode> nodes = (ArrayList<PNode>) edge.getAttribute("nodes");
                 final PNode node1 = (PNode) nodes.get(0);
                 final PNode node2 = (PNode) nodes.get(1);
 

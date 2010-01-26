@@ -47,7 +47,8 @@ public class PSWTMouseEvent extends MouseEvent {
     private static final int SWT_BUTTON3 = 3;
 
     private static final long serialVersionUID = 1L;
-
+    
+    @SuppressWarnings("serial")
     private static final Component fakeSrc = new Component() {
     };
 

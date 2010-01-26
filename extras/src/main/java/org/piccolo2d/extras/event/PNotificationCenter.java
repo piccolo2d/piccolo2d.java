@@ -66,7 +66,7 @@ public class PNotificationCenter {
     public static final Object NULL_MARKER = new Object();
 
     /** Singleton instance of the notification center. */
-    protected  static volatile PNotificationCenter DEFAULT_CENTER;
+    protected static volatile PNotificationCenter DEFAULT_CENTER;
 
     /** A map of listeners keyed by NotificationKey objects. */
     protected HashMap<NotificationKey, List<NotificationTarget>> listenersMap;
@@ -239,7 +239,7 @@ public class PNotificationCenter {
      * @param object source of the notification, may be null
      * @param properties properties associated with the notification
      */
-    public void postNotification(final String notificationName, final Object object, final Map properties) {
+    public void postNotification(final String notificationName, final Object object, final Map<?, ?> properties) {
         postNotification(new PNotification(notificationName, object, properties));
     }
 
@@ -282,7 +282,8 @@ public class PNotificationCenter {
      * @param object source of the notification
      * @param listeners list to append listeners to
      */
-    private void fillWithMatchingListeners(final Object notificationName, final Object object, final List<NotificationTarget> listeners) {
+    private void fillWithMatchingListeners(final Object notificationName, final Object object,
+            final List<NotificationTarget> listeners) {
         final Object key = new NotificationKey(nullify(notificationName), nullify(object));
         final List<NotificationTarget> globalListeners = listenersMap.get(key);
         if (globalListeners != null) {

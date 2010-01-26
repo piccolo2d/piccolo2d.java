@@ -45,6 +45,7 @@ import org.piccolo2d.swt.PSWTImage;
 /**
  * Unit test for PSWTImage.
  */
+@SuppressWarnings("serial")
 public class PSWTImageTest extends TestCase {
     File imageFile;
     PSWTCanvas canvas;

@@ -44,6 +44,7 @@ import org.piccolo2d.extras.pswing.PSwing;
 import org.piccolo2d.extras.pswing.PSwingCanvas;
 
 
+@SuppressWarnings("serial")
 public class MultiplePSwingCanvasesExample extends JFrame {
     
     

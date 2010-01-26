@@ -31,9 +31,6 @@ package org.piccolo2d;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 
 
@@ -52,21 +49,24 @@ class MockPCamera extends PCamera {
     static class Notification {
         private final String type;
         private final PBounds bounds;
-        // this should really be PLayer
-        private final PNode layer;
+        private final PLayer layer;
 
-        private Notification(final String type, final PBounds bounds, final PNode layer) {
+        private Notification(final String type, final PBounds bounds, final PLayer layer) {
             this.bounds = bounds;
             this.layer = layer;
             this.type = type;
         }
 
-        public PNode getLayer() {
+        public PLayer getLayer() {
             return layer;
         }
 
         public PBounds getBounds() {
             return bounds;
+        }
+        
+        public String getType() {
+            return type;
         }
     }
 

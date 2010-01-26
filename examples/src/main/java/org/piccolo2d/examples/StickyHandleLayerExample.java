@@ -29,7 +29,6 @@
 package org.piccolo2d.examples;
 
 import java.awt.Color;
-import java.util.Iterator;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
@@ -40,7 +39,6 @@ import org.piccolo2d.extras.handles.PBoundsHandle;
 import org.piccolo2d.extras.handles.PHandle;
 import org.piccolo2d.extras.util.PBoundsLocator;
 import org.piccolo2d.nodes.PPath;
-
 
 /**
  * This example shows another way to create sticky handles. These handles are
@@ -81,9 +79,7 @@ public class StickyHandleLayerExample extends PFrame {
                 final PRoot root = getActivityScheduler().getRoot();
 
                 if (root.getPaintInvalid() || root.getChildPaintInvalid()) {
-                    final Iterator i = getCanvas().getCamera().getChildrenIterator();
-                    while (i.hasNext()) {
-                        final PNode each = (PNode) i.next();
+                    for (PNode each : getCanvas().getCamera().getChildrenReference()) {
                         if (each instanceof PHandle) {
                             final PHandle handle = (PHandle) each;
                             handle.relocateHandle();

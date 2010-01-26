@@ -28,7 +28,6 @@
  */
 package org.piccolo2d.swt.examples;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -54,7 +53,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.piccolo2d.swt.SWTGraphics2D;
-
 
 /**
  * Piccolo2D SWT benchmarking test suite.
@@ -123,8 +121,8 @@ public class SWTBenchTest extends Canvas {
     private static final int DRAW_IMG5 = 12;
     private static final int NUM_TESTS = 13;
 
-    private static String testNames[] = { "line", "rect", "fill rect", "oval", "fill oval", "poly", "fill poly", "text",
-            "image", "scaled image", "mask image", "alpha image", "argb image", };
+    private static String testNames[] = { "line", "rect", "fill rect", "oval", "fill oval", "poly", "fill poly",
+            "text", "image", "scaled image", "mask image", "alpha image", "argb image", };
 
     private void testDrawLine(final SWTGraphics2D g, final Random r) {
         g.drawLine(rand(r), rand(r), rand(r), rand(r));
@@ -214,8 +212,9 @@ public class SWTBenchTest extends Canvas {
     }
 
     /**
-     * Create a new Piccolo2D SWT benchmarking test suite with the specified parent and style.
-     *
+     * Create a new Piccolo2D SWT benchmarking test suite with the specified
+     * parent and style.
+     * 
      * @param parent parent
      * @param style style
      */
@@ -268,14 +267,6 @@ public class SWTBenchTest extends Canvas {
         g.setTransform(transform);
     }
 
-    private void setupClip(final Graphics2D g, final Random r) {
-        // g.setClip(rand(r), rand(r), rand(r), rand(r));
-    }
-
-    private void setupBlend(final Graphics2D g, final Random r) {
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, r.nextFloat()));
-    }
-
     private void setup(final int ctx, final Graphics2D g, final Random r) {
         switch (ctx) {
             case CTX_NORMAL:
@@ -294,6 +285,15 @@ public class SWTBenchTest extends Canvas {
             // break;
         }
     }
+
+    // private void setupClip(final Graphics2D g, final Random r) {
+    // g.setClip(rand(r), rand(r), rand(r), rand(r));
+    // }
+
+    // private void setupBlend(final Graphics2D g, final Random r) {
+    // g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+    // r.nextFloat()));
+    // }
 
     private void test(final int testNum, final SWTGraphics2D g, final Random r) {
 
@@ -442,7 +442,7 @@ public class SWTBenchTest extends Canvas {
 
     /**
      * Main.
-     *
+     * 
      * @param args command line arguments, ignored
      */
     public static void main(final String args[]) {

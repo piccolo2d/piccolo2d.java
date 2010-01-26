@@ -47,6 +47,7 @@ import org.piccolo2d.util.PPaintContext;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("serial")
 public class PSwingTest extends TestCase {
     public void setUp() {
         RepaintManager.setCurrentManager(new PSwingRepaintManager());
@@ -123,7 +124,8 @@ public class PSwingTest extends TestCase {
     
     public void testAddingSwingComponentToWrappedHierarchyMakesItNotDoubleBuffer() {
         final JPanel panel = new JPanel();
-        final PSwing pSwing = new PSwing(panel);
+        new PSwing(panel);
+        
         final JComponent child = new JLabel("Test Component");
         child.setDoubleBuffered(true);
         panel.add(child);

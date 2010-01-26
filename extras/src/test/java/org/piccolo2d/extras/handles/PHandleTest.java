@@ -39,6 +39,7 @@ import junit.framework.TestCase;
 /**
  * Unit test for PHandle.
  */
+@SuppressWarnings("serial")
 public class PHandleTest extends TestCase {
     public void testCloneWorksAsExpected() {
         PHandle handle = new PHandle(new OriginLocator());

@@ -88,6 +88,7 @@ public class ExampleRunner extends JFrame {
     /**
      * @param c
      */
+    @SuppressWarnings("serial")
     private JPanel buildOptions() {
         JPanel optionsPanel = new JPanel(new GridLayout(3, 1));        
         optionsPanel.setBorder(new TitledBorder("Display Options"));
@@ -113,13 +114,14 @@ public class ExampleRunner extends JFrame {
         return optionsPanel;
     } 
 
-    private void addExampleButtons(final JPanel panel, final Class[] exampleClasses) {
+    private void addExampleButtons(final JPanel panel, final Class<?>[] exampleClasses) {
         for (int i = 0; i < exampleClasses.length; i++) {
             panel.add(buildExampleButton(exampleClasses[i]));
         }
     }
 
-    private JButton buildExampleButton(final Class exampleClass) {
+    @SuppressWarnings("serial")
+    private JButton buildExampleButton(final Class<?> exampleClass) {
         final String fullClassName = exampleClass.getName();
         final String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
         final String exampleLabel = camelToProper(simpleClassName);

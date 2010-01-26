@@ -31,21 +31,22 @@ package org.piccolo2d.examples.fisheye;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PPaintContext;
 
-
 class DayNode extends PNode {
+    private static final long serialVersionUID = 1L;
     boolean hasWidthFocus;
     boolean hasHeightFocus;
-    ArrayList lines;
+    List<String> lines;
     int week;
     int day;
     String dayOfMonthString;
 
     public DayNode(int week, int day) {
-        lines = new ArrayList();
+        lines = new ArrayList<String>();
         lines.add("7:00 AM Walk the dog.");
         lines.add("9:30 AM Meet John for Breakfast.");
         lines.add("12:00 PM Lunch with Peter.");

@@ -30,7 +30,6 @@ package org.piccolo2d.examples;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.util.Iterator;
 import java.util.Random;
 
 import org.piccolo2d.PCanvas;
@@ -94,9 +93,7 @@ public class DynamicExample extends PFrame {
     }
 
     public void rotateNodes() {
-        final Iterator i = getCanvas().getLayer().getChildrenReference().iterator();
-        while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+        for (PNode each : getCanvas().getLayer().getChildrenReference()) {
             each.rotate(Math.toRadians(2));
         }
     }

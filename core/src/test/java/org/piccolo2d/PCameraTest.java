@@ -77,8 +77,7 @@ public class PCameraTest extends TestCase {
         camera1.addLayer(layer2);
 
 
-        final PCamera cameraCopy = (PCamera) camera1.clone();
-        //TODO: assertEquals(2, cameraCopy.getLayerCount());                       
+        camera1.clone();                    
     }
 
     public void testCameraShouldHaveNullComponentUntilAssigned() {

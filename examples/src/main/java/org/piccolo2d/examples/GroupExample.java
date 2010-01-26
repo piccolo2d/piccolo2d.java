@@ -32,6 +32,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -109,7 +110,7 @@ public class GroupExample extends PFrame {
 
         // Create a selection handler so we can see that the decorator actually
         // works
-        final ArrayList selectableParents = new ArrayList();
+        final List<PNode> selectableParents = new ArrayList<PNode>();
         selectableParents.add(dg);
         selectableParents.add(vdg);
 

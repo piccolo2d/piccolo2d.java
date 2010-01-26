@@ -59,7 +59,6 @@ import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -92,38 +91,39 @@ public class SWTGraphics2D extends Graphics2D {
      * incrementGCCount and decrementGCCount.
      */
     protected static int CACHE_COUNT = 0;
-    
+
     /** Map from font names to Fonts. */
-    protected static final HashMap FONT_CACHE = new HashMap();
-    
+    protected static final Map<String, org.eclipse.swt.graphics.Font> FONT_CACHE = new HashMap<String, org.eclipse.swt.graphics.Font>();
+
     /** Map from awt colors to swt colors. */
-    protected static final HashMap COLOR_CACHE = new HashMap();
-    
-    /** Map from awt shapess to swt Paths. */
-    protected static final HashMap SHAPE_CACHE = new HashMap();
-    
+    protected static final Map<Color, org.eclipse.swt.graphics.Color> COLOR_CACHE = new HashMap<Color, org.eclipse.swt.graphics.Color>();
+
+    /** Map from awt shapes to swt Paths. */
+    protected static final Map<Shape, Path> SHAPE_CACHE = new HashMap<Shape, Path>();
+
     /** Buffer used to extract the graphics device. */
     protected static final BufferedImage BUFFER = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
     private static final Point TEMP_POINT = new Point();
     private static final Rectangle2D TEMP_RECT = new Rectangle2D.Double();
     private static final Rectangle2D TEMP_LINE_RECT = new Rectangle2D.Double();
-    private static final org.eclipse.swt.graphics.Rectangle SWT_RECT = new org.eclipse.swt.graphics.Rectangle(0, 0, 0, 0);
+    private static final org.eclipse.swt.graphics.Rectangle SWT_RECT = new org.eclipse.swt.graphics.Rectangle(0, 0, 0,
+            0);
 
     /** The Underlying GraphicsContext provided by swt. */
     protected GC gc;
-    
+
     /** Device onto which all graphics operations will ultimately take place. */
     protected Device device;
-    
+
     /** The current transform to apply to drawing operations. */
     protected AffineTransform transform = new AffineTransform();
-    
+
     private final Transform swtTransform;
-    
+
     /** The current font to use when drawing text. */
     protected org.eclipse.swt.graphics.Font curFont;
-    
+
     /** The current stroke width to use when drawing lines. */
     protected double lineWidth = 1.0;
 
@@ -377,7 +377,7 @@ public class SWTGraphics2D extends Graphics2D {
      * @return matching font, or null if not found
      */
     public org.eclipse.swt.graphics.Font getFont(final String fontString) {
-        org.eclipse.swt.graphics.Font cachedFont = (org.eclipse.swt.graphics.Font) FONT_CACHE.get(fontString);
+        org.eclipse.swt.graphics.Font cachedFont = FONT_CACHE.get(fontString);
         if (cachedFont == null) {
             int style = 0;
             if (fontString.indexOf("bold=true") != -1) {
@@ -569,7 +569,7 @@ public class SWTGraphics2D extends Graphics2D {
             fillArc(a2.getX(), a2.getY(), a2.getWidth(), a2.getHeight(), a2.getAngleStart(), a2.getAngleExtent());
         }
         else {
-            Path p = (Path) SHAPE_CACHE.get(s);
+            Path p = SHAPE_CACHE.get(s);
             if (p == null) {
                 p = pathIterator2Path(s.getPathIterator(null));
                 SHAPE_CACHE.put(s, p);
@@ -1318,7 +1318,7 @@ public class SWTGraphics2D extends Graphics2D {
      * 
      * @see java.awt.Graphics2D#setRenderingHints(Map)
      */
-    public void setRenderingHints(final Map hints) {
+    public void setRenderingHints(final Map<?, ?> hints) {
     }
 
     /**
@@ -1326,7 +1326,7 @@ public class SWTGraphics2D extends Graphics2D {
      * 
      * @see java.awt.Graphics2D#addRenderingHints(Map)
      */
-    public void addRenderingHints(final Map hints) {
+    public void addRenderingHints(final Map<?, ?> hints) {
     }
 
     /**
@@ -1523,16 +1523,13 @@ public class SWTGraphics2D extends Graphics2D {
         CACHE_COUNT--;
 
         if (CACHE_COUNT == 0) {
-            for (final Iterator i = FONT_CACHE.values().iterator(); i.hasNext();) {
-                final org.eclipse.swt.graphics.Font font = (org.eclipse.swt.graphics.Font) i.next();
+            for (final org.eclipse.swt.graphics.Font font : FONT_CACHE.values()) {
                 font.dispose();
             }
-            for (final Iterator i = COLOR_CACHE.values().iterator(); i.hasNext();) {
-                final org.eclipse.swt.graphics.Color color = (org.eclipse.swt.graphics.Color) i.next();
+            for (final org.eclipse.swt.graphics.Color color : COLOR_CACHE.values()) {
                 color.dispose();
             }
-            for (final Iterator i = SHAPE_CACHE.values().iterator(); i.hasNext();) {
-                final Path path = (Path) i.next();
+            for (final Path path : SHAPE_CACHE.values()) {
                 path.dispose();
             }
         }
