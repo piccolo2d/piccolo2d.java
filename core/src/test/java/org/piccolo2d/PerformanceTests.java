@@ -38,136 +38,147 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import org.piccolo2d.PNode;
+import junit.framework.TestCase;
+
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
-
-import junit.framework.TestCase;
 
 /**
  * Performance tests.
  */
 public class PerformanceTests extends TestCase {
 
-    private static PerformanceLog log = new PerformanceLog();
-    private static int NUMBER_NODES = 20000;
+    private static Measurements measurements = new Measurements();
+    private static int NUMBER_NODES = 10000;
+    private static int NUMBER_SETS = 10;
 
     public PerformanceTests(final String name) {
         super(name);
     }
 
-    public void testRunPerformanceTests() {
-        if (1 == 1) {
-            return;
-        }
-
-        // three times to warm up JVM
-        for (int i = 0; i < 3; i++) {
+    public void testRunPerformanceTests() throws NoninvertibleTransformException {
+        for (int i = 0; i < NUMBER_SETS; i++) {
             addNodes();
             copyNodes();
             createNodes();
             createPaths();
             fullIntersectsNodes();
             memorySizeOfNodes();
-            // removeNodes();
+            removeNodes();
             translateNodes();
             costOfNoBoundsCache();
-            // renderSpeed();
-            if (i != 2) {
-                log.clear();
-            }
+            renderSpeed();
         }
-        log.writeLog();
+
+        measurements.writeLog();
     }
 
     public void createNodes() {
         final PNode[] nodes = new PNode[NUMBER_NODES];
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i] = new PNode();
-        }
-        log.endTest("Create " + NUMBER_NODES + " new nodes");
+        measurements.time("Create " + NUMBER_NODES + " new nodes", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    nodes[i] = new PNode();
+                }
+            }
+        });
+        ;
     }
 
     public void createPaths() {
         final PNode[] nodes = new PNode[NUMBER_NODES];
-
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i] = PPath.createRectangle(0, 0, 100, 80);
-        }
-        log.endTest("Create " + NUMBER_NODES + " new rect paths");
-
         final Random r = new Random();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i].translate(r.nextFloat() * 300, r.nextFloat() * 300);
-        }
+
+        measurements.time("Create " + NUMBER_NODES + " new rect paths with random translations", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    nodes[i] = PPath.createRectangle(0, 0, 100, 80);
+                    nodes[i].translate(r.nextFloat() * 300, r.nextFloat() * 300);
+                }
+            }
+        });
     }
 
     public void addNodes() {
         final PNode parent = new PNode();
-        final PNode[] nodes = new PNode[NUMBER_NODES];
+        final PNode[] nodes = createNodesArray();
 
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i] = new PNode();
-        }
-
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            parent.addChild(nodes[i]);
-        }
-        log.endTest("Add " + NUMBER_NODES + " nodes to a new parent");
+        measurements.time("Add " + NUMBER_NODES + " nodes to a new parent", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    parent.addChild(nodes[i]);
+                }
+            }
+        });
     }
 
     public void removeNodes() {
         final PNode parent = new PNode();
-        final PNode[] nodes = new PNode[NUMBER_NODES];
-        final ArrayList list = new ArrayList();
+        final PNode[] nodes = createNodesArray();
 
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i] = new PNode();
-        }
+        final List<PNode> list = new ArrayList<PNode>();
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             parent.addChild(nodes[i]);
             list.add(nodes[i]);
         }
 
-        log.startTest();
+        measurements.time("Remove " + NUMBER_NODES + " nodes using removeChild() front to back", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    parent.removeChild(nodes[i]);
+                }
+            }
+        });
+
+        parent.addChildren(list);
+        measurements.time("Remove " + NUMBER_NODES + " nodes using removeChild() back to front by index",
+                new Runnable() {
+                    public void run() {
+                        for (int i = NUMBER_NODES - 1; i >= 0; i--) {
+                            parent.removeChild(i);
+                        }
+                    }
+                });
+
+        parent.addChildren(list);
+        measurements.time("Remove " + NUMBER_NODES + " nodes using removeChild() back to front by object, TO_SLOW",
+                new Runnable() {
+                    public void run() {
+                        for (int i = NUMBER_NODES - 1; i >= 0; i--) {
+                            parent.removeChild(i);
+                        }
+                    }
+                });
+
+        parent.addChildren(list);
+        measurements.time("Remove " + NUMBER_NODES + " nodes using removeChildren()", new Runnable() {
+
+            public void run() {
+                parent.removeChildren(list);
+            }
+        });
+
+        parent.addChildren(list);
+
+        measurements.time("Remove " + NUMBER_NODES + " nodes using removeAllChildren()", new Runnable() {
+            public void run() {
+                parent.removeAllChildren();
+            }
+        });
+    }
+
+    private PNode[] createNodesArray() {
+        final PNode[] nodes = new PNode[NUMBER_NODES];
         for (int i = 0; i < NUMBER_NODES; i++) {
-            parent.removeChild(nodes[i]);
+            nodes[i] = new PNode();
         }
-        log.endTest("Remove " + NUMBER_NODES + " nodes using removeChild() front to back");
-
-        parent.addChildren(list);
-
-        log.startTest();
-        for (int i = NUMBER_NODES - 1; i >= 0; i--) {
-            parent.removeChild(i);
-        }
-        log.endTest("Remove " + NUMBER_NODES + " nodes using removeChild() back to front by index");
-
-        log.startTest();
-        // for (int i = NUMBER_NODES - 1; i >= 0; i--) {
-        // parent.removeChild(nodes[i]);
-        // }
-        log.endTest("Remove " + NUMBER_NODES + " nodes using removeChild() back to front by object, TO_SLOW");
-
-        parent.addChildren(list);
-
-        log.startTest();
-        parent.removeChildren(list);
-        log.endTest("Remove " + NUMBER_NODES + " nodes using removeChildren()");
-
-        parent.addChildren(list);
-
-        log.startTest();
-        parent.removeAllChildren();
-        log.endTest("Remove " + NUMBER_NODES + " nodes using removeAllChildren()");
+        return nodes;
     }
 
     public void translateNodes() {
@@ -183,28 +194,40 @@ public class PerformanceTests extends TestCase {
             nodes[i].getFullBoundsReference();
         }
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i].translate(1000 * r.nextFloat(), 1000 * r.nextFloat());
-            nodes[i].scale(1000 * r.nextFloat());
-            // nodes[i].translateBy(100.01, 100.2);
-            // nodes[i].scaleBy(0.9);
-        }
-        log.endTest("Translate " + NUMBER_NODES + " nodes, not counting repaint or validate layout");
+        measurements.time("Translate " + NUMBER_NODES + " nodes, not counting repaint or validate layout",
+                new Runnable() {
 
-        log.startTest();
-        // parent.validateFullBounds(); now protected.
-        parent.getFullBoundsReference(); // calls validateFullBounds as a side
-        // effect.
-        log.endTest("Validate Layout after translate " + NUMBER_NODES + " nodes");
+                    public void run() {
+                        for (int i = 0; i < NUMBER_NODES; i++) {
+                            nodes[i].translate(1000 * r.nextFloat(), 1000 * r.nextFloat());
+                            nodes[i].scale(1000 * r.nextFloat());
+                            // nodes[i].translateBy(100.01, 100.2);
+                            // nodes[i].scaleBy(0.9);
+                        }
+                    }
+                });
 
-        log.startTest();
-        parent.validateFullPaint();
-        log.endTest("Validate Paint after translate " + NUMBER_NODES + " nodes");
+        measurements.time("Validate Layout after translate " + NUMBER_NODES + " nodes", new Runnable() {
+            public void run() {
+                // Since parent.validateFullBounds(); now protected, we use
+                // getFullBoundsReference since it calls validateFullBounds
+                // indirectly.
+                parent.getFullBoundsReference();
 
-        log.startTest();
-        parent.computeFullBounds(b);
-        log.endTest("Parent compute bounds of " + NUMBER_NODES + " children nodes");
+            }
+        });
+
+        measurements.time("Validate Paint after translate " + NUMBER_NODES + " nodes", new Runnable() {
+            public void run() {
+                parent.validateFullPaint();
+            }
+        });
+
+        measurements.time("Parent compute bounds of " + NUMBER_NODES + " children nodes", new Runnable() {
+            public void run() {
+                parent.computeFullBounds(b);
+            }
+        });
     }
 
     public void fullIntersectsNodes() {
@@ -221,32 +244,25 @@ public class PerformanceTests extends TestCase {
         parent.getFullBoundsReference(); // calls validateFullBounds as a side
         // effect.
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i].fullIntersects(b);
-        }
-        log.endTest("Do fullIntersects test for " + NUMBER_NODES + " nodes");
+        measurements.time("fullIntersect on " + NUMBER_NODES + " nodes", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    nodes[i].fullIntersects(b);
+                }
+            }
+        });
     }
-    
+
     public void memorySizeOfNodes() {
         final PNode[] nodes = new PNode[NUMBER_NODES];
-        Runtime.getRuntime().gc();
-        final long startTotalMemory = Runtime.getRuntime().totalMemory();
-        final long startFree = Runtime.getRuntime().freeMemory();
-        long endFree;
-        long endTotal;
 
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i] = new PNode();
-        }
-
-        Runtime.getRuntime().gc();
-        endFree = Runtime.getRuntime().freeMemory();
-        endTotal = Runtime.getRuntime().totalMemory();
-
-        log.addEntry("Approximate k used by " + NUMBER_NODES + " nodes",
-                (endTotal - startTotalMemory + startFree - endFree) / 1024);
-        nodes[0].getPaint();
+        measurements.memory("Approximate k used by " + NUMBER_NODES + " nodes", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    nodes[i] = new PNode();
+                }
+            }
+        });
     }
 
     public void copyNodes() {
@@ -258,9 +274,11 @@ public class PerformanceTests extends TestCase {
             parent.addChild(nodes[i]);
         }
 
-        log.startTest();
-        parent.clone();
-        log.endTest("Copy/Serialize " + NUMBER_NODES + " nodes");
+        measurements.time("Copy/Serialize " + NUMBER_NODES + " nodes", new Runnable() {
+            public void run() {
+                parent.clone();
+            }
+        });
     }
 
     public void costOfNoBoundsCache() {
@@ -276,58 +294,71 @@ public class PerformanceTests extends TestCase {
             bounds[i] = new PBounds(1000 * r.nextFloat(), 1000 * r.nextFloat(), 100, 80);
         }
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            bounds[i].intersects(pickRect);
-        }
-        log.endTest("Do intersects test for " + NUMBER_NODES + " bounds");
+        measurements.time("Do intersects test for " + NUMBER_NODES + " bounds", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    bounds[i].intersects(pickRect);
+                }
+            }
+        });
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            nodes[i].localToParent(bounds[i]);
-        }
-        log.endTest("Transform " + NUMBER_NODES + " bounds from local to parent");
+        measurements.time("Transform " + NUMBER_NODES + " bounds from local to parent", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    nodes[i].localToParent(bounds[i]);
+                }
+            }
+        });
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            pickRect.add(bounds[i]);
-        }
-        log.endTest("Sum " + NUMBER_NODES + " bounds");
+        measurements.time("Sum " + NUMBER_NODES + " bounds", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    pickRect.add(bounds[i]);
+                }
+            }
+        });
 
         final PBounds b = new PBounds(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES * 10; i++) {
-            b.clone();
-        }
-        log.endTest("Clone " + NUMBER_NODES * 10 + " PBounds");
+
+        measurements.time("Clone " + NUMBER_NODES + " PBounds", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    b.clone();
+                }
+            }
+        });
 
     }
 
-    public void renderSpeed() throws NoninvertibleTransformException {
+    private void renderSpeed() throws NoninvertibleTransformException {
         final Random r = new Random();
         final PAffineTransform at = new PAffineTransform();
         at.setScale(r.nextFloat());
-        at.translate(r.nextFloat(), r.nextFloat());
+        at.translate(r.nextDouble(), r.nextDouble());
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            at.createInverse();
-        }
-        log.endTest("Create inverse transform " + NUMBER_NODES + " times");
+        measurements.time("Create inverse transform " + NUMBER_NODES + " times", new Runnable() {
+            public void run() {
+                try {
+                    for (int i = 0; i < NUMBER_NODES; i++) {
+                        at.createInverse();
+                    }
+                }
+                catch (final NoninvertibleTransformException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         final int height = 400;
         final int width = 400;
 
         final double scale1 = 0.5;
         final double scale2 = 2;
-        boolean scaleFlip = true;
 
         final PAffineTransform transorm1 = new PAffineTransform();
         // transorm1.scale(0.5, 0.5);
         transorm1.translate(0.5, 10.1);
-        PAffineTransform transorm2 = null;
-
-        transorm2 = new PAffineTransform(transorm1.createInverse());
+        final PAffineTransform transorm2 = new PAffineTransform(transorm1.createInverse());
 
         final GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice().getDefaultConfiguration();
@@ -335,61 +366,70 @@ public class PerformanceTests extends TestCase {
                 Transparency.TRANSLUCENT);
         final Graphics2D g2 = result.createGraphics();
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            if (scaleFlip) {
-                g2.scale(scale2, scale2);
-                scaleFlip = !scaleFlip;
+        measurements.time("Scale graphics context " + NUMBER_NODES + " times", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    if (i % 2 == 0) {
+                        g2.scale(scale2, scale2);
+                    }
+                    else {
+                        g2.scale(scale1, scale1);
+
+                    }
+                }
             }
-            else {
-                g2.scale(scale1, scale1);
-                scaleFlip = !scaleFlip;
-            }
-        }
-        log.endTest("Scale graphics context " + NUMBER_NODES + " times");
+        });
 
         g2.setTransform(new AffineTransform());
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            g2.translate(0.5, 0.5);
-        }
-        log.endTest("Translate graphics context " + NUMBER_NODES + " times");
+        measurements.time("Translate graphics context " + NUMBER_NODES + " times", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    g2.translate(0.5, 0.5);
+                }
+            }
+        });
 
         g2.setTransform(new AffineTransform());
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            if (scaleFlip) {
-                g2.transform(transorm1);
-                scaleFlip = !scaleFlip;
+        measurements.time("Transform graphics context " + NUMBER_NODES + " times", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    if (i % 2 == 0) {
+                        g2.transform(transorm1);
+                    }
+                    else {
+                        g2.transform(transorm2);
+                    }
+                }
             }
-            else {
-                g2.transform(transorm2);
-                scaleFlip = !scaleFlip;
-            }
-        }
-        log.endTest("Transform graphics context " + NUMBER_NODES + " times");
+        });
 
         final Rectangle2D rect = new Rectangle2D.Double(0, 0, 100, 80);
         final GeneralPath path = new GeneralPath(rect);
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            g2.fill(rect);
-        }
-        log.endTest("Fill " + NUMBER_NODES + " rects");
+        measurements.time("Fill " + NUMBER_NODES + " rects", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    g2.fill(rect);
+                }
+            }
+        });
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            g2.getTransform().getScaleX();
-        }
-        log.endTest("Call g2.getTransform() " + NUMBER_NODES + " times");
+        measurements.time("Call g2.getTransform() " + NUMBER_NODES + " times", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    g2.getTransform().getScaleX();
+                }
+            }
+        });
 
-        log.startTest();
-        for (int i = 0; i < NUMBER_NODES; i++) {
-            g2.fill(path);
-        }
-        log.endTest("Fill " + NUMBER_NODES + " paths");
+        measurements.time("Fill " + NUMBER_NODES + " paths", new Runnable() {
+            public void run() {
+                for (int i = 0; i < NUMBER_NODES; i++) {
+                    g2.fill(path);
+                }
+            }
+        });
     }
 }

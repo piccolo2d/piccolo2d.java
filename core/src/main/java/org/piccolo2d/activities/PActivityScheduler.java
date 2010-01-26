@@ -168,11 +168,12 @@ public class PActivityScheduler implements Serializable {
      * @param currentTime the current unix time in milliseconds.
      */
     public void processActivities(final long currentTime) {
-        final int size = activities.size();
-        if (size > 0) {
+        if (!activities.isEmpty()) {
             processingActivities.clear();
             processingActivities.addAll(activities);
-            for (PActivity each : reverse(processingActivities)) {
+            
+            final List<PActivity> clonedActivities = new ArrayList<PActivity>(processingActivities);
+            for (PActivity each : reverse(clonedActivities)) {
                 each.processStep(currentTime);
             }
         }

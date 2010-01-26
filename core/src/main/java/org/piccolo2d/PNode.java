@@ -3090,6 +3090,10 @@ public class PNode implements Cloneable, Serializable, Printable {
 
         final boolean thisPickable = getPickable() && pickPath.acceptsNode(this);
 
+        // tests for 3 cases
+        // 1. try picking this node before its children
+        // 2. try picking a child recursively
+        // 3. try picking this node after its children
         if ((thisPickable && pick(pickPath)) || (getChildrenPickable() && pickChild(pickPath))
                 || (thisPickable && pickAfterChildren(pickPath))) {
             return true;
