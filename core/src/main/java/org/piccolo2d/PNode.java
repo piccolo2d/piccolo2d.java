@@ -1478,10 +1478,8 @@ public class PNode implements Cloneable, Serializable, Printable {
             return true;
         }
         // Don't put any invalidating code here or else nodes with volatile
-        // bounds will
-        // create a soft infinite loop (calling Swing.invokeLater()) when they
-        // validate
-        // their bounds.
+        // bounds will create a soft infinite loop (calling Swing.invokeLater())
+        // when they validate their bounds.
         return false;
     }
 

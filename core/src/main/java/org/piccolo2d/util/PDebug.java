@@ -30,7 +30,7 @@ package org.piccolo2d.util;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.SwingUtilities;
 
@@ -156,9 +156,9 @@ public final class PDebug {
         }
 
         if (PDebug.debugRegionManagement) {
-            final Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(PDebug.getDebugPaintColor());
-            g2.fill(g.getClipBounds().getBounds2D());
+            g.setColor(PDebug.getDebugPaintColor());
+            Rectangle2D b = g.getClipBounds().getBounds2D();
+            g.fillRect((int) b.getX(), (int) b.getY(), (int) b.getWidth(), (int) b.getHeight());
         }
 
         processingOutput = false;

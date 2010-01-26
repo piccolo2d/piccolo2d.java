@@ -29,14 +29,12 @@
 package org.piccolo2d.nodes;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 
-import org.piccolo2d.MockPropertyChangeListener;
-import org.piccolo2d.nodes.PText;
-
-
 import junit.framework.TestCase;
+
+import org.piccolo2d.MockPropertyChangeListener;
+import org.piccolo2d.nodes.PText.HorizontalAlignment;
 
 /**
  * Unit test for PText.
@@ -103,47 +101,17 @@ public class PTextTest extends TestCase {
     }   
 
     public void testHorizontalAlignmentIsLeftByDefault() {
-        assertEquals(Component.LEFT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
+        assertEquals(HorizontalAlignment.LEFT, textNode.getHorizontalAlignment());
     }
 
     public void testSetHorizontalAlignmentPersists() {
-        textNode.setHorizontalAlignment(Component.RIGHT_ALIGNMENT);
-        assertEquals(Component.RIGHT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
+        textNode.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        assertEquals(HorizontalAlignment.RIGHT, textNode.getHorizontalAlignment());
     }
 
-    public void testSetHorizontalAlignmentInvalidValues() {
+    public void testSetHorizontalAlignmentMayNotBeNull() {
         try {
-            textNode.setHorizontalAlignment(-2.0f);
-        }
-        catch (final IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            textNode.setHorizontalAlignment(2.0f);
-        }
-        catch (final IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            textNode.setHorizontalAlignment(-Float.MAX_VALUE);
-        }
-        catch (final IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            textNode.setHorizontalAlignment(Float.MAX_VALUE);
-        }
-        catch (final IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            textNode.setHorizontalAlignment(-1.00f);
-        }
-        catch (final IllegalArgumentException e) {
-            // expected
-        }
-        try {
-            textNode.setHorizontalAlignment(1.00f);
+            textNode.setHorizontalAlignment(null);
         }
         catch (final IllegalArgumentException e) {
             // expected

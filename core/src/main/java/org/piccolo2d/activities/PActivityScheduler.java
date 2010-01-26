@@ -57,12 +57,14 @@ import static org.piccolo2d.util.PUtil.reverse;
 public class PActivityScheduler implements Serializable {
     private static final long serialVersionUID = 1L;
     private transient Timer activityTimer = null;
+    private transient final List<PActivity> processingActivities;
     private final PRoot root;
     private final List<PActivity> activities;
+
+
     private boolean activitiesChanged;
     private boolean animating;
-    private final List<PActivity> processingActivities;
-
+    
     /**
      * Constructs an instance of PActivityScheduler. All activities it will
      * schedule will take place on children of the rootNode provided.
@@ -171,7 +173,7 @@ public class PActivityScheduler implements Serializable {
         if (!activities.isEmpty()) {
             processingActivities.clear();
             processingActivities.addAll(activities);
-            
+
             final List<PActivity> clonedActivities = new ArrayList<PActivity>(processingActivities);
             for (PActivity each : reverse(clonedActivities)) {
                 each.processStep(currentTime);

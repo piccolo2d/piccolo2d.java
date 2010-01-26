@@ -59,6 +59,7 @@ public abstract class PDragSequenceEventHandler extends PBasicInputEventHandler 
 
     /** Constructs a drag sequence event handler instance. */
     public PDragSequenceEventHandler() {
+        dragActivity = null;
     }
 
     /**

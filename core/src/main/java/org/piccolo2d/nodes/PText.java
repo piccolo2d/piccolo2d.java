@@ -160,8 +160,12 @@ public class PText extends PNode {
     protected double greekThreshold = DEFAULT_GREEK_THRESHOLD;
 
     /** Horizontal alignment for this text node. */
-    private float horizontalAlignment = DEFAULT_HORIZONTAL_ALIGNMENT;
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
 
+    public enum HorizontalAlignment {
+        LEFT, CENTER, RIGHT
+    }
+    
     /**
      * True if this text node should constrain its height to the height of its
      * text.
@@ -205,7 +209,7 @@ public class PText extends PNode {
      * @since 1.3
      * @return the horizontal alignment for this text node
      */
-    public float getHorizontalAlignment() {
+    public HorizontalAlignment getHorizontalAlignment() {
         return horizontalAlignment;
     }
 
@@ -219,29 +223,8 @@ public class PText extends PNode {
      *            <code>Component.CENTER_ALIGNMENT</code>, or
      *            <code>Component.RIGHT_ALIGNMENT</code>
      */
-    public void setHorizontalAlignment(final float horizontalAlignment) {
-        if (!validHorizontalAlignment(horizontalAlignment)) {
-            throw new IllegalArgumentException("horizontalAlignment must be one of Component.LEFT_ALIGNMENT, "
-                    + "Component.CENTER_ALIGNMENT, or Component.RIGHT_ALIGNMENT");
-        }
+    public void setHorizontalAlignment(final HorizontalAlignment horizontalAlignment) {
         this.horizontalAlignment = horizontalAlignment;
-    }
-
-    /**
-     * Return true if the specified horizontal alignment is one of
-     * <code>Component.LEFT_ALIGNMENT</code>,
-     * <code>Component.CENTER_ALIGNMENT</code>, or
-     * <code>Component.RIGHT_ALIGNMENT</code>.
-     * 
-     * @param horizontalAlignment horizontal alignment
-     * @return true if the specified horizontal alignment is one of
-     *         <code>Component.LEFT_ALIGNMENT</code>,
-     *         <code>Component.CENTER_ALIGNMENT</code>, or
-     *         <code>Component.RIGHT_ALIGNMENT</code>
-     */
-    private static boolean validHorizontalAlignment(final float horizontalAlignment) {
-        return Component.LEFT_ALIGNMENT == horizontalAlignment || Component.CENTER_ALIGNMENT == horizontalAlignment
-                || Component.RIGHT_ALIGNMENT == horizontalAlignment;
     }
 
     /**
@@ -544,7 +527,17 @@ public class PText extends PNode {
                 return;
             }
 
-            final float offset = (float) (getWidth() - tl.getAdvance()) * horizontalAlignment;
+            final float offset;
+            switch (horizontalAlignment) {
+                case LEFT:
+                    offset = 0;
+                    break;
+                case RIGHT:
+                    offset = (float) (getWidth() - tl.getAdvance());
+                    break;
+                default: // CENTER
+                    offset = (float) (getWidth() - tl.getAdvance()) * 0.5f;
+            }
 
             tl.draw(g2, x + offset, y);
 

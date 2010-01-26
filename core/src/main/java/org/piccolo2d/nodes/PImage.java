@@ -34,6 +34,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,7 +46,6 @@ import javax.swing.ImageIcon;
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
-
 
 /**
  * <b>PImage</b> is a wrapper around a java.awt.Image. If this node is copied or
@@ -75,7 +75,7 @@ public class PImage extends PNode {
      * {@link #getImage getImage}). Both old and new value will be set correctly
      * to Image objects in any property change event.
      */
-    
+
     public static final int PROPERTY_CODE_IMAGE = 1 << 15;
 
     private transient Image image;
@@ -188,21 +188,20 @@ public class PImage extends PNode {
             return;
         }
 
-        final double iw = image.getWidth(null);
-        final double ih = image.getHeight(null);
+        final Rectangle2D imageRect = new Rectangle2D.Double(0, 0, image.getWidth(null), image.getHeight(null));
 
         final PBounds b = getBoundsReference();
         final Graphics2D g2 = paintContext.getGraphics();
 
-        if (b.x != 0 || b.y != 0 || b.width != iw || b.height != ih) {
-            g2.translate(b.x, b.y);
-            g2.scale(b.width / iw, b.height / ih);
+        if (imageRect.equals(b)) {
             g2.drawImage(image, 0, 0, null);
-            g2.scale(iw / b.width, ih / b.height);
-            g2.translate(-b.x, -b.y);
         }
         else {
+            g2.translate(b.x, b.y);
+            g2.scale(b.width / imageRect.getWidth(), b.height / imageRect.getHeight());
             g2.drawImage(image, 0, 0, null);
+            g2.scale(imageRect.getWidth() / b.width, imageRect.getHeight() / b.height);
+            g2.translate(-b.x, -b.y);
         }
 
     }
