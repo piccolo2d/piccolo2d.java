@@ -42,7 +42,6 @@ import javax.swing.ViewportLayout;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.util.PBounds;
 
-
 /**
  * A subclass of JViewport that talks to the scroll director to negotiate the
  * view positions and sizes.
@@ -205,7 +204,8 @@ public class PViewport extends JViewport {
     }
 
     /**
-     * A simple layout manager to give the ZCanvas the same size as the Viewport.
+     * A simple layout manager to give the ZCanvas the same size as the
+     * Viewport.
      */
     public static class PViewportLayout extends ViewportLayout {
         private static final long serialVersionUID = 1L;

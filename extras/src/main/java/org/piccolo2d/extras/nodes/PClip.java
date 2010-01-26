@@ -28,6 +28,8 @@
  */
 package org.piccolo2d.extras.nodes;
 
+import static org.piccolo2d.util.PUtil.reverse;
+
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.Rectangle2D;
@@ -37,8 +39,6 @@ import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
-import static org.piccolo2d.util.PUtil.reverse;
-
 
 /**
  * <b>PClip</b> is a simple node that applies a clip before rendering or picking
@@ -139,7 +139,7 @@ public class PClip extends PPath {
             }
 
             if (getChildrenPickable() && getPathReference().intersects(pickPath.getPickBounds())) {
-                for (PNode each : reverse(getChildrenReference())) {
+                for (final PNode each : reverse(getChildrenReference())) {
                     if (each.fullPick(pickPath)) {
                         return true;
                     }

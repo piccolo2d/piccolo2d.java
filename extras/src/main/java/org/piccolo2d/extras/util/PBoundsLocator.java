@@ -34,7 +34,6 @@ import javax.swing.SwingConstants;
 
 import org.piccolo2d.PNode;
 
-
 /**
  * <b>PBoundsLocator</b> is a locator that locates points on the bounds of a
  * node.

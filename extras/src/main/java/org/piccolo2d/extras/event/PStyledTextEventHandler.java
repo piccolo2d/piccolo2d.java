@@ -60,7 +60,6 @@ import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
 import org.piccolo2d.extras.nodes.PStyledText;
 
-
 /**
  * @author Lance Good
  */
@@ -351,8 +350,8 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
         private static final long serialVersionUID = 1L;
 
         public DefaultTextEditor() {
-            EmptyBorder padding = new EmptyBorder(TEXT_EDIT_PADDING,
-                    TEXT_EDIT_PADDING, TEXT_EDIT_PADDING, TEXT_EDIT_PADDING);
+            final EmptyBorder padding = new EmptyBorder(TEXT_EDIT_PADDING, TEXT_EDIT_PADDING, TEXT_EDIT_PADDING,
+                    TEXT_EDIT_PADDING);
             setBorder(new CompoundBorder(new LineBorder(Color.black), padding));
         }
 
@@ -365,7 +364,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             if (!(graphics instanceof Graphics2D)) {
                 throw new IllegalArgumentException("Provided graphics context is not a Graphics2D object");
             }
-            
+
             final Graphics2D g2 = (Graphics2D) graphics;
 
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

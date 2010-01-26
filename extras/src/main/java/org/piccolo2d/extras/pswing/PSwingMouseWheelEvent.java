@@ -15,7 +15,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * <b>PMouseMotionEvent</b> is an event which indicates that a mouse motion
  * action occurred in a node.
@@ -68,7 +67,7 @@ public class PSwingMouseWheelEvent extends MouseWheelEvent implements PSwingEven
                 swingEvent.getX(), swingEvent.getY(), swingEvent.getClickCount(), swingEvent.isPopupTrigger(),
                 swingEvent.getScrollType(), swingEvent.getScrollAmount(), swingEvent.getWheelRotation());
         this.id = id;
-        this.event = piccoloEvent;
+        event = piccoloEvent;
     }
 
     /**

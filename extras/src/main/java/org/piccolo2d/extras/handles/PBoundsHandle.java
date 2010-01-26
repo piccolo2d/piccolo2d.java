@@ -43,7 +43,6 @@ import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * <b>PBoundsHandle</b> a handle for resizing the bounds of another node. If a
  * bounds handle is dragged such that the other node's width or height becomes
@@ -105,9 +104,9 @@ public class PBoundsHandle extends PHandle {
     public static void removeBoundsHandlesFrom(final PNode node) {
         final ArrayList<PBoundsHandle> handles = new ArrayList<PBoundsHandle>();
 
-        for (PNode each : node.getChildrenReference()) {
+        for (final PNode each : node.getChildrenReference()) {
             if (each instanceof PBoundsHandle) {
-                handles.add((PBoundsHandle)each);
+                handles.add((PBoundsHandle) each);
             }
         }
         node.removeChildren(handles);
@@ -256,7 +255,7 @@ public class PBoundsHandle extends PHandle {
      * @param flipY whether to allow flipping along the y direction
      */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
-        for (PNode child : getParent().getChildrenReference()) {
+        for (final PNode child : getParent().getChildrenReference()) {
             if (child instanceof PBoundsHandle) {
                 ((PBoundsHandle) child).flipHandleIfNeeded(flipX, flipY);
             }

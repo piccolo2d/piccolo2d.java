@@ -31,7 +31,7 @@ package org.piccolo2d.extras.util;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -471,7 +471,7 @@ public class LineShape implements Shape, MutablePoints {
          *         supported
          */
         public int getWindingRule() {
-            return GeneralPath.WIND_EVEN_ODD;
+            return Path2D.WIND_EVEN_ODD;
         }
 
         /**

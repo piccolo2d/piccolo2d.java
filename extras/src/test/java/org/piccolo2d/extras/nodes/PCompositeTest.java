@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PComposite;
-
 import junit.framework.TestCase;
 
 /**
@@ -37,8 +35,8 @@ import junit.framework.TestCase;
  */
 public class PCompositeTest extends TestCase {
     public void testClone() {
-        PComposite composite = new PComposite();           
-        PComposite cloned = (PComposite) composite.clone();
-        assertNotNull(cloned);      
+        final PComposite composite = new PComposite();
+        final PComposite cloned = (PComposite) composite.clone();
+        assertNotNull(cloned);
     }
 }

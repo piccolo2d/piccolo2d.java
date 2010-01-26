@@ -45,22 +45,22 @@ public final class ShadowUtilsTest extends TestCase {
 
     public void setUp() {
         src = new BufferedImage(TEST_IMAGE_SIZE, TEST_IMAGE_SIZE, BufferedImage.TYPE_INT_ARGB);
-        Paint srcPaint = new Color(255, 0, 0, 200);
-        Graphics2D g = src.createGraphics();
+        final Paint srcPaint = new Color(255, 0, 0, 200);
+        final Graphics2D g = src.createGraphics();
         g.setPaint(srcPaint);
         g.drawRect(25, 25, 50, 50);
         g.dispose();
     }
 
     public void testCreateShadowAcceptsTinyShadow() {
-        BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, 1);
+        final BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, 1);
         assertNotNull(dest);
         assertEquals(TEST_IMAGE_SIZE + 4, dest.getWidth());
         assertEquals(TEST_IMAGE_SIZE + 4, dest.getHeight());
     }
 
     public void testCreateShadowAcceptsHugeShadow() {
-        BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, 25);
+        final BufferedImage dest = ShadowUtils.createShadow(src, shadowPaint, 25);
         assertNotNull(dest);
         assertEquals(TEST_IMAGE_SIZE + 100, dest.getWidth());
         assertEquals(TEST_IMAGE_SIZE + 100, dest.getHeight());
@@ -71,7 +71,7 @@ public final class ShadowUtilsTest extends TestCase {
             ShadowUtils.createShadow(src, shadowPaint, 0);
             fail("Non positive blur radius should fail");
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
 
@@ -79,7 +79,7 @@ public final class ShadowUtilsTest extends TestCase {
             ShadowUtils.createShadow(src, shadowPaint, -1);
             fail("Non positive blur radius should fail");
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
     }
@@ -89,7 +89,7 @@ public final class ShadowUtilsTest extends TestCase {
             ShadowUtils.createShadow(null, Color.BLACK, 4);
             fail("ctr(null, ...) expected IllegalArgumentException");
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             // expected
         }
     }

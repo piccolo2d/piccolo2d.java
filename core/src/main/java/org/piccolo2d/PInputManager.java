@@ -93,6 +93,7 @@ public class PInputManager extends PBasicInputEventHandler implements PRoot.Inpu
     public PInputManager() {        
         lastCanvasPosition = new Point2D.Double();
         currentCanvasPosition = new Point2D.Double();
+        nextInputSource = null;
     }
 
     /**

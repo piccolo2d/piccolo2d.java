@@ -49,7 +49,6 @@ import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
 
-
 /**
  * <b>PHandle</b> is used to modify some aspect of Piccolo when it is dragged.
  * Each handle has a PLocator that it uses to automatically position itself. See
@@ -85,7 +84,8 @@ public class PHandle extends PPath {
     /** The default size for a handle. */
     public static final float DEFAULT_HANDLE_SIZE = 8;
     /** Default shape to use when drawing handles. */
-    public static final Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
+    public static final Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE,
+            DEFAULT_HANDLE_SIZE);
 
     /** Default color to paint handles. */
     public static final Color DEFAULT_COLOR = Color.white;

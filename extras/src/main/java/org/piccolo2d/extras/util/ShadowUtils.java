@@ -32,14 +32,13 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Paint;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 
 /**
  * Static utility methods for creating shadows.
- *
+ * 
  * @since 1.3
  */
 public final class ShadowUtils {
@@ -76,12 +75,12 @@ public final class ShadowUtils {
         if (blurRadius < 1) {
             throw new IllegalArgumentException("blur radius must be greater than zero, was " + blurRadius);
         }
-        int w = src.getWidth(null) + (BLUR_BOUNDS_AFFORDANCE * blurRadius);
-        int h = src.getHeight(null) + (BLUR_BOUNDS_AFFORDANCE * blurRadius);
+        final int w = src.getWidth(null) + BLUR_BOUNDS_AFFORDANCE * blurRadius;
+        final int h = src.getHeight(null) + BLUR_BOUNDS_AFFORDANCE * blurRadius;
 
         // paint src image into mask
-        BufferedImage mask = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = mask.createGraphics();
+        final BufferedImage mask = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g = mask.createGraphics();
         g.drawImage(src, 2 * blurRadius, 2 * blurRadius, null);
 
         // composite mask with shadow paint
@@ -91,8 +90,8 @@ public final class ShadowUtils {
         g.dispose();
 
         // apply convolve op for blur
-        ConvolveOp convolveOp = new ConvolveOp(new GaussianKernel(blurRadius));
-        BufferedImage shadow = convolveOp.filter(mask, null);
+        final ConvolveOp convolveOp = new ConvolveOp(new GaussianKernel(blurRadius));
+        final BufferedImage shadow = convolveOp.filter(mask, null);
         return shadow;
     }
 
@@ -107,7 +106,7 @@ public final class ShadowUtils {
          * @param blurRadius blur radius
          */
         GaussianKernel(final int blurRadius) {
-            super((2 * blurRadius) + 1, (2 * blurRadius) + 1, createKernel(blurRadius));
+            super(2 * blurRadius + 1, 2 * blurRadius + 1, createKernel(blurRadius));
         }
 
         /**
@@ -119,16 +118,16 @@ public final class ShadowUtils {
          *         specified radius
          */
         private static float[] createKernel(final int r) {
-            int w = (2 * r) + 1;
-            float[] kernel = new float[w * w];
-            double m = 2.0d * Math.pow((r / 3.0d), 2);
-            double n = Math.PI * m;
+            final int w = 2 * r + 1;
+            final float[] kernel = new float[w * w];
+            final double m = 2.0d * Math.pow((r / 3.0d), 2);
+            final double n = Math.PI * m;
 
             double sum = 0.0d;
             for (int x = 0; x < w; x++) {
-                int xr2 = (x - r) * (x - r);
+                final int xr2 = (x - r) * (x - r);
                 for (int y = 0; y < w; y++) {
-                    int yr2 = (y - r) * (y - r);
+                    final int yr2 = (y - r) * (y - r);
                     kernel[x * w + y] = (float) (Math.pow(Math.E, -(yr2 + xr2) / m) / n);
                     sum += kernel[x * w + y];
                 }

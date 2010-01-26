@@ -33,7 +33,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * This class relays adjustments to its bounds to its target.
  */

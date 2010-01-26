@@ -39,7 +39,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * <b>PMouseEvent</b> is an event which indicates that a mouse action occurred
  * in a node.
@@ -95,7 +94,7 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwing
         super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiers(),
                 swingEvent.getX(), swingEvent.getY(), swingEvent.getClickCount(), swingEvent.isPopupTrigger());
         this.id = id;
-        this.event = piccoloEvent;
+        event = piccoloEvent;
     }
 
     /**
@@ -103,8 +102,8 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwing
      * 
      * @param id The event type (MOUSE_PRESSED, MOUSE_RELEASED, MOUSE_CLICKED,
      *            MOUSE_ENTERED, MOUSE_EXITED, MOUSE_MOVED, MOUSE_DRAGGED)
-     * @param swingEvent The original swing mouse event when in
-     *            MOUSE_DRAGGED and MOUSE_RELEASED events.
+     * @param swingEvent The original swing mouse event when in MOUSE_DRAGGED
+     *            and MOUSE_RELEASED events.
      * @param pEvent used to query about the event's Piccolo2d context
      * 
      * @return the constructed PSwingEvent
@@ -113,7 +112,7 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwing
         if (pEvent == null) {
             throw new IllegalArgumentException("PInputEvent associated with PSwingEvent may not be null");
         }
-        
+
         if (id == MouseEvent.MOUSE_MOVED || id == MouseEvent.MOUSE_DRAGGED) {
             return new PSwingMouseMotionEvent(id, swingEvent, pEvent);
         }

@@ -31,7 +31,6 @@ package org.piccolo2d.extras.nodes;
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * <b>PComposite</b> is a simple node that makes a group of nodes appear to be a
  * single node when picking and interacting. There is also partial (commented

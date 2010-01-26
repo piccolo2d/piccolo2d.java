@@ -49,7 +49,6 @@ import org.piccolo2d.event.PInputEventFilter;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
 
-
 /**
  * <b>PNavigationEventHandler</b> implements simple focus based navigation. Uses
  * mouse button one or the arrow keys to set a new focus. Animates the canvas
@@ -290,7 +289,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         }
 
         final PNode focusParent = focusNode.getParent();
-        
+
         final Iterator<PNode> i = focusParent.getChildrenIterator();
 
         while (i.hasNext()) {
@@ -328,8 +327,8 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
                 }
         }
 
-        final Point2D highlightCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(focusNode);
-        final Point2D nodeCenter = (Point2D) NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(node);
+        final Point2D highlightCenter = NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(focusNode);
+        final Point2D nodeCenter = NODE_TO_GLOBAL_NODE_CENTER_MAPPING.get(node);
 
         final double ytest1 = nodeCenter.getX() - highlightCenter.getX() + highlightCenter.getY();
         final double ytest2 = -nodeCenter.getX() + highlightCenter.getX() + highlightCenter.getY();
@@ -364,7 +363,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
      * @param point point from which distance is being computed
      */
     public void sortNodesByDistanceFromPoint(final List<PNode> nodes, final Point2D point) {
-        Collections.sort(nodes, new Comparator<PNode>() {           
+        Collections.sort(nodes, new Comparator<PNode>() {
             public int compare(final PNode each1, final PNode each2) {
                 final Point2D center1 = each1.getGlobalFullBounds().getCenter2D();
                 final Point2D center2 = each2.getGlobalFullBounds().getCenter2D();
@@ -465,7 +464,7 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
      * @param camera the camera to be transformed
      */
     protected void fillViewWhiteSpace(final PCamera camera) {
-        final PBounds rootBounds = camera.getRoot().getFullBoundsReference();        
+        final PBounds rootBounds = camera.getRoot().getFullBoundsReference();
 
         if (rootBounds.contains(camera.getViewBounds())) {
             return;
@@ -477,8 +476,8 @@ public class PNavigationEventHandler extends PBasicInputEventHandler {
         // center content.
         double dx = 0;
         double dy = 0;
-        
-        PBounds viewBounds = camera.getViewBounds();
+
+        final PBounds viewBounds = camera.getViewBounds();
 
         if (viewBounds.getWidth() > rootBounds.getWidth()) {
             // then center along x axis.

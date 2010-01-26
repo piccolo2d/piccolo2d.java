@@ -40,7 +40,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 
-
 /**
  * This is a simple node that draws a "3D" rectangle within the bounds of the
  * node. Drawing a 3D rectangle in a zooming environment is a little tricky
@@ -212,5 +211,5 @@ public class P3DRect extends PNode {
         topLeftInnerColor = topLeftOuterColor.darker();
         bottomRightInnerColor = color.brighter();
         bottomRightOuterColor = bottomRightInnerColor.brighter();
-    }    
+    }
 }

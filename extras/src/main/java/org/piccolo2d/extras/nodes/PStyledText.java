@@ -57,7 +57,6 @@ import javax.swing.text.StyleContext;
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PPaintContext;
 
-
 /**
  * @author Lance Good
  */
@@ -249,10 +248,10 @@ public class PStyledText extends PNode {
                             - paragraphRange.startIndex));
 
                     final Font font = extractFont(styleContext, pos, rootElement, attributes);
-                    applyFontAttribute(paragraphRange, attributedString, curElement, font);                    
+                    applyFontAttribute(paragraphRange, attributedString, curElement, font);
                     applyBackgroundAttribute(styleContext, paragraphRange, attributedString, curElement, attributes);
                     applyUnderlineAttribute(paragraphRange, attributedString, curElement, attributes);
-                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);          
+                    applyStrikeThroughAttribute(paragraphRange, attributedString, curElement, attributes);
 
                     // And set the position to the end of the given attribute
                     pos = curElement.getEndOffset();
@@ -435,7 +434,7 @@ public class PStyledText extends PNode {
         final Iterator<AttributedString> contentIterator = stringContents.iterator();
 
         while (contentIterator.hasNext()) {
-            final AttributedString ats = (AttributedString) contentIterator.next();
+            final AttributedString ats = contentIterator.next();
             final AttributedCharacterIterator itr = ats.getIterator();
 
             LineBreakMeasurer measurer;
@@ -468,7 +467,7 @@ public class PStyledText extends PNode {
                     linesList.add(lineInfo);
                 }
 
-                final int lineEnd = ((Integer) breakList.get(0)).intValue();
+                final int lineEnd = (breakList.get(0)).intValue();
                 if (lineEnd <= itr.getRunLimit()) {
                     breakList.remove(0);
                     newLine = true;
@@ -500,7 +499,7 @@ public class PStyledText extends PNode {
             textWidth = Math.max(textWidth, lineWidth);
         }
 
-        lines = (LineInfo[]) linesList.toArray(new LineInfo[linesList.size()]);
+        lines = linesList.toArray(new LineInfo[linesList.size()]);
 
         constrainDimensionsIfNeeded(textWidth, textHeight);
     }
@@ -542,7 +541,7 @@ public class PStyledText extends PNode {
     // Because swing doesn't use fractional font metrics by default, we use
     // LineBreakMeasurer to find out where Swing is going to break them
     private ArrayList<Integer> extractLineBreaks(final AttributedCharacterIterator itr, final LineBreakMeasurer measurer) {
-        ArrayList<Integer> breakList = new ArrayList<Integer>();
+        final ArrayList<Integer> breakList = new ArrayList<Integer>();
         while (measurer.getPosition() < itr.getEndIndex()) {
             if (constrainWidthToTextWidth) {
                 measurer.nextLayout(Float.MAX_VALUE);
@@ -604,7 +603,7 @@ public class PStyledText extends PNode {
             }
 
             for (int j = 0; j < lineInfo.segments.size(); j++) {
-                final SegmentInfo sInfo = (SegmentInfo) lineInfo.segments.get(j);
+                final SegmentInfo sInfo = lineInfo.segments.get(j);
                 final float width = sInfo.layout.getAdvance();
 
                 if (sInfo.background != null) {
@@ -702,8 +701,8 @@ public class PStyledText extends PNode {
      * Simple class to represent an range within the document.
      */
     protected static class RunInfo {
-        private int startIndex;
-        private int endIndex;
+        private final int startIndex;
+        private final int endIndex;
 
         /**
          * Constructs a RunInfo representing the range within the document from

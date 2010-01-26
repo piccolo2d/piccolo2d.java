@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PClip;
-
 import junit.framework.TestCase;
 
 /**
@@ -37,8 +35,8 @@ import junit.framework.TestCase;
  */
 public class PClipTest extends TestCase {
     public void testClone() {
-        PClip clip = new PClip();           
-        PClip cloned = (PClip) clip.clone();
-        assertNotNull(cloned);      
+        final PClip clip = new PClip();
+        final PClip cloned = (PClip) clip.clone();
+        assertNotNull(cloned);
     }
 }

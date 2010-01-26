@@ -34,7 +34,6 @@ import org.piccolo2d.PLayer;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.extras.nodes.PCacheCamera;
 
-
 /**
  * An extension of PCanvas that automatically installs a PCacheCamera.
  * 

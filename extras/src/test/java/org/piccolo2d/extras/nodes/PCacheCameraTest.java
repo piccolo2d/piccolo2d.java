@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PCacheCamera;
-
 import junit.framework.TestCase;
 
 /**
@@ -37,8 +35,8 @@ import junit.framework.TestCase;
  */
 public class PCacheCameraTest extends TestCase {
     public void testClone() {
-        PCacheCamera camera = new PCacheCamera();        
-        PCacheCamera cloned = (PCacheCamera) camera.clone();
-        assertNotNull(cloned);      
+        final PCacheCamera camera = new PCacheCamera();
+        final PCacheCamera cloned = (PCacheCamera) camera.clone();
+        assertNotNull(cloned);
     }
 }

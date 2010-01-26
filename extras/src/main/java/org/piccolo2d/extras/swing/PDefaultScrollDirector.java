@@ -87,8 +87,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
      */
     public void install(final PViewport targetViewPort, final PCanvas targetView) {
         scrollPane = (PScrollPane) targetViewPort.getParent();
-        this.viewPort = targetViewPort;
-        this.view = targetView;
+        viewPort = targetViewPort;
+        view = targetView;
 
         if (targetView != null) {
             camera = targetView.getCamera();
@@ -137,7 +137,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
             // First we compute the union of all the layers
             final PBounds layerBounds = new PBounds();
 
-            for (PLayer layer : camera.getLayersReference()) {
+            for (final PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
@@ -166,7 +166,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
             // First we compute the union of all the layers
             final PBounds bounds = new PBounds();
 
-            for (PLayer layer : camera.getLayersReference()) {
+            for (final PLayer layer : camera.getLayersReference()) {
                 bounds.add(layer.getFullBoundsReference());
             }
 
@@ -201,7 +201,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
         // Get the union of all the layers' bounds
         final PBounds layerBounds = new PBounds();
 
-        for (PLayer layer : camera.getLayersReference()) {
+        for (final PLayer layer : camera.getLayersReference()) {
             layerBounds.add(layer.getFullBoundsReference());
         }
 
@@ -272,7 +272,7 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            for (PLayer layer : camera.getLayersReference()) {
+            for (final PLayer layer : camera.getLayersReference()) {
                 layerBounds.add(layer.getFullBoundsReference());
             }
 

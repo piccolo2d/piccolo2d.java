@@ -34,18 +34,16 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-import org.piccolo2d.extras.pswing.PSwingRepaintManager;
-import org.piccolo2d.util.PPaintContext;
-
 import junit.framework.TestCase;
+
+import org.piccolo2d.util.PPaintContext;
 
 @SuppressWarnings("serial")
 public class PSwingTest extends TestCase {
@@ -121,18 +119,18 @@ public class PSwingTest extends TestCase {
                 });
 
     }
-    
+
     public void testAddingSwingComponentToWrappedHierarchyMakesItNotDoubleBuffer() {
         final JPanel panel = new JPanel();
         new PSwing(panel);
-        
+
         final JComponent child = new JLabel("Test Component");
         child.setDoubleBuffered(true);
         panel.add(child);
         assertFalse(child.isDoubleBuffered());
     }
 
-    public void assertDelayedSuccess(String message, int delay, Predicate p) {
+    public void assertDelayedSuccess(final String message, final int delay, final Predicate p) {
         int remainingTries = delay / 50;
         while (remainingTries > 0) {
             if (p.isTrue()) {
@@ -142,14 +140,14 @@ public class PSwingTest extends TestCase {
             try {
                 Thread.sleep(50);
             }
-            catch (InterruptedException e) {
+            catch (final InterruptedException e) {
                 // do nothing
             }
         }
         fail(message);
     }
-    
-    public void assertDelayedSuccess(int delay, Predicate p) {
+
+    public void assertDelayedSuccess(final int delay, final Predicate p) {
         assertDelayedSuccess("Failed asserting delayed success", delay, p);
     }
 
@@ -169,10 +167,10 @@ public class PSwingTest extends TestCase {
         panel.setBounds(0, 0, 100, 100);
         final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
 
-        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = image.createGraphics();
+        final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics = image.createGraphics();
         graphics.setTransform(AffineTransform.getScaleInstance(0.01, 0.01));
-        PPaintContext paintContext = new PPaintContext(graphics);
+        final PPaintContext paintContext = new PPaintContext(graphics);
 
         pSwing.paint(paintContext);
         assertTrue(pSwing.isPaintedGreek());
@@ -185,10 +183,10 @@ public class PSwingTest extends TestCase {
         panel.setBounds(0, 0, 100, 100);
         final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
 
-        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = image.createGraphics();
+        final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics = image.createGraphics();
         graphics.setTransform(AffineTransform.getScaleInstance(5, 5));
-        PPaintContext paintContext = new PPaintContext(graphics);
+        final PPaintContext paintContext = new PPaintContext(graphics);
 
         pSwing.paint(paintContext);
         assertFalse(pSwing.isPaintedGreek());
@@ -200,9 +198,9 @@ public class PSwingTest extends TestCase {
         panel.setBounds(0, 0, 100, 100);
         final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
         pSwing.setGreekThreshold(2);
-        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = image.createGraphics();
-        PPaintContext paintContext = new PPaintContext(graphics);
+        final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics = image.createGraphics();
+        final PPaintContext paintContext = new PPaintContext(graphics);
 
         pSwing.paint(paintContext);
         assertTrue(pSwing.isPaintedGreek());
@@ -220,31 +218,30 @@ public class PSwingTest extends TestCase {
 
     public void testAssertSettingJLabelWidthTooSmallGrowsIt() {
         final JLabel label = new JLabel("Hello");
-        PSwingCanvas canvas = new PSwingCanvas();
+        final PSwingCanvas canvas = new PSwingCanvas();
         canvas.setBounds(0, 0, 100, 100);
-        final MockPaintingPSwing swing = new MockPaintingPSwing(label);        
-        assertDelayedSuccess(500,
-                new Predicate() {
+        final MockPaintingPSwing swing = new MockPaintingPSwing(label);
+        assertDelayedSuccess(500, new Predicate() {
 
-                    public boolean isTrue() {
-                        return label.getMinimumSize().getWidth() != 0;
-                    }
-                });
+            public boolean isTrue() {
+                return label.getMinimumSize().getWidth() != 0;
+            }
+        });
         swing.setWidth(10);
         canvas.getLayer().addChild(swing);
         canvas.doLayout();
         // While paint, it uses the graphics element to determine the font's
         // display size and hence determine minimum size of JLabel.
         swing.paint();
-        
+
         assertFalse(10 == swing.getWidth());
     }
 
     public void testAssertSettingJButtonWidthTooSmallGrowsIt() {
-        JButton label = new JButton("Hello");
-        PSwingCanvas canvas = new PSwingCanvas();
+        final JButton label = new JButton("Hello");
+        final PSwingCanvas canvas = new PSwingCanvas();
         canvas.setBounds(0, 0, 100, 100);
-        MockPaintingPSwing swing = new MockPaintingPSwing(label);
+        final MockPaintingPSwing swing = new MockPaintingPSwing(label);
         assertFalse(label.getMinimumSize().getWidth() == 0);
         swing.setWidth(10);
         canvas.getLayer().addChild(swing);
@@ -256,16 +253,16 @@ public class PSwingTest extends TestCase {
     }
 
     public void testPSwingAttachesItselfToItsCanvasWhenAddedToItsSceneGraph() {
-        PSwingCanvas canvas1 = new PSwingCanvas();
-        PSwing label = new PSwing(new JLabel("Hello"));
+        final PSwingCanvas canvas1 = new PSwingCanvas();
+        final PSwing label = new PSwing(new JLabel("Hello"));
         assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
         canvas1.getLayer().addChild(label);
         assertEquals(1, canvas1.getSwingWrapper().getComponentCount());
     }
 
     public void testPSwingRemovesItselfFromItsCanvasWhenRemovedFromScene() {
-        PSwingCanvas canvas1 = new PSwingCanvas();
-        PSwing label = new PSwing(new JLabel("Hello"));
+        final PSwingCanvas canvas1 = new PSwingCanvas();
+        final PSwing label = new PSwing(new JLabel("Hello"));
         canvas1.getLayer().addChild(label);
         assertEquals(1, canvas1.getSwingWrapper().getComponentCount());
         label.removeFromParent();
@@ -273,9 +270,9 @@ public class PSwingTest extends TestCase {
     }
 
     public void testPSwingReattachesItselfWhenMovedFromCanvasToCanvas() {
-        PSwingCanvas canvas1 = new PSwingCanvas();
-        PSwingCanvas canvas2 = new PSwingCanvas();
-        PSwing label = new PSwing(new JLabel("Hello"));
+        final PSwingCanvas canvas1 = new PSwingCanvas();
+        final PSwingCanvas canvas2 = new PSwingCanvas();
+        final PSwing label = new PSwing(new JLabel("Hello"));
         canvas1.getLayer().addChild(label);
         canvas2.getLayer().addChild(label);
         assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
@@ -286,37 +283,39 @@ public class PSwingTest extends TestCase {
         private boolean paintedGreek;
         private boolean paintedComponent;
 
-        public MockPaintingPSwing(JComponent component) {
+        public MockPaintingPSwing(final JComponent component) {
             super(component);
-        }       
+        }
 
-        public void paintOnto(BufferedImage image) {
-            PPaintContext paintContext = new PPaintContext(image.createGraphics());
+        public void paintOnto(final BufferedImage image) {
+            final PPaintContext paintContext = new PPaintContext(image.createGraphics());
             paint(paintContext);
         }
 
         public BufferedImage paint() {
-            BufferedImage image = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
+            final BufferedImage image = new BufferedImage((int) getWidth(), (int) getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
             paintOnto(image);
             return image;
         }
 
         public BufferedImage paintComponent() {
-            BufferedImage image = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
+            final BufferedImage image = new BufferedImage((int) getWidth(), (int) getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
             paintComponentOnto(image);
             return image;
         }
 
-        public void paintComponentOnto(BufferedImage image) {            
+        public void paintComponentOnto(final BufferedImage image) {
             paint(image.createGraphics());
         }
 
-        public void paint(Graphics2D paintContext) {
+        public void paint(final Graphics2D paintContext) {
             super.paint(paintContext);
             paintedComponent = true;
         }
 
-        public void paintAsGreek(Graphics2D paintContext) {
+        public void paintAsGreek(final Graphics2D paintContext) {
             super.paintAsGreek(paintContext);
             paintedGreek = true;
         }

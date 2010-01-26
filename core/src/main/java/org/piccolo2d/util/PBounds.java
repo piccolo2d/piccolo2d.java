@@ -73,7 +73,7 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
      */
     public PBounds(final PBounds aBounds) {
         this(aBounds.x, aBounds.y, aBounds.width, aBounds.height);
-        isEmpty = aBounds.isEmpty();
+        isEmpty = aBounds.isEmpty;
     }
 
     /**
@@ -122,6 +122,17 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
         return new PBounds(this);
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof PBounds) {
+            return equals((PBounds)o);
+        }
+        return false;
+    }
+    
+    public boolean equals(PBounds bounds) {
+        return super.equals(bounds) && this.isEmpty == bounds.isEmpty;
+    }
+    
     /**
      * Returns true if this bounds has been flagged as empty. Not necessarily if
      * it is empty.

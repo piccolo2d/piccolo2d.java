@@ -94,7 +94,7 @@ public class SwingLayoutNode extends PNode {
      * @param container Container in which child nodes will effectively be laid
      *            out
      */
-    public SwingLayoutNode(Container container) {
+    public SwingLayoutNode(final Container container) {
         this.container = container;
         propertyChangeListener = new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent event) {
@@ -116,7 +116,7 @@ public class SwingLayoutNode extends PNode {
      *            specified
      */
     public void setAnchor(final Anchor anchor) {
-        this.defaultAnchor = anchor;
+        defaultAnchor = anchor;
     }
 
     /**
@@ -254,7 +254,7 @@ public class SwingLayoutNode extends PNode {
      * @param anchor specifies the location from which layout takes place
      */
     public void addChildren(final Collection<PNode> nodes, final Object constraints, final Anchor anchor) {
-        for (PNode node : nodes) {
+        for (final PNode node : nodes) {
             addChild(node, constraints, anchor);
         }
     }

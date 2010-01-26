@@ -30,11 +30,9 @@ package org.piccolo2d.extras;
 
 import java.awt.event.KeyListener;
 
-import org.piccolo2d.PCanvas;
-import org.piccolo2d.extras.PFrame;
-
 import junit.framework.TestCase;
 
+import org.piccolo2d.PCanvas;
 
 /**
  * Unit test for PFrame.
@@ -42,12 +40,12 @@ import junit.framework.TestCase;
 public class PFrameTest extends TestCase {
     @SuppressWarnings("serial")
     public void testCanvasIsValidWithDefaultConstructor() {
-        PFrame frame = new PFrame() {
-            public void setVisible(boolean visible) {
+        final PFrame frame = new PFrame() {
+            public void setVisible(final boolean visible) {
                 // why oh why is PFrame visible by default
             }
         };
-        PCanvas canvas = frame.getCanvas();
+        final PCanvas canvas = frame.getCanvas();
         assertNotNull(canvas);
         assertNotNull(canvas.getLayer());
         assertNotNull(canvas.getCamera());
@@ -56,8 +54,8 @@ public class PFrameTest extends TestCase {
 
     @SuppressWarnings("serial")
     public void testDefaultsToWindowed() {
-        PFrame frame = new PFrame() {
-            public void setVisible(boolean visible) {
+        final PFrame frame = new PFrame() {
+            public void setVisible(final boolean visible) {
                 // why oh why is PFrame visible by default
             }
         };
@@ -65,14 +63,13 @@ public class PFrameTest extends TestCase {
     }
 
     public void testFullScreenModeInstallsEscapeListeners() {
-        PFrame frame = new PFrame();        
-        frame.setFullScreenMode(true);        
-        
+        final PFrame frame = new PFrame();
+        frame.setFullScreenMode(true);
 
-        KeyListener[] listeners = frame.getCanvas().getKeyListeners();
+        final KeyListener[] listeners = frame.getCanvas().getKeyListeners();
         assertEquals(1, listeners.length);
 
-        KeyListener listener = listeners[0];
+        final KeyListener listener = listeners[0];
         assertNotNull(listener);
         frame.setVisible(false);
         frame.setFullScreenMode(false);

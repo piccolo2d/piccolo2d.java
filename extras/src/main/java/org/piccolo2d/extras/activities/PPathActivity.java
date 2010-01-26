@@ -105,10 +105,10 @@ public abstract class PPathActivity extends PInterpolatingActivity {
      */
     public void setKnots(final float[] newKnots) {
         if (newKnots == null) {
-            this.knots = null;
+            knots = null;
         }
         else {
-            this.knots = (float[]) newKnots.clone();
+            knots = newKnots.clone();
         }
     }
 
@@ -121,7 +121,7 @@ public abstract class PPathActivity extends PInterpolatingActivity {
         if (knots == null) {
             return null;
         }
-        return (float[]) knots.clone();
+        return knots.clone();
     }
 
     /**
@@ -183,7 +183,8 @@ public abstract class PPathActivity extends PInterpolatingActivity {
      * matches the given progress and knots.
      * 
      * @param zeroToOne how far between the knots the activity is
-     * @param startKnot knot that defines the start of this particular interpolation
+     * @param startKnot knot that defines the start of this particular
+     *            interpolation
      * @param endKnot knot that defines the end of this particular interpolation
      */
     public abstract void setRelativeTargetValue(float zeroToOne, int startKnot, int endKnot);

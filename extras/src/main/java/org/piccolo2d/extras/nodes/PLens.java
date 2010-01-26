@@ -39,7 +39,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragEventHandler;
 import org.piccolo2d.nodes.PPath;
 
-
 /**
  * <b>PLens</b> is a simple default lens implementation for Piccolo2D. See
  * piccolo2d/examples LensExample for one possible use of this lens. Lens's are

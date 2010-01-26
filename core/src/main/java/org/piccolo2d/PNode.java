@@ -1142,7 +1142,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      *         to this node.
      */
     public PAffineTransform getGlobalToLocalTransform(final PAffineTransform dest) {
-        PAffineTransform result = getLocalToGlobalTransform(dest);
+        final PAffineTransform result = getLocalToGlobalTransform(dest);
         try {
             result.setTransform(result.createInverse());
         }
@@ -1665,7 +1665,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return union of children bounds
      */
     public PBounds getUnionOfChildrenBounds(final PBounds dstBounds) {
-        PBounds resultBounds;
+        final PBounds resultBounds;
         if (dstBounds == null) {
             resultBounds = new PBounds();
         }
@@ -1674,7 +1674,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             resultBounds.resetToZero();
         }
 
-        for (PNode each : children) {
+        for (final PNode each : children) {
             resultBounds.add(each.getFullBoundsReference());
         }
 
@@ -1818,7 +1818,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         setBoundsChanged(true);
         firePropertyChange(PROPERTY_CODE_BOUNDS, PROPERTY_BOUNDS, null, bounds);
 
-        for (PNode each : children) {
+        for (final PNode each : children) {
             each.parentBoundsChanged();
         }
     }
@@ -1887,30 +1887,25 @@ public class PNode implements Cloneable, Serializable, Printable {
             if (childBoundsInvalid || childBoundsVolatile) {
                 childBoundsVolatile = false;
 
-                for (PNode each : children) {
+                for (final PNode each : children) {
                     childBoundsVolatile |= each.validateFullBounds();
                 }
             }
 
             // 4. Now that my children's bounds are valid and my own bounds are
             // valid run any layout algorithm here. Note that if you try to
-            // layout volatile
-            // children piccolo will most likely start a "soft" infinite loop.
-            // It won't freeze
-            // your program, but it will make an infinite number of calls to
-            // SwingUtilities
-            // invoke later. You don't want to do that.
+            // layout volatile children Piccolo2D will most likely start a
+            // "soft"
+            // infinite loop. It won't freeze your program, but it will make an
+            // infinite number of calls to SwingUtilities invoke later. You
+            // don't want to do that.
             layoutChildren();
 
             // 5. If the full bounds cache is invalid then recompute the full
             // bounds cache here after our own bounds and the children's bounds
             // have been computed above.
             if (fullBoundsInvalid) {
-                final double oldX = fullBoundsCache.x;
-                final double oldY = fullBoundsCache.y;
-                final double oldWidth = fullBoundsCache.width;
-                final double oldHeight = fullBoundsCache.height;
-                final boolean oldEmpty = fullBoundsCache.isEmpty();
+                final PBounds oldFullBounds = (PBounds) fullBoundsCache.clone();
 
                 // 6. This will call getFullBoundsReference on all of the
                 // children. So if the above
@@ -1919,16 +1914,12 @@ public class PNode implements Cloneable, Serializable, Printable {
                 // validated again here.
                 fullBoundsCache = computeFullBounds(fullBoundsCache);
 
-                final boolean fullBoundsChanged = fullBoundsCache.x != oldX || fullBoundsCache.y != oldY
-                        || fullBoundsCache.width != oldWidth || fullBoundsCache.height != oldHeight
-                        || fullBoundsCache.isEmpty() != oldEmpty;
-
                 // 7. If the new full bounds cache differs from the previous
                 // cache then
                 // tell our parent to invalidate their full bounds. This is how
                 // bounds changes
                 // deep in the tree percolate up.
-                if (fullBoundsChanged) {
+                if (!oldFullBounds.equals(fullBoundsCache)) {
                     if (parent != null) {
                         parent.invalidateFullBounds();
                     }
@@ -1938,9 +1929,8 @@ public class PNode implements Cloneable, Serializable, Printable {
                     // full bounds. The
                     // new bounds will be computed later in the validatePaint
                     // pass.
-                    if (paintInvalid && !oldEmpty) {
-                        TEMP_REPAINT_BOUNDS.setRect(oldX, oldY, oldWidth, oldHeight);
-                        repaintFrom(TEMP_REPAINT_BOUNDS, this);
+                    if (paintInvalid && !oldFullBounds.isEmpty()) {
+                        repaintFrom(oldFullBounds, this);
                     }
                 }
             }
@@ -2554,7 +2544,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (getChildPaintInvalid()) {
-            for (PNode each : children) {
+            for (final PNode each : children) {
                 each.validateFullPaint();
             }
 
@@ -2768,7 +2758,7 @@ public class PNode implements Cloneable, Serializable, Printable {
             paint(paintContext);
         }
 
-        for (PNode each : children) {
+        for (final PNode each : children) {
             each.fullPaint(paintContext);
         }
 
@@ -2873,8 +2863,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         final double nodeWidth = nodeBounds.getWidth();
         final double nodeHeight = nodeBounds.getHeight();
 
-        double imageRatio = imageWidth / (imageHeight * 1.0);
-        double nodeRatio = nodeWidth / nodeHeight;
+        final double imageRatio = imageWidth / (imageHeight * 1.0);
+        final double nodeRatio = nodeWidth / nodeHeight;
         double scale;
         switch (fillStrategy) {
             case FILL_STRATEGY_ASPECT_FIT:
@@ -3094,8 +3084,8 @@ public class PNode implements Cloneable, Serializable, Printable {
         // 1. try picking this node before its children
         // 2. try picking a child recursively
         // 3. try picking this node after its children
-        if ((thisPickable && pick(pickPath)) || (getChildrenPickable() && pickChild(pickPath))
-                || (thisPickable && pickAfterChildren(pickPath))) {
+        if (thisPickable && pick(pickPath) || getChildrenPickable() && pickChild(pickPath) || thisPickable
+                && pickAfterChildren(pickPath)) {
             return true;
         }
 
@@ -3106,7 +3096,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     private boolean pickChild(final PPickPath pickPath) {
-        for (PNode each : reverse(children)) {
+        for (final PNode each : reverse(children)) {
             if (each.fullPick(pickPath)) {
                 return true;
             }
@@ -3134,7 +3124,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 results.add(this);
             }
 
-            for (PNode each : reverse(children)) {
+            for (final PNode each : reverse(children)) {
                 each.findIntersectingNodes(localBounds, results);
             }
         }
@@ -3209,7 +3199,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param nodes a collection of nodes to be added to this node
      */
     public void addChildren(final Collection<PNode> nodes) {
-        for (PNode each : nodes) {
+        for (final PNode each : nodes) {
             addChild(each);
         }
     }
@@ -3368,7 +3358,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the removed child
      */
     public PNode removeChild(final int index) {
-        final PNode child = (PNode) children.remove(index);
+        final PNode child = children.remove(index);
 
         if (children.isEmpty()) {
             children = EMPTY_CHILDREN;
@@ -3390,7 +3380,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param childrenNodes the collection of children to remove
      */
     public void removeChildren(final Collection<? extends PNode> childrenNodes) {
-        for (PNode each : childrenNodes) {
+        for (final PNode each : childrenNodes) {
             removeChild(each);
         }
     }
@@ -3400,7 +3390,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * efficient then removing each child individually.
      */
     public void removeAllChildren() {
-        for (PNode each : children) {
+        for (final PNode each : children) {
             each.setParent(null);
         }
         children = EMPTY_CHILDREN;
@@ -3494,7 +3484,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @return the child node at the specified index
      */
     public PNode getChild(final int index) {
-        return (PNode) children.get(index);
+        return children.get(index);
     }
 
     /**
@@ -3564,7 +3554,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         }
 
         if (filter == null || filter.acceptChildrenOf(this)) {
-            for (PNode each : children) {
+            for (final PNode each : children) {
                 each.getAllNodes(filter, results);
             }
         }

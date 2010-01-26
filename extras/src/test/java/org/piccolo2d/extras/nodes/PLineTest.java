@@ -30,8 +30,6 @@ package org.piccolo2d.extras.nodes;
 
 import java.awt.Color;
 
-import org.piccolo2d.extras.nodes.PLine;
-
 import junit.framework.TestCase;
 
 /**
@@ -39,10 +37,10 @@ import junit.framework.TestCase;
  */
 public class PLineTest extends TestCase {
     public void testClone() {
-        PLine line = new PLine();
+        final PLine line = new PLine();
         line.setStrokePaint(Color.RED);
-        PLine cloned = (PLine) line.clone();
-        assertNotNull(cloned);         
+        final PLine cloned = (PLine) line.clone();
+        assertNotNull(cloned);
         assertEquals(Color.RED, cloned.getStrokePaint());
         assertNotSame(line.getLineReference(), cloned.getLineReference());
     }

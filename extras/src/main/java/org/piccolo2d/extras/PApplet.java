@@ -33,7 +33,6 @@ import javax.swing.SwingUtilities;
 
 import org.piccolo2d.PCanvas;
 
-
 /**
  * <b>PApplet</b> is meant to be subclassed by applications that just need a
  * PCanvas embedded in a web page.

@@ -138,7 +138,7 @@ public class PNotificationCenter {
     private Method extractCallbackMethod(final Object listener, final String methodName) {
         Method method = null;
         try {
-            Class<?>[] classes = new Class<?>[1];
+            final Class<?>[] classes = new Class<?>[1];
             classes[0] = PNotification.class;
             method = listener.getClass().getMethod(methodName, classes);
         }
@@ -210,7 +210,7 @@ public class PNotificationCenter {
         processKeyQueue();
 
         final List<NotificationKey> keys = matchingKeys(notificationName, object);
-        for (NotificationKey key : keys) {
+        for (final NotificationKey key : keys) {
             removeListener(listener, key);
         }
     }
@@ -296,7 +296,7 @@ public class PNotificationCenter {
         final Iterator<NotificationTarget> listenerIterator = listeners.iterator();
 
         while (listenerIterator.hasNext()) {
-            listener = (NotificationTarget) listenerIterator.next();
+            listener = listenerIterator.next();
             if (listener.get() == null) {
                 listenerIterator.remove();
             }
@@ -308,7 +308,7 @@ public class PNotificationCenter {
 
     private void notifyListener(final PNotification notification, final NotificationTarget listener) {
         try {
-            Object[] objects = new Object[1];
+            final Object[] objects = new Object[1];
             objects[0] = notification;
             listener.getMethod().invoke(listener.get(), objects);
         }
@@ -334,7 +334,7 @@ public class PNotificationCenter {
         final NotificationKey searchKey = new NotificationKey(name, object);
         final Iterator<NotificationKey> it = listenersMap.keySet().iterator();
         while (it.hasNext()) {
-            final NotificationKey key = (NotificationKey) it.next();
+            final NotificationKey key = it.next();
             if (searchKey.equals(key)) {
                 result.add(key);
             }

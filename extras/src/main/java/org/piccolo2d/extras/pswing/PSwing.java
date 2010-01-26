@@ -60,7 +60,6 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 
-
 /*
  This message was sent to Sun on August 27, 1999
 
@@ -283,7 +282,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      */
     private final ContainerListener doubleBufferRemover = new ContainerAdapter() {
         public void componentAdded(final ContainerEvent event) {
-            Component childComponent = event.getChild();
+            final Component childComponent = event.getChild();
             if (childComponent != null && childComponent instanceof JComponent) {
                 disableDoubleBuffering(((JComponent) childComponent));
             }
@@ -340,7 +339,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
         updateBounds();
         listenForCanvas(this);
-    }   
+    }
 
     /**
      * Ensures the bounds of the underlying component are accurate, and sets the
@@ -619,7 +618,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      */
     private boolean isListeningTo(final PNode node) {
         for (int i = 0; i < listeningTo.size(); i++) {
-            final PNode pNode = (PNode) listeningTo.get(i);
+            final PNode pNode = listeningTo.get(i);
             if (pNode == node) {
                 return true;
             }

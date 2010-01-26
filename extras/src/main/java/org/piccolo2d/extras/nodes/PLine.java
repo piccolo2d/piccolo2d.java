@@ -46,7 +46,6 @@ import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PUtil;
 
-
 /**
  * <b>PLine</b> a class for drawing multisegment lines.
  * 
@@ -153,10 +152,10 @@ public class PLine extends PNode {
                 .getHeight()
                 - lineBounds.getHeight());
 
-        double adjustedX = x + strokeOutset / 2;
-        double adjustedY = y + strokeOutset / 2;
-        double adjustedWidth = width - strokeOutset;
-        double adjustedHeight = height - strokeOutset;
+        final double adjustedX = x + strokeOutset / 2;
+        final double adjustedY = y + strokeOutset / 2;
+        final double adjustedWidth = width - strokeOutset;
+        final double adjustedHeight = height - strokeOutset;
 
         TEMP_TRANSFORM.setToIdentity();
         TEMP_TRANSFORM.translate(adjustedX, adjustedY);
@@ -254,7 +253,7 @@ public class PLine extends PNode {
         final Point2D result;
         if (dst == null) {
             result = new Point2D.Double();
-        } 
+        }
         else {
             result = dst;
         }

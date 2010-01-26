@@ -47,7 +47,6 @@ import javax.swing.plaf.ScrollPaneUI;
 
 import org.piccolo2d.PCanvas;
 
-
 /**
  * A simple extension to a standard scroll pane that uses the jazz version of
  * the viewport by default. Also uses the jazz version of ScrollPaneLayout
@@ -69,7 +68,7 @@ public class PScrollPane extends JScrollPane {
 
         public void adjustmentValueChanged(final AdjustmentEvent event) {
             if (event.getSource() instanceof JScrollBar) {
-                JScrollBar scrollBar = (JScrollBar) event.getSource();
+                final JScrollBar scrollBar = (JScrollBar) event.getSource();
 
                 setAdjusting(scrollBar.getValueIsAdjusting());
             }
@@ -84,7 +83,7 @@ public class PScrollPane extends JScrollPane {
          */
         private void setAdjusting(final boolean isAdjusting) {
             if (isAdjusting != lastAdjustingState) {
-                Component c = getViewport().getView();
+                final Component c = getViewport().getView();
                 if (c instanceof PCanvas) {
                     ((PCanvas) c).setInteracting(isAdjusting);
                 }
@@ -117,7 +116,8 @@ public class PScrollPane extends JScrollPane {
      * Intercepts the vertical scroll bar setter to ensure that the adjustment
      * listener is installed appropriately.
      * 
-     * @param newVerticalScrollBar the new vertical scroll bar to use with this PScrollPane
+     * @param newVerticalScrollBar the new vertical scroll bar to use with this
+     *            PScrollPane
      */
     public void setVerticalScrollBar(final JScrollBar newVerticalScrollBar) {
         if (verticalScrollBar != null) {
@@ -132,7 +132,8 @@ public class PScrollPane extends JScrollPane {
      * Intercepts the horizontal scroll bar setter to ensure that the adjustment
      * listener is installed appropriately.
      * 
-     * @param newHorizontalScrollBar the new horizontal scroll bar to use with this PScrollPane
+     * @param newHorizontalScrollBar the new horizontal scroll bar to use with
+     *            this PScrollPane
      */
     public void setHorizontalScrollBar(final JScrollBar newHorizontalScrollBar) {
         if (horizontalScrollBar != null) {
@@ -305,7 +306,7 @@ public class PScrollPane extends JScrollPane {
                 return;
             }
 
-            Component view = vp.getView();
+            final Component view = vp.getView();
             if (view == null) {
                 return;
             }

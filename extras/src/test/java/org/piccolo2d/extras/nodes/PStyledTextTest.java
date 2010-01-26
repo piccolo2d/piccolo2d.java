@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PStyledText;
-
 import junit.framework.TestCase;
 
 /**
@@ -37,8 +35,8 @@ import junit.framework.TestCase;
  */
 public final class PStyledTextTest extends TestCase {
     public void testClone() {
-        PStyledText text = new PStyledText();
-        PStyledText clone = (PStyledText) text.clone();
+        final PStyledText text = new PStyledText();
+        final PStyledText clone = (PStyledText) text.clone();
         assertNotNull(clone);
     }
 }

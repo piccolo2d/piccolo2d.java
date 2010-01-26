@@ -132,8 +132,8 @@ public class PComboBox extends JComboBox implements Serializable {
      * @param canvasEnvirnoment canvas on which the pSwing node is embedded
      */
     public void setEnvironment(final PSwing pSwingNode, final PSwingCanvas canvasEnvirnoment) {
-        this.pSwing = pSwingNode;
-        this.canvas = canvasEnvirnoment;
+        pSwing = pSwingNode;
+        canvas = canvasEnvirnoment;
     }
 
     /**

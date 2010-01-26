@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 import org.piccolo2d.activities.PInterpolatingActivity;
 
-
 /**
  * <b>PPositionPathActivity</b> animates through a sequence of points.
  * 
@@ -109,7 +108,7 @@ public class PPositionPathActivity extends PPathActivity {
             final Target target, final float[] knots, final Point2D[] positions) {
         super(duration, stepRate, loopCount, mode, knots);
         this.target = target;
-        this.positions = (Point2D[]) positions.clone();
+        this.positions = positions.clone();
     }
 
     /**
@@ -128,7 +127,7 @@ public class PPositionPathActivity extends PPathActivity {
      * @return array of points on the path
      */
     public Point2D[] getPositions() {
-        return (Point2D[]) positions.clone();
+        return positions.clone();
     }
 
     /**
@@ -148,7 +147,7 @@ public class PPositionPathActivity extends PPathActivity {
      * @param positions new animation positions
      */
     public void setPositions(final Point2D[] positions) {
-        this.positions = (Point2D[]) positions.clone();
+        this.positions = positions.clone();
     }
 
     /**
@@ -201,8 +200,8 @@ public class PPositionPathActivity extends PPathActivity {
             }
 
             if (points.size() > 1) {
-                final Point2D last = (Point2D) points.get(points.size() - 2);
-                final Point2D current = (Point2D) points.get(points.size() - 1);
+                final Point2D last = points.get(points.size() - 2);
+                final Point2D current = points.get(points.size() - 1);
                 distanceSum += last.distance(current);
             }
 
@@ -214,7 +213,7 @@ public class PPositionPathActivity extends PPathActivity {
         final float[] newKnots = new float[size];
 
         for (int i = 0; i < size; i++) {
-            newPositions[i] = (Point2D) points.get(i);
+            newPositions[i] = points.get(i);
             if (i > 0) {
                 final float dist = (float) newPositions[i - 1].distance(newPositions[i]);
                 newKnots[i] = newKnots[i - 1] + dist / distanceSum;

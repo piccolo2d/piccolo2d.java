@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PNodeCache;
-
 import junit.framework.TestCase;
 
 /**
@@ -37,8 +35,8 @@ import junit.framework.TestCase;
  */
 public class PNodeCacheTest extends TestCase {
     public void testClone() {
-        PNodeCache line = new PNodeCache();       
-        PNodeCache cloned = (PNodeCache) line.clone();
-        assertNotNull(cloned);                   
+        final PNodeCache line = new PNodeCache();
+        final PNodeCache cloned = (PNodeCache) line.clone();
+        assertNotNull(cloned);
     }
 }

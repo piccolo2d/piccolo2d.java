@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PLens;
-
 import junit.framework.TestCase;
 
 /**
@@ -37,14 +35,15 @@ import junit.framework.TestCase;
  */
 public class PLensTest extends TestCase {
     public void testClone() {
-        PLens lens = new PLens();           
+        final PLens lens = new PLens();
         assertTrue(lens.getInputEventListeners().length > 0);
-        PLens cloned = (PLens) lens.clone();
-        assertNotNull(cloned);      
+        final PLens cloned = (PLens) lens.clone();
+        assertNotNull(cloned);
 
-        //assertTrue(cloned.getInputEventListeners().length > 0);        
-        //assertNotNull(cloned.getPropertyChangeListeners());
-        //assertFalse(cloned.getPropertyChangeListeners().length == 0); 
-        //assertNotSame(cloned.getPropertyChangeListeners()[0], lens.getPropertyChangeListeners()[0]);
+        // assertTrue(cloned.getInputEventListeners().length > 0);
+        // assertNotNull(cloned.getPropertyChangeListeners());
+        // assertFalse(cloned.getPropertyChangeListeners().length == 0);
+        // assertNotSame(cloned.getPropertyChangeListeners()[0],
+        // lens.getPropertyChangeListeners()[0]);
     }
 }

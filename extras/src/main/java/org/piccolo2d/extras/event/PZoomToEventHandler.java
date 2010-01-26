@@ -37,7 +37,6 @@ import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
 import org.piccolo2d.util.PBounds;
 
-
 /**
  * <b>PZoomToEventHandler</b> is used to zoom the camera view to the node
  * clicked on with button one.
@@ -66,6 +65,7 @@ public class PZoomToEventHandler extends PBasicInputEventHandler {
 
     /**
      * Zooms the camera to the picked node of the event.
+     * 
      * @param event Event from which to extract the zoom target
      */
     protected void zoomTo(final PInputEvent event) {

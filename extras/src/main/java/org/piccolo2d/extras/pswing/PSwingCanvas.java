@@ -35,7 +35,6 @@ import javax.swing.RepaintManager;
 
 import org.piccolo2d.PCanvas;
 
-
 /**
  * The <b>PSwingCanvas</b> is a PCanvas that can display Swing components with
  * the PSwing adapter.
@@ -46,7 +45,9 @@ import org.piccolo2d.PCanvas;
  */
 public class PSwingCanvas extends PCanvas {
     private static final long serialVersionUID = 1L;
-    /** Key used to store the "Swing Wrapper" as an attribute of the PSwing node. */
+    /**
+     * Key used to store the "Swing Wrapper" as an attribute of the PSwing node.
+     */
     public static final String SWING_WRAPPER_KEY = "Swing Wrapper";
     private final ChildWrapper swingWrapper;
 
@@ -80,7 +81,8 @@ public class PSwingCanvas extends PCanvas {
     }
 
     /**
-     * JComponent wrapper for a PSwingCanvas. Used by PSwingRepaintManager. So, do not make it private.
+     * JComponent wrapper for a PSwingCanvas. Used by PSwingRepaintManager. So,
+     * do not make it private.
      */
     static class ChildWrapper extends JComponent {
         /**

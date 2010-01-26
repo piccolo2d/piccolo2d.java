@@ -38,7 +38,6 @@ import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * <b>PNodeCache</b> caches a visual representation of it's children into an
  * image and uses this cached image for painting instead of painting it's

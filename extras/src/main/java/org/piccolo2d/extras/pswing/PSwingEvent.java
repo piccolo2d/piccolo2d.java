@@ -11,7 +11,6 @@ import java.awt.geom.Point2D;
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PPickPath;
 
-
 /**
  * Interface allowing PSwing events that originated from swing and are destined
  * for PSwing nodes must conform to.

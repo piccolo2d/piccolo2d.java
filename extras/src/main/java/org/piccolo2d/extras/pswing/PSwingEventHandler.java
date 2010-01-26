@@ -48,7 +48,6 @@ import org.piccolo2d.event.PInputEventListener;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PAffineTransformException;
 
-
 /**
  * Event handler to send MousePressed, MouseReleased, MouseMoved, MouseClicked,
  * and MouseDragged events on Swing components within a PCanvas.
@@ -270,8 +269,8 @@ public class PSwingEventHandler implements PInputEventListener {
 
             final MouseWheelEvent tempEvent = new MouseWheelEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(),
                     mEvent.getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
-                    .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent
-                    .getWheelRotation());
+                            .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent
+                            .getWheelRotation());
 
             final PSwingMouseWheelEvent e2 = new PSwingMouseWheelEvent(tempEvent.getID(), tempEvent, aEvent);
             dispatchEvent(comp, e2);
@@ -488,7 +487,7 @@ public class PSwingEventHandler implements PInputEventListener {
             recursing = true;
             final PSwingEvent pSwingMouseEvent = PSwingMouseEvent.createMouseEvent(swingMouseEvent.getID(),
                     swingMouseEvent, aEvent);
-            
+
             dispatchEvent(pSwingMouseEvent, aEvent);
             if (pSwingMouseEvent.asMouseEvent().isConsumed()) {
                 aEvent.setHandled(true);

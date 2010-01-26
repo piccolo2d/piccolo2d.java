@@ -47,7 +47,6 @@ import javax.swing.SwingUtilities;
 
 import org.piccolo2d.PCanvas;
 
-
 /**
  * <b>PFrame</b> is meant to be subclassed by applications that just need a
  * PCanvas in a JFrame. It also includes full screen mode functionality when run
@@ -246,7 +245,7 @@ public class PFrame extends JFrame {
     protected DisplayMode getBestDisplayMode(final GraphicsDevice device) {
         final Iterator<DisplayMode> itr = getPreferredDisplayModes(device).iterator();
         while (itr.hasNext()) {
-            final DisplayMode each = (DisplayMode) itr.next();
+            final DisplayMode each = itr.next();
             final DisplayMode[] modes = device.getDisplayModes();
             for (int i = 0; i < modes.length; i++) {
                 if (modes[i].getWidth() == each.getWidth() && modes[i].getHeight() == each.getHeight()
@@ -329,5 +328,5 @@ public class PFrame extends JFrame {
      * beforeInitialize();
      */
     public void initialize() {
-    }   
+    }
 }

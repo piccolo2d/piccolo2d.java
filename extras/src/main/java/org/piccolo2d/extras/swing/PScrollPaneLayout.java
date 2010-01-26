@@ -39,7 +39,6 @@ import javax.swing.border.Border;
 
 import org.piccolo2d.util.PBounds;
 
-
 /**
  * A subclass of ScrollPaneLayout that looks at the Viewport for sizing
  * information rather than View. Also queries the Viewport for sizing

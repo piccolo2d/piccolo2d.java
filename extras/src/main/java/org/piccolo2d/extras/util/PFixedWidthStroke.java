@@ -29,6 +29,7 @@
 package org.piccolo2d.extras.util;
 
 import java.awt.BasicStroke;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.io.ObjectStreamException;
 import java.io.Serializable;

@@ -37,7 +37,6 @@ import javax.swing.SwingUtilities;
 
 import org.piccolo2d.util.PBounds;
 
-
 /**
  * This RepaintManager replaces the default Swing implementation, and is used to
  * intercept and repaint dirty regions of PSwing components.

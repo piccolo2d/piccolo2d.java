@@ -235,7 +235,7 @@ public class XYArray implements MutablePoints, Cloneable {
      * @param n number of points
      */
     private void initPoints(final double[] srcPoints, final int n) {
-        this.points = initPoints(srcPoints, n, this.points);
+        points = initPoints(srcPoints, n, points);
         if (srcPoints == null) {
             numPoints = 0;
         }
@@ -336,7 +336,7 @@ public class XYArray implements MutablePoints, Cloneable {
      * @param num the number of points to remove
      */
     public void removePoints(final int pos, final int num) {
-        int sanitizedNum = Math.min(num, numPoints - pos);
+        final int sanitizedNum = Math.min(num, numPoints - pos);
         if (sanitizedNum > 0) {
             System.arraycopy(points, (pos + sanitizedNum) * 2, points, pos * 2, (numPoints - (pos + sanitizedNum)) * 2);
             numPoints -= sanitizedNum;

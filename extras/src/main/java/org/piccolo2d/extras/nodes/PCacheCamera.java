@@ -44,7 +44,6 @@ import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PUtil;
 
-
 /**
  * An extension to PCamera that provides a fast image based
  * animationToCenterBounds method.
@@ -169,8 +168,8 @@ public class PCacheCamera extends PCamera {
      * This copies the behavior of the standard animateViewToTransform but
      * clears the cache when it is done.
      * 
-     * @param dest the resulting transform that the view should be
-     *            applying when the animation is complete
+     * @param dest the resulting transform that the view should be applying when
+     *            the animation is complete
      * @param duration length in milliseconds that the animation should last
      * @return the scheduled PTransformActivity, null if duration was 0
      */
