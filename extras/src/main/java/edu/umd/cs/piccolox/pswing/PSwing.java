@@ -651,7 +651,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             canvas.removePSwing(this);
         }
 
-        if (newCanvas != null) {
+        if (newCanvas == null) {
+        	canvas = null;
+        } else {
             canvas = newCanvas;
             canvas.addPSwing(this);
             updateBounds();
