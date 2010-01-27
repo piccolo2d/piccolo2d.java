@@ -275,6 +275,20 @@ public class PSwingTest extends TestCase {
         assertEquals(0, canvas1.getSwingWrapper().getComponentCount());
         assertEquals(1, canvas2.getSwingWrapper().getComponentCount());
     }
+    
+    public void testPSwingRegistersWithCanvasThroughoutItsLifeCycle() {
+    	PSwingCanvas canvas = new PSwingCanvas();
+    	PSwing label = new PSwing(new JLabel("Hello"));        
+    	
+    	canvas.getLayer().addChild(label);    
+    	assertEquals(1, canvas.getSwingWrapper().getComponentCount());
+    	
+    	label.removeFromParent();
+    	assertEquals(0, canvas.getSwingWrapper().getComponentCount());
+    	
+    	canvas.getLayer().addChild(label);    
+    	assertEquals(1, canvas.getSwingWrapper().getComponentCount());    	
+    }
 
     public class MockPaintingPSwing extends PSwing {
         private boolean paintedGreek;
