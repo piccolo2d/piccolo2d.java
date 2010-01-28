@@ -442,7 +442,10 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /** {@inheritDoc} */
     public void setVisible(final boolean visible) {
         super.setVisible(visible);
-        component.setVisible(visible);
+        
+        if (component.isVisible() != visible) {
+        	component.setVisible(visible);
+        }
     }
 
     /**
