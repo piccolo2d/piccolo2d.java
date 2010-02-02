@@ -93,28 +93,7 @@ public class PSwingTest extends TestCase {
 		final BufferedImage img = pSwing.paintComponent();
 
 		assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
-	}
-
-	public void testHidingComponentHidesPSwing() {
-		final JPanel panel = new JPanel();
-		final PSwing pSwing = new PSwing(panel);
-		panel.setPreferredSize(new Dimension(100, 100));
-		pSwing.setBounds(0, 0, 00, 100);
-		panel.setVisible(false);
-
-		// Wow, do I hate this chunk of code. Turns out that the event dispatch
-		// thread needs time to push the component hidden method before this
-		// test passes
-		// There has to be a way of forcing this without a sleep
-		assertDelayedSuccess(
-				"setting component to invisible did not reflect in associated PSwing",
-				500, new Predicate() {
-
-					public boolean isTrue() {
-						return !pSwing.getVisible();
-					}
-				});
-	}
+	}	
 
 	public void testHidingPNodeHidesComponent() {
 		final JPanel panel = new JPanel();

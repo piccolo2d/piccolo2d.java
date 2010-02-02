@@ -323,19 +323,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             public void propertyChange(final PropertyChangeEvent evt) {
                 updateBounds();
             }
-        });
-
-        component.addComponentListener(new ComponentAdapter() {
-            /** {@inheritDoc} */
-            public void componentHidden(final ComponentEvent e) {
-                setVisible(false);
-            }
-
-            /** {@inheritDoc} */
-            public void componentShown(final ComponentEvent e) {
-                setVisible(true);
-            }
-        });
+        });       
 
         updateBounds();
         listenForCanvas(this);
