@@ -100,6 +100,9 @@ Issue	Summary
 145	build broken (pom, swt)
 150	Prepare SwingLayoutNode for distribution
 155	If width or height is zero, the rest of bounds are reset.
+158	Component doesn't receive events after PSwing is added, removed and re-added to scenegraph
+159	events not delivered to PSwing Components for some transforms
+160	endless calls to PSwing's ComponentListener
 
 
 API changes to core:
