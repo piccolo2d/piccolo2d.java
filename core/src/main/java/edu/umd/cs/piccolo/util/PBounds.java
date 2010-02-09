@@ -233,7 +233,10 @@ public class PBounds extends Rectangle2D.Double implements Serializable {
      * @param bounds bounds being added
      */
     public void add(final PBounds bounds) {
-        if (isEmpty) {
+        if (bounds.isEmpty) {
+            return;
+        }
+        else if (isEmpty) {
             x = bounds.x;
             y = bounds.y;
             width = bounds.width;
