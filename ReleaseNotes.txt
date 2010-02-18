@@ -99,10 +99,10 @@ Issue	Summary
 144	Updates for PSwing
 145	build broken (pom, swt)
 150	Prepare SwingLayoutNode for distribution
-155	If width or height is zero, the rest of bounds are reset.
 158	Component doesn't receive events after PSwing is added, removed and re-added to scenegraph
 159	events not delivered to PSwing Components for some transforms
 160	endless calls to PSwing's ComponentListener
+161	full bounds behavior has changed in Piccolo 1.3
 
 
 API changes to core:
