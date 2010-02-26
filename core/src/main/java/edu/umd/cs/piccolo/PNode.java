@@ -3328,9 +3328,9 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Change the order of this node in its parent's children list so that it
-     * will draw in front of all of its other sibling nodes.
+     * will draw in back of the specified sibling node.
      * 
-     * @param sibling sibling in back of which this nodes should be moved.
+     * @param sibling sibling to move in back of
      */
     public void moveInBackOf(final PNode sibling) {
         final PNode p = parent;
@@ -3343,7 +3343,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Change the order of this node in its parent's children list so that it
-     * will draw after the given sibling node.
+     * will draw in front of all of its other sibling nodes.
      */
     public void moveToFront() {
         final PNode p = parent;
@@ -3355,9 +3355,9 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Change the order of this node in its parent's children list so that it
-     * will draw before the given sibling node.
+     * will draw in front of the specified sibling node.
      * 
-     * @param sibling sibling in front of which this nodes should be moved.
+     * @param sibling sibling to move in front of
      */
     public void moveInFrontOf(final PNode sibling) {
         final PNode p = parent;
