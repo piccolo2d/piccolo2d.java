@@ -42,6 +42,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.HierarchyBoundsAdapter;
+import java.awt.event.HierarchyEvent;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -323,7 +325,13 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
             public void propertyChange(final PropertyChangeEvent evt) {
                 updateBounds();
             }
-        });       
+        });
+        component.addHierarchyBoundsListener(new HierarchyBoundsAdapter() {
+            /** {@inheritDoc} */
+            public void ancestorResized(HierarchyEvent arg0) {
+                updateBounds();
+            }
+        });
 
         updateBounds();
         listenForCanvas(this);
@@ -430,9 +438,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /** {@inheritDoc} */
     public void setVisible(final boolean visible) {
         super.setVisible(visible);
-        
+
         if (component.isVisible() != visible) {
-        	component.setVisible(visible);
+            component.setVisible(visible);
         }
     }
 
@@ -643,8 +651,9 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         }
 
         if (newCanvas == null) {
-        	canvas = null;
-        } else {
+            canvas = null;
+        }
+        else {
             canvas = newCanvas;
             canvas.addPSwing(this);
             updateBounds();
