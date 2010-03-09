@@ -317,6 +317,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         component.putClientProperty(PSWING_PROPERTY, this);
         initializeComponent(component);
 
+        component.revalidate();
         //TODO: this listener is suspicious, it's not listening for any specific property
         component.addPropertyChangeListener(new PropertyChangeListener() {
             /** {@inheritDoc} */
