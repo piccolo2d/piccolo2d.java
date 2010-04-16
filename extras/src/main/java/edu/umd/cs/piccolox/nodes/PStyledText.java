@@ -65,10 +65,10 @@ public class PStyledText extends PNode {
     private static final long serialVersionUID = 1L;
 
     /** Font rendering context used for all PStyledText instances. */
-    protected static FontRenderContext SWING_FRC = new FontRenderContext(null, true, false);
+    protected static final FontRenderContext SWING_FRC = new FontRenderContext(null, true, false);
 
     /** Used while painting underlines. */
-    protected static Line2D paintLine = new Line2D.Double();
+    protected static final Line2D paintLine = new Line2D.Double();
 
     /**
      * Underlying document used to handle the complexities involved with

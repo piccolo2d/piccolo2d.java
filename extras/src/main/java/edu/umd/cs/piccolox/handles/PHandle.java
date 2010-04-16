@@ -82,12 +82,12 @@ public class PHandle extends PPath {
     private static final long serialVersionUID = 1L;
 
     /** The default size for a handle. */
-    public static float DEFAULT_HANDLE_SIZE = 8;
+    public static final float DEFAULT_HANDLE_SIZE = 8;
     /** Default shape to use when drawing handles. */
-    public static Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
+    public static final Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
 
     /** Default color to paint handles. */
-    public static Color DEFAULT_COLOR = Color.white;
+    public static final Color DEFAULT_COLOR = Color.white;
 
     private PLocator locator;
     private transient PDragSequenceEventHandler handleDragger;

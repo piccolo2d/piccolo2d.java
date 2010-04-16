@@ -93,18 +93,18 @@ public class SWTGraphics2D extends Graphics2D {
      */
     protected static int CACHE_COUNT = 0;
     /** Map from font names to Fonts. */
-    protected static HashMap FONT_CACHE = new HashMap();
+    protected static final HashMap FONT_CACHE = new HashMap();
     /** Map from awt colors to swt colors. */
-    protected static HashMap COLOR_CACHE = new HashMap();
+    protected static final HashMap COLOR_CACHE = new HashMap();
     /** Map from awt shapess to swt Paths. */
-    protected static HashMap SHAPE_CACHE = new HashMap();
+    protected static final HashMap SHAPE_CACHE = new HashMap();
     /** Buffer used to extract the graphics device. */
-    protected static BufferedImage BUFFER = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    protected static final BufferedImage BUFFER = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
-    private static Point TEMP_POINT = new Point();
-    private static Rectangle2D TEMP_RECT = new Rectangle2D.Double();
-    private static Rectangle2D TEMP_LINE_RECT = new Rectangle2D.Double();
-    private static org.eclipse.swt.graphics.Rectangle SWT_RECT = new org.eclipse.swt.graphics.Rectangle(0, 0, 0, 0);
+    private static final Point TEMP_POINT = new Point();
+    private static final Rectangle2D TEMP_RECT = new Rectangle2D.Double();
+    private static final Rectangle2D TEMP_LINE_RECT = new Rectangle2D.Double();
+    private static final org.eclipse.swt.graphics.Rectangle SWT_RECT = new org.eclipse.swt.graphics.Rectangle(0, 0, 0, 0);
 
     /** The Underlying GraphicsContext provided by swt. */
     protected GC gc;

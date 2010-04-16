@@ -61,11 +61,11 @@ import edu.umd.cs.piccolox.util.PNodeLocator;
 public class PSWTHandle extends PSWTPath {
     private static final long serialVersionUID = 1L;
     /** The Default Size of a handle not including its border. */
-    public static float DEFAULT_HANDLE_SIZE = 8;
+    public static final float DEFAULT_HANDLE_SIZE = 8;
     /** The default shape to use when drawing handles. Default is an ellipse. */
-    public static Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
+    public static final Shape DEFAULT_HANDLE_SHAPE = new Ellipse2D.Float(0f, 0f, DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE);
     /** The default color to use when drawing a handle. (white) */
-    public static Color DEFAULT_COLOR = Color.white;
+    public static final Color DEFAULT_COLOR = Color.white;
 
     private PLocator locator;
     private PDragSequenceEventHandler handleDragger;

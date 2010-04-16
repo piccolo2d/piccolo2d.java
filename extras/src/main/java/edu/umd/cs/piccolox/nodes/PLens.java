@@ -69,13 +69,13 @@ public class PLens extends PNode {
     private final transient PDragEventHandler lensDragger;
 
     /** The height of the drag bar. */
-    public static double LENS_DRAGBAR_HEIGHT = 20;
+    public static final double LENS_DRAGBAR_HEIGHT = 20;
 
     /** Default paint to use for the drag bar. */
-    public static Paint DEFAULT_DRAGBAR_PAINT = Color.DARK_GRAY;
+    public static final Paint DEFAULT_DRAGBAR_PAINT = Color.DARK_GRAY;
 
     /** Default paint to use when drawing the background of the lens. */
-    public static Paint DEFAULT_LENS_PAINT = Color.LIGHT_GRAY;
+    public static final Paint DEFAULT_LENS_PAINT = Color.LIGHT_GRAY;
 
     /**
      * Constructs the default PLens.
