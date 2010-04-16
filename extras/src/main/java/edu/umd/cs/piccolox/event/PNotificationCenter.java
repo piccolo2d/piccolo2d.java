@@ -61,7 +61,7 @@ import java.util.Map;
  * 
  * @author Jesse Grosjean
  */
-public class PNotificationCenter {
+public final class PNotificationCenter {
     /** Used as a place holder for null names or objects. */
     public static final Object NULL_MARKER = new Object();
 
