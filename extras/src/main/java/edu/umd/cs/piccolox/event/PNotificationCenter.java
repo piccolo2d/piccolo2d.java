@@ -66,13 +66,13 @@ public final class PNotificationCenter {
     public static final Object NULL_MARKER = new Object();
 
     /** Singleton instance of the notification center. */
-    protected  static volatile PNotificationCenter DEFAULT_CENTER;
+    private  static volatile PNotificationCenter DEFAULT_CENTER;
 
     /** A map of listeners keyed by NotificationKey objects. */
-    protected HashMap listenersMap;
+    private HashMap listenersMap;
 
     /** A queue of NotificationKeys that are available to be garbage collected. */
-    protected ReferenceQueue keyQueue;
+    private ReferenceQueue keyQueue;
 
     /**
      * Singleton accessor for the PNotificationCenter.
@@ -328,7 +328,7 @@ public final class PNotificationCenter {
      * 
      * @return list of matching keys
      */
-    protected List matchingKeys(final String name, final Object object) {
+    private List matchingKeys(final String name, final Object object) {
         final List result = new LinkedList();
 
         final NotificationKey searchKey = new NotificationKey(name, object);
@@ -350,7 +350,7 @@ public final class PNotificationCenter {
      * @param listener the listener being unregistered
      * @param key the key that identifies the listener
      */
-    protected void removeListener(final Object listener, final Object key) {
+    private void removeListener(final Object listener, final Object key) {
         if (listener == null) {
             listenersMap.remove(key);
             return;
@@ -378,7 +378,7 @@ public final class PNotificationCenter {
      * Iterates over available keys in the key queue and removes the queue from
      * the listener map.
      */
-    protected void processKeyQueue() {
+    private void processKeyQueue() {
         NotificationKey key;
         while ((key = (NotificationKey) keyQueue.poll()) != null) {
             listenersMap.remove(key);
@@ -388,7 +388,7 @@ public final class PNotificationCenter {
     /**
      * Represents a notification type from a particular object.
      */
-    protected static class NotificationKey extends WeakReference {
+    private static class NotificationKey extends WeakReference {
         private final Object name;
         private final int hashCode;
 
@@ -478,7 +478,7 @@ public final class PNotificationCenter {
      * A NotificationTarget is a method on a particular object that can be
      * invoked.
      */
-    protected static class NotificationTarget extends WeakReference {
+    private static class NotificationTarget extends WeakReference {
         /** Cached hashcode value computed at construction time. */
         protected int hashCode;
 

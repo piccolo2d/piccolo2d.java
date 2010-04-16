@@ -78,33 +78,11 @@ public class PCanvas extends JComponent implements PComponent {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @deprecated this is a typo and clients should change their code to
-     *             reflect the correct spelling
-     */
-    public static final String INTERATING_CHANGED_NOTIFICATION = "INTERATING_CHANGED_NOTIFICATION";
-
-    /**
-     * The property name that identifies a change in the interacting state.
-     * 
-     * @since 1.3
-     * @deprecated in favor of PROPERTY_INTERACTING
-     */
-    public static final String INTERACTING_CHANGED_NOTIFICATION = "INTERACTING_CHANGED_NOTIFICATION";
-
-    /**
      * The property name that identifies a change in the interacting state.
      *
      * @since 1.3
      */
     public static final String PROPERTY_INTERACTING = "INTERACTING_CHANGED_NOTIFICATION";
-
-    /**
-     * Used as a public global to track the current canvas.
-     * 
-     * @deprecated since it falsely assumes that there is only one PCanvas per
-     *             program
-     */
-    public static PCanvas CURRENT_ZCANVAS = null;
 
     /** The camera though which this Canvas is viewing. */
     private PCamera camera;
@@ -165,7 +143,6 @@ public class PCanvas extends JComponent implements PComponent {
      * camera, and layer. Zooming and panning are automatically installed.
      */
     public PCanvas() {
-        CURRENT_ZCANVAS = this;
         cursorStack = new PStack();
         setCamera(createDefaultCamera());
         setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
@@ -646,17 +623,6 @@ public class PCanvas extends JComponent implements PComponent {
      */
     public Timer createTimer(final int delay, final ActionListener listener) {
         return new Timer(delay, listener);
-    }
-
-    /**
-     * Returns the quality to use when not animating or interacting.
-     * 
-     * @since 1.3
-     * @deprecated in favor or getNormalRenderQuality
-     * @return the render quality to use when not animating or interacting
-     */
-    public int getDefaultRenderQuality() {
-        return normalRenderQuality;
     }
 
     /**

@@ -30,8 +30,6 @@ package edu.umd.cs.piccolox.util;
 import java.awt.Shape;
 import java.awt.Stroke;
 
-import edu.umd.cs.piccolo.util.PDebug;
-import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PPickPath;
 
 /**
@@ -102,19 +100,10 @@ abstract class PSemanticStroke implements Stroke {
      * re-implementations.
      */
     protected float getActiveScale() {
-        // FIXME Honestly I don't understand this distinction - shouldn't it
-        // always be PPaintContext.CURRENT_PAINT_CONTEXT regardless of the
-        // debugging flag?
-        if (PDebug.getProcessingOutput()) {
-            if (PPaintContext.CURRENT_PAINT_CONTEXT != null) {
-                return (float) PPaintContext.CURRENT_PAINT_CONTEXT.getScale();
-            }
+        if (PPickPath.CURRENT_PICK_PATH != null) {
+            return (float) PPickPath.CURRENT_PICK_PATH.getScale();
         }
-        else {
-            if (PPickPath.CURRENT_PICK_PATH != null) {
-                return (float) PPickPath.CURRENT_PICK_PATH.getScale();
-            }
-        }
+
         return 1.0f;
     }
 

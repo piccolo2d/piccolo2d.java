@@ -329,15 +329,4 @@ public class PFrame extends JFrame {
      */
     public void initialize() {
     }
-
-    /**
-     * Method for testing the creating of PFrame.
-     * 
-     * @deprecated since it's not terribly useful
-     * 
-     * @param argv command line arguments
-     */
-    public static void main(final String[] argv) {
-        new PFrame();
-    }
 }

@@ -471,16 +471,6 @@ public class PCameraTest extends TestCase {
         camera.repaintFromLayer(new PBounds(0, 0, 1, 1), layer);
     }
 
-    public void testRepaintFromLayerNotALayer() {
-        try {
-            camera.repaintFromLayer(new PBounds(0, 0, 1, 1), new PNode());
-            fail("repaintFromLayer(PBounds, PNode) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-
     public void testRemoveLayerAtIndex() {
         PLayer layer = new PLayer();
         camera.addLayer(layer);

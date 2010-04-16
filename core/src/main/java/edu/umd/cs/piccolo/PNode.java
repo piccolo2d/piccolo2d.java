@@ -831,37 +831,6 @@ public class PNode implements Cloneable, Serializable, Printable {
         return value.doubleValue();
     }
 
-    /**
-     * @deprecated use getAttribute(Object key)instead.
-     * 
-     * @param key name of property to search for
-     * @return value of matching client property
-     */
-    public Object getClientProperty(final Object key) {
-        return getAttribute(key);
-    }
-
-    /**
-     * @deprecated use addAttribute(Object key, Object value)instead.
-     * 
-     * @param key name of property to add
-     * @param value value or new attribute
-     */
-    public void addClientProperty(final Object key, final Object value) {
-        addAttribute(key, value);
-    }
-
-    /**
-     * @deprecated use getClientPropertyKeysEnumerator() instead.
-     * 
-     * @return iterator for client property keys
-     */
-    public Iterator getClientPropertyKeysIterator() {
-        final Enumeration enumeration = getClientPropertyKeysEnumeration();
-
-        return new ClientPropertyKeyIterator(enumeration);
-    }
-
     // ****************************************************************
     // Copying - Methods for copying this node and its descendants.
     // Copying is implemented in terms of serialization.
@@ -2419,46 +2388,6 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * @deprecated in favor of animateToRelativePosition
-     * 
-     *             It will calculate the necessary transform in order to make
-     *             this node appear at a particular position relative to the
-     *             specified bounding box. The source point specifies a point in
-     *             the unit square (0, 0) - (1, 1) that represents an anchor
-     *             point on the corresponding node to this transform. The
-     *             destination point specifies an anchor point on the reference
-     *             node. The position method then computes the transform that
-     *             results in transforming this node so that the source anchor
-     *             point coincides with the reference anchor point. This can be
-     *             useful for layout algorithms as it is straightforward to
-     *             position one object relative to another.
-     *             <p>
-     *             For example, If you have two nodes, A and B, and you call
-     * 
-     *             <PRE>
-     * Point2D srcPt = new Point2D.Double(1.0, 0.0);
-     * Point2D destPt = new Point2D.Double(0.0, 0.0);
-     * A.position(srcPt, destPt, B.getGlobalBounds(), 750, null);
-     * </PRE>
-     * 
-     *             The result is that A will move so that its upper-right corner
-     *             is at the same place as the upper-left corner of B, and the
-     *             transition will be smoothly animated over a period of 750
-     *             milliseconds.
-     * 
-     * @param srcPt The anchor point on this transform's node (normalized to a
-     *            unit square)
-     * @param destPt The anchor point on destination bounds (normalized to a
-     *            unit square)
-     * @param destBounds The bounds (in global coordinates) used to calculate
-     *            this transform's node
-     * @param millis Number of milliseconds over which to perform the animation
-     */
-    public void position(final Point2D srcPt, final Point2D destPt, final Rectangle2D destBounds, final int millis) {
-        animateToRelativePosition(srcPt, destPt, destBounds, millis);
-    };
-
-    /**
      * Return a copy of the transform associated with this node.
      * 
      * @return copy of this node's transform
@@ -3690,15 +3619,6 @@ public class PNode implements Cloneable, Serializable, Printable {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         parent = (PNode) in.readObject();
-    }
-
-    /**
-     * @deprecated see http://code.google.com/p/piccolo2d/issues/detail?id=99
-     * 
-     * @return a string representation of this node's state
-     */
-    protected String paramString() {
-        return "";
     }
 
     /**

@@ -210,16 +210,6 @@ public class PCamera extends PNode {
     }
 
     /**
-     * @deprecated by {@link #repaintFromLayer(PBounds, PLayer)}. Will be removed
-     *    in version 2.0.
-     * @param viewBounds bounds that require repainting, in view coordinates
-     * @param repaintedLayer layer dispatching the repaint notification
-     */
-    public void repaintFromLayer(final PBounds viewBounds, final PNode repaintedLayer) {
-        throw new IllegalArgumentException("repaintedLayer not an instance of PLayer");
-    }
-
-    /**
      * Return a reference to the list of layers viewed by this camera.
      * 
      * @return the list of layers viewed by this camera
@@ -743,26 +733,6 @@ public class PCamera extends PNode {
         }
 
         return null;
-    }
-
-    /**
-     * Pan the camera's view from its current transform when the activity starts
-     * to a new transform so that the view bounds will contain (if possible,
-     * intersect if not possible) the new bounds in the camera layers coordinate
-     * system. If the duration is 0 then the view will be transformed
-     * immediately, and null will be returned. Else a new PTransformActivity
-     * will get returned that is set to animate the camera's view transform to
-     * the new bounds.
-     * 
-     * @deprecated Renamed to animateViewToPanToBounds
-     * 
-     * @param includeBounds the bounds to which the view will animate to
-     * @param duration the duration of the animation given in milliseconds
-     * 
-     * @return the scheduled PTransformActivity
-     */
-    public PTransformActivity animateViewToIncludeBounds(final Rectangle2D includeBounds, final long duration) {
-        return animateViewToPanToBounds(includeBounds, duration);
     }
 
     /**

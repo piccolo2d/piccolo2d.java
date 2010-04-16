@@ -61,12 +61,6 @@ public class PPaintContext {
     /** Font context to use while in high quality rendering. */
     public static final FontRenderContext RENDER_QUALITY_HIGH_FRC = new FontRenderContext(null, true, true);
 
-    /**
-     * @deprecated will disappear as soon as possible Global for accessing the
-     *             current paint context while painting.
-     **/
-    public static PPaintContext CURRENT_PAINT_CONTEXT;
-
     /** Used while calculating scale at which rendering is occurring. */
     private static final double[] PTS = new double[4];
 
@@ -112,8 +106,6 @@ public class PPaintContext {
         }
 
         localClipStack.push(clip.getBounds2D());
-
-        CURRENT_PAINT_CONTEXT = this;
     }
 
     /**
@@ -160,15 +152,6 @@ public class PPaintContext {
      */
     public void pushCamera(final PCamera aCamera) {
         cameraStack.push(aCamera);
-    }
-
-    /**
-     * @deprecated in favor of popCamera()
-     * 
-     * @param aCamera absolute not used in any way
-     */
-    public void popCamera(final PCamera aCamera) {
-        cameraStack.pop();
     }
 
     /**

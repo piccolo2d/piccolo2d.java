@@ -99,15 +99,6 @@ public class PTextTest extends TestCase {
         assertNotNull(textNode.toString());
     }
 
-    public void testJustificationIsLeftByDefault() {
-        assertEquals(Component.LEFT_ALIGNMENT, textNode.getJustification(), 0.000001);
-    }
-
-    public void testSetJustificationPersists() {
-        textNode.setJustification(Component.RIGHT_ALIGNMENT);
-        assertEquals(Component.RIGHT_ALIGNMENT, textNode.getJustification(), 0.000001);
-    }
-
     public void testHorizontalAlignmentIsLeftByDefault() {
         assertEquals(Component.LEFT_ALIGNMENT, textNode.getHorizontalAlignment(), 0.000001);
     }

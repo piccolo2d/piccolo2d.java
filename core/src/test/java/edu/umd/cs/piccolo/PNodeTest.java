@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 import javax.swing.text.MutableAttributeSet;
@@ -591,30 +590,6 @@ public class PNodeTest extends TestCase {
     public void testGetDoubleAttributeReturnsValueIfFoundWhenDefaultProvided() {
         node.addAttribute("Found", new Double(5));
         assertEquals(5, node.getIntegerAttribute("Found", 10), 0.001);
-    }
-
-    public void testGetAddClienProperty() {
-        assertNull(node.getClientProperty("Testing"));
-        node.addClientProperty("Testing", "Hello");
-        assertEquals("Hello", node.getClientProperty("Testing"));
-    }
-
-    public void testGetClientPropertyKeysIteratorIsNotNullOnEmptyClientProperties() {
-        final Iterator iterator = node.getClientPropertyKeysIterator();
-        assertNotNull(iterator);
-        assertFalse(iterator.hasNext());
-    }
-
-    public void testGetClientPropertyKeysIteratorReturnsValidIteraotOnPropertiesExist() {
-        node.addClientProperty("A", "Aval");
-        node.addClientProperty("B", "Bval");
-        final Iterator iterator = node.getClientPropertyKeysIterator();
-        assertNotNull(iterator);
-        assertTrue(iterator.hasNext());
-        assertEquals("A", iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals("B", iterator.next());
-        assertFalse(iterator.hasNext());
     }
 
     public void testLocalToParentModifiesGivenPoint() {

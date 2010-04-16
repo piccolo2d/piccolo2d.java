@@ -70,17 +70,6 @@ public class PCanvasTest extends TestCase {
         assertTrue(canvas.getInteracting());
     }
 
-    public void testSetInteractingFiresChangeEvent() {
-        final MockPropertyChangeListener mockListener = new MockPropertyChangeListener();
-        canvas.addPropertyChangeListener(PCanvas.INTERACTING_CHANGED_NOTIFICATION, mockListener);
-        canvas.setInteracting(true);
-        assertEquals(1, mockListener.getPropertyChangeCount());
-    }
-
-    public void testDefaultRenderQualityIsHigh() {
-        assertEquals(PPaintContext.HIGH_QUALITY_RENDERING, canvas.getDefaultRenderQuality());
-    }
-
     public void testDefaultAnimatingRenderQualityIsLow() {
         assertEquals(PPaintContext.LOW_QUALITY_RENDERING, canvas.getAnimatingRenderQuality());
     }
