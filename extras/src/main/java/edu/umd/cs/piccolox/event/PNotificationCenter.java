@@ -79,7 +79,7 @@ public final class PNotificationCenter {
      * 
      * @return singleton instance of PNotificationCenter
      */
-    public static PNotificationCenter defaultCenter() {
+    public synchronized static PNotificationCenter defaultCenter() {
         if (DEFAULT_CENTER == null) {
             DEFAULT_CENTER = new PNotificationCenter();
         }
