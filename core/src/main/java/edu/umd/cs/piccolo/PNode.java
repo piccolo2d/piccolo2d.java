@@ -2905,8 +2905,9 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Constructs a new PrinterJob, allows the user to select which printer to
      * print to, And then prints the node.
+     * @throws PrinterException 
      */
-    public void print() {
+    public void print() throws PrinterException {
         final PrinterJob printJob = PrinterJob.getPrinterJob();
         final PageFormat pageFormat = printJob.defaultPage();
         final Book book = new Book();
@@ -2914,12 +2915,7 @@ public class PNode implements Cloneable, Serializable, Printable {
         printJob.setPageable(book);
 
         if (printJob.printDialog()) {
-            try {
-                printJob.print();
-            }
-            catch (final PrinterException e) {
-                throw new RuntimeException("Error Printing", e);
-            }
+            printJob.print();
         }
     }
 
