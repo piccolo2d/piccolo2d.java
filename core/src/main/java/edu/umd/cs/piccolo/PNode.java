@@ -3636,26 +3636,6 @@ public class PNode implements Cloneable, Serializable, Printable {
         return result;
     }
 
-    private static final class ClientPropertyKeyIterator implements Iterator {
-        private final Enumeration enumeration;
-
-        private ClientPropertyKeyIterator(final Enumeration enumeration) {
-            this.enumeration = enumeration;
-        }
-
-        public boolean hasNext() {
-            return enumeration.hasMoreElements();
-        }
-
-        public Object next() {
-            return enumeration.nextElement();
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     /**
      * <b>PSceneGraphDelegate</b> is an interface to receive low level node
      * events. It together with PNode.SCENE_GRAPH_DELEGATE gives Piccolo2d users
