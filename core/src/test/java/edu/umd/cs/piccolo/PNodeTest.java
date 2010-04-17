@@ -239,7 +239,7 @@ public class PNodeTest extends TestCase {
 
         final PNode clonedNode = (PNode) node.clone();
 
-        assertNull(clonedNode.getListenerList());               
+        assertNull(clonedNode.getListenerList());      
     }
     
     public void testCloneClonesChildrenAswell() {
@@ -250,6 +250,18 @@ public class PNodeTest extends TestCase {
 
         assertEquals(clonedNode.getChildrenCount(), 1);
         assertNotSame(child, clonedNode.getChild(0));
+    }
+    
+    public void testCloneDoesADeepCopy() {
+        final PNode child = new PNode();
+        node.addChild(child);
+
+        final PNode clonedNode = (PNode) node.clone();
+
+        assertNotSame(node.getChildrenReference(), clonedNode.getChildrenReference());
+        assertNotSame(node.getChild(0), clonedNode.getChild(0));
+        
+        assertNotSame(node.getBoundsReference(), clonedNode.getBoundsReference());
     }
     
     public void testCloneDoesNotCopyParent() {
