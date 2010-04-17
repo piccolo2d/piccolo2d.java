@@ -28,6 +28,7 @@
  */
 package edu.umd.cs.piccolo;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 
@@ -42,6 +43,9 @@ import edu.umd.cs.piccolo.util.PUtil;
  */
 public final class POffscreenCanvas implements PComponent {
 
+    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
+    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
+    
     /** Bounds of this offscreen canvas. */
     private final PBounds bounds;
 
@@ -51,9 +55,11 @@ public final class POffscreenCanvas implements PComponent {
     /** Render quality. */
     private int renderQuality = DEFAULT_RENDER_QUALITY;
 
-    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
-    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
+    /** Whether this node's background color should be drawn when rendering. */
+    private boolean opaque;
 
+    /** Background color to paint before the contents of the scene are rendered. */
+    private Color backgroundColor;
 
     /**
      * Create a new offscreen canvas the specified width and height.
@@ -70,6 +76,9 @@ public final class POffscreenCanvas implements PComponent {
         }
         bounds = new PBounds(0.0d, 0.0d, width, height);
         setCamera(PUtil.createBasicScenegraph());
+        
+        opaque = false;
+        backgroundColor = null;
     }
 
     /**
@@ -82,6 +91,12 @@ public final class POffscreenCanvas implements PComponent {
         if (graphics == null) {
             throw new IllegalArgumentException("graphics must not be null");
         }
+        
+        if (opaque && backgroundColor != null) {
+            graphics.setBackground(backgroundColor);
+            graphics.clearRect(0, 0, (int)bounds.getWidth(), (int)bounds.getHeight());
+        }
+        
         final PPaintContext paintContext = new PPaintContext(graphics);
         paintContext.setRenderQuality(renderQuality);
         camera.fullPaint(paintContext);
@@ -163,5 +178,30 @@ public final class POffscreenCanvas implements PComponent {
     /** {@inheritDoc} */
     public void setInteracting(final boolean interacting) {
         // empty
+    }
+    
+    /**
+     * Return the root of the scene this POffscreenCanvas is viewing.
+     * 
+     * @return root element of the scene being viewed
+     */
+    public PRoot getRoot() {
+        return camera.getRoot();
+    }
+
+    public boolean isOpaque() {
+        return opaque;
+    }
+
+    public void setOpaque(boolean opaque) {
+        this.opaque = opaque;
+    }
+
+    public Color getBackground() {
+        return backgroundColor;
+    }
+
+    public void setBackground(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }
