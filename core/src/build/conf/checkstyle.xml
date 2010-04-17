@@ -48,6 +48,7 @@
         <module name="JavadocMethod">
         	<property name="scope" value="protected"/>
         	<property name="allowUndeclaredRTE" value="true"/>
+        	<property name="allowMissingPropertyJavadoc" value="true" />
         </module>
         <module name="JavadocType">
         	<property name="scope" value="public"/>        
