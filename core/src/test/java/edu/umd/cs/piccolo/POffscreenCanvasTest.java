@@ -36,6 +36,7 @@ import java.awt.image.BufferedImage;
 import junit.framework.TestCase;
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.nodes.PPath;
+import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
@@ -104,6 +105,34 @@ public class POffscreenCanvasTest extends TestCase {
         }
     }
 
+    public void testRenderEmptyOpaqueNullBackgroundColor() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        final BufferedImage image = new BufferedImage(100, 200, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D graphics = image.createGraphics();
+        canvas.setOpaque(true);
+        canvas.render(graphics);
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 200; y++) {
+                assertEquals(0, image.getRGB(x, y));
+            }
+        }
+    }
+
+    public void testRenderEmptyOpaque() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        final BufferedImage image = new BufferedImage(100, 200, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D graphics = image.createGraphics();
+        canvas.setOpaque(true);
+        canvas.setBackground(Color.RED);
+        canvas.render(graphics);
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 200; y++) {
+                // red pixel, RGBA is 255, 0, 0, 255
+                assertEquals(-65536, image.getRGB(x, y));
+            }
+        }
+    }
+
     public void testRenderFull() {
         final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
         final PPath rect = PPath.createRectangle(0.0f, 0.0f, 200.0f, 300.0f);
@@ -149,6 +178,12 @@ public class POffscreenCanvasTest extends TestCase {
         }
     }
 
+    public void testRepaint() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        canvas.repaint(null);
+        canvas.repaint(new PBounds(0.0, 0.0, 50.0, 50.0));
+    }
+
     public void testPaintImmediately() {
         final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
         canvas.paintImmediately();
@@ -169,5 +204,30 @@ public class POffscreenCanvasTest extends TestCase {
         final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
         canvas.setInteracting(true);
         canvas.setInteracting(false);
+    }
+
+    public void testRoot() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        assertNotNull(canvas.getRoot());
+    }
+
+    public void testRootIsNullWhenCameraIsNull() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        canvas.setCamera(null);
+        assertEquals(null, canvas.getRoot());
+    }
+
+    public void testOpaque() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        assertFalse(canvas.isOpaque());
+        canvas.setOpaque(true);
+        assertTrue(canvas.isOpaque());
+    }
+
+    public void testBackground() {
+        final POffscreenCanvas canvas = new POffscreenCanvas(100, 200);
+        assertEquals(null, canvas.getBackground());
+        canvas.setBackground(Color.RED);
+        assertEquals(Color.RED, canvas.getBackground());
     }
 }

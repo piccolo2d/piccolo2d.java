@@ -55,11 +55,12 @@ public final class POffscreenCanvas implements PComponent {
     /** Render quality. */
     private int renderQuality = DEFAULT_RENDER_QUALITY;
 
-    /** Whether this node's background color should be drawn when rendering. */
+    /** True if this offscreen canvas is opaque. */
     private boolean opaque;
 
-    /** Background color to paint before the contents of the scene are rendered. */
+    /** Background color for this offscreen canvas. */
     private Color backgroundColor;
+
 
     /**
      * Create a new offscreen canvas the specified width and height.
@@ -81,11 +82,11 @@ public final class POffscreenCanvas implements PComponent {
         backgroundColor = null;
     }
 
+
     /**
      * Render this offscreen canvas to the specified graphics.
-     * 
-     * @param graphics graphics to render this offscreen canvas to, must not be
-     *            null
+     *
+     * @param graphics graphics to render this offscreen canvas to, must not be null
      */
     public void render(final Graphics2D graphics) {
         if (graphics == null) {
@@ -94,7 +95,7 @@ public final class POffscreenCanvas implements PComponent {
         
         if (opaque && backgroundColor != null) {
             graphics.setBackground(backgroundColor);
-            graphics.clearRect(0, 0, (int)bounds.getWidth(), (int)bounds.getHeight());
+            graphics.clearRect(0, 0, (int) bounds.getWidth(), (int) bounds.getHeight());
         }
         
         final PPaintContext paintContext = new PPaintContext(graphics);
@@ -181,27 +182,54 @@ public final class POffscreenCanvas implements PComponent {
     }
     
     /**
-     * Return the root of the scene this POffscreenCanvas is viewing.
+     * Return the root node of the scene graph for this offscreen canvas.  The
+     * root node will be null if the camera for this offscreen canvas is null.
      * 
-     * @return root element of the scene being viewed
+     * @return the root node of the scene graph for this offscreen canvas
      */
     public PRoot getRoot() {
-        return camera.getRoot();
+        return camera == null ? null : camera.getRoot();
     }
 
+    /**
+     * Return true if this offscreen canvas is opaque.  Defaults to <code>false</code>.
+     *
+     * @return true if this offscreen canvas is opaque
+     */
     public boolean isOpaque() {
         return opaque;
     }
 
-    public void setOpaque(boolean opaque) {
+    /**
+     * Set to true if this offscreen canvas is opaque.
+     *
+     * @param opaque true if this offscreen canvas is opaque
+     */
+    public void setOpaque(final boolean opaque) {
         this.opaque = opaque;
     }
 
+    /**
+     * Return the background color for this offscreen canvas.  If this
+     * offscreen canvas is opaque, the background color will be painted
+     * before the contents of the scene are rendered.
+     *
+     * @see #isOpaque
+     * @return the background color for this offscreen canvas
+     */
     public Color getBackground() {
         return backgroundColor;
     }
 
-    public void setBackground(Color backgroundColor) {
+    /**
+     * Set the background color for this offscreen canvas to <code>backgroundColor</code>.
+     * If this offscreen canvas is opaque, the background color will be painted
+     * before the contents of the scene are rendered.
+     *
+     * @see #isOpaque
+     * @param backgroundColor background color for this offscreen canvas
+     */
+    public void setBackground(final Color backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 }
