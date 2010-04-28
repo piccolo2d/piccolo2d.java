@@ -54,6 +54,24 @@ public class PSelectionEventHandlerTest
         selectionChanged = false;
     }
 
+    public void testSelectionChange()
+    {
+        PCanvas canvas = new PCanvas();
+        PLayer layer = canvas.getLayer();
+        PNode node = new PNode();
+        layer.addChild(node);
+
+        PSelectionEventHandler selectionHandler = new PSelectionEventHandler(layer, layer);
+        assertTrue(selectionHandler.getSelectionReference().isEmpty());
+
+        PNotificationCenter notificationCenter = PNotificationCenter.defaultCenter();
+        notificationCenter.addListener(this, "selectionChanged", PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, null);
+
+        selectionHandler.select(node);
+        assertTrue(selectionHandler.getSelectionReference().contains(node));
+        assertTrue(selectionChanged);
+    }
+
     /**
      * {@link http://code.google.com/p/piccolo2d/issues/detail?id=177}
      */
@@ -76,15 +94,56 @@ public class PSelectionEventHandlerTest
         PInputEvent event = new PInputEvent(null, keyEvent);
         selectionHandler.keyPressed(event);
         assertTrue(selectionHandler.getSelectionReference().isEmpty());
+        assertTrue(selectionChanged);
+    }
 
-        // fix this assertion to fix issue 177 linked above
-        //assertTrue(selectionChanged);
+    public void testKeyboardDeleteInactive()
+    {
+        PCanvas canvas = new PCanvas();
+        PLayer layer = canvas.getLayer();
+        PNode node = new PNode();
+        layer.addChild(node);
+
+        PSelectionEventHandler selectionHandler = new PSelectionEventHandler(layer, layer);
+        selectionHandler.setDeleteKeyActive(false);
+        selectionHandler.select(node);
+        assertTrue(selectionHandler.getSelectionReference().contains(node));
+
+        PNotificationCenter notificationCenter = PNotificationCenter.defaultCenter();
+        notificationCenter.addListener(this, "selectionChanged", PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, null);
+
+        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE);
+        PInputEvent event = new PInputEvent(null, keyEvent);
+        selectionHandler.keyPressed(event);
+        assertTrue(selectionHandler.getSelectionReference().contains(node));
+        assertFalse(selectionChanged);
+    }
+
+    public void testKeyboardDeleteEmptySelection()
+    {
+        PCanvas canvas = new PCanvas();
+        PLayer layer = canvas.getLayer();
+
+        PSelectionEventHandler selectionHandler = new PSelectionEventHandler(layer, layer);
+        selectionHandler.setDeleteKeyActive(true);
+        assertTrue(selectionHandler.getSelectionReference().isEmpty());
+
+        PNotificationCenter notificationCenter = PNotificationCenter.defaultCenter();
+        notificationCenter.addListener(this, "selectionChanged", PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, null);
+
+        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE);
+        PInputEvent event = new PInputEvent(null, keyEvent);
+        selectionHandler.keyPressed(event);
+        assertTrue(selectionHandler.getSelectionReference().isEmpty());
+        assertFalse(selectionChanged);
     }
 
     /**
      * Selection changed, called by PNotificationCenter.
+     *
+     * @param notification notification
      */
-    public void selectionChanged()
+    public void selectionChanged(final PNotification notification)
     {
         this.selectionChanged = true;
     }

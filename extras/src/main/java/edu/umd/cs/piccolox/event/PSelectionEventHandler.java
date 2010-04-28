@@ -783,13 +783,14 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
      * @param e the key press event
      */
     public void keyPressed(final PInputEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_DELETE && deleteKeyActive) {
+        if (e.getKeyCode() == KeyEvent.VK_DELETE && deleteKeyActive && !selection.isEmpty()) {
             final Iterator selectionEn = selection.keySet().iterator();
             while (selectionEn.hasNext()) {
                 final PNode node = (PNode) selectionEn.next();
                 node.removeFromParent();
             }
             selection.clear();
+            postSelectionChanged();
         }
     }
 
