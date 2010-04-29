@@ -47,6 +47,12 @@
       <artifactId>piccolo2d-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.easytesting</groupId>
+      <artifactId>fest-swing-junit</artifactId>
+      <version>1.2a4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <scm>
     <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/extras</connection>
