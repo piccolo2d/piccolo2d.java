@@ -155,13 +155,13 @@
           </formats>
           <instrumentation>
             <ignores>
-              <ignore>edu.umd.cs.piccolo.examples.*</ignore>
-              <ignore>edu.umd.cs.piccolo.examples.pswing.*</ignore>
-              <ignore>edu.umd.cs.piccolo.examples.swt.*</ignore>
-              <ignore>edu.umd.cs.piccolo.tutorial.*</ignore>
+              <ignore>org.piccolo2d.examples.*</ignore>
+              <ignore>org.piccolo2d.examples.pswing.*</ignore>
+              <ignore>org.piccolo2d.examples.swt.*</ignore>
+              <ignore>org.piccolo2d.tutorial.*</ignore>
             </ignores>
             <excludes>
-              <exclude>edu/umd/cs/piccolo/examples/**</exclude>
+              <exclude>org/piccolo2d/examples/**</exclude>
             </excludes>
           </instrumentation>
         </configuration>

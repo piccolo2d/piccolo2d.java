@@ -46,7 +46,7 @@ dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-core</artifactId>
-  <version>1.3</version>
+  <version>2.0</version>
 </dependency>
 
 in your pom.xml.  To include the Piccolo2D core classes and the
@@ -55,7 +55,7 @@ Piccolo2D extras classes in your project, use a dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-extras</artifactId>
-  <version>1.3</version>
+  <version>2.0</version>
 </dependency>
 
 in your pom.xml.  To include the Piccolo2D core classes and the
@@ -64,7 +64,7 @@ Piccolo2D SWT classes in your project, use a dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-swt</artifactId>
-  <version>1.3</version>
+  <version>2.0</version>
 </dependency>
 
 in your pom.xml.  If your project does not use maven, simply include

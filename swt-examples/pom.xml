@@ -61,7 +61,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>edu.umd.cs.piccolox.swt.examples.SWTBasicExample</mainClass>
+              <mainClass>org.piccolo2d.extras.swt.examples.SWTBasicExample</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
