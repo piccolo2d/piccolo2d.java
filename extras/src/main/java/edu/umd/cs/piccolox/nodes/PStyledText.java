@@ -54,8 +54,9 @@ import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PPaintContext;
+
 
 /**
  * @author Lance Good

@@ -45,7 +45,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
-import edu.umd.cs.piccolo.util.PDebug;
+import org.piccolo2d.util.PDebug;
+
 import edu.umd.cs.piccolox.PFrame;
 
 public class ExampleRunner extends JFrame {

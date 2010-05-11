@@ -8,8 +8,9 @@ package edu.umd.cs.piccolox.pswing;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PPickPath;
+
 
 /**
  * Interface allowing PSwing events that originated from swing and are destined

@@ -32,8 +32,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PPaintContext;
+
 
 class DayNode extends PNode {
     boolean hasWidthFocus;

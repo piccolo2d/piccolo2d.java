@@ -28,9 +28,9 @@
  */
 package edu.umd.cs.piccolox.util;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPickPath;
 
 /**
  * Experimental class for detecting occlusions.

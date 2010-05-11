@@ -37,7 +37,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.border.Border;
 
-import edu.umd.cs.piccolo.util.PBounds;
+import org.piccolo2d.util.PBounds;
+
 
 /**
  * A subclass of ScrollPaneLayout that looks at the Viewport for sizing

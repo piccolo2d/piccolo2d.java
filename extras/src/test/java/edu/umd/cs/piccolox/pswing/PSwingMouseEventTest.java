@@ -6,8 +6,9 @@ import java.awt.event.MouseWheelEvent;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.piccolo2d.event.PInputEvent;
+
 import junit.framework.TestCase;
-import edu.umd.cs.piccolo.event.PInputEvent;
 
 public class PSwingMouseEventTest extends TestCase {
 

@@ -34,10 +34,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.nodes.PHtmlView;
+import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolo.nodes.PHtmlView;
-import edu.umd.cs.piccolo.nodes.PText;
+
 
 import edu.umd.cs.piccolox.PFrame;
 import edu.umd.cs.piccolox.nodes.PStyledText;

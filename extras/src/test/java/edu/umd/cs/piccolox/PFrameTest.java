@@ -30,9 +30,10 @@ package edu.umd.cs.piccolox;
 
 import java.awt.event.KeyListener;
 
+import org.piccolo2d.PCanvas;
+
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.PCanvas;
 
 /**
  * Unit test for PFrame.

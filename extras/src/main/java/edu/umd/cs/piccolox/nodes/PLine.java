@@ -39,11 +39,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolo.util.PUtil;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PAffineTransform;
+import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PUtil;
+
 import edu.umd.cs.piccolox.util.LineShape;
 
 /**

@@ -35,7 +35,8 @@ import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
-import edu.umd.cs.piccolo.util.PBounds;
+import org.piccolo2d.util.PBounds;
+
 
 /**
  * This RepaintManager replaces the default Swing implementation, and is used to

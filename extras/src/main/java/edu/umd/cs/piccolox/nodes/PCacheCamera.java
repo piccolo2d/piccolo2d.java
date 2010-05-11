@@ -35,14 +35,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PRoot;
-import edu.umd.cs.piccolo.activities.PTransformActivity;
-import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PDimension;
-import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolo.util.PUtil;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PRoot;
+import org.piccolo2d.activities.PTransformActivity;
+import org.piccolo2d.util.PAffineTransform;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PDimension;
+import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PUtil;
+
 
 /**
  * An extension to PCamera that provides a fast image based

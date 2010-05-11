@@ -28,7 +28,7 @@
  */
 package edu.umd.cs.piccolox.util;
 
-import edu.umd.cs.piccolo.PNode;
+import org.piccolo2d.PNode;
 
 /**
  * <b>PNodeLocator</b> provides an abstraction for locating points on a node.

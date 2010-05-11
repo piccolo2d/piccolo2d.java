@@ -31,7 +31,8 @@ package edu.umd.cs.piccolox.nodes;
 import java.awt.Image;
 import java.awt.Paint;
 
-import edu.umd.cs.piccolo.nodes.PImage;
+import org.piccolo2d.nodes.PImage;
+
 
 import edu.umd.cs.piccolox.util.ShadowUtils;
 

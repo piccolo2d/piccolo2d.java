@@ -32,11 +32,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Dimension2D;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PDimension;
-import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PDimension;
+import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PPickPath;
+
 
 /**
  * <b>PNodeCache</b> caches a visual representation of it's children into an

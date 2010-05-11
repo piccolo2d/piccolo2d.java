@@ -33,7 +33,8 @@ import java.awt.Dimension;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 
 /**
  * The <b>PSwingCanvas</b> is a PCanvas that can display Swing components with

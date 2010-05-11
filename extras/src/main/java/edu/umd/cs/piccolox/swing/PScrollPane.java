@@ -45,7 +45,8 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.ScrollPaneUI;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 
 /**
  * A simple extension to a standard scroll pane that uses the jazz version of

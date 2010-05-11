@@ -32,11 +32,12 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.Rectangle2D;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PPickPath;
+
 
 /**
  * <b>PClip</b> is a simple node that applies a clip before rendering or picking

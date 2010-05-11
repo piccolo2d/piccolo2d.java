@@ -41,12 +41,13 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PAffineTransformException;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PAffineTransform;
+import org.piccolo2d.util.PAffineTransformException;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
+
 
 /**
  * <b>PSWTPath</b> is a wrapper around a java.awt.geom.GeneralPath, with

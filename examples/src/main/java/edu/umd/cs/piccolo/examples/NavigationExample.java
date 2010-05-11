@@ -32,9 +32,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.Random;
 
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.nodes.PPath;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.nodes.PPath;
+
 import edu.umd.cs.piccolox.PFrame;
 import edu.umd.cs.piccolox.event.PNavigationEventHandler;
 

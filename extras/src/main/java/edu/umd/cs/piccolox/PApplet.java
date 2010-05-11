@@ -31,7 +31,8 @@ package edu.umd.cs.piccolox;
 import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 
 /**
  * <b>PApplet</b> is meant to be subclassed by applications that just need a

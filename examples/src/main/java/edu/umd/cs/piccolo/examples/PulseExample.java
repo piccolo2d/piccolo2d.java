@@ -30,14 +30,15 @@ package edu.umd.cs.piccolo.examples;
 
 import java.awt.Color;
 
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.PRoot;
-import edu.umd.cs.piccolo.activities.PActivityScheduler;
-import edu.umd.cs.piccolo.activities.PColorActivity;
-import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
-import edu.umd.cs.piccolo.nodes.PPath;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.PRoot;
+import org.piccolo2d.activities.PActivityScheduler;
+import org.piccolo2d.activities.PColorActivity;
+import org.piccolo2d.activities.PInterpolatingActivity;
+import org.piccolo2d.nodes.PPath;
+
 import edu.umd.cs.piccolox.PFrame;
 
 /**

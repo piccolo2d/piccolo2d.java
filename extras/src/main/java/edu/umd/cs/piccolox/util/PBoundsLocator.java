@@ -32,7 +32,8 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.SwingConstants;
 
-import edu.umd.cs.piccolo.PNode;
+import org.piccolo2d.PNode;
+
 
 /**
  * <b>PBoundsLocator</b> is a locator that locates points on the bounds of a

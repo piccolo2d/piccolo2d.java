@@ -33,12 +33,13 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.util.ArrayList;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
+
 import edu.umd.cs.piccolox.PFrame;
 import edu.umd.cs.piccolox.event.PSelectionEventHandler;
 

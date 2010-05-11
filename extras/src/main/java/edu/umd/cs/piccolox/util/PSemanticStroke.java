@@ -30,11 +30,12 @@ package edu.umd.cs.piccolox.util;
 import java.awt.Shape;
 import java.awt.Stroke;
 
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.util.PPickPath;
+
 
 /**
  * 
- * @see edu.umd.cs.piccolo.nodes.PPath
+ * @see org.piccolo2d.nodes.PPath
  * @see Stroke
  * @version 1.3
  * @author Marcus Rohrmoser

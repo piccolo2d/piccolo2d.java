@@ -54,11 +54,12 @@ import java.util.Arrays;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
+
 
 /*
  This message was sent to Sun on August 27, 1999

@@ -17,9 +17,9 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
  * <b>PSWTText</b> creates a visual component to support text. Multiple lines

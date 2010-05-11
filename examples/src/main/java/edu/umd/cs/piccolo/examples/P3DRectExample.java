@@ -2,7 +2,8 @@ package edu.umd.cs.piccolo.examples;
 
 import java.awt.Color;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 import edu.umd.cs.piccolox.PFrame;
 import edu.umd.cs.piccolox.nodes.P3DRect;
 

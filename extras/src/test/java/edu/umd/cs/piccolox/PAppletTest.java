@@ -28,9 +28,10 @@
  */
 package edu.umd.cs.piccolox;
 
+import org.piccolo2d.PCanvas;
+
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.PCanvas;
 
 /**
  * Unit test for PApplet.

@@ -28,10 +28,11 @@
  */
 package edu.umd.cs.piccolo.examples;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.nodes.PPath;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.nodes.PPath;
+
 import edu.umd.cs.piccolox.PFrame;
 
 public class CenterExample extends PFrame {

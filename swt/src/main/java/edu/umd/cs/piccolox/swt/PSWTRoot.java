@@ -33,8 +33,8 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 import org.eclipse.swt.widgets.Composite;
+import org.piccolo2d.PRoot;
 
-import edu.umd.cs.piccolo.PRoot;
 
 /**
  * <b>PSWTRoot</b> is a subclass of PRoot that is designed to work in the SWT

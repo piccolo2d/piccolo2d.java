@@ -30,9 +30,10 @@ package edu.umd.cs.piccolox.swt;
 
 import java.awt.geom.Point2D;
 
+import org.piccolo2d.util.PBounds;
+
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.util.PBounds;
 
 /**
  * Unit test for PSWTPath.

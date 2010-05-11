@@ -48,18 +48,18 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PComponent;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PRoot;
+import org.piccolo2d.event.PInputEventListener;
+import org.piccolo2d.event.PPanEventHandler;
+import org.piccolo2d.event.PZoomEventHandler;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PDebug;
+import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PStack;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PComponent;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PRoot;
-import edu.umd.cs.piccolo.event.PInputEventListener;
-import edu.umd.cs.piccolo.event.PPanEventHandler;
-import edu.umd.cs.piccolo.event.PZoomEventHandler;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PDebug;
-import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolo.util.PStack;
 
 /**
  * <b>PSWTCanvas</b> is an SWT Composite that can be used to embed

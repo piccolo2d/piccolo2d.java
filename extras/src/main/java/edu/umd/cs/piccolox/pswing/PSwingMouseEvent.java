@@ -35,9 +35,10 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.event.PInputEvent;
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.util.PPickPath;
+
 
 /**
  * <b>PMouseEvent</b> is an event which indicates that a mouse action occurred

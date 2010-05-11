@@ -32,7 +32,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 
 /**
  * The interface an application can implement to control scrolling in a

@@ -32,11 +32,11 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PImage;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PImage;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
  * <b>PSWTImage</b> is a wrapper around a org.eclipse.swt.graphics.Image.

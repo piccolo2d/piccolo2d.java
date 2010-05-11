@@ -39,8 +39,9 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JViewport;
 import javax.swing.ViewportLayout;
 
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.util.PBounds;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.util.PBounds;
+
 
 /**
  * A subclass of JViewport that talks to the scroll director to negotiate the

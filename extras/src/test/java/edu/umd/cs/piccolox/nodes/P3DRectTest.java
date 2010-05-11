@@ -32,8 +32,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import org.piccolo2d.util.PPaintContext;
+
 import junit.framework.TestCase;
-import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
  * Unit test for P3DRect.

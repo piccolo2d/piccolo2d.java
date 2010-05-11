@@ -31,7 +31,8 @@ package edu.umd.cs.piccolox.pswing;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-import edu.umd.cs.piccolo.event.PInputEvent;
+import org.piccolo2d.event.PInputEvent;
+
 
 /**
  * <b>PMouseMotionEvent</b> is an event which indicates that a mouse motion

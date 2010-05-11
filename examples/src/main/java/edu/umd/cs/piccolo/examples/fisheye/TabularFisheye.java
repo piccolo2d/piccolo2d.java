@@ -32,7 +32,8 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 
 public class TabularFisheye extends PCanvas {
     private CalendarNode calendarNode;

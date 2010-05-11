@@ -32,12 +32,13 @@ import java.awt.Color;
 
 import java.awt.image.BufferedImage;
 
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PImage;
+import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolo.nodes.PImage;
-import edu.umd.cs.piccolo.nodes.PText;
+
 
 import edu.umd.cs.piccolox.PFrame;
 

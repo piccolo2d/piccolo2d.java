@@ -40,13 +40,14 @@ import java.awt.geom.Point2D;
 
 import javax.swing.SwingUtilities;
 
-import edu.umd.cs.piccolo.PCamera;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.event.PInputEvent;
-import edu.umd.cs.piccolo.event.PInputEventListener;
-import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PAffineTransformException;
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.event.PInputEventListener;
+import org.piccolo2d.util.PAffineTransform;
+import org.piccolo2d.util.PAffineTransformException;
+
 
 /**
  * Event handler to send MousePressed, MouseReleased, MouseMoved, MouseClicked,

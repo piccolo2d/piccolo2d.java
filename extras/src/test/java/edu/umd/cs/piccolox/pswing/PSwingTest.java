@@ -40,8 +40,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
+import org.piccolo2d.util.PPaintContext;
+
 import junit.framework.TestCase;
-import edu.umd.cs.piccolo.util.PPaintContext;
 
 public class PSwingTest extends TestCase {
 	public void setUp() {

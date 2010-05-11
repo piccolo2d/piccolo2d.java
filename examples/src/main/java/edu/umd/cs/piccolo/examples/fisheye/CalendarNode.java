@@ -30,9 +30,10 @@ package edu.umd.cs.piccolo.examples.fisheye;
 
 import java.awt.Font;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
-import edu.umd.cs.piccolo.event.PInputEvent;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PBasicInputEventHandler;
+import org.piccolo2d.event.PInputEvent;
+
 
 class CalendarNode extends PNode {
     static int DEFAULT_NUM_DAYS = 7;

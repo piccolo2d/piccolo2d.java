@@ -28,9 +28,10 @@
  */
 package edu.umd.cs.piccolox.handles;
 
+import org.piccolo2d.PNode;
+
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.PNode;
 
 import edu.umd.cs.piccolox.util.PLocator;
 

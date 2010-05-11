@@ -31,16 +31,17 @@ package edu.umd.cs.piccolo.tutorial;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
-import edu.umd.cs.piccolo.event.PDragEventHandler;
-import edu.umd.cs.piccolo.event.PInputEvent;
-import edu.umd.cs.piccolo.nodes.PImage;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.nodes.PText;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PPaintContext;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PBasicInputEventHandler;
+import org.piccolo2d.event.PDragEventHandler;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.nodes.PImage;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PText;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
+
 import edu.umd.cs.piccolox.PFrame;
 
 public class InterfaceFrame extends PFrame {

@@ -52,7 +52,7 @@ import java.io.Serializable;
  * internal state of the base stroke. Try PathExample with extreme zoom in and
  * zoom back to the original scale. The pickable circles disappear. Strange!
  * 
- * @see edu.umd.cs.piccolo.nodes.PPath
+ * @see org.piccolo2d.nodes.PPath
  * @see BasicStroke
  * @version 1.0
  * @author Jesse Grosjean

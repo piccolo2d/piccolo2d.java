@@ -34,11 +34,12 @@ import java.awt.Paint;
 
 import java.awt.image.BufferedImage;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.nodes.PImage;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolo.nodes.PImage;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.nodes.PText;
+
 
 import edu.umd.cs.piccolox.PFrame;
 

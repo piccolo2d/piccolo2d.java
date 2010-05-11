@@ -30,11 +30,12 @@ package edu.umd.cs.piccolox.event;
 
 import java.awt.event.KeyEvent;
 
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
+import org.piccolo2d.PCanvas;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PInputEvent;
 
-import edu.umd.cs.piccolo.event.PInputEvent;
+
 
 import junit.framework.TestCase;
 

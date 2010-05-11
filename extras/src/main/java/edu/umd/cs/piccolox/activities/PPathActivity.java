@@ -28,7 +28,7 @@
  */
 package edu.umd.cs.piccolox.activities;
 
-import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
+import org.piccolo2d.activities.PInterpolatingActivity;
 
 /**
  * <b>PPathActivity</b> is the abstract base class for all path activity

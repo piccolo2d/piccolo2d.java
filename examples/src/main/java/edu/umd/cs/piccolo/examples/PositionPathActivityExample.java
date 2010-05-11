@@ -31,9 +31,10 @@ package edu.umd.cs.piccolo.examples;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 
-import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PPath;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.nodes.PPath;
+
 import edu.umd.cs.piccolox.PFrame;
 import edu.umd.cs.piccolox.activities.PPositionPathActivity;
 

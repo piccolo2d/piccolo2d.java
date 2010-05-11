@@ -28,11 +28,12 @@
  */
 package edu.umd.cs.piccolox.swt;
 
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PInputEventListener;
+
 import junit.framework.TestCase;
 
-import edu.umd.cs.piccolo.PNode;
 
-import edu.umd.cs.piccolo.event.PInputEventListener;
 
 import edu.umd.cs.piccolox.util.PBoundsLocator;
 import edu.umd.cs.piccolox.util.PLocator;

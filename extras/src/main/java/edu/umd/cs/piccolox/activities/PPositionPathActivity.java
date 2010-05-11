@@ -33,7 +33,8 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import edu.umd.cs.piccolo.activities.PInterpolatingActivity;
+import org.piccolo2d.activities.PInterpolatingActivity;
+
 
 /**
  * <b>PPositionPathActivity</b> animates through a sequence of points.

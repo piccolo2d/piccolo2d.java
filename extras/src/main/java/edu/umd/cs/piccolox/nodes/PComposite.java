@@ -28,8 +28,8 @@
  */
 package edu.umd.cs.piccolox.nodes;
 
-import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PPickPath;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PPickPath;
 
 /**
  * <b>PComposite</b> is a simple node that makes a group of nodes appear to be a

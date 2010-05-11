@@ -41,7 +41,8 @@ import java.util.Iterator;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import edu.umd.cs.piccolo.PNode;
+import org.piccolo2d.PNode;
+
 
 /**
  * Uses Swing layout managers to position PNodes.

@@ -45,7 +45,8 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import edu.umd.cs.piccolo.PCanvas;
+import org.piccolo2d.PCanvas;
+
 
 /**
  * <b>PFrame</b> is meant to be subclassed by applications that just need a
