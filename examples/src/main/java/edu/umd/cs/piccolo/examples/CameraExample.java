@@ -33,10 +33,10 @@ import java.awt.Color;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PBoundsHandle;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PBoundsHandle;
 
 /**
  * This example shows how to create internal cameras

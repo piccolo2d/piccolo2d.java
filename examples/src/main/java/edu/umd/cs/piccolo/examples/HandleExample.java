@@ -34,13 +34,13 @@ import java.awt.Color;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PBoundsHandle;
+import org.piccolo2d.extras.handles.PHandle;
+import org.piccolo2d.extras.util.PNodeLocator;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PDimension;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PBoundsHandle;
-import edu.umd.cs.piccolox.handles.PHandle;
-import edu.umd.cs.piccolox.util.PNodeLocator;
 
 /**
  * This example show how to add the default handles to a node, and also how to

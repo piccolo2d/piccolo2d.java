@@ -40,8 +40,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
+
 
 public class MultiplePSwingCanvasesExample extends JFrame {
     

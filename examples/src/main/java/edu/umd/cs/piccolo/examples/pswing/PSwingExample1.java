@@ -51,11 +51,11 @@ import javax.swing.event.ChangeListener;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PZoomEventHandler;
+import org.piccolo2d.extras.pswing.PComboBox;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.pswing.PComboBox;
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
  * User: Sam Reid Date: Jul 11, 2005 Time: 12:15:55 PM

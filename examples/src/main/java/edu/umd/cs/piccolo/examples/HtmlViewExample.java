@@ -36,9 +36,9 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PHtmlView;
 
-import edu.umd.cs.piccolox.PFrame;
 
 public class HtmlViewExample extends PFrame {
     private static final long serialVersionUID = 1L;

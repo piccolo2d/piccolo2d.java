@@ -32,9 +32,9 @@ import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
 
 public class PositionExample extends PFrame {
 

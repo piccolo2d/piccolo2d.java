@@ -36,9 +36,9 @@ import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This example shows how to make a node handle events.

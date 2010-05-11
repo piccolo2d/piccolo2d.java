@@ -38,9 +38,9 @@ import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
 
 public class SquiggleExample extends PFrame {
 

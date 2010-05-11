@@ -46,6 +46,8 @@ import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragEventHandler;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.nodes.P3DRect;
 import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
@@ -53,8 +55,6 @@ import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.nodes.P3DRect;
 
 /**
  * This example, contributed by Rowan Christmas, shows how to create a birds-eye

@@ -3,9 +3,9 @@ package edu.umd.cs.piccolo.examples;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.nodes.P3DRect;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.nodes.P3DRect;
 
 public class P3DRectExample extends PFrame {
 

@@ -35,15 +35,15 @@ import java.awt.Paint;
 import java.awt.image.BufferedImage;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.nodes.PShadow;
 import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
 
 
-import edu.umd.cs.piccolox.PFrame;
 
-import edu.umd.cs.piccolox.nodes.PShadow;
 
 /**
  * Shadow example.

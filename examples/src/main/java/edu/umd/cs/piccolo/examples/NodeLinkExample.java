@@ -36,9 +36,9 @@ import java.beans.PropertyChangeListener;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragEventHandler;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * Simple example showing one way to create a link between two nodes.

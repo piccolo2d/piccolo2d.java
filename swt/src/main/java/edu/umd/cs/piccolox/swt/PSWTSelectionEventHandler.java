@@ -37,10 +37,10 @@ import org.eclipse.swt.SWT;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.event.PSelectionEventHandler;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolox.event.PSelectionEventHandler;
 
 /**
  * Selection event handler modified to use SWT paths instead of normal paths.

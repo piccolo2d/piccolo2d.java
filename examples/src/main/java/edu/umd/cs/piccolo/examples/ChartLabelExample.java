@@ -35,10 +35,10 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This example shows how to create a vertical and a horizontal bar which can

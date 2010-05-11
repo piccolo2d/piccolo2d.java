@@ -41,10 +41,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
  * Attempt to replicate the PSwingRepaintManager-related memory leak reported in

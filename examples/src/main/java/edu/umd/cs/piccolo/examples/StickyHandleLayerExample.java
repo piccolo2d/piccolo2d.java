@@ -35,12 +35,12 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivity;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PBoundsHandle;
+import org.piccolo2d.extras.handles.PHandle;
+import org.piccolo2d.extras.util.PBoundsLocator;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PBoundsHandle;
-import edu.umd.cs.piccolox.handles.PHandle;
-import edu.umd.cs.piccolox.util.PBoundsLocator;
 
 /**
  * This example shows another way to create sticky handles. These handles are

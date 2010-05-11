@@ -32,12 +32,12 @@ import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.event.PNotification;
+import org.piccolo2d.extras.event.PNotificationCenter;
+import org.piccolo2d.extras.event.PSelectionEventHandler;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.event.PNotification;
-import edu.umd.cs.piccolox.event.PNotificationCenter;
-import edu.umd.cs.piccolox.event.PSelectionEventHandler;
 
 /**
  * This example shows how the selection event handler works. It creates a bunch

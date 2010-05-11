@@ -33,10 +33,10 @@ import java.awt.geom.GeneralPath;
 
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.activities.PPositionPathActivity;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.activities.PPositionPathActivity;
 
 /**
  * This example shows how create a simple acitivty to animate a node along a

@@ -33,11 +33,11 @@ import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.event.PDragEventHandler;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PStickyHandleManager;
+import org.piccolo2d.extras.util.PFixedWidthStroke;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PStickyHandleManager;
-import edu.umd.cs.piccolox.util.PFixedWidthStroke;
 
 public class PathExample extends PFrame {
 

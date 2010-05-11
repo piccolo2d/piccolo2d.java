@@ -55,14 +55,14 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.extras.swing.SwingLayoutNode;
+import org.piccolo2d.extras.swing.SwingLayoutNode.Anchor;
 import org.piccolo2d.nodes.PHtmlView;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
-import edu.umd.cs.piccolox.swing.SwingLayoutNode;
-import edu.umd.cs.piccolox.swing.SwingLayoutNode.Anchor;
 
 public class SwingLayoutExample {
 

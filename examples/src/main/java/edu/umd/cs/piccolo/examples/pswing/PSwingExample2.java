@@ -72,9 +72,9 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.table.TableColumn;
 
 import org.piccolo2d.PNode;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
 
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
  * User: Sam Reid Date: Jul 11, 2005 Time: 12:15:55 PM

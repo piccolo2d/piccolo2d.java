@@ -35,10 +35,10 @@ import javax.swing.event.ChangeListener;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 /**
  * Demonstrates the use of PSwing in a Piccolo application.

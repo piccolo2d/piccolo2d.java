@@ -31,11 +31,11 @@ package edu.umd.cs.piccolo.examples;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.activities.PActivity;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PText;
 
 
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This example demonstrates the difference between

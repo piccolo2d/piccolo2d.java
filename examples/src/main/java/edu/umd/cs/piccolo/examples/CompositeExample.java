@@ -33,11 +33,11 @@ import java.awt.Color;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragEventHandler;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.nodes.PComposite;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.nodes.PComposite;
 
 /**
  * This example shows how to create a composite node. A composite node is a

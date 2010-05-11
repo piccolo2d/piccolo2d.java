@@ -34,10 +34,10 @@ import java.util.Random;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.event.PNavigationEventHandler;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.event.PNavigationEventHandler;
 
 public class NavigationExample extends PFrame {
 

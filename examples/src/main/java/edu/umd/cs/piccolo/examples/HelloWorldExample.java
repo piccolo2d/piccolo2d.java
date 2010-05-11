@@ -29,9 +29,9 @@
 package edu.umd.cs.piccolo.examples;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.PFrame;
 
 public class HelloWorldExample extends PFrame {
 

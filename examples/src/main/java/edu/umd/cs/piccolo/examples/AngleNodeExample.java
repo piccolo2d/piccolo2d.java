@@ -40,12 +40,12 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PHandle;
+import org.piccolo2d.extras.util.PLocator;
 import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PHandle;
-import edu.umd.cs.piccolox.util.PLocator;
 
 /**
  * This shows how to create a simple node that has two handles and can be used

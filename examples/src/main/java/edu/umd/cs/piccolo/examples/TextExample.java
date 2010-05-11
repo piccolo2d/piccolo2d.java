@@ -29,9 +29,9 @@
 package edu.umd.cs.piccolo.examples;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.event.PStyledTextEventHandler;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.event.PStyledTextEventHandler;
 
 /**
  * @author Lance Good

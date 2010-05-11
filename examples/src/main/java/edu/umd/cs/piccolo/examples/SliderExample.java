@@ -46,9 +46,10 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import edu.umd.cs.piccolox.pswing.PSwing;
-import edu.umd.cs.piccolox.pswing.PSwingCanvas;
-import edu.umd.cs.piccolox.swing.PScrollPane;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.extras.swing.PScrollPane;
+
 
 /**
  * Tests a set of Sliders and Checkboxes in panels.

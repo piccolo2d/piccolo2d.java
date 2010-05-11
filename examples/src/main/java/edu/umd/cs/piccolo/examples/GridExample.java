@@ -45,9 +45,9 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * Example of drawing an infinite grid, and providing support for snap to grid.

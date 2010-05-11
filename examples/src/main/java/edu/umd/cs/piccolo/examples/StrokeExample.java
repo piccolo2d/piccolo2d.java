@@ -32,11 +32,11 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.util.PFixedWidthStroke;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.util.PFixedWidthStroke;
 
 /**
  * Stroke example.

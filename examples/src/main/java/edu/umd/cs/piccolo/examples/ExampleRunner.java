@@ -45,9 +45,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.util.PDebug;
 
-import edu.umd.cs.piccolox.PFrame;
 
 public class ExampleRunner extends JFrame {
     private static final long serialVersionUID = 1L;

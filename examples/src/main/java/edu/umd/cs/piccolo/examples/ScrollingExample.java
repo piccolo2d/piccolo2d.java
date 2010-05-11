@@ -44,15 +44,15 @@ import javax.swing.JToolBar;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.swing.PDefaultScrollDirector;
+import org.piccolo2d.extras.swing.PScrollDirector;
+import org.piccolo2d.extras.swing.PScrollPane;
+import org.piccolo2d.extras.swing.PViewport;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.swing.PDefaultScrollDirector;
-import edu.umd.cs.piccolox.swing.PScrollDirector;
-import edu.umd.cs.piccolox.swing.PScrollPane;
-import edu.umd.cs.piccolox.swing.PViewport;
 
 /**
  * This creates a simple scene and allows switching between traditional

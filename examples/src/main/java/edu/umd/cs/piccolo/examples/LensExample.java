@@ -39,13 +39,13 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PBoundsHandle;
+import org.piccolo2d.extras.nodes.PLens;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PBoundsHandle;
-import edu.umd.cs.piccolox.nodes.PLens;
 
 /**
  * This example shows one way to create and use lens's in Piccolo.

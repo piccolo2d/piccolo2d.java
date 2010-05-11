@@ -35,13 +35,13 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.nodes.PStyledText;
 import org.piccolo2d.nodes.PHtmlView;
 import org.piccolo2d.nodes.PText;
 
 
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.nodes.PStyledText;
 
 /**
  * Example of text rendering with offset bounds.

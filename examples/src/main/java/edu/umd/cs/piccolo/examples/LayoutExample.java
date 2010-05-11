@@ -33,10 +33,10 @@ import java.util.Iterator;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.handles.PBoundsHandle;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.PBoundsHandle;
 
 /**
  * This example shows how to create a node that will automatically layout its

@@ -38,10 +38,10 @@ import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivity;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.util.PFixedWidthStroke;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.util.PFixedWidthStroke;
 
 /**
  * 1000 nodes rotated continuously. Note that if you zoom to a portion of the

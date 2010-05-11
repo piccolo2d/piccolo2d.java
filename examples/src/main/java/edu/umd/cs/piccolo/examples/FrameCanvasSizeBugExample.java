@@ -31,10 +31,10 @@ package edu.umd.cs.piccolo.examples;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PText;
 
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This example demonstrates a bug with setting the size

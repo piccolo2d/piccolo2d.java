@@ -30,13 +30,13 @@ package edu.umd.cs.piccolox.swt;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEventListener;
+import org.piccolo2d.extras.util.PBoundsLocator;
+import org.piccolo2d.extras.util.PLocator;
 
 import junit.framework.TestCase;
 
 
 
-import edu.umd.cs.piccolox.util.PBoundsLocator;
-import edu.umd.cs.piccolox.util.PLocator;
 
 /**
  * Unit test for PSWTHandle.

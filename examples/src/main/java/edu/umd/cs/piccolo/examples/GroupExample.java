@@ -36,12 +36,12 @@ import java.util.ArrayList;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
+import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.extras.event.PSelectionEventHandler;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.event.PSelectionEventHandler;
 
 /**
  * An example of how to implement decorator groups. Decorator groups are nodes

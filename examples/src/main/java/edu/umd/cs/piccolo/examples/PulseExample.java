@@ -37,9 +37,9 @@ import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivityScheduler;
 import org.piccolo2d.activities.PColorActivity;
 import org.piccolo2d.activities.PInterpolatingActivity;
+import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
-import edu.umd.cs.piccolox.PFrame;
 
 /**
  * This example shows how to set up interpolating activities that repeat. For
