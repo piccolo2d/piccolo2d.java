@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolox.swt;
+package org.piccolo2d.extras.swt;
 
 import java.io.File;
 
@@ -39,6 +39,8 @@ import org.eclipse.swt.layout.FillLayout;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.piccolo2d.extras.swt.PSWTCanvas;
+import org.piccolo2d.extras.swt.PSWTImage;
 
 /**
  * Unit test for PSWTImage.

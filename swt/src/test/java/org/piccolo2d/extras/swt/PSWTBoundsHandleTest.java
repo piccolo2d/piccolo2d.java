@@ -26,11 +26,12 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.umd.cs.piccolox.swt;
+package org.piccolo2d.extras.swt;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEventListener;
+import org.piccolo2d.extras.swt.PSWTBoundsHandle;
 import org.piccolo2d.extras.util.PBoundsLocator;
 
 import junit.framework.TestCase;

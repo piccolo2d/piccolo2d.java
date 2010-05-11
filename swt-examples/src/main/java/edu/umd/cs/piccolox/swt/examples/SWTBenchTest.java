@@ -53,8 +53,8 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.piccolo2d.extras.swt.SWTGraphics2D;
 
-import edu.umd.cs.piccolox.swt.SWTGraphics2D;
 
 /**
  * Piccolo2D SWT benchmarking test suite.

@@ -33,10 +33,10 @@ import java.awt.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.piccolo2d.extras.swt.PSWTCanvas;
+import org.piccolo2d.extras.swt.PSWTPath;
+import org.piccolo2d.extras.swt.PSWTText;
 
-import edu.umd.cs.piccolox.swt.PSWTCanvas;
-import edu.umd.cs.piccolox.swt.PSWTPath;
-import edu.umd.cs.piccolox.swt.PSWTText;
 
 public final class SWTBasicExample {
 

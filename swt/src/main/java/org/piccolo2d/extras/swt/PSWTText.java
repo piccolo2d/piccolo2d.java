@@ -2,7 +2,7 @@
  * Copyright (C) 1998-1999 by University of Maryland, College Park, MD 20742, USA
  * All rights reserved.
  */
-package edu.umd.cs.piccolox.swt;
+package org.piccolo2d.extras.swt;
 
 import java.awt.Color;
 import java.awt.Font;
