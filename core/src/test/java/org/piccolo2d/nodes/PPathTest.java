@@ -58,12 +58,12 @@ public class PPathTest extends TestCase {
     }
 
     public void testStrokeIsNotNullByDefault() {
-        final PPath path = new PPath();
+        final PPath path = new PPath.Double();
         assertNotNull(path.getStroke());
     }
 
     public void testStrokePaintIsBlackByDefault() {
-        final PPath path = new PPath();
+        final PPath path = new PPath.Double();
         assertEquals(Color.BLACK, path.getStrokePaint());
     }
 
@@ -137,6 +137,7 @@ public class PPathTest extends TestCase {
         PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 0), path.getBounds(), 2.0d);
     }
 
+    /*
     public void testCreatePolyLinePoint2DReturnsValidPPath() {
         final PPath path = PPath.createPolyline(new Point2D[] { new Point2D.Double(0, 0), new Point2D.Double(100, 50),
                 new Point2D.Double(100, 0) });
@@ -153,23 +154,25 @@ public class PPathTest extends TestCase {
         // Seems like rounding is affecting the bounds greatly
         PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
+    */
 
     public void testSetStrokePaintPersists() {
-        final PPath path = new PPath();
+        final PPath path = new PPath.Double();
         path.setStrokePaint(Color.RED);
         assertEquals(Color.RED, path.getStrokePaint());
     }
 
+    // move these to PShape test, add stroke
     public void testSetStrokeFiresPropertyChangeEvent() {
-        final PPath path = new PPath();
-        path.addPropertyChangeListener(PPath.PROPERTY_STROKE_PAINT, mockListener);
+        final PPath path = new PPath.Double();
+        path.addPropertyChangeListener("strokePaint", mockListener);
         path.setStrokePaint(Color.RED);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
 
     public void testChangingPathFiresPropertyChangeEvent() {
-        final PPath path = new PPath();
-        path.addPropertyChangeListener(PPath.PROPERTY_PATH, mockListener);
+        final PPath path = new PPath.Double();
+        path.addPropertyChangeListener("path", mockListener); // "shape"
         path.append(new Rectangle2D.Double(0, 0, 100, 50), true);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
