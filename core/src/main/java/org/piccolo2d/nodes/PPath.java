@@ -31,6 +31,7 @@ package org.piccolo2d.nodes;
 import java.awt.Shape;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -85,6 +86,10 @@ public abstract class PPath extends PShape
     }
 
 
+    public static PPath createArc(final float x, final float y, final float width, final float height, final float start, final float extent, final int type) {
+        return new PPath.Float(new Arc2D.Float(x, y, width, height, start, extent, type));
+    }
+
     public static PPath createCubicCurve(final float x1, final float y1, final float ctrlx1, final float ctrly1, final float ctrlx2, final float ctrly2, final float x2, final float y2) {
         return new PPath.Float(new CubicCurve2D.Float(x1, y1, ctrlx1, ctrly1, ctrlx2, ctrly2, x2, y2));
     }
@@ -118,6 +123,9 @@ public abstract class PPath extends PShape
         return new PPath.Float(new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight));
     }
 
+    public static PPath createArc(final double x, final double y, final double width, final double height, final double start, final double extent, final int type) {
+        return new PPath.Double(new Arc2D.Double(x, y, width, height, start, extent, type));
+    }
 
     public static PPath createCubicCurve(final double x1, final double y1, final double ctrlx1, final double ctrly1, final double ctrlx2, final double ctrly2, final double x2, final double y2) {
         return new PPath.Double(new CubicCurve2D.Double(x1, y1, ctrlx1, ctrly1, ctrlx2, ctrly2, x2, y2));

@@ -28,6 +28,11 @@
  */
 package org.piccolo2d.nodes;
 
+import java.awt.Shape;
+
+import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
+
 /**
  * Unit test for PPath.Float.
  */
@@ -36,5 +41,37 @@ public class PPathFloatTest extends AbstractPShapeTest {
     /** {@inheritDoc} */
     protected PShape createShapeNode() {
         return new PPath.Float();
+    }
+
+    public void testNoArgConstructor() {
+        assertNotNull(new PPath.Float());
+    }
+
+    public void testShapeConstructor() {
+        assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f)));
+    }
+
+    public void testShapeConstructorNullArgument() {
+        try {
+            new PPath.Float((Shape) null);
+            fail("ctr((Shape) null) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
+    }
+
+    public void testPathConstructor() {
+        assertNotNull(new PPath.Float(new Path2D.Float()));
+    }
+
+    public void testPathConstructorNullArgument() {
+        try {
+            new PPath.Float((Path2D) null);
+            fail("ctr((Path2D) null) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
     }
 }

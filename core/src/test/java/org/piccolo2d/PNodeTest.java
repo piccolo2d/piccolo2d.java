@@ -134,6 +134,29 @@ public class PNodeTest extends AbstractPNodeTest {
         layoutNode1.getFullBoundsReference();
     }
 
+    public void testFindIntersectingNodes() {
+        final PNode c = new PNode();
+
+        node.addChild(c);
+        node.setBounds(0, 0, 100, 100);
+        c.setBounds(0, 0, 100, 100);
+        c.scale(200);
+
+        ArrayList found = new ArrayList();
+        final Rectangle2D rect2d = new Rectangle2D.Double(50, 50, 10, 10);
+        node.findIntersectingNodes(rect2d, found);
+
+        assertEquals(found.size(), 2);
+        assertEquals(rect2d.getHeight(), 10, 0);
+        found = new ArrayList();
+
+        final PBounds bounds = new PBounds(50, 50, 10, 10);
+        node.findIntersectingNodes(bounds, found);
+
+        assertEquals(found.size(), 2);
+        assertEquals(bounds.getHeight(), 10, 0);
+    }
+
     public void testCenterFullBoundsOnPointWorksAsExpected() {
         final PNode parent = buildComplexSquareNode();
 
@@ -250,5 +273,153 @@ public class PNodeTest extends AbstractPNodeTest {
 
         final PPickPath path = canvas.getCamera().pick(5, 5, 5);
         assertSame(node1, path.getPickedNode());
+    }
+
+    public void testSetTransparency1MeansInvisible() {
+        node.setBounds(0, 0, 100, 100);
+        node.setVisible(true);
+        node.setPaint(Color.RED);
+
+        final PCanvas canvas = buildCanvasContainingNode(node);
+
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics g = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
+
+        canvas.paintComponent(g);
+        node.setTransparency(1f);
+        assertEquals(Color.RED.getRGB(), img.getRGB(10, 10));
+
+        node.setTransparency(0f);
+        canvas.paintComponent(g);
+        assertEquals(Color.WHITE.getRGB(), img.getRGB(10, 10));
+
+    }
+
+    public void testPaintColourIsRespectedOnPaint() {
+        final BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        final Graphics g = GraphicsEnvironment.getLocalGraphicsEnvironment().createGraphics(img);
+
+        node.setPaint(Color.RED);
+        node.setBounds(0, 0, 100, 100);
+
+        final PCanvas canvas = buildCanvasContainingNode(node);
+        canvas.paintComponent(g);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+    }
+
+    public void testToImageReturnsValidImage() {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        // Really don't like casting here, but... without changing the
+        // interface, I don't see a choice
+        final BufferedImage img = (BufferedImage) node.toImage();
+
+        assertEquals(10, img.getHeight(null));
+        assertEquals(10, img.getWidth(null));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 9));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 9));
+    }
+
+    public void testToImageUsesFullBoundsWhenConvertingImage() throws IOException {
+        node.setBounds(0, 0, 50, 50);
+        PNode child1 = new PNode();
+        child1.setBounds(0, 0, 100, 50);
+        child1.setPaint(Color.RED);
+        node.addChild(child1);
+        
+        PNode child2 = new PNode();
+        child2.setBounds(0, 0, 50, 100);
+        child2.setPaint(Color.BLUE);
+        node.addChild(child2);
+        
+        BufferedImage image = (BufferedImage) node.toImage();
+        assertNotNull(image);
+        assertEquals(100, image.getWidth());
+        assertEquals(100, image.getHeight());           
+        assertEquals(Color.RED.getRGB(), image.getRGB(99, 1));
+        
+        //This line fails if PNode.toImage uses getWidth() rather than getFullBounds().getWidth()
+        assertEquals(Color.BLUE.getRGB(), image.getRGB(1, 99));
+    }
+
+    public void testToImageWillAcceptBackgroundPaint() {
+        node.setBounds(0, 0, 10, 10);
+
+        final BufferedImage img = (BufferedImage) node.toImage(10, 10, Color.BLUE);
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(5, 5));
+    }
+
+    public void testToImageWithBackgroundColorGivenReturnsValidImage() {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        final BufferedImage img = (BufferedImage) node.toImage(20, 40, Color.BLUE);
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(15, 25));
+    }
+
+    public void testToImageScalesNodeAsBigAsCanBe() throws IOException {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        final BufferedImage img = (BufferedImage) node.toImage(20, 40, Color.BLUE);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 19));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 20));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(19, 20));
+    }
+
+    public void testToImageScalesAccordingToExactFitStrategy() throws IOException {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
+                Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 0));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 39));
+        assertEquals(Color.RED.getRGB(), img.getRGB(19, 39));
+
+    }
+
+    public void testToImageScalesAccordingToAspectCoverStrategy() throws IOException {
+        node.setBounds(0, 0, 10, 10);
+        node.setPaint(Color.RED);
+
+        PNode blueSquare = new PNode();
+        blueSquare.setPaint(Color.BLUE);
+        blueSquare.setBounds(0, 0, 5, 5);
+        node.addChild(blueSquare);
+
+        PNode greenSquare = new PNode();
+        greenSquare.setPaint(Color.GREEN);
+        greenSquare.setBounds(5, 5, 5, 5);
+        node.addChild(greenSquare);
+
+        final BufferedImage img = (BufferedImage) node.toImage(new BufferedImage(20, 40, BufferedImage.TYPE_INT_RGB),
+                Color.BLUE, PNode.FILL_STRATEGY_EXACT_FIT);
+
+        assertEquals(Color.RED.getRGB(), img.getRGB(11, 19));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 20));
+        assertEquals(Color.RED.getRGB(), img.getRGB(0, 20));
+        assertEquals(Color.RED.getRGB(), img.getRGB(9, 39));
+
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 0));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(0, 19));
+        assertEquals(Color.BLUE.getRGB(), img.getRGB(9, 0));
+
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 20));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 20));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(10, 39));
+        assertEquals(Color.GREEN.getRGB(), img.getRGB(19, 39));
     }
 }

@@ -38,24 +38,23 @@ import java.awt.geom.Area;
  */
 public class PArea extends PShape
 {
-    private Area area;
+    private transient Area area;
 
 
     public PArea() {
-        super();
         area = new Area();
     }
 
     public PArea(final Shape shape) {
         if (shape == null) {
-            throw new IllegalArgumentException("shape must not be null");
+            throw new NullPointerException("shape must not be null");
         }
         this.area = new Area(shape);
     }
 
     public PArea(final Area area) {
         if (area == null) {
-            throw new IllegalArgumentException("area must not be null");
+            throw new NullPointerException("area must not be null");
         }
         this.area = new Area();
         this.area.add(area);
@@ -64,22 +63,22 @@ public class PArea extends PShape
 
     public void add(final Area area) {
         this.area.add(area);
-        updateBounds();
+        updateBoundsFromShape();
     }
 
     public void exclusiveOr(final Area area) {
         this.area.exclusiveOr(area);
-        updateBounds();
+        updateBoundsFromShape();
     }
 
     public void intersect(final Area area) {
         this.area.intersect(area);
-        updateBounds();
+        updateBoundsFromShape();
     }
 
     public void subtract(final Area area) {
         this.area.subtract(area);
-        updateBounds();
+        updateBoundsFromShape();
     }
 
     public boolean isPolygonal() {
