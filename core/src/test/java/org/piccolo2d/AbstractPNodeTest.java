@@ -85,6 +85,10 @@ public abstract class AbstractPNodeTest extends TestCase {
      */
     protected abstract PNode createNode();
 
+    public void testCreateNode() {
+        assertNotNull(createNode());
+    }
+
     public void testCenterBaseBoundsOnPoint() {
         node.setBounds(100, 300, 100, 80);
         node.centerBoundsOnPoint(0, 0);
