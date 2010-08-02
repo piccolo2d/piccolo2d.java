@@ -78,13 +78,8 @@ public abstract class PShape extends PNode {
     }
 
     protected final void updateBoundsFromShape() {
-        if (getShape() == null) {
-            resetBounds();
-        }
-        else {
-            final Rectangle2D b = getBoundsWithStroke();
-            setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-        }
+        final Rectangle2D b = getBoundsWithStroke();
+        setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
     }
 
     protected final Rectangle2D getBoundsWithStroke() {

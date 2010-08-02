@@ -29,8 +29,14 @@
 package org.piccolo2d.nodes;
 
 import java.awt.Color;
+import java.awt.Shape;
+
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,7 +46,9 @@ import java.io.ObjectInputStream;
 
 import org.piccolo2d.MockPropertyChangeListener;
 import org.piccolo2d.PiccoloAsserts;
+
 import org.piccolo2d.nodes.PPath;
+
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PObjectOutputStream;
 
@@ -50,6 +58,9 @@ import junit.framework.TestCase;
  * Unit test for PPath.
  */
 public class PPathTest extends TestCase {
+
+    private static final double TOLERANCE = 0.0001d;
+    private static final double LOW_TOLERANCE = 1.0d;
 
     private MockPropertyChangeListener mockListener;
 
@@ -162,7 +173,7 @@ public class PPathTest extends TestCase {
         assertEquals(Color.RED, path.getStrokePaint());
     }
 
-    // move these to PShape test, add stroke
+    // todo:  move these to PShape test, add stroke
     public void testSetStrokeFiresPropertyChangeEvent() {
         final PPath path = new PPath.Double();
         path.addPropertyChangeListener("strokePaint", mockListener);
@@ -177,4 +188,140 @@ public class PPathTest extends TestCase {
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
 
+    public void testCreateArcFloat() {
+        assertNotNull(PPath.createArc(0.0f, 0.0f, 50.0f, 100.0f, 25.0f, 75.0f, Arc2D.OPEN));
+    }
+
+    public void testCreateCubicCurveFloat() {
+        assertNotNull(PPath.createCubicCurve(0.0f, 0.0f, 25.0f, 75.0f, 75.0f, 25.0f, 50.0f, 100.0f));
+    }
+
+    public void testCreateEllipseFloat() {
+        assertNotNull(PPath.createEllipse(0.0f, 0.0f, 50.0f, 100.0f));
+    }
+
+    public void testCreateLineFloat() {
+        assertNotNull(PPath.createLine(0.0f, 0.0f, 50.0f, 100.0f));
+    }
+
+    public void testCreateQuadCurveFloat() {
+        assertNotNull(PPath.createQuadCurve(0.0f, 0.0f, 25.0f, 75.0f, 50.0f, 100.0f));
+    }
+
+    public void testCreateRectangleFloat() {
+        assertNotNull(PPath.createRectangle(0.0f, 0.0f, 50.0f, 100.0f));
+    }
+
+    public void testCreateRoundRectangleFloat() {
+        assertNotNull(PPath.createRoundRectangle(0.0f, 0.0f, 50.0f, 100.0f, 4.0f, 8.0f));
+    }
+
+    public void testCreateArcDouble() {
+        assertNotNull(PPath.createArc(0.0d, 0.0d, 50.0d, 100.0d, 25.0d, 75.0d, Arc2D.OPEN));
+    }
+
+    public void testCreateCubicCurveDouble() {
+        assertNotNull(PPath.createCubicCurve(0.0d, 0.0d, 25.0d, 75.0d, 75.0d, 25.0d, 50.0d, 100.0d));
+    }
+
+    public void testCreateEllipseDouble() {
+        assertNotNull(PPath.createEllipse(0.0d, 0.0d, 50.0d, 100.0d));
+    }
+
+    public void testCreateLineDouble() {
+        assertNotNull(PPath.createLine(0.0d, 0.0d, 50.0d, 100.0d));
+    }
+
+    public void testCreateQuadCurveDouble() {
+        assertNotNull(PPath.createQuadCurve(0.0d, 0.0d, 25.0d, 75.0d, 50.0d, 100.0d));
+    }
+
+    public void testCreateRectangleDouble() {
+        assertNotNull(PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d));
+    }
+
+    public void testCreateRoundRectangleDouble() {
+        assertNotNull(PPath.createRoundRectangle(0.0d, 0.0d, 50.0d, 100.0d, 4.0d, 8.0d));
+    }
+
+    public void testAppendShape() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        Rectangle2D rect = new Rectangle2D.Double(50.0d, 100.0d, 50.0d, 100.0d);
+        path.append(rect, true);
+        // todo:  shouldn't this be width + 2 * strokeWidth?
+        assertEquals(101.0d, path.getWidth(), TOLERANCE);
+        assertEquals(201.0d, path.getHeight(), TOLERANCE);
+    }
+
+    public void testAppendShapeNullArgument() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        try {
+            path.append((Shape) null, true);
+            fail("append((Shape) null, true) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
+    }
+
+    public void testAppendPathIterator() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        Rectangle2D rect = new Rectangle2D.Double(50.0d, 100.0d, 50.0d, 100.0d);
+        PathIterator pathIterator = rect.getPathIterator(new AffineTransform());
+        path.append(pathIterator, true);
+        assertEquals(101.0d, path.getWidth(), TOLERANCE);
+        assertEquals(201.0d, path.getHeight(), TOLERANCE);
+    }
+
+    public void testAppendPathIteratorNullArgument() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        try {
+            path.append((PathIterator) null, true);
+            fail("append((PathIterator) null, true) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
+    }
+
+    public void testCurveTo() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.curveTo(70.0d, 140.0d, 80.0d, 140.0d, 100.0d, 200.0d);
+        assertEquals(101.0d, path.getWidth(), LOW_TOLERANCE);
+        assertEquals(201.0d, path.getHeight(), LOW_TOLERANCE);
+    }
+
+    public void testLineTo() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.lineTo(100.0d, 200.0d);
+        assertEquals(101.0d, path.getWidth(), LOW_TOLERANCE);
+        assertEquals(201.0d, path.getHeight(), LOW_TOLERANCE);
+    }
+
+    public void testMoveTo() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.moveTo(100.0d, 200.0d);
+        assertEquals(51.0d, path.getWidth(), TOLERANCE);
+        assertEquals(101.0d, path.getHeight(), TOLERANCE);
+    }
+
+    public void testQuadTo() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.quadTo(70.0d, 140.0d, 100.0d, 200.0d);
+        assertEquals(101.0d, path.getWidth(), LOW_TOLERANCE);
+        assertEquals(201.0d, path.getHeight(), LOW_TOLERANCE);
+    }
+
+    public void testClosePath() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.lineTo(100.0d, 200.0d);
+        path.closePath();
+    }
+
+    public void testClosePathAlreadyClosed() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.lineTo(100.0d, 200.0d);
+        path.closePath();
+        path.closePath();
+    }
 }

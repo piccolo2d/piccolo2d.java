@@ -50,10 +50,7 @@ public abstract class PPath extends PShape
 
     // todo: ctr with stroke?
 
-    PPath(final Path2D path) {
-        if (path == null) {
-            throw new IllegalArgumentException("path must not be null");
-        }
+    private PPath(final Path2D path) {
         this.path = (Path2D) path.clone();
         // todo:
         // not sure why this call is required for this class, it is not present in original PPath
@@ -61,7 +58,7 @@ public abstract class PPath extends PShape
     }
 
 
-    public static class Float extends PPath {
+    public static final class Float extends PPath {
         public Float() {
             super(new Path2D.Float());
         }
@@ -73,7 +70,7 @@ public abstract class PPath extends PShape
         }
     }
 
-    public static class Double extends PPath {
+    public static final class Double extends PPath {
         public Double() {
             super(new Path2D.Double());
         }
@@ -86,111 +83,111 @@ public abstract class PPath extends PShape
     }
 
 
-    public static PPath createArc(final float x, final float y, final float width, final float height, final float start, final float extent, final int type) {
+    public static final PPath createArc(final float x, final float y, final float width, final float height, final float start, final float extent, final int type) {
         return new PPath.Float(new Arc2D.Float(x, y, width, height, start, extent, type));
     }
 
-    public static PPath createCubicCurve(final float x1, final float y1, final float ctrlx1, final float ctrly1, final float ctrlx2, final float ctrly2, final float x2, final float y2) {
+    public static final PPath createCubicCurve(final float x1, final float y1, final float ctrlx1, final float ctrly1, final float ctrlx2, final float ctrly2, final float x2, final float y2) {
         return new PPath.Float(new CubicCurve2D.Float(x1, y1, ctrlx1, ctrly1, ctrlx2, ctrly2, x2, y2));
     }
 
-    public static PPath createEllipse(final float x, final float y, final float width, final float height) {
+    public static final PPath createEllipse(final float x, final float y, final float width, final float height) {
         return new PPath.Float(new Ellipse2D.Float(x, y, width, height));
     }
 
-    public static PPath createLine(final float x1, final float y1, final float x2, final float y2) {
+    public static final PPath createLine(final float x1, final float y1, final float x2, final float y2) {
         return new PPath.Float(new Line2D.Float(x1, y1, x2, y2));
     }
 
     /*
       need setPathToPolyline
-    public static PPath createPolyline(final float[] xp, final float[] yp) {
+    public static final PPath createPolyline(final float[] xp, final float[] yp) {
     }
 
-    public static PPath createPolyline(final Point2D.Float[] points) {
+    public static final PPath createPolyline(final Point2D.Float[] points) {
     }
     */
 
-    public static PPath createQuadCurve(final float x1, final float y1, final float ctrlx, final float ctrly, final float x2, final float y2) {
+    public static final PPath createQuadCurve(final float x1, final float y1, final float ctrlx, final float ctrly, final float x2, final float y2) {
         return new PPath.Float(new QuadCurve2D.Float(x1, y1, ctrlx, ctrly, x2, y2));
     }
 
-    public static PPath createRectangle(final float x, final float y, final float width, final float height) {
+    public static final PPath createRectangle(final float x, final float y, final float width, final float height) {
         return new PPath.Float(new Rectangle2D.Float(x, y, width, height));
     }
 
-    public static PPath createRoundRectangle(final float x, final float y, final float width, final float height, final float arcWidth, final float arcHeight) {
+    public static final PPath createRoundRectangle(final float x, final float y, final float width, final float height, final float arcWidth, final float arcHeight) {
         return new PPath.Float(new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight));
     }
 
-    public static PPath createArc(final double x, final double y, final double width, final double height, final double start, final double extent, final int type) {
+    public static final PPath createArc(final double x, final double y, final double width, final double height, final double start, final double extent, final int type) {
         return new PPath.Double(new Arc2D.Double(x, y, width, height, start, extent, type));
     }
 
-    public static PPath createCubicCurve(final double x1, final double y1, final double ctrlx1, final double ctrly1, final double ctrlx2, final double ctrly2, final double x2, final double y2) {
+    public static final PPath createCubicCurve(final double x1, final double y1, final double ctrlx1, final double ctrly1, final double ctrlx2, final double ctrly2, final double x2, final double y2) {
         return new PPath.Double(new CubicCurve2D.Double(x1, y1, ctrlx1, ctrly1, ctrlx2, ctrly2, x2, y2));
     }
 
-    public static PPath createEllipse(final double x, final double y, final double width, final double height) {
+    public static final PPath createEllipse(final double x, final double y, final double width, final double height) {
         return new PPath.Double(new Ellipse2D.Double(x, y, width, height));
     }
 
-    public static PPath createLine(final double x1, final double y1, final double x2, final double y2) {
+    public static final PPath createLine(final double x1, final double y1, final double x2, final double y2) {
         return new PPath.Double(new Line2D.Double(x1, y1, x2, y2));
     }
 
     /*
-    public static PPath createPolyline(final double[] xp, final double[] yp) {
+    public static final PPath createPolyline(final double[] xp, final double[] yp) {
     }
 
-    public static PPath createPolyline(final Point2D.Double[] points) {
+    public static final PPath createPolyline(final Point2D.Double[] points) {
     }
     */
 
-    public static PPath createQuadCurve(final double x1, final double y1, final double ctrlx, final double ctrly, final double x2, final double y2) {
+    public static final PPath createQuadCurve(final double x1, final double y1, final double ctrlx, final double ctrly, final double x2, final double y2) {
         return new PPath.Double(new QuadCurve2D.Double(x1, y1, ctrlx, ctrly, x2, y2));
     }
 
-    public static PPath createRectangle(final double x, final double y, final double width, final double height) {
+    public static final PPath createRectangle(final double x, final double y, final double width, final double height) {
         return new PPath.Double(new Rectangle2D.Double(x, y, width, height));
     }
 
-    public static PPath createRoundRectangle(final double x, final double y, final double width, final double height, final double arcWidth, final double arcHeight) {
+    public static final PPath createRoundRectangle(final double x, final double y, final double width, final double height, final double arcWidth, final double arcHeight) {
         return new PPath.Double(new RoundRectangle2D.Double(x, y, width, height, arcWidth, arcHeight));
     }
 
 
-    public void append(final Shape shape, final boolean connect) {
+    public final void append(final Shape shape, final boolean connect) {
         path.append(shape, connect);
         updateBoundsFromShape();
     }
 
-    public void append(final PathIterator pathIterator, final boolean connect) {
+    public final void append(final PathIterator pathIterator, final boolean connect) {
         path.append(pathIterator, connect);
         updateBoundsFromShape();
     }
 
-    public void curveTo(final double x1, final double y1, final double x2, final double y2, final double x3, final double y3) {
+    public final void curveTo(final double x1, final double y1, final double x2, final double y2, final double x3, final double y3) {
         path.curveTo(x1, y1, x2, y2, x3, y3);
         updateBoundsFromShape();
     }
 
-    public void lineTo(final double x, final double y) {
+    public final void lineTo(final double x, final double y) {
         path.lineTo(x, y);
         updateBoundsFromShape();
     }
 
-    public void moveTo(final double x, final double y) {
+    public final void moveTo(final double x, final double y) {
         path.moveTo(x, y);
         updateBoundsFromShape();
     }
 
-    public void quadTo(final double x1, final double y1, final double x2, final double y2) {
+    public final void quadTo(final double x1, final double y1, final double x2, final double y2) {
         path.quadTo(x1, y1, x2, y2);
         updateBoundsFromShape();
     }
 
-    public void closePath() {
+    public final void closePath() {
         path.closePath();
         updateBoundsFromShape();
     }
@@ -199,12 +196,12 @@ public abstract class PPath extends PShape
     //    path property change events
 
     /** {@inheritDoc} */
-    protected Shape getShape() {
+    protected final Shape getShape() {
         return path;
     }
 
     /** {@inheritDoc} */
-    protected void transform(final AffineTransform transform) {
+    protected final void transform(final AffineTransform transform) {
         path.transform(transform);
     }
 }

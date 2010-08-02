@@ -36,7 +36,7 @@ import java.awt.geom.Area;
 /**
  * Area node.
  */
-public class PArea extends PShape
+public final class PArea extends PShape
 {
     private transient Area area;
 
