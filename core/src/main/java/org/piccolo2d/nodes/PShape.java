@@ -53,6 +53,9 @@ public abstract class PShape extends PNode {
     /** Stroke paint for this shape node, defaults to {@link #DEFAULT_STROKE_PAINT}. */
     private Paint strokePaint = DEFAULT_STROKE_PAINT;
 
+    /** Default paint for this shape node, <code>Color.WHITE</code>. */
+    public static final Paint DEFAULT_PAINT = Color.WHITE;
+
     /** Default stroke, a basic stroke of width <code>1.0f</code>. */
     public static final Stroke DEFAULT_STROKE = new BasicStroke(1.0f);
 
@@ -65,6 +68,7 @@ public abstract class PShape extends PNode {
      */
     protected PShape() {
         super();
+        setPaint(DEFAULT_PAINT);
     }
 
 

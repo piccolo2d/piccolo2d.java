@@ -51,4 +51,19 @@ public abstract class AbstractPShapeTest extends AbstractPNodeTest {
     public void testCreateShapeNode() {
         assertNotNull(createShapeNode());
     }
+
+    public void testDefaultPaint() {
+        PShape shape = createShapeNode();
+        assertEquals(PShape.DEFAULT_PAINT, shape.getPaint());
+    }
+
+    public void testDefaultStroke() {
+        PShape shape = createShapeNode();
+        assertEquals(PShape.DEFAULT_STROKE, shape.getStroke());
+    }
+
+    public void testDefaultStrokePaint() {
+        PShape shape = createShapeNode();
+        assertEquals(PShape.DEFAULT_STROKE_PAINT, shape.getStrokePaint());
+    }
 }

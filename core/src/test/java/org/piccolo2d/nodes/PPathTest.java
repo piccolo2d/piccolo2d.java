@@ -324,4 +324,84 @@ public class PPathTest extends TestCase {
         path.closePath();
         path.closePath();
     }
+
+    public void testIntersects() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        assertTrue(path.intersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertTrue(path.intersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.intersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testIntersectsNullStroke() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.setStroke(null);
+        assertTrue(path.intersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertTrue(path.intersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.intersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testIntersectsNullPaint() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.setPaint(null);
+        assertTrue(path.intersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.intersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testIntersectsNullPaintNullStroke() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.setPaint(null);
+        path.setStroke(null);
+        assertFalse(path.intersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.intersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testFullIntersects() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testFullIntersectsNullStroke() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.setStroke(null);
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testFullIntersectsNullPaint() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.setPaint(null);
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
+
+    public void testFullIntersectsNullPaintNullStroke() {
+        PPath path = PPath.createRectangle(0.0d, 0.0d, 50.0d, 100.0d);
+        path.setPaint(null);
+        path.setStroke(null);
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(0.0d, 0.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(25.0d, 50.0d, 2.0d, 2.0d)));
+        assertTrue(path.fullIntersects(new Rectangle2D.Double(49.0d, 99.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
+        assertFalse(path.fullIntersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
+    }
 }

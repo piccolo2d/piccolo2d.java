@@ -178,7 +178,6 @@ public final class PArea extends PShape {
 
     // todo:
     //    area property change events?
-    //    static methods
     //    should modifiers return this to allow chaining, e.g. add(area0).intersect(area1)
     //    test serialization, may have to add custom code to serialize areas
 

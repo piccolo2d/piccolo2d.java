@@ -93,11 +93,31 @@ public class PAreaTest extends AbstractPShapeTest {
         assertEquals(151.0d, area.getWidth(), TOLERANCE);
         assertEquals(101.0, area.getHeight(), TOLERANCE);
         assertTrue(area.intersects(new Rectangle2D.Double(10.0d, 95.0d, 10.0d, 10.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(25.0, 25.0d, 2.0d, 2.0d)));
         assertTrue(area.intersects(new Rectangle2D.Double(60.0d, 95.0d, 10.0d, 10.0d)));
         assertTrue(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
     }
 
-    public void testAddNoStroke() {
+    public void testAddNullPaint() {
+        PArea area = new PArea();
+        area.setPaint(null);
+        assertEquals(0.0d, area.getWidth(), TOLERANCE);
+        assertEquals(0.0d, area.getHeight(), TOLERANCE);
+
+        Area rect0 = new Area(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d));
+        area.add(rect0);
+        Area rect1 = new Area(new Rectangle2D.Double(50.0d, 0.0d, 100.0d, 100.0d));
+        area.add(rect1);
+
+        assertEquals(151.0d, area.getWidth(), TOLERANCE);
+        assertEquals(101.0, area.getHeight(), TOLERANCE);
+        assertTrue(area.intersects(new Rectangle2D.Double(10.0d, 95.0d, 10.0d, 10.0d)));
+        assertFalse(area.intersects(new Rectangle2D.Double(25.0, 25.0d, 2.0d, 2.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(60.0d, 95.0d, 10.0d, 10.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
+    }
+
+    public void testAddNullStroke() {
         PArea area = new PArea();
         area.setStroke(null);
         assertEquals(0.0d, area.getWidth(), TOLERANCE);
@@ -110,10 +130,13 @@ public class PAreaTest extends AbstractPShapeTest {
 
         assertEquals(150.0d, area.getWidth(), TOLERANCE);
         assertEquals(100.0, area.getHeight(), TOLERANCE);
-        assertFalse(area.intersects(new Rectangle2D.Double(10.0d, 95.0d, 10.0d, 10.0d)));
-        assertFalse(area.intersects(new Rectangle2D.Double(60.0d, 95.0d, 10.0d, 10.0d)));
-        assertFalse(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(10.0d, 95.0d, 10.0d, 10.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(25.0, 25.0d, 2.0d, 2.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(60.0d, 95.0d, 10.0d, 10.0d)));
+        assertTrue(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
     }
+
+    // todo:  find stroke-only rect, add NullStrokePaint tests
 
     public void testAddNullArgument() {
         PArea area = new PArea();
@@ -143,7 +166,7 @@ public class PAreaTest extends AbstractPShapeTest {
         assertTrue(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
     }
 
-    public void testExclusiveOrNoStroke() {
+    public void testExclusiveOrNullStroke() {
         PArea area = new PArea();
         area.setStroke(null);
         assertEquals(0.0d, area.getWidth(), TOLERANCE);
@@ -189,7 +212,7 @@ public class PAreaTest extends AbstractPShapeTest {
         assertFalse(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
     }
 
-    public void testIntersectNoStroke() {
+    public void testIntersectNullStroke() {
         PArea area = new PArea();
         area.setStroke(null);
         assertEquals(0.0d, area.getWidth(), TOLERANCE);
@@ -235,7 +258,7 @@ public class PAreaTest extends AbstractPShapeTest {
         assertFalse(area.intersects(new Rectangle2D.Double(110.0d, 95.0d, 10.0d, 10.0d)));
     }
 
-    public void testSubtractNoStroke() {
+    public void testSubtractNullStroke() {
         PArea area = new PArea();
         area.setStroke(null);
         assertEquals(0.0d, area.getWidth(), TOLERANCE);
