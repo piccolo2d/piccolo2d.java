@@ -36,15 +36,24 @@ import java.awt.geom.Area;
 /**
  * Area node.
  */
-public final class PArea extends PShape
-{
+public final class PArea extends PShape {
+
+    /** Area for this area node. */
     private transient Area area;
 
 
+    /**
+     * Create a new area node with an empty area.
+     */
     public PArea() {
         area = new Area();
     }
 
+    /**
+     * Create a new area node with the specified shape.
+     *
+     * @param shape shape, must not be null
+     */
     public PArea(final Shape shape) {
         if (shape == null) {
             throw new NullPointerException("shape must not be null");
@@ -52,6 +61,11 @@ public final class PArea extends PShape
         this.area = new Area(shape);
     }
 
+    /**
+     * Create a new area node with the specified area.
+     *
+     * @param area area, must not be null
+     */
     public PArea(final Area area) {
         if (area == null) {
             throw new NullPointerException("area must not be null");
@@ -61,34 +75,103 @@ public final class PArea extends PShape
     }
 
 
+    /**
+     * Add the shape of the specified area to the shape of this area node.
+     * The resulting shape of this area node will include the union of both shapes,
+     * or all areas that were contained in either this or the specified area.
+     *
+     * @param area area to add, must not be null
+     * @throws NullPointerException if area is null
+     */
     public void add(final Area area) {
         this.area.add(area);
         updateBoundsFromShape();
     }
 
+    /**
+     * Set the shape of this area node to be the combined area of its current
+     * shape and the shape of the specified area, minus their intersection. The
+     * resulting shape of this area node will include only areas that were contained
+     * in either this area node or in the specified area, but not in both. 
+     *
+     * @param area area to exclusive or, must not be null
+     * @throws NullPointerException if area is null
+     */
     public void exclusiveOr(final Area area) {
         this.area.exclusiveOr(area);
         updateBoundsFromShape();
     }
 
+    /**
+     * Set the shape of this area node to the intersection of its current shape
+     * and the shape of the specified area. The resulting shape of this area node
+     * will include only areas that were contained in both this area node and also
+     * in the specified area.
+     *
+     * @param area area to intersect, must not be null
+     * @throws NullPointerException if area is null
+     */
     public void intersect(final Area area) {
         this.area.intersect(area);
         updateBoundsFromShape();
     }
 
+    /**
+     * Subtract the shape of the specified area from the shape of this area node.
+     * The resulting shape of this area node will include areas that were contained
+     * only in this area node and not in the specified area.
+     *
+     * @param area area to subtract, must not be null
+     * @throws NullPointerException if area is null
+     */
     public void subtract(final Area area) {
         this.area.subtract(area);
         updateBoundsFromShape();
     }
 
+    /**
+     * Removes all of the geometry from this area node and restores it to an empty area.
+     */
+    public void reset() {
+        area.reset();
+        updateBoundsFromShape();
+    }
+
+    /**
+     * Return true if this area node represents an empty area.
+     *
+     * @return true if this area node represents an empty area
+     */
+    public boolean isEmpty() {
+        return area.isEmpty();
+    }
+
+    /**
+     * Return true if this area node consists entirely of straight-edged polygonal geometry.
+     *
+     * @return true if this area node consists entirely of straight-edged polygonal geometry
+     */
     public boolean isPolygonal() {
         return area.isPolygonal();
     }
 
+    /**
+     * Return true if this area node is rectangular in shape.
+     *
+     * @return true if this area node is rectangular in shape
+     */
     public boolean isRectangular() {
         return area.isRectangular();
     }
 
+    /**
+     * Return true if this area node is comprised of a single closed subpath. This
+     * method returns true if the path contains 0 or 1 subpaths, or false if the path
+     * contains more than 1 subpath. The subpaths are counted by the number of
+     * <code>SEG_MOVETO</code> segments that appear in the path. 
+     *
+     * @return true if this area node is comprised of a single closed subpath
+     */
     public boolean isSingular() {
         return area.isSingular();
     }
@@ -96,6 +179,8 @@ public final class PArea extends PShape
     // todo:
     //    area property change events?
     //    static methods
+    //    should modifiers return this to allow chaining, e.g. add(area0).intersect(area1)
+    //    test serialization, may have to add custom code to serialize areas
 
     /** {@inheritDoc} */
     protected Shape getShape() {

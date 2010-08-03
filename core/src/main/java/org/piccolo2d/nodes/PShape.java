@@ -46,18 +46,58 @@ import org.piccolo2d.util.PPaintContext;
  * Abstract shape node.
  */
 public abstract class PShape extends PNode {
+
+    /** Stroke for this shape node, defaults to {@link #DEFAULT_STROKE}. */
     private transient Stroke stroke = DEFAULT_STROKE;
+
+    /** Stroke paint for this shape node, defaults to {@link #DEFAULT_STROKE_PAINT}. */
     private Paint strokePaint = DEFAULT_STROKE_PAINT;
+
+    /** Default stroke, a basic stroke of width <code>1.0f</code>. */
     public static final Stroke DEFAULT_STROKE = new BasicStroke(1.0f);
+
+    /** Default stroke paint, <code>Color.BLACK</code>. */
     public static final Paint DEFAULT_STROKE_PAINT = Color.BLACK;
 
+
+    /**
+     * This is an abstract class that cannot be instantiated directly.
+     */
+    protected PShape() {
+        super();
+    }
+
+
+    /**
+     * Return the shape for this shape node.
+     *
+     * @return the shape for this shape node
+     */
     protected abstract Shape getShape();
+
+    /**
+     * Apply the specified transform to the shape for this shape node.
+     *
+     * @param transform transform to apply to the shape for this shape node
+     */
     protected abstract void transform(AffineTransform transform);
 
+
+    /**
+     * Return the stroke for this shape node.  Defaults to {@link #DEFAULT_STROKE}.
+     *
+     * @return the stroke for this shape node
+     */
     public final Stroke getStroke() {
         return stroke;
     }
 
+    /**
+     * Set the stroke for this shape node to <code>stroke</code>.  This is
+     * a bound property.
+     *
+     * @param stroke stroke for this shape node
+     */
     public final void setStroke(final Stroke stroke) {
         Stroke oldStroke = this.stroke;
         this.stroke = stroke;
@@ -66,10 +106,21 @@ public abstract class PShape extends PNode {
         firePropertyChange(-1, "stroke", oldStroke, this.stroke);
     }
 
+    /**
+     * Return the stroke paint for this shape node.  Defaults to {@link #DEFAULT_STROKE_PAINT}.
+     *
+     * @return the stroke paint for this shape node
+     */
     public final Paint getStrokePaint() {
         return strokePaint;
     }
 
+    /**
+     * Set the stroke paint for this shape node to <code>strokePaint</code>.  This is
+     * a bound property.
+     *
+     * @param strokePaint stroke paint for this shape node
+     */
     public final void setStrokePaint(final Paint strokePaint) {
         Paint oldStrokePaint = this.strokePaint;
         this.strokePaint = strokePaint;
@@ -77,11 +128,19 @@ public abstract class PShape extends PNode {
         firePropertyChange(-1, "strokePaint", oldStrokePaint, this.strokePaint);
     }
 
+    /**
+     * Update the bounds of this shape node from its shape.
+     */
     protected final void updateBoundsFromShape() {
         final Rectangle2D b = getBoundsWithStroke();
         setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
     }
 
+    /**
+     * Return the bounds of this node, taking the stroke into consideration if necessary.
+     *
+     * @return the bounds of this node, taking the stroke into consideration if necessary
+     */
     protected final Rectangle2D getBoundsWithStroke() {
         if (stroke != null) {
             return stroke.createStrokedShape(getShape()).getBounds2D();

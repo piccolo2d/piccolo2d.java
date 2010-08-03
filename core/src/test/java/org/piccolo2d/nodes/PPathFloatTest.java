@@ -28,7 +28,9 @@
  */
 package org.piccolo2d.nodes;
 
+import java.awt.BasicStroke;
 import java.awt.Shape;
+import java.awt.Stroke;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
@@ -47,8 +49,18 @@ public class PPathFloatTest extends AbstractPShapeTest {
         assertNotNull(new PPath.Float());
     }
 
+    public void testStrokeConstructor() {
+        assertNotNull(new PPath.Float((Stroke) null));
+        assertNotNull(new PPath.Float(new BasicStroke(2.0f)));
+    }
+
     public void testShapeConstructor() {
         assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f)));
+    }
+
+    public void testShapeStrokeConstructor() {
+        assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f), null));
+        assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f), new BasicStroke(2.0f)));
     }
 
     public void testShapeConstructorNullArgument() {
@@ -61,14 +73,39 @@ public class PPathFloatTest extends AbstractPShapeTest {
         }
     }
 
+    public void testShapeStrokeConstructorNullArgument() {
+        try {
+            new PPath.Float((Shape) null, null);
+            fail("ctr((Shape) null, ) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
+    }
+
     public void testPathConstructor() {
         assertNotNull(new PPath.Float(new Path2D.Float()));
+    }
+
+    public void testPathStrokeConstructor() {
+        assertNotNull(new PPath.Float(new Path2D.Float(), null));
+        assertNotNull(new PPath.Float(new Path2D.Float(), new BasicStroke(2.0f)));
     }
 
     public void testPathConstructorNullArgument() {
         try {
             new PPath.Float((Path2D) null);
             fail("ctr((Path2D) null) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
+    }
+
+    public void testStrokePathConstructorNullArgument() {
+        try {
+            new PPath.Float((Path2D) null, null);
+            fail("ctr((Path2D) null, ) expected NullPointerException");
         }
         catch (NullPointerException e) {
             // expected

@@ -264,6 +264,32 @@ public class PAreaTest extends AbstractPShapeTest {
         }
     }
 
+    public void testReset() {
+        PArea area = new PArea();
+        area.setStroke(null);
+        assertEquals(0.0d, area.getWidth(), TOLERANCE);
+        assertEquals(0.0d, area.getHeight(), TOLERANCE);
+
+        Area rect0 = new Area(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d));
+        area.add(rect0);
+        Area rect1 = new Area(new Rectangle2D.Double(50.0d, 0.0d, 100.0d, 100.0d));
+        area.add(rect1);
+
+        assertEquals(150.0d, area.getWidth(), TOLERANCE);
+        assertEquals(100.0, area.getHeight(), TOLERANCE);
+
+        area.reset();
+        assertEquals(0.0d, area.getWidth(), TOLERANCE);
+        assertEquals(0.0d, area.getHeight(), TOLERANCE);
+    }
+
+    public void testIsEmpty() {
+        assertTrue(new PArea().isEmpty());
+        assertFalse(new PArea(new Rectangle2D.Double(0.0d, 0.0d, 50.0d, 100.0d)).isEmpty());
+        assertTrue(new PArea(new Line2D.Double(0.0d, 0.0d, 50.0d, 100.0d)).isEmpty());
+        assertFalse(new PArea(new Ellipse2D.Double(0.0d, 0.0d, 50.0d, 100.0d)).isEmpty());
+    }
+
     public void testIsPolygonal() {
         assertTrue(new PArea(new Rectangle2D.Double(0.0d, 0.0d, 50.0d, 100.0d)).isPolygonal());
         assertTrue(new PArea(new Line2D.Double(0.0d, 0.0d, 50.0d, 100.0d)).isPolygonal());
