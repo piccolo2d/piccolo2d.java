@@ -38,10 +38,10 @@ import java.awt.geom.Rectangle2D;
 /**
  * Unit test for PPath.Float.
  */
-public class PPathFloatTest extends AbstractPShapeTest {
+public class PPathFloatTest extends AbstractPPathTest {
 
     /** {@inheritDoc} */
-    protected PShape createShapeNode() {
+    protected PPath createPathNode() {
         return new PPath.Float();
     }
 

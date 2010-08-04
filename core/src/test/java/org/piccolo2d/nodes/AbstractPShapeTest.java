@@ -28,13 +28,27 @@
  */
 package org.piccolo2d.nodes;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Paint;
+import java.awt.Stroke;
+
 import org.piccolo2d.AbstractPNodeTest;
+import org.piccolo2d.MockPropertyChangeListener;
 import org.piccolo2d.PNode;
 
 /**
  * Abstract unit test for subclasses of PShape.
  */
 public abstract class AbstractPShapeTest extends AbstractPNodeTest {
+
+    private MockPropertyChangeListener mockListener;
+
+    /** {@inheritDoc} */
+    protected void setUp() {
+        super.setUp();
+        mockListener = new MockPropertyChangeListener();
+    }
 
     /** {@inheritDoc} */
     protected PNode createNode() {
@@ -65,5 +79,35 @@ public abstract class AbstractPShapeTest extends AbstractPNodeTest {
     public void testDefaultStrokePaint() {
         PShape shape = createShapeNode();
         assertEquals(PShape.DEFAULT_STROKE_PAINT, shape.getStrokePaint());
+    }
+
+    public void testStroke() {
+        PShape shape = createShapeNode();
+        Stroke stroke = new BasicStroke(2.0f);
+        shape.setStroke(stroke);
+        assertEquals(stroke, shape.getStroke());
+    }
+
+    public void testStrokeBoundProperty() {
+        PShape shape = createShapeNode();
+        shape.addPropertyChangeListener("stroke", mockListener);
+        Stroke stroke = new BasicStroke(2.0f);
+        shape.setStroke(stroke);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testStrokePaint() {
+        PShape shape = createShapeNode();
+        Paint strokePaint = Color.RED;
+        shape.setStrokePaint(strokePaint);
+        assertEquals(strokePaint, shape.getStrokePaint());
+    }
+
+    public void testStrokePaintBoundProperty() {
+        PShape shape = createShapeNode();
+        shape.addPropertyChangeListener("strokePaint", mockListener);
+        Paint strokePaint = Color.RED;
+        shape.setStrokePaint(strokePaint);
+        assertEquals(1, mockListener.getPropertyChangeCount());
     }
 }

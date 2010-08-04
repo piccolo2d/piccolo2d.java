@@ -552,7 +552,12 @@ public abstract class PPath extends PShape {
      * @param x3 x coordinate of the final end point
      * @param y3 y coordinate of the final end point
      */
-    public final void curveTo(final double x1, final double y1, final double x2, final double y2, final double x3, final double y3) {
+    public final void curveTo(final double x1,
+                              final double y1,
+                              final double x2,
+                              final double y2,
+                              final double x3,
+                              final double y3) {
         path.curveTo(x1, y1, x2, y2, x3, y3);
         updateBoundsFromShape();
     }

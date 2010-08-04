@@ -38,10 +38,10 @@ import java.awt.geom.Rectangle2D;
 /**
  * Unit test for PPath.Double.
  */
-public class PPathDoubleTest extends AbstractPShapeTest {
+public class PPathDoubleTest extends AbstractPPathTest {
 
     /** {@inheritDoc} */
-    protected PShape createShapeNode() {
+    protected PPath createPathNode() {
         return new PPath.Double();
     }
 

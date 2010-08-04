@@ -52,31 +52,35 @@ import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PObjectOutputStream;
 
-import junit.framework.TestCase;
-
 /**
- * Unit test for PPath.
+ * Abstract unit test for subclasses of PPath.
  */
-public class PPathTest extends TestCase {
+public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     private static final double TOLERANCE = 0.0001d;
     private static final double LOW_TOLERANCE = 1.0d;
 
     private MockPropertyChangeListener mockListener;
 
-    public void setUp() {
+    /** {@inheritDoc} */
+    protected PShape createShapeNode() {
+        return createPathNode();
+    }
+
+    /**
+     * Create a new instance of a subclass of PPath to test.
+     *
+     * @return a new instance of a subclass of PPath to test
+     */
+    protected abstract PPath createPathNode();
+
+    /** {@inheritDoc} */
+    protected void setUp() {
+        super.setUp();
         mockListener = new MockPropertyChangeListener();
     }
 
-    public void testStrokeIsNotNullByDefault() {
-        final PPath path = new PPath.Double();
-        assertNotNull(path.getStroke());
-    }
-
-    public void testStrokePaintIsBlackByDefault() {
-        final PPath path = new PPath.Double();
-        assertEquals(Color.BLACK, path.getStrokePaint());
-    }
+    // todo:  rewrite in terms of createPathNode()
 
     public void testClone() {
         PPath p = PPath.createEllipse(0, 0, 100, 100);        
@@ -167,23 +171,10 @@ public class PPathTest extends TestCase {
     }
     */
 
-    public void testSetStrokePaintPersists() {
-        final PPath path = new PPath.Double();
-        path.setStrokePaint(Color.RED);
-        assertEquals(Color.RED, path.getStrokePaint());
-    }
-
-    // todo:  move these to PShape test, add stroke
-    public void testSetStrokeFiresPropertyChangeEvent() {
-        final PPath path = new PPath.Double();
-        path.addPropertyChangeListener("strokePaint", mockListener);
-        path.setStrokePaint(Color.RED);
-        assertEquals(1, mockListener.getPropertyChangeCount());
-    }
-
+    // todo:  replace with commented out test methods below
     public void testChangingPathFiresPropertyChangeEvent() {
         final PPath path = new PPath.Double();
-        path.addPropertyChangeListener("path", mockListener); // "shape"
+        path.addPropertyChangeListener("path", mockListener);
         path.append(new Rectangle2D.Double(0, 0, 100, 50), true);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
@@ -404,4 +395,86 @@ public class PPathTest extends TestCase {
         assertFalse(path.fullIntersects(new Rectangle2D.Double(-10.0d, -10.0d, 2.0d, 2.0d)));
         assertFalse(path.fullIntersects(new Rectangle2D.Double(100.0d, 200.0d, 2.0d, 2.0d)));
     }
+
+    /*
+    public void testPath() {
+        PPath path = createPathNode();
+        assertNotNull(path.getPath()); // or (Path) getShape(), or getPathReference() ?
+        Path2D.Double rect = new Path2D.Double((new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d)));
+        path.setPath(rect);
+        assertEquals(rect, path.getPath());
+    }
+
+    public void testPathNullArgument() {
+        PPath path = createPathNode();
+        try {
+            path.setPath(null);
+            fail("setPath(null) expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) { // or NPE?
+            // expected
+        }
+    }
+
+    public void testPathBoundProperty() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        Path2D.Double rect = new Path2D.Double((new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d)));
+        path.setPath(rect);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testAppendShapeFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        Rectangle2D rect = new Rectangle2D.Double(50.0d, 100.0d, 50.0d, 100.0d);
+        path.append(rect, true);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testAppendPathIteratorFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        Rectangle2D rect = new Rectangle2D.Double(50.0d, 100.0d, 50.0d, 100.0d);
+        PathIterator pathIterator = rect.getPathIterator(new AffineTransform());
+        path.append(pathIterator, true);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testCurveToFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        path.curveTo(70.0d, 140.0d, 80.0d, 140.0d, 100.0d, 200.0d);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testLineToFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        path.lineTo(100.0d, 200.0d);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testMoveToFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        path.moveTo(100.0d, 200.0d);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testQuadToFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        path.quadTo(70.0d, 140.0d, 100.0d, 200.0d);
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+
+    public void testClosePathFiresPropertyChangeEvent() {
+        PPath path = createPathNode();
+        path.addPropertyChangeListener("path", mockListener);
+        path.lineTo(100.0d, 200.0d);
+        path.closePath();
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
+    */
 }
