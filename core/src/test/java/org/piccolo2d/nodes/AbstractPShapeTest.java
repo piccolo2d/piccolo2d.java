@@ -42,12 +42,9 @@ import org.piccolo2d.PNode;
  */
 public abstract class AbstractPShapeTest extends AbstractPNodeTest {
 
-    private MockPropertyChangeListener mockListener;
-
     /** {@inheritDoc} */
     protected void setUp() {
         super.setUp();
-        mockListener = new MockPropertyChangeListener();
     }
 
     /** {@inheritDoc} */

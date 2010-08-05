@@ -39,7 +39,7 @@ import java.awt.geom.Area;
 public final class PArea extends PShape {
 
     /** Area for this area node. */
-    private transient Area area;
+    private final transient Area area;
 
 
     /**
@@ -76,6 +76,26 @@ public final class PArea extends PShape {
 
 
     /**
+     * Return a copy of the area backing this area node.
+     *
+     * @return a copy of the area backing this area node
+     */
+    public Area getArea() {
+        return (Area) area.clone();
+    }
+
+    /**
+     * Return the area backing this node.  The returned area must not be
+     * modified or the bounds of this node may no longer be valid and any
+     * <code>area</code> property change listeners will not be notified.
+     *
+     * @return the area backing this area node
+     */
+    public Area getAreaReference() {
+        return area;
+    }
+
+    /**
      * Add the shape of the specified area to the shape of this area node.
      * The resulting shape of this area node will include the union of both shapes,
      * or all areas that were contained in either this or the specified area.
@@ -84,8 +104,10 @@ public final class PArea extends PShape {
      * @throws NullPointerException if area is null
      */
     public void add(final Area area) {
+        Area oldArea = (Area) this.area.clone();
         this.area.add(area);
         updateBoundsFromShape();
+        firePropertyChange(-1, "area", oldArea, getArea());
     }
 
     /**
@@ -98,8 +120,10 @@ public final class PArea extends PShape {
      * @throws NullPointerException if area is null
      */
     public void exclusiveOr(final Area area) {
+        Area oldArea = (Area) this.area.clone();
         this.area.exclusiveOr(area);
         updateBoundsFromShape();
+        firePropertyChange(-1, "area", oldArea, getArea());
     }
 
     /**
@@ -112,8 +136,10 @@ public final class PArea extends PShape {
      * @throws NullPointerException if area is null
      */
     public void intersect(final Area area) {
+        Area oldArea = (Area) this.area.clone();
         this.area.intersect(area);
         updateBoundsFromShape();
+        firePropertyChange(-1, "area", oldArea, getArea());
     }
 
     /**
@@ -125,16 +151,20 @@ public final class PArea extends PShape {
      * @throws NullPointerException if area is null
      */
     public void subtract(final Area area) {
+        Area oldArea = (Area) this.area.clone();
         this.area.subtract(area);
         updateBoundsFromShape();
+        firePropertyChange(-1, "area", oldArea, getArea());
     }
 
     /**
      * Removes all of the geometry from this area node and restores it to an empty area.
      */
     public void reset() {
+        Area oldArea = (Area) area.clone();
         area.reset();
         updateBoundsFromShape();
+        firePropertyChange(-1, "area", oldArea, getArea());
     }
 
     /**

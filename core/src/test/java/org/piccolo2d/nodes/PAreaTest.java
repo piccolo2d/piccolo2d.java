@@ -52,6 +52,11 @@ public class PAreaTest extends AbstractPShapeTest {
     private static final Rectangle2D EXTERIOR = new Rectangle2D.Double(200.0, 200.0d, 2.0d, 2.0d);
 
     /** {@inheritDoc} */
+    protected void setUp() {
+        super.setUp();
+    }
+
+    /** {@inheritDoc} */
     protected PShape createShapeNode() {
         return new PArea();
     }
@@ -576,6 +581,7 @@ public class PAreaTest extends AbstractPShapeTest {
         area.setArea(rect);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
+    */
 
     public void testAddFiresPropertyChangeEvent() {
         PArea area = new PArea();
@@ -587,32 +593,40 @@ public class PAreaTest extends AbstractPShapeTest {
 
     public void testExclusiveOrFiresPropertyChangeEvent() {
         PArea area = new PArea();
-        area.addPropertyChangeListener("area", mockListener);
         Area rect0 = new Area(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d));
         area.add(rect0);
         Area rect1 = new Area(new Rectangle2D.Double(50.0d, 0.0d, 100.0d, 100.0d));
+        area.addPropertyChangeListener("area", mockListener);
         area.exclusiveOr(rect1);
-        assertEquals(2, mockListener.getPropertyChangeCount());
+        assertEquals(1, mockListener.getPropertyChangeCount());
     }
 
     public void testIntersectFiresPropertyChangeEvent() {
         PArea area = new PArea();
-        area.addPropertyChangeListener("area", mockListener);
         Area rect0 = new Area(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d));
         area.add(rect0);
         Area rect1 = new Area(new Rectangle2D.Double(50.0d, 0.0d, 100.0d, 100.0d));
+        area.addPropertyChangeListener("area", mockListener);
         area.intersect(rect1);
-        assertEquals(2, mockListener.getPropertyChangeCount());
+        assertEquals(1, mockListener.getPropertyChangeCount());
     }
 
     public void testSubtractFiresPropertyChangeEvent() {
         PArea area = new PArea();
-        area.addPropertyChangeListener("area", mockListener);
         Area rect0 = new Area(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d));
         area.add(rect0);
         Area rect1 = new Area(new Rectangle2D.Double(50.0d, 0.0d, 100.0d, 100.0d));
+        area.addPropertyChangeListener("area", mockListener);
         area.subtract(rect1);
-        assertEquals(2, mockListener.getPropertyChangeCount());
+        assertEquals(1, mockListener.getPropertyChangeCount());
     }
-    */
+
+    public void testResetFiresPropertyChangeEvent() {
+        PArea area = new PArea();
+        Area rect = new Area(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d));
+        area.add(rect);
+        area.addPropertyChangeListener("area", mockListener);
+        area.reset();
+        assertEquals(1, mockListener.getPropertyChangeCount());
+    }
 }

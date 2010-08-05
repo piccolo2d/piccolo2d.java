@@ -48,7 +48,7 @@ import java.awt.geom.PathIterator;
 public abstract class PPath extends PShape {
 
     /** Path for this path node. */
-    private Path2D path;
+    private final Path2D path;
 
 
     /**
@@ -501,6 +501,26 @@ public abstract class PPath extends PShape {
 
 
     /**
+     * Return a copy of the path backing this path node.
+     *
+     * @return a copy of the path backing this path node
+     */
+    public Path2D getPath() {
+        return (Path2D) path.clone();
+    }
+
+    /**
+     * Return the path backing this node.  The returned path must not be
+     * modified or the bounds of this node may no longer be valid and any
+     * <code>path</code> property change listeners will not be notified.
+     *
+     * @return the path backing this path node
+     */
+    public Path2D getPathReference() {
+        return path;
+    }
+
+    /**
      * Append the geometry of the specified shape to this path node, possibly
      * connecting the new geometry to the existing path segments with a line
      * segment. If the connect parameter is true and the path is not empty then
@@ -516,8 +536,10 @@ public abstract class PPath extends PShape {
      *    <code>lineTo</code> segment to connect the new geometry to the existing path
      */
     public final void append(final Shape shape, final boolean connect) {
+        Path2D oldPath = (Path2D) path.clone();
         path.append(shape, connect);
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     /**
@@ -534,8 +556,10 @@ public abstract class PPath extends PShape {
      *    <code>lineTo</code> segment to connect the new geometry to the existing path
      */
     public final void append(final PathIterator pathIterator, final boolean connect) {
+        Path2D oldPath = (Path2D) path.clone();
         path.append(pathIterator, connect);
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     /**
@@ -558,8 +582,10 @@ public abstract class PPath extends PShape {
                               final double y2,
                               final double x3,
                               final double y3) {
+        Path2D oldPath = (Path2D) path.clone();
         path.curveTo(x1, y1, x2, y2, x3, y3);
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     /**
@@ -570,8 +596,10 @@ public abstract class PPath extends PShape {
      * @param y y coordinate
      */
     public final void lineTo(final double x, final double y) {
+        Path2D oldPath = (Path2D) path.clone();
         path.lineTo(x, y);
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     /**
@@ -582,8 +610,10 @@ public abstract class PPath extends PShape {
      * @param y y coordinate
      */
     public final void moveTo(final double x, final double y) {
+        Path2D oldPath = (Path2D) path.clone();
         path.moveTo(x, y);
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     /**
@@ -599,8 +629,10 @@ public abstract class PPath extends PShape {
      * @param y2 y coordinate of the final end point
      */
     public final void quadTo(final double x1, final double y1, final double x2, final double y2) {
+        Path2D oldPath = (Path2D) path.clone();
         path.quadTo(x1, y1, x2, y2);
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     /**
@@ -609,12 +641,13 @@ public abstract class PPath extends PShape {
      * has no effect. 
      */
     public final void closePath() {
+        Path2D oldPath = (Path2D) path.clone();
         path.closePath();
         updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
     }
 
     // todo:  setPathTo...
-    //    path property change events
 
     /** {@inheritDoc} */
     protected final Shape getShape() {

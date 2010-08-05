@@ -60,7 +60,10 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
     private static final double TOLERANCE = 0.0001d;
     private static final double LOW_TOLERANCE = 1.0d;
 
-    private MockPropertyChangeListener mockListener;
+    /** {@inheritDoc} */
+    protected void setUp() {
+        super.setUp();
+    }
 
     /** {@inheritDoc} */
     protected PShape createShapeNode() {
@@ -73,12 +76,6 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
      * @return a new instance of a subclass of PPath to test
      */
     protected abstract PPath createPathNode();
-
-    /** {@inheritDoc} */
-    protected void setUp() {
-        super.setUp();
-        mockListener = new MockPropertyChangeListener();
-    }
 
     // todo:  rewrite in terms of createPathNode()
 
@@ -170,14 +167,6 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
         PiccoloAsserts.assertEquals(new PBounds(0, 0, 100, 50), path.getBounds(), 2.0d);
     }
     */
-
-    // todo:  replace with commented out test methods below
-    public void testChangingPathFiresPropertyChangeEvent() {
-        final PPath path = new PPath.Double();
-        path.addPropertyChangeListener("path", mockListener);
-        path.append(new Rectangle2D.Double(0, 0, 100, 50), true);
-        assertEquals(1, mockListener.getPropertyChangeCount());
-    }
 
     public void testCreateArcFloat() {
         assertNotNull(PPath.createArc(0.0f, 0.0f, 50.0f, 100.0f, 25.0f, 75.0f, Arc2D.OPEN));
@@ -423,6 +412,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
         path.setPath(rect);
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
+    */
 
     public void testAppendShapeFiresPropertyChangeEvent() {
         PPath path = createPathNode();
@@ -434,6 +424,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     public void testAppendPathIteratorFiresPropertyChangeEvent() {
         PPath path = createPathNode();
+        path.moveTo(0.0d, 0.0d);
         path.addPropertyChangeListener("path", mockListener);
         Rectangle2D rect = new Rectangle2D.Double(50.0d, 100.0d, 50.0d, 100.0d);
         PathIterator pathIterator = rect.getPathIterator(new AffineTransform());
@@ -443,6 +434,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     public void testCurveToFiresPropertyChangeEvent() {
         PPath path = createPathNode();
+        path.moveTo(0.0d, 0.0d);
         path.addPropertyChangeListener("path", mockListener);
         path.curveTo(70.0d, 140.0d, 80.0d, 140.0d, 100.0d, 200.0d);
         assertEquals(1, mockListener.getPropertyChangeCount());
@@ -450,6 +442,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     public void testLineToFiresPropertyChangeEvent() {
         PPath path = createPathNode();
+        path.moveTo(0.0d, 0.0d);
         path.addPropertyChangeListener("path", mockListener);
         path.lineTo(100.0d, 200.0d);
         assertEquals(1, mockListener.getPropertyChangeCount());
@@ -457,6 +450,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     public void testMoveToFiresPropertyChangeEvent() {
         PPath path = createPathNode();
+        path.moveTo(0.0d, 0.0d);
         path.addPropertyChangeListener("path", mockListener);
         path.moveTo(100.0d, 200.0d);
         assertEquals(1, mockListener.getPropertyChangeCount());
@@ -464,6 +458,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     public void testQuadToFiresPropertyChangeEvent() {
         PPath path = createPathNode();
+        path.moveTo(0.0d, 0.0d);
         path.addPropertyChangeListener("path", mockListener);
         path.quadTo(70.0d, 140.0d, 100.0d, 200.0d);
         assertEquals(1, mockListener.getPropertyChangeCount());
@@ -471,10 +466,10 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
 
     public void testClosePathFiresPropertyChangeEvent() {
         PPath path = createPathNode();
-        path.addPropertyChangeListener("path", mockListener);
+        path.moveTo(0.0d, 0.0d);
         path.lineTo(100.0d, 200.0d);
+        path.addPropertyChangeListener("path", mockListener);
         path.closePath();
         assertEquals(1, mockListener.getPropertyChangeCount());
     }
-    */
 }
