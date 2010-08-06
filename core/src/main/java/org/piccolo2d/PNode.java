@@ -1878,6 +1878,7 @@ public class PNode implements Cloneable, Serializable, Printable {
                 signalBoundsChanged();
             }
 
+
             // 3. If the bounds of on of my decendents are invalidate then
             // validate the bounds of all of my children.
             if (childBoundsInvalid || childBoundsVolatile) {
@@ -1903,15 +1904,22 @@ public class PNode implements Cloneable, Serializable, Printable {
             // bounds cache here after our own bounds and the children's bounds
             // have been computed above.
             if (fullBoundsInvalid) {
+                final double oldX = fullBoundsCache.x;
+                final double oldY = fullBoundsCache.y;
+                final double oldWidth = fullBoundsCache.width;
+                final double oldHeight = fullBoundsCache.height;
+                final boolean oldEmpty = fullBoundsCache.isEmpty();
+
                 // 6. This will call getFullBoundsReference on all of the
                 // children. So if the above
                 // layoutChildren method changed the bounds of any of the
                 // children they will be
                 // validated again here.
-                PBounds oldFullBoundsCache = fullBoundsCache;
                 fullBoundsCache = computeFullBounds(fullBoundsCache);
 
-                final boolean fullBoundsChanged = !oldFullBoundsCache.equals(fullBoundsCache);
+                final boolean fullBoundsChanged = fullBoundsCache.x != oldX || fullBoundsCache.y != oldY
+                    || fullBoundsCache.width != oldWidth || fullBoundsCache.height != oldHeight
+                    || fullBoundsCache.isEmpty() != oldEmpty;
 
                 // 7. If the new full bounds cache differs from the previous
                 // cache then
@@ -1922,16 +1930,14 @@ public class PNode implements Cloneable, Serializable, Printable {
                     if (parent != null) {
                         parent.invalidateFullBounds();
                     }
-                    
                     firePropertyChange(PROPERTY_CODE_FULL_BOUNDS, PROPERTY_FULL_BOUNDS, null, fullBoundsCache);
 
                     // 8. If our paint was invalid make sure to repaint our old
                     // full bounds. The
                     // new bounds will be computed later in the validatePaint
                     // pass.
-                    if (paintInvalid && !oldFullBoundsCache.isEmpty()) {
-                        TEMP_REPAINT_BOUNDS.setRect(oldFullBoundsCache.x, oldFullBoundsCache.getY(), oldFullBoundsCache
-                                .getWidth(), oldFullBoundsCache.getHeight());
+                    if (paintInvalid && !oldEmpty) {
+                        TEMP_REPAINT_BOUNDS.setRect(oldX, oldY, oldWidth, oldHeight);
                         repaintFrom(TEMP_REPAINT_BOUNDS, this);
                     }
                 }
