@@ -175,6 +175,7 @@ public class PActivityScheduler implements Serializable {
                 final PActivity each = (PActivity) processingActivities.get(i);
                 each.processStep(currentTime);
             }
+            processingActivities.clear();
         }
     }
 
