@@ -211,6 +211,14 @@
       </roles>
       <timezone>+2</timezone>
     </contributor>
+    <contributor>
+      <name>Aaron Dixon</name>
+      <email>atdixon@gmail.com</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </contributor>
   </contributors>
   <build>
     <pluginManagement>
