@@ -53,6 +53,9 @@ public abstract class PShape extends PNode {
     /** Stroke paint for this shape node, defaults to {@link #DEFAULT_STROKE_PAINT}. */
     private Paint strokePaint = DEFAULT_STROKE_PAINT;
 
+    /** True if bounds are currently being updated to match the shape. */
+    private transient boolean updatingBoundsFromShape = false;
+
     /** Default paint for this shape node, <code>Color.WHITE</code>. */
     public static final Paint DEFAULT_PAINT = Color.WHITE;
 
@@ -136,8 +139,10 @@ public abstract class PShape extends PNode {
      * Update the bounds of this shape node from its shape.
      */
     protected final void updateBoundsFromShape() {
+        updatingBoundsFromShape = true;
         final Rectangle2D b = getBoundsWithStroke();
         setBounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+        updatingBoundsFromShape = false;
     }
 
     /**
@@ -156,37 +161,39 @@ public abstract class PShape extends PNode {
 
     /** {@inheritDoc} */
     protected final void internalUpdateBounds(final double x, final double y, final double width, final double height) {
+        if (updatingBoundsFromShape) {
+            return;
+        }
+
         final Rectangle2D bounds = getShape().getBounds2D();
         final Rectangle2D strokeBounds = getBoundsWithStroke();
         final double strokeOutset = Math.max(strokeBounds.getWidth() - bounds.getWidth(),
                                              strokeBounds.getHeight() - bounds.getHeight());
 
-        double adjustedX = x + strokeOutset / 2;
-        double adjustedY = y + strokeOutset / 2;
+        double adjustedX = x + strokeOutset / 2.0d;
+        double adjustedY = y + strokeOutset / 2.0d;
         double adjustedWidth = width - strokeOutset;
         double adjustedHeight = height - strokeOutset;
 
         final double scaleX;
         if (adjustedWidth == 0 || bounds.getWidth() == 0) {
-            scaleX = 1;
+            scaleX = 1.0d;
         }
         else {
             scaleX = adjustedWidth / bounds.getWidth();
         }
         final double scaleY;
         if (adjustedHeight == 0 || bounds.getHeight() == 0) {
-            scaleY = 1;
+            scaleY = 1.0d;
         }
         else {
             scaleY = adjustedHeight / bounds.getHeight();
         }
 
-        // todo: cache instance as static?
         final AffineTransform transform = new AffineTransform();
         transform.translate(adjustedX, adjustedY);
         transform.scale(scaleX, scaleY);
         transform.translate(-bounds.getX(), -bounds.getY());
-
         transform(transform);
     }
 
