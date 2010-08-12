@@ -29,6 +29,7 @@
 package org.piccolo2d.nodes;
 
 import java.awt.Shape;
+import java.awt.Stroke;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -50,6 +51,16 @@ public final class PArea extends PShape {
     }
 
     /**
+     * Create a new area node with an empty area and the specified stroke.
+     *
+     * @param stroke stroke
+     */
+    public PArea(final Stroke stroke) {
+        area = new Area();
+        setStroke(stroke);
+    }
+
+    /**
      * Create a new area node with the specified shape.
      *
      * @param shape shape, must not be null
@@ -59,6 +70,20 @@ public final class PArea extends PShape {
             throw new NullPointerException("shape must not be null");
         }
         this.area = new Area(shape);
+    }
+
+    /**
+     * Create a new area node with the specified shape and stroke.
+     *
+     * @param shape shape, must not be null
+     * @param stroke stroke
+     */
+    public PArea(final Shape shape, final Stroke stroke) {
+        if (shape == null) {
+            throw new NullPointerException("shape must not be null");
+        }
+        this.area = new Area(shape);
+        setStroke(stroke);
     }
 
     /**
@@ -72,6 +97,21 @@ public final class PArea extends PShape {
         }
         this.area = new Area();
         this.area.add(area);
+    }
+
+    /**
+     * Create a new area node with the specified area and stroke.
+     *
+     * @param area area, must not be null
+     * @param stroke stroke
+     */
+    public PArea(final Area area, final Stroke stroke) {
+        if (area == null) {
+            throw new NullPointerException("area must not be null");
+        }
+        this.area = new Area();
+        this.area.add(area);
+        setStroke(stroke);
     }
 
 
@@ -207,7 +247,6 @@ public final class PArea extends PShape {
     }
 
     // todo:
-    //    area property change events?
     //    should modifiers return this to allow chaining, e.g. add(area0).intersect(area1)
     //    test serialization, may have to add custom code to serialize areas
 
