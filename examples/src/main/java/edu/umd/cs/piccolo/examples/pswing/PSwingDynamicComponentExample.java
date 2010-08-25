@@ -1,6 +1,35 @@
-/* Copyright 2010, University of Colorado */
+/*
+ * Copyright (c) 2008-2010, Piccolo2D project, http://piccolo2d.org
+ * Copyright (c) 1998-2008, University of Maryland
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided
+ * that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution.
+ *
+ * None of the name of the University of Maryland, the name of the Piccolo2D project, or the names of its
+ * contributors may be used to endorse or promote products derived from this software without specific
+ * prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package edu.umd.cs.piccolo.examples.pswing;
 
-package edu.umd.cs.piccolox.pswing;
+import edu.umd.cs.piccolox.pswing.PSwing;
+import edu.umd.cs.piccolox.pswing.PSwingCanvas;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -21,10 +50,14 @@ import java.lang.reflect.InvocationTargetException;
  * The JPanel contain various JComponents whose text can be updated by 
  * typing into JTextFields and pressing the "Update" button.
  * The JPanel managed by PSwing is often rendered incorrectly.
- *
+ * <p>
+ * Please see piccolo2d issue 163 for more information about this problem and solution:
+ * http://code.google.com/p/piccolo2d/issues/detail?id=163
+ * 
  * @author Chris Malley (cmalley@pixelzoom.com)
+ * @author Sam Reid
  */
-public class PSwingDynamicComponentTest extends JFrame {
+public class PSwingDynamicComponentExample extends JFrame {
     
     private static final Dimension FRAME_SIZE = new Dimension( 800, 400 );
     private static final int TEXT_FIELD_COLUMNS = 30;
@@ -32,8 +65,8 @@ public class PSwingDynamicComponentTest extends JFrame {
     private final ComponentPanel swingPanel, piccoloPanel;
     private final JTextField labelTextField, checkBoxTextField, radioButtonTextField;
     
-    public PSwingDynamicComponentTest() {
-        super( PSwingDynamicComponentTest.class.getName() );
+    public PSwingDynamicComponentExample() {
+        super( PSwingDynamicComponentExample.class.getName() );
         setSize( FRAME_SIZE );
         
         // canvas
@@ -212,7 +245,7 @@ public class PSwingDynamicComponentTest extends JFrame {
 //        new SleepThread( 1000 ).start();
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
-                JFrame frame = new PSwingDynamicComponentTest();
+                JFrame frame = new PSwingDynamicComponentExample();
                 frame.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
                 frame.setVisible( true );
             }
