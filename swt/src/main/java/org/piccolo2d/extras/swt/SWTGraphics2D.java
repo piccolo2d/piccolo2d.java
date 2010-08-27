@@ -565,7 +565,7 @@ public class SWTGraphics2D extends Graphics2D {
                 p = pathIterator2Path(s.getPathIterator(null));
                 SHAPE_CACHE.put(s, p);
             }
-            drawPath(p);
+            fillPath(p);
         }
     }
 
