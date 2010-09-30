@@ -67,16 +67,16 @@ public final class AnimatePathExample extends PFrame {
 
 
     /**
-     * Create a new path example.
+     * Create a new animate path example.
      */
     public AnimatePathExample() {
         this(null);
     }
 
     /**
-     * Create a new path example with the specified canvas.
+     * Create a new animate path example with the specified canvas.
      *
-     * @param canvas canvas for this path example
+     * @param canvas canvas for this animate path example
      */
     public AnimatePathExample(final PCanvas canvas) {
         super("AnimatePathExample", false, canvas);
@@ -94,7 +94,6 @@ public final class AnimatePathExample extends PFrame {
         curve.setStrokePaint(STROKE_PAINT);
 
         PInputEventListener animateCurve = new PBasicInputEventHandler() {
-
                 /** {@inheritDoc} */
                 public void mousePressed(final PInputEvent event) {
                     animateCurve();
@@ -111,7 +110,7 @@ public final class AnimatePathExample extends PFrame {
      */
     private void animateCurve() {
         curve.addActivity(new PInterpolatingActivity(1000L) {
-                /** @inheritDoc */
+                /** {@inheritDoc} */
                 public void setRelativeTargetValue(final float value) {
                     curve.reset();
                     curve.moveTo(100.0d, 100.0d);
