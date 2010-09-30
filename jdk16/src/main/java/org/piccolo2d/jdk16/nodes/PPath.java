@@ -636,6 +636,16 @@ public abstract class PPath extends PShape {
     }
 
     /**
+     * Reset the geometry for this path node to empty.
+     */
+    public final void reset() {
+        Path2D oldPath = (Path2D) path.clone();
+        path.reset();
+        updateBoundsFromShape();
+        firePropertyChange(-1, "path", oldPath, getPath());
+    }
+
+    /**
      * Close the current subpath by drawing a straight line back to the coordinates
      * of the last <code>moveTo</code>. If the path is already closed then this method
      * has no effect. 
