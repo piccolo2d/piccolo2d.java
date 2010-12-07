@@ -95,6 +95,15 @@ public class TextWrappingExample extends PFrame {
             }
         };
 
+    /** Reset bounds action. */
+    private final AbstractAction resetBoundsAction = new AbstractAction("Reset Bounds") {
+            /** {@inheritDoc} */
+            public void actionPerformed(final ActionEvent event) {
+                wide.setBounds(10.0d, 10.0d, 400.0d, 100.0d);
+                narrow.setBounds(10.0d, 210.0d, 100.0d, 400.0d);
+            }
+        };
+
     /** Text. */
     private static final String TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et lacus eros, non auctor odio. Duis nibh dolor, consectetur ac sodales sit amet, hendrerit eget lorem. Donec sollicitudin quam vel ipsum accumsan hendrerit eget a dui. Vivamus iaculis sollicitudin faucibus. Integer dignissim facilisis est, tempor ultrices eros convallis vitae. In.";
 
@@ -127,6 +136,8 @@ public class TextWrappingExample extends PFrame {
         toolBar.add(toggleTextButton);
         toolBar.add(constrainHeightButton);
         toolBar.add(constrainWidthButton);
+        toolBar.addSeparator();
+        toolBar.add(resetBoundsAction);
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add("North", toolBar);
@@ -145,7 +156,7 @@ public class TextWrappingExample extends PFrame {
         narrow.addPropertyChangeListener("bounds", new PropertyChangeListener() {
                 /** {@inheritDoc} */
                 public void propertyChange(final PropertyChangeEvent event) {
-                    narrowLabel.setText("Narrow label bounds=" + wide.getBounds());
+                    narrowLabel.setText("Narrow label bounds=" + narrow.getBounds());
                 }
             });
 
