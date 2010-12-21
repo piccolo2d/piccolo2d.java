@@ -219,6 +219,12 @@
       </roles>
       <timezone>+2</timezone>
     </contributor>
+    <contributor>
+      <email>berthold.daum@bdaum.de</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </contributor>
   </contributors>
   <build>
     <pluginManagement>
