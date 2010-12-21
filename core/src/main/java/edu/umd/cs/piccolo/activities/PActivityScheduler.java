@@ -169,7 +169,6 @@ public class PActivityScheduler implements Serializable {
     public void processActivities(final long currentTime) {
         final int size = activities.size();
         if (size > 0) {
-            processingActivities.clear();
             processingActivities.addAll(activities);
             for (int i = size - 1; i >= 0; i--) {
                 final PActivity each = (PActivity) processingActivities.get(i);
