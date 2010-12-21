@@ -197,9 +197,7 @@
       </roles>
       <timezone>-6</timezone>
     </developer>
-  </developers>
-  <contributors>
-    <contributor>
+    <developer>
       <name>Chris Malley</name>
       <email>cmalley@pixelzoom.com</email>
       <url>http://www.pixelzoom.com</url>
@@ -207,7 +205,9 @@
         <role>developer</role>
       </roles>
       <timezone>-7</timezone>
-    </contributor>
+    </developer>
+  </developers>
+  <contributors>
     <contributor>
       <name>Alexander Kurtakov</name>
       <email>akurtakov@gmail.com</email>
