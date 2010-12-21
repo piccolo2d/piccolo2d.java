@@ -365,5 +365,24 @@
         </plugins>
       </build>
     </profile>
+    <!--  profile only activated for maven 3.0-beta-x or later versions -->
+    <profile>
+      <id>maven-3</id>
+      <activation>
+        <file>
+          <exists>${basedir}</exists>
+        </file>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <artifactId>maven-site-plugin</artifactId>
+              <version>3.0-beta-3</version>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
   </profiles>
 </project>
