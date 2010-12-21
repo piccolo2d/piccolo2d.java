@@ -91,14 +91,17 @@ public class ActivityMemoryLeakBugExample extends PFrame {
                     // empty
                 }
 
-                PActivity a = new PActivity(-1) {
-                        /** {@inheritDoc} */
-                        protected void activityStep(final long elapsedTime) {
-                            System.out.println("cleanup activity");
-                            terminate();
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            PActivity a = new PActivity(-1) {
+                                    protected void activityStep(final long elapsedTime) {
+                                        System.out.println("cleanup activity");
+                                        terminate();
+                                    }
+                                };
+                            layer.getRoot().addActivity(a);
                         }
-                    };
-                layer.getRoot().addActivity(a);
+                    });
             }
         }.start();
     }
