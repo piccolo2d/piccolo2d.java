@@ -90,10 +90,13 @@ public class PSwingTest extends TestCase {
 		panel.setBackground(Color.RED);
 		panel.setPreferredSize(new Dimension(100, 100));
 
-		final BufferedImage img = pSwing.paintComponent();
-
-		assertEquals(Color.RED.getRGB(), img.getRGB(50, 50));
-	}	
+		final BufferedImage image = new BufferedImage(100, 100,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics2D graphics = image.createGraphics();
+		PPaintContext paintContext = new PPaintContext(graphics);
+		pSwing.paint(paintContext);
+		assertEquals(Color.RED.getRGB(), image.getRGB(50, 50));
+	}
 
 	public void testHidingPNodeHidesComponent() {
 		final JPanel panel = new JPanel();
@@ -208,7 +211,11 @@ public class PSwingTest extends TestCase {
 		canvas.doLayout();
 		// While paint, it uses the graphics element to determine the font's
 		// display size and hence determine minimum size of JLabel.
-		swing.paint();
+		BufferedImage image = new BufferedImage(100, 100,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics2D graphics = image.createGraphics();
+		PPaintContext paintContext = new PPaintContext(graphics);
+		swing.paint(paintContext);
 
 		assertFalse(10 == swing.getWidth());
 	}
@@ -224,7 +231,11 @@ public class PSwingTest extends TestCase {
 		canvas.doLayout();
 		// While paint, it uses the graphics element to determine the font's
 		// display size and hence determine minimum size of JLabel.
-		swing.paint();
+		BufferedImage image = new BufferedImage(100, 100,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics2D graphics = image.createGraphics();
+		PPaintContext paintContext = new PPaintContext(graphics);
+		swing.paint(paintContext);
 		assertFalse(10 == swing.getWidth());
 	}
 
@@ -275,30 +286,6 @@ public class PSwingTest extends TestCase {
 
 		public MockPaintingPSwing(JComponent component) {
 			super(component);
-		}
-
-		public void paintOnto(BufferedImage image) {
-			PPaintContext paintContext = new PPaintContext(image
-					.createGraphics());
-			paint(paintContext);
-		}
-
-		public BufferedImage paint() {
-			BufferedImage image = new BufferedImage((int) getWidth(),
-					(int) getHeight(), BufferedImage.TYPE_INT_RGB);
-			paintOnto(image);
-			return image;
-		}
-
-		public BufferedImage paintComponent() {
-			BufferedImage image = new BufferedImage((int) getWidth(),
-					(int) getHeight(), BufferedImage.TYPE_INT_RGB);
-			paintComponentOnto(image);
-			return image;
-		}
-
-		public void paintComponentOnto(BufferedImage image) {
-			paint(image.createGraphics());
 		}
 
 		public void paint(Graphics2D paintContext) {
