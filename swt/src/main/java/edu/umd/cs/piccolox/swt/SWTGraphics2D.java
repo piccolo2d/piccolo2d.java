@@ -1106,6 +1106,7 @@ public class SWTGraphics2D extends Graphics2D {
      * @param p path to draw
      */
     public void drawPath(final Path p) {
+        gc.setLineWidth((int) (lineWidth + 0.5));
         gc.setTransform(swtTransform);
         gc.drawPath(p);
         gc.setTransform(null);
