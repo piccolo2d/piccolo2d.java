@@ -222,10 +222,37 @@
       </properties>
     </profile>
     <profile>
-      <id>windows</id>
+      <id>windows_x86</id>
       <activation>
         <os>
           <family>windows</family>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.win32.win32</swt.groupId>
+        <swt.artifactId>x86</swt.artifactId>
+      </properties>
+    </profile>
+    <profile>
+      <id>windows_amd64</id>
+      <activation>
+        <os>
+          <family>windows</family>
+          <arch>amd64</arch>
+        </os>
+      </activation>
+      <properties>
+        <swt.groupId>org.eclipse.swt.win32.win32</swt.groupId>
+        <swt.artifactId>x86_64</swt.artifactId>
+      </properties>
+    </profile>
+    <profile>
+      <id>windows_x86_64</id>
+      <activation>
+        <os>
+          <family>windows</family>
+          <arch>x86_64</arch>
         </os>
       </activation>
       <properties>
