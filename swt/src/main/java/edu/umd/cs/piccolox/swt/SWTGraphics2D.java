@@ -1548,14 +1548,17 @@ public class SWTGraphics2D extends Graphics2D {
                 final org.eclipse.swt.graphics.Font font = (org.eclipse.swt.graphics.Font) i.next();
                 font.dispose();
             }
+            FONT_CACHE.clear();
             for (final Iterator i = COLOR_CACHE.values().iterator(); i.hasNext();) {
                 final org.eclipse.swt.graphics.Color color = (org.eclipse.swt.graphics.Color) i.next();
                 color.dispose();
             }
+            COLOR_CACHE.clear();
             for (final Iterator i = SHAPE_CACHE.values().iterator(); i.hasNext();) {
                 final Path path = (Path) i.next();
                 path.dispose();
             }
+            SHAPE_CACHE.clear();
         }
     }
 
