@@ -59,6 +59,16 @@
     <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/swt</developerConnection>
     <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/swt</url>
   </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>${surefire.argLine}</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <reporting>
     <plugins>
       <plugin>
@@ -293,6 +303,7 @@
       <properties>
         <swt.groupId>org.eclipse.swt.cocoa</swt.groupId>
         <swt.artifactId>macosx</swt.artifactId>
+        <surefire.argLine>-XstartOnFirstThread</surefire.argLine>
       </properties>
     </profile>
 -->
