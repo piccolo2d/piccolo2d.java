@@ -62,11 +62,11 @@ public class InterfaceFrame extends PFrame {
         // Create a node.
         final PNode aNode = new PNode();
 
-        // A node will not be visible until its bounds and brush are set.
+        // A node will not be visible until its bounds and paint are set.
         aNode.setBounds(0, 0, 100, 80);
         aNode.setPaint(Color.RED);
 
-        // A node needs to be a descendent of the root to be displayed.
+        // A node needs to be a descendant of the root to be displayed.
         final PLayer layer = getCanvas().getLayer();
         layer.addChild(aNode);
 
@@ -77,11 +77,11 @@ public class InterfaceFrame extends PFrame {
         aNode.addChild(anotherNode);
 
         // The base bounds of a node are easy to change. Changing the bounds
-        // of a node will not affect it's children.
+        // of a node will not affect its children.
         aNode.setBounds(-10, -10, 200, 110);
 
         // Each node has a transform that can be used to modify the position,
-        // scale or rotation of a node. Changing a node's transform, will
+        // scale or rotation of a node. Changing a node's transform will
         // transform all of its children as well.
         aNode.translate(100, 100);
         aNode.scale(1.5f);
@@ -113,7 +113,7 @@ public class InterfaceFrame extends PFrame {
         myCompositeFace.addChild(eye2);
         myCompositeFace.addChild(mouth);
 
-        // Don't want anyone grabbing out our eye's.
+        // Don't want anyone grabbing out our eyes.
         myCompositeFace.setChildrenPickable(false);
 
         // Position the face parts.
@@ -125,7 +125,7 @@ public class InterfaceFrame extends PFrame {
         b.inset(-5, -5);
         myCompositeFace.setBounds(b);
 
-        // Opps its to small, so scale it up.
+        // Opps it's too small, so scale it up.
         myCompositeFace.scale(1.5);
 
         layer.addChild(myCompositeFace);
@@ -138,11 +138,8 @@ public class InterfaceFrame extends PFrame {
 
     class ToggleShape extends PPath {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
-        private boolean fIsPressed = false;
+        private boolean isPressed = false;
 
         public ToggleShape() {
             setPathToEllipse(0, 0, 100, 80);
@@ -150,20 +147,20 @@ public class InterfaceFrame extends PFrame {
             addInputEventListener(new PBasicInputEventHandler() {
                 public void mousePressed(final PInputEvent event) {
                     super.mousePressed(event);
-                    fIsPressed = true;
+                    isPressed = true;
                     repaint();
                 }
 
                 public void mouseReleased(final PInputEvent event) {
                     super.mouseReleased(event);
-                    fIsPressed = false;
+                    isPressed = false;
                     repaint();
                 }
             });
         }
 
         protected void paint(final PPaintContext paintContext) {
-            if (fIsPressed) {
+            if (isPressed) {
                 final Graphics2D g2 = paintContext.getGraphics();
                 g2.setPaint(getPaint());
                 g2.fill(getBoundsReference());
