@@ -37,12 +37,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -59,7 +56,6 @@ import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
-
 
 /*
  This message was sent to Sun on August 27, 1999
@@ -192,6 +188,7 @@ import org.piccolo2d.util.PPaintContext;
  * </p>
  * 
  * @author Sam R. Reid
+ * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Benjamin B. Bederson
  * @author Lance E. Good
  * 
@@ -220,7 +217,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     /**
      * Default stroke, <code>new BasicStroke()</code>. Cannot be made static
-     * because BasicStroke is not serializable.
+     * because BasicStroke is not serializable.  Should not be null.
      */
     private Stroke defaultStroke = new BasicStroke();
 
@@ -271,12 +268,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     };
 
-    private final PropertyChangeListener reshapeListener = new PropertyChangeListener() {
-        public void propertyChange(final PropertyChangeEvent evt) {
-            repaint();
-        }
-    };
-
     /**
      * Listens to container nodes for changes to its contents. Any additions
      * will automatically have double buffering turned off.
@@ -296,9 +287,10 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
          * I'm assuming that the intent of the is method is that it should be
          * called explicitly by anyone making changes to the hierarchy of the
          * Swing component graph.
+         * @param targetComponent the component for which double buffering should be removed
          */
         private void disableDoubleBuffering(final JComponent targetComponent) {
-            targetComponent.setDoubleBuffered(false);
+            targetComponent.setDoubleBuffered( false );
             for (int i = 0; i < targetComponent.getComponentCount(); i++) {
                 final Component c = targetComponent.getComponent(i);
                 if (c instanceof JComponent) {
@@ -319,16 +311,18 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         initializeComponent(component);
 
         component.revalidate();
-        //TODO: this listener is suspicious, it's not listening for any specific property
-        component.addPropertyChangeListener(new PropertyChangeListener() {
-            /** {@inheritDoc} */
-            public void propertyChange(final PropertyChangeEvent evt) {
-                updateBounds();
-            }
-        });
-
         updateBounds();
         listenForCanvas(this);
+    }
+
+    /**
+     * @deprecated by {@link #PSwing(JComponent)}
+     * 
+     * @param swingCanvas canvas on which the PSwing node will be embedded
+     * @param component not used
+     */
+    public PSwing(final PSwingCanvas swingCanvas, final JComponent component) {
+        this(component);
     }
 
     /**
@@ -336,24 +330,37 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * bounds of this PNode.
      */
     public void updateBounds() {
-        // Avoid setBounds if it is unnecessary
-        // TODO: should we make sure this is called at least once
-        // TODO: does this sometimes need to be called when size already equals
-        // preferred size, to relayout/update things?
+        /*
+         * Need to explicitly set the component's bounds because 
+         * the component's parent (PSwingCanvas.ChildWrapper) has no layout manager.
+         */
         if (componentNeedsResizing()) {
-            component.setBounds(0, 0, component.getPreferredSize().width, component.getPreferredSize().height);
+            updateComponentSize();
         }
-        setBounds(0, 0, component.getPreferredSize().width, component.getPreferredSize().height);
-    }
-
-    private boolean componentNeedsResizing() {
-        return component.getWidth() != component.getPreferredSize().width
-                || component.getHeight() != component.getPreferredSize().height;
+        setBounds( 0, 0, component.getPreferredSize().width, component.getPreferredSize().height );
     }
 
     /**
-     * Determines if the Swing component should be rendered normally or as a
-     * filled rectangle.
+     * Since the parent ChildWrapper has no layout manager, it is the responsibility of this PSwing
+     * to make sure the component has its bounds set properly, otherwise it will not be drawn properly.
+     * This method sets the bounds of the component to be equal to its preferred size.
+     */
+    private void updateComponentSize() {
+        component.setBounds( 0, 0, component.getPreferredSize().width, component.getPreferredSize().height );
+    }
+
+    /**
+     * Determines whether the component should be resized, based on whether its actual width and height
+     * differ from its preferred width and height.
+     * @return true if the component should be resized.
+     */
+    private boolean componentNeedsResizing() {
+        return component.getWidth() != component.getPreferredSize().width || component.getHeight() != component.getPreferredSize().height;
+    }
+
+    /**
+     * Paints the PSwing on the specified renderContext.  Also determines if
+     * the Swing component should be rendered normally or as a filled rectangle (greeking).
      * <p/>
      * The transform, clip, and composite will be set appropriately when this
      * object is rendered. It is up to this object to restore the transform,
@@ -365,25 +372,29 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * @param renderContext Contains information about current render.
      */
     public void paint(final PPaintContext renderContext) {
+        if (componentNeedsResizing()) {
+            updateComponentSize();
+            component.validate();
+        }
         final Graphics2D g2 = renderContext.getGraphics();
 
-        if (defaultStroke == null) {
-            defaultStroke = new BasicStroke();
-        }
+        //Save Stroke and Font for restoring.
+        Stroke originalStroke = g2.getStroke();
+        Font originalFont = g2.getFont();
 
         g2.setStroke(defaultStroke);
         g2.setFont(DEFAULT_FONT);
-
-        if (component.getParent() == null) {
-            component.revalidate();
-        }
-
+        
         if (shouldRenderGreek(renderContext)) {
             paintAsGreek(g2);
         }
         else {
             paint(g2);
         }
+
+        //Restore the stroke and font on the Graphics2D
+        g2.setStroke(originalStroke);
+        g2.setFont(originalFont);
     }
 
     /**
@@ -399,24 +410,26 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * Paints the Swing component as greek.
+     * Paints the Swing component as greek.  This method assumes that the stroke has been set beforehand.
      * 
      * @param g2 The graphics used to render the filled rectangle
      */
     public void paintAsGreek(final Graphics2D g2) {
-        final Color background = component.getBackground();
-        final Color foreground = component.getForeground();
-        final Rectangle2D rect = getBounds();
+        //Save original color for restoring painting as greek.
+        Color originalColor = g2.getColor();
 
-        if (background != null) {
-            g2.setColor(background);
+        if (component.getBackground() != null) {
+            g2.setColor(component.getBackground());
         }
-        g2.fill(rect);
+        g2.fill(getBounds());
 
-        if (foreground != null) {
-            g2.setColor(foreground);
+        if (component.getForeground() != null) {
+            g2.setColor(component.getForeground());
         }
-        g2.draw(rect);
+        g2.draw(getBounds());
+
+        //Restore original color on the Graphics2D
+        g2.setColor( originalColor );
     }
 
     /** {@inheritDoc} */
@@ -504,20 +517,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
         if (c.getFont() != null) {
             minFontSize = Math.min(minFontSize, c.getFont().getSize());
         }
-        c.addPropertyChangeListener("font", this);
-
-        // Update shape when any property (such as text or font) changes.
-        c.addPropertyChangeListener(reshapeListener);
-
-        c.addComponentListener(new ComponentAdapter() {
-            public void componentResized(final ComponentEvent e) {
-                updateBounds();
-            }
-
-            public void componentShown(final ComponentEvent e) {
-                updateBounds();
-            }
-        });
+        c.addPropertyChangeListener( "font", this );
 
         if (c instanceof Container) {
             initializeChildren((Container) c);
@@ -654,7 +654,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * threshold the Swing component is rendered as 'Greek' instead of painting
      * the Swing component. Defaults to {@link #DEFAULT_GREEK_THRESHOLD}.
      * 
-     * @see PSwing#paintGreek(PPaintContext)
+     * @see PSwing#paintAsGreek(Graphics2D)
      * @return the current Greek threshold scale
      */
     public double getGreekThreshold() {
@@ -666,7 +666,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * scale will be below this threshold the Swing component is rendered as
      * 'Greek' instead of painting the Swing component..
      * 
-     * @see PSwing#paintGreek(PPaintContext)
+     * @see PSwing#paintAsGreek(Graphics2D)
      * @param greekThreshold Greek threshold in scale
      */
     public void setGreekThreshold(final double greekThreshold) {
