@@ -346,6 +346,8 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * a transformed context is slow. Enabling buffered painting gives a significant performance
      * boost on these platforms; however, at the expense of a lower-quality drawing result at larger
      * scales.
+     * @since 1.3.1
+     * @param useBufferedPainting true if this {@link PSwing} should use buffered painting
      */
     public void setUseBufferedPainting(final boolean useBufferedPainting) {
         this.useBufferedPainting = useBufferedPainting;
