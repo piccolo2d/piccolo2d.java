@@ -28,16 +28,18 @@
  */
 package org.piccolo2d.examples.pswing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PZoomEventHandler;
+import org.piccolo2d.extras.pswing.PComboBox;
+import org.piccolo2d.extras.pswing.PSwing;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.nodes.PText;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,13 +50,11 @@ import javax.swing.JTree;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.piccolo2d.PNode;
-import org.piccolo2d.event.PZoomEventHandler;
-import org.piccolo2d.extras.pswing.PComboBox;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-import org.piccolo2d.nodes.PText;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
@@ -63,6 +63,14 @@ import org.piccolo2d.nodes.PText;
 
 public class PSwingExample1 {
     public static void main(final String[] args) {
+        new PSwingExample1().run();
+    }
+
+    protected PSwing createPSwing(JComponent component) {
+        return new PSwing(component);
+    }
+
+    protected void run() {
         final PSwingCanvas pCanvas = new PSwingCanvas();
         final PText pText = new PText("PText");
         pCanvas.getLayer().addChild(pText);
@@ -87,13 +95,13 @@ public class PSwingExample1 {
                 System.out.println("TestZSwing.actionPerformed!!!!!!!!!!!!!!*********************");
             }
         });
-        final PSwing pSwing = new PSwing(jButton);
+        final PSwing pSwing = createPSwing(jButton);
         pCanvas.getLayer().addChild(pSwing);
         pSwing.repaint();
 
         final JSpinner jSpinner = new JSpinner();
         jSpinner.setPreferredSize(new Dimension(100, jSpinner.getPreferredSize().height));
-        final PSwing pSpinner = new PSwing(jSpinner);
+        final PSwing pSpinner = createPSwing(jSpinner);
         pCanvas.getLayer().addChild(pSpinner);
         pSpinner.translate(0, 150);
 
@@ -108,20 +116,20 @@ public class PSwingExample1 {
                 System.out.println("TestPSwing.JChekbox.stateChanged@" + System.currentTimeMillis());
             }
         });
-        final PSwing pCheckBox = new PSwing(jcb);
+        final PSwing pCheckBox = createPSwing(jcb);
         pCanvas.getLayer().addChild(pCheckBox);
         pCheckBox.translate(100, 0);
 
         // Growable JTextArea
         final JTextArea textArea = new JTextArea("This is a growable TextArea.\nTry it out!");
         textArea.setBorder(new LineBorder(Color.blue, 3));
-        PSwing swing = new PSwing(textArea);
+        PSwing swing = createPSwing(textArea);
         swing.translate(150, 150);
         pCanvas.getLayer().addChild(swing);
 
         // A Slider
         final JSlider slider = new JSlider();
-        final PSwing pSlider = new PSwing(slider);
+        final PSwing pSlider = createPSwing(slider);
         pSlider.translate(200, 200);
         pCanvas.getLayer().addChild(pSlider);
 
@@ -130,26 +138,26 @@ public class PSwingExample1 {
         tree.setEditable(true);
         final JScrollPane p = new JScrollPane(tree);
         p.setPreferredSize(new Dimension(150, 150));
-        final PSwing pTree = new PSwing(p);
+        final PSwing pTree = createPSwing(p);
         pCanvas.getLayer().addChild(pTree);
         pTree.translate(0, 250);
 
         // A JColorChooser - also demonstrates JTabbedPane
         final JColorChooser chooser = new JColorChooser();
-        final PSwing pChooser = new PSwing(chooser);
+        final PSwing pChooser = createPSwing(chooser);
         pCanvas.getLayer().addChild(pChooser);
         pChooser.translate(100, 300);
 
         final JPanel myPanel = new JPanel();
         myPanel.setBorder(BorderFactory.createTitledBorder("Titled Border"));
         myPanel.add(new JCheckBox("CheckBox"));
-        final PSwing panelSwing = new PSwing(myPanel);
+        final PSwing panelSwing = createPSwing(myPanel);
         pCanvas.getLayer().addChild(panelSwing);
         panelSwing.translate(400, 50);
 
         // A Slider
         final JSlider slider2 = new JSlider();
-        final PSwing pSlider2 = new PSwing(slider2);
+        final PSwing pSlider2 = createPSwing(slider2);
         pSlider2.translate(200, 200);
         final PNode root = new PNode();
         root.addChild(pSlider2);
@@ -164,7 +172,7 @@ public class PSwingExample1 {
         final String[] listItems = { "Summer Teeth", "Mermaid Avenue", "Being There", "A.M." };
         final PComboBox box = new PComboBox(listItems);
         comboPanel.add(box);
-        swing = new PSwing(comboPanel);
+        swing = createPSwing(comboPanel);
         swing.translate(200, 230);
         pCanvas.getLayer().addChild(swing);
         box.setEnvironment(swing, pCanvas);// has to be done manually at present

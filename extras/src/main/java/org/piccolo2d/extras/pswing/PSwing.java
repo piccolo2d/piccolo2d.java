@@ -28,6 +28,14 @@
  */
 package org.piccolo2d.extras.pswing;
 
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PPaintContext;
+
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -40,6 +48,8 @@ import java.awt.Stroke;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -47,15 +57,6 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javax.swing.JComponent;
-import javax.swing.RepaintManager;
-
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
-import org.piccolo2d.util.PBounds;
-import org.piccolo2d.util.PPaintContext;
 
 /*
  This message was sent to Sun on August 27, 1999
@@ -203,6 +204,11 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /** Temporary repaint bounds. */
     private static final PBounds TEMP_REPAINT_BOUNDS2 = new PBounds();
 
+    /** For use when buffered painting is enabled. */
+    private static final Color BUFFER_BACKGROUND_COLOR = new Color(0, 0, 0, 0);
+
+    private static final AffineTransform IDENTITY_TRANSFORM = new AffineTransform();
+
     /** Default Greek threshold, <code>0.3d</code>. */
     private static final double DEFAULT_GREEK_THRESHOLD = 0.3d;
 
@@ -211,6 +217,15 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     /** Swing component for this Swing node. */
     private JComponent component = null;
+
+    /**
+     * Whether or not to use buffered painting.
+     * @see {@link #paint(java.awt.Graphics2D)}
+     */
+    private boolean useBufferedPainting = false;
+
+    /** Used when buffered painting is enabled. */
+    private BufferedImage buffer;
 
     /** Minimum font size. */
     private double minFontSize = Double.MAX_VALUE;
@@ -323,6 +338,22 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      */
     public PSwing(final PSwingCanvas swingCanvas, final JComponent component) {
         this(component);
+    }
+
+    /**
+     * If true {@link PSwing} will paint the {@link JComponent} to a buffer with no graphics
+     * transformations applied and then paint the buffer to the target transformed
+     * graphics context. On some platforms (such as Mac OS X) rendering {@link JComponent}s to
+     * a transformed context is slow. Enabling buffered painting gives a significant performance
+     * boost on these platforms; however, at the expense of a lower-quality drawing result at larger
+     * scales.
+     */
+    public void setUseBufferedPainting(final boolean useBufferedPainting) {
+        this.useBufferedPainting = useBufferedPainting;
+    }
+
+    public boolean isUseBufferedPainting() {
+        return this.useBufferedPainting;
     }
 
     /**
@@ -471,12 +502,47 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
         final RenderingHints oldHints = g2.getRenderingHints();
 
-        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-        component.paint(g2);
+        if (useBufferedPainting) {
+            Graphics2D bufferedGraphics = getBufferedGraphics(g2);
+            component.paint(bufferedGraphics);
+            g2.drawRenderedImage(buffer, IDENTITY_TRANSFORM);
+        } else {
+            g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+            component.paint(g2);
+        }
 
         g2.setRenderingHints(oldHints);
 
         manager.unlockRepaint(component);
+    }
+
+    private Graphics2D getBufferedGraphics(Graphics2D source) {
+        final Graphics2D bufferedGraphics;
+        if(!isBufferValid()) {
+            // Get the graphics context associated with a new buffered image.
+            // Use TYPE_INT_ARGB_PRE so that transparent components look good on Windows.
+            buffer = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+            bufferedGraphics = buffer.createGraphics();
+        }
+        else {
+            // Use the graphics context associated with the existing buffered image
+            bufferedGraphics = buffer.createGraphics();
+            // Clear the buffered image to prevent artifacts on Macintosh
+            bufferedGraphics.setBackground(BUFFER_BACKGROUND_COLOR);
+            bufferedGraphics.clearRect(0, 0, component.getWidth(), component.getHeight());
+        }
+        bufferedGraphics.setRenderingHints(source.getRenderingHints());
+        return bufferedGraphics;
+    }
+
+    /**
+     * Tells whether the buffer for the image of the Swing components
+     * is currently valid.
+     *
+     * @return true if the buffer is currently valid
+     */
+    private boolean isBufferValid() {
+        return !(buffer == null || buffer.getWidth() != component.getWidth() || buffer.getHeight() != component.getHeight());
     }
 
     /**
