@@ -28,24 +28,20 @@
  */
 package org.piccolo2d.extras.pswing;
 
+import junit.framework.TestCase;
+import org.piccolo2d.util.PPaintContext;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.RepaintManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.RepaintManager;
-
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-import org.piccolo2d.extras.pswing.PSwingRepaintManager;
-import org.piccolo2d.util.PPaintContext;
-
-import junit.framework.TestCase;
 
 public class PSwingTest extends TestCase {
 	public void setUp() {
@@ -98,7 +94,22 @@ public class PSwingTest extends TestCase {
                 PPaintContext paintContext = new PPaintContext(graphics);
                 pSwing.paint(paintContext);
                 assertEquals(Color.RED.getRGB(), image.getRGB(50, 50));
-	}	
+	}
+
+	public void testPSwingWithBufferedPaintingDelegatesPaintingToItsComponent() throws IOException {
+		final JPanel panel = new JPanel();
+		final MockPaintingPSwing pSwing = new MockPaintingPSwing(panel);
+        pSwing.setUseBufferedPainting(true);
+		panel.setBackground(Color.RED);
+		panel.setPreferredSize(new Dimension(100, 100));
+
+		final BufferedImage image = new BufferedImage(100, 100,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics2D graphics = image.createGraphics();
+		PPaintContext paintContext = new PPaintContext(graphics);
+		pSwing.paint(paintContext);
+		assertEquals(Color.RED.getRGB(), image.getRGB(50, 50));
+	}
 
 	public void testHidingPNodeHidesComponent() {
 		final JPanel panel = new JPanel();
