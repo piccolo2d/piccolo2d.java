@@ -43,7 +43,7 @@ import java.lang.ref.WeakReference;
  * Example that demonstrates the memory leak in Issue 185.
  * <p>
  * Memory leak - PActivityScheduler keeps processed activities in reference<br/>
- * {@link http://code.google.com/p/piccolo2d/issues/detail?id=185}
+ * <a href="http://code.google.com/p/piccolo2d/issues/detail?id=185">http://code.google.com/p/piccolo2d/issues/detail?id=185</a>
  * </p>
  */
 public class ActivityMemoryLeakBugExample extends PFrame {
