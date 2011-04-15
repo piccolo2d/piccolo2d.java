@@ -220,7 +220,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
 
     /**
      * Whether or not to use buffered painting.
-     * @see {@link #paint(java.awt.Graphics2D)}
+     * @see #paint(java.awt.Graphics2D)
      */
     private boolean useBufferedPainting = false;
 

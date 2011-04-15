@@ -34,7 +34,8 @@ import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.ref.WeakReference;
@@ -43,7 +44,7 @@ import java.lang.ref.WeakReference;
  * Example that demonstrates the memory leak in Issue 185.
  * <p>
  * Memory leak - PActivityScheduler keeps processed activities in reference<br/>
- * {@link http://code.google.com/p/piccolo2d/issues/detail?id=185}
+ * <a href="http://code.google.com/p/piccolo2d/issues/detail?id=185">http://code.google.com/p/piccolo2d/issues/detail?id=185</a>
  * </p>
  */
 public class ActivityMemoryLeakBugExample extends PFrame {
