@@ -34,7 +34,7 @@
   <parent>
     <artifactId>piccolo2d-parent</artifactId>
     <groupId>org.piccolo2d</groupId>
-    <version>1.3.1</version>
+    <version>1.4-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>piccolo2d-swt</artifactId>
@@ -274,7 +274,7 @@
 
     disable this profile to build on mac osx, jdk 1.6, x86_64
 
--->
+
     <profile>
       <id>macosx_carbon</id>
       <activation>
@@ -287,11 +287,12 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
+-->
 <!--
 
     enable this profile to build on mac osx, jdk 1.6, x86_64
       set MAVEN_OPTS="-Dd64", or unit tests will fail
-
+-->
     <profile>
       <id>macosx_cocoa_intel</id>
       <activation>
@@ -306,6 +307,6 @@
         <surefire.argLine>-XstartOnFirstThread</surefire.argLine>
       </properties>
     </profile>
--->
+
   </profiles>
 </project>
