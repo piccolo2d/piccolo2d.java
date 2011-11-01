@@ -28,15 +28,34 @@
  */
 package edu.umd.cs.piccolo.activities;
 
+import java.awt.geom.AffineTransform;
+
+import edu.umd.cs.piccolo.PNode;
+
 import junit.framework.TestCase;
 
 /**
  * Unit test for PTransformActivity.
  */
 public class PTransformActivityTest extends TestCase {
+    private final PNode node = new PNode();
+    private final PTransformActivity.Target target = new PTransformActivity.Target() {
+            public void setTransform(final AffineTransform aTransform) {
+                node.setTransform(aTransform);
+            }
+            public void getSourceMatrix(final double[] aSource) {
+                node.getTransformReference(true).getMatrix(aSource);
+            }
+        };
 
     public PTransformActivityTest(final String name) {
         super(name);
+    }
+
+    public void testNullDestinationTransform() {
+        final PTransformActivity transformActivity = new PTransformActivity(0, 0, target);
+        transformActivity.setDestinationTransform(null);
+        transformActivity.setRelativeTargetValue(0.0f);
     }
 
     public void testToString() {

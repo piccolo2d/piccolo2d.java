@@ -196,6 +196,9 @@ public class PTransformActivity extends PInterpolatingActivity {
     public void setRelativeTargetValue(final float zeroToOne) {
         super.setRelativeTargetValue(zeroToOne);
 
+        if (destination == null) {
+            return;
+        }
         STATIC_TRANSFORM.setTransform(source[0] + zeroToOne * (destination[0] - source[0]), source[1] + zeroToOne
                 * (destination[1] - source[1]), source[2] + zeroToOne * (destination[2] - source[2]), source[3]
                 + zeroToOne * (destination[3] - source[3]), source[4] + zeroToOne * (destination[4] - source[4]),
