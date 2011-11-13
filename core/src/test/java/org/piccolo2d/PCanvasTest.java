@@ -30,10 +30,10 @@ package org.piccolo2d;
 
 import java.awt.Cursor;
 
-import org.piccolo2d.PCanvas;
 import org.piccolo2d.event.PInputEventListener;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PUtil;
 
 import junit.framework.TestCase;
 
@@ -117,6 +117,25 @@ public class PCanvasTest extends TestCase {
     public void testSettingCanvasBoundsAffectsCameraBounds() {
         canvas.setBounds(0, 0, 100, 100);
         assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds());
+    }
+
+    public void testSettingCanvasBoundsNotAtOrigin() {
+        canvas.setBounds(50, 50, 100, 100);
+        assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds()); // camera should remain at (0,0)
+    }
+
+    public void testSettingCameraAffectsCameraBounds() {
+        canvas.setBounds(0, 0, 100, 100);
+        PCamera camera = PUtil.createBasicScenegraph();
+        canvas.setCamera(camera);
+        assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds());
+    }
+
+    public void testSettingCameraOnCanvasNotAtOrigin() {
+        canvas.setBounds(50, 50, 100, 100);
+        PCamera camera = PUtil.createBasicScenegraph();
+        canvas.setCamera(camera);
+        assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds()); // camera should remain at (0,0)
     }
 
     public void testAddInputEventListenersIsHonoured() {

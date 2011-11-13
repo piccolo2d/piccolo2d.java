@@ -264,7 +264,7 @@ public class PCanvas extends JComponent implements PComponent {
 
         if (camera != null) {
             camera.setComponent(this);
-            camera.setBounds(getBounds());
+            camera.setBounds(0, 0, getWidth(), getHeight());
         }
     }
 
