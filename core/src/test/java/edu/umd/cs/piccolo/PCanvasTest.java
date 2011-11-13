@@ -28,12 +28,13 @@
  */
 package edu.umd.cs.piccolo;
 
-import java.awt.Cursor;
-
-import junit.framework.TestCase;
 import edu.umd.cs.piccolo.event.PInputEventListener;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
+import edu.umd.cs.piccolo.util.PUtil;
+import junit.framework.TestCase;
+
+import java.awt.Cursor;
 
 /**
  * Unit test for PCanvas.
@@ -126,6 +127,25 @@ public class PCanvasTest extends TestCase {
     public void testSettingCanvasBoundsAffectsCameraBounds() {
         canvas.setBounds(0, 0, 100, 100);
         assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds());
+    }
+
+    public void testSettingCanvasBoundsNotAtOrigin() {
+        canvas.setBounds(50, 50, 100, 100);
+        assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds()); // camera should remain at (0,0)
+    }
+
+    public void testSettingCameraAffectsCameraBounds() {
+        canvas.setBounds(0, 0, 100, 100);
+        PCamera camera = PUtil.createBasicScenegraph();
+        canvas.setCamera(camera);
+        assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds());
+    }
+
+    public void testSettingCameraOnCanvasNotAtOrigin() {
+        canvas.setBounds(50, 50, 100, 100);
+        PCamera camera = PUtil.createBasicScenegraph();
+        canvas.setCamera(camera);
+        assertEquals(new PBounds(0, 0, 100, 100), canvas.getCamera().getBounds()); // camera should remain at (0,0)
     }
 
     public void testAddInputEventListenersIsHonoured() {

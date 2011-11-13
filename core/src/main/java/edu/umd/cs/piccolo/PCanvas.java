@@ -28,6 +28,19 @@
  */
 package edu.umd.cs.piccolo;
 
+import edu.umd.cs.piccolo.event.PInputEventListener;
+import edu.umd.cs.piccolo.event.PPanEventHandler;
+import edu.umd.cs.piccolo.event.PZoomEventHandler;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.util.PDebug;
+import edu.umd.cs.piccolo.util.PPaintContext;
+import edu.umd.cs.piccolo.util.PStack;
+import edu.umd.cs.piccolo.util.PUtil;
+
+import javax.swing.FocusManager;
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -45,20 +58,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-
-import javax.swing.FocusManager;
-import javax.swing.JComponent;
-import javax.swing.RepaintManager;
-import javax.swing.Timer;
-
-import edu.umd.cs.piccolo.event.PInputEventListener;
-import edu.umd.cs.piccolo.event.PPanEventHandler;
-import edu.umd.cs.piccolo.event.PZoomEventHandler;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PDebug;
-import edu.umd.cs.piccolo.util.PPaintContext;
-import edu.umd.cs.piccolo.util.PStack;
-import edu.umd.cs.piccolo.util.PUtil;
 
 /**
  * <b>PCanvas</b> is a simple Swing component that can be used to embed Piccolo
@@ -286,7 +285,7 @@ public class PCanvas extends JComponent implements PComponent {
 
         if (camera != null) {
             camera.setComponent(this);
-            camera.setBounds(getBounds());
+            camera.setBounds(0, 0, getWidth(), getHeight());
         }
     }
 
