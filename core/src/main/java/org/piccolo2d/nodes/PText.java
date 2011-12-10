@@ -310,7 +310,7 @@ public class PText extends PNode {
      * the height of its text.
      * 
      * @param constrainHeightToTextHeight true if this text node should
-     *            constrain its height to the width of its text
+     *            constrain its height to the height of its text
      */
     public void setConstrainHeightToTextHeight(final boolean constrainHeightToTextHeight) {
         this.constrainHeightToTextHeight = constrainHeightToTextHeight;
