@@ -28,6 +28,15 @@
  */
 package org.piccolo2d.extras.pswing;
 
+import org.piccolo2d.PCamera;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.event.PInputEventListener;
+import org.piccolo2d.util.PAffineTransform;
+import org.piccolo2d.util.PAffineTransformException;
+
+import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Point;
@@ -37,16 +46,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-
-import javax.swing.SwingUtilities;
-
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
-import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.event.PInputEventListener;
-import org.piccolo2d.util.PAffineTransform;
-import org.piccolo2d.util.PAffineTransformException;
 
 
 /**
@@ -209,9 +208,12 @@ public class PSwingEventHandler implements PInputEventListener {
             final PSwing swing = (PSwing) currentNode;
             final PNode grabNode = pickedNode;
 
-            point = new Point(mEvent.getX(), mEvent.getY());
-            cameraToLocal(pSwingMouseEvent.getPath().getTopCamera(), point, grabNode);
-            prevPoint = (Point) point.clone();
+            // use a floating point object to perform cameraToLocal to survive the transform math
+            final Point2D.Double p2d = new Point2D.Double(mEvent.getX(), mEvent.getY());
+            cameraToLocal(pSwingMouseEvent.getPath().getTopCamera(), p2d, grabNode);
+            
+            point = new Point((int) p2d.getX(), (int) p2d.getY());
+            prevPoint = (Point2D) p2d.clone();
 
             // This is only partially fixed to find the deepest
             // component at pt. It needs to do something like
