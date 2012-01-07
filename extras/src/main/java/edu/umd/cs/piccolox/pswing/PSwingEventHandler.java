@@ -208,9 +208,12 @@ public class PSwingEventHandler implements PInputEventListener {
             final PSwing swing = (PSwing) currentNode;
             final PNode grabNode = pickedNode;
 
-            point = new Point(mEvent.getX(), mEvent.getY());
-            cameraToLocal(pSwingMouseEvent.getPath().getTopCamera(), point, grabNode);
-            prevPoint = (Point) point.clone();
+            // use a floating point object to perform cameraToLocal to survive the transform math
+            final Point2D.Double p2d = new Point2D.Double(mEvent.getX(), mEvent.getY());
+            cameraToLocal(pSwingMouseEvent.getPath().getTopCamera(), p2d, grabNode);
+            
+            point = new Point((int) p2d.getX(), (int) p2d.getY());
+            prevPoint = (Point2D) p2d.clone();
 
             // This is only partially fixed to find the deepest
             // component at pt. It needs to do something like
