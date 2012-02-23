@@ -76,13 +76,13 @@ public class ExampleRunner extends JFrame {
                 ClipExample.class, CompositeExample.class, DynamicExample.class, EventHandlerExample.class,
                 FullScreenNodeExample.class, GraphEditorExample.class, GridExample.class, GroupExample.class,
                 HandleExample.class, HelloWorldExample.class, HierarchyZoomExample.class, HtmlViewExample.class,
-                KeyEventFocusExample.class, LayoutExample.class, LensExample.class, NavigationExample.class,
-                NodeCacheExample.class, NodeEventExample.class, NodeExample.class, NodeLinkExample.class,
-                P3DRectExample.class, PanToExample.class, PathExample.class, PositionExample.class,
-                PositionPathActivityExample.class, PulseExample.class, ScrollingExample.class, SelectionExample.class,
-                ShadowExample.class, SquiggleExample.class, StickyExample.class, StickyHandleLayerExample.class,
-                StrokeExample.class, TextExample.class, TooltipExample.class, TwoCanvasExample.class,
-                WaitForActivitiesExample.class });
+                KeyEventFocusExample.class, LayoutExample.class, LensExample.class, MouseWheelZoomExample.class,
+                NavigationExample.class, NodeCacheExample.class, NodeEventExample.class, NodeExample.class,
+                NodeLinkExample.class, P3DRectExample.class, PanToExample.class, PathExample.class,
+                PositionExample.class, PositionPathActivityExample.class, PulseExample.class, ScrollingExample.class,
+                SelectionExample.class, ShadowExample.class, SquiggleExample.class, StickyExample.class,
+                StickyHandleLayerExample.class, StrokeExample.class, TextExample.class, TooltipExample.class,
+                TwoCanvasExample.class, WaitForActivitiesExample.class });
     }
 
     /**
