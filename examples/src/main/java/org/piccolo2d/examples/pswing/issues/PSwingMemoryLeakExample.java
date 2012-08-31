@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.examples.pswing;
+package org.piccolo2d.examples.pswing.issues;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
