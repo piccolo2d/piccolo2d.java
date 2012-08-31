@@ -30,6 +30,11 @@ package org.piccolo2d;
 
 import java.awt.Cursor;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JPanel;
+
 import org.piccolo2d.event.PInputEventListener;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
@@ -152,5 +157,110 @@ public class PCanvasTest extends TestCase {
         final PInputEventListener[] listeners = canvas.getInputEventListeners();
         assertNotNull(listeners);
         assertEquals(2, listeners.length); // zoom + pan + mockListener
+    }
+
+    public void testMouseNoButtonPressed() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.NOBUTTON);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mousePressed(mouseEvent);
+        }
+        assertEquals(0, mockListener.getNotificationCount());
+    }
+
+    public void testMouseButton1Pressed() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.BUTTON1);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mousePressed(mouseEvent);
+        }
+        assertEquals(1, mockListener.getNotificationCount());
+    }
+
+    public void testMouseButton2Pressed() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.BUTTON2);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mousePressed(mouseEvent);
+        }
+        assertEquals(1, mockListener.getNotificationCount());
+    }
+
+    public void testMouseButton3Pressed() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.BUTTON3);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mousePressed(mouseEvent);
+        }
+        assertEquals(1, mockListener.getNotificationCount());
+    }
+
+    public void testMouseNoButtonReleased() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.NOBUTTON);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mouseReleased(mouseEvent);
+        }
+        assertEquals(0, mockListener.getNotificationCount());
+    }
+
+    public void testMouseButton1Released() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.BUTTON1);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mouseReleased(mouseEvent);
+        }
+        assertEquals(3, mockListener.getNotificationCount());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(MouseEvent.BUTTON1, mockListener.getNotification(i).event.getButton());
+        }
+    }
+
+    public void testMouseButton2Released() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.BUTTON2);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mouseReleased(mouseEvent);
+        }
+        assertEquals(3, mockListener.getNotificationCount());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(MouseEvent.BUTTON2, mockListener.getNotification(i).event.getButton());
+        }
+    }
+
+    public void testMouseButton3Released() {
+        JPanel panel = new JPanel();
+        panel.add("Center", canvas);
+        canvas.addInputEventListener(mockListener);
+        MouseEvent mouseEvent = new MouseEvent(canvas, 0, System.currentTimeMillis(), 0, 10, 10, 1, false, MouseEvent.BUTTON3);
+        for (int i = 0, size = canvas.getMouseListeners().length; i < size; i++) {
+            MouseListener mouseListener = canvas.getMouseListeners()[i];
+            mouseListener.mouseReleased(mouseEvent);
+        }
+        assertEquals(3, mockListener.getNotificationCount());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(MouseEvent.BUTTON3, mockListener.getNotification(i).event.getButton());
+        }
     }
 }
