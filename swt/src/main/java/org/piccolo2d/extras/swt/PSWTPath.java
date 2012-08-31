@@ -73,6 +73,7 @@ public class PSWTPath extends PNode {
     private static final Color DEFAULT_STROKE_PAINT = Color.black;
     private static final BasicStroke BASIC_STROKE = new BasicStroke();
     private static final float PEN_WIDTH = 1f;
+    private static final float DEFAULT_TRANSPARENCY = 1.0f;
 
     private Paint strokePaint;
 
@@ -84,6 +85,7 @@ public class PSWTPath extends PNode {
     private AffineTransform inverseXForm;
 
     private double[] shapePts;
+    private float transparency = DEFAULT_TRANSPARENCY;
 
     /**
      * Creates a path representing the rectangle provided.
@@ -315,6 +317,7 @@ public class PSWTPath extends PNode {
     protected void paint(final PPaintContext paintContext) {
         final Paint p = getPaint();
         final SWTGraphics2D g2 = (SWTGraphics2D) paintContext.getGraphics();
+        g2.setTransparency(transparency);
 
         if (internalXForm != null) {
             g2.transform(internalXForm);
@@ -571,4 +574,25 @@ public class PSWTPath extends PNode {
         PBounds bounds = getBoundsReference();                                                                                                        
         return new Point2D.Double(bounds.x + (bounds.width / 2.0), bounds.y + (bounds.height / 2.0));
     } 
+
+    /**
+     * Return the transparency for this SWT path node.
+     *
+     * @return the transparency for this SWT path node
+     */
+    public float getTransparency() {
+        return transparency;
+    }
+
+    /**
+     * Set the transparency for this SWT path node to <code>transparency</code>.
+     *
+     * @param transparency transparency, must be between <code>0.0f</code> and <code>1.0f</code> inclusive
+     */
+    public void setTransparency(final float transparency) {
+        if ((transparency < 0.0f) || (transparency > 1.0f)) {
+            throw new IllegalArgumentException("transparency must be between 0.0f and 1.0f inclusive");
+        }
+        this.transparency = transparency;
+    }
 }

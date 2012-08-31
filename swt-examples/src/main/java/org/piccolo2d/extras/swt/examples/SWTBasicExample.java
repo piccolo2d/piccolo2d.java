@@ -67,9 +67,15 @@ public final class SWTBasicExample {
         circle.setPaint(Color.GREEN);
         canvas.getLayer().addChild(circle);
 
+        circle = PSWTPath.createEllipse(120, 220, 40, 40);
+        circle.setPaint(Color.GRAY);
+        circle.setTransparency(0.2f);
+        canvas.getLayer().addChild(circle);
+
         circle = PSWTPath.createEllipse(400, 400, 75, 150);
         circle.setPaint(Color.YELLOW);
         canvas.getLayer().addChild(circle);
+
 
         PSWTText text = new PSWTText("Hello World\nMultiline");        
         text.translate(350, 150);

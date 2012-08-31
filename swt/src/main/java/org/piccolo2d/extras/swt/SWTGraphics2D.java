@@ -86,6 +86,7 @@ public class SWTGraphics2D extends Graphics2D {
     private static final int DEFAULT_FONT_SIZE = 12;
 
     private static final boolean DEFAULT_STRING_TRANSPARENCY = true;
+    private static final float DEFAULT_TRANSPARENCY = 1.0f;
 
     /**
      * The number of Graphics Contexts active as determined by called to
@@ -116,7 +117,9 @@ public class SWTGraphics2D extends Graphics2D {
     /** The current font to use when drawing text. */
     protected org.eclipse.swt.graphics.Font curFont;
     /** The current stroke width to use when drawing lines. */
-    protected double lineWidth = 1.0;
+    protected double lineWidth = 1.0d;
+    /** Transparency, <code>0.0f &lt;= transparency &lt;= 1.0f</code>. */
+    private float transparency = DEFAULT_TRANSPARENCY;
 
     /**
      * Constructor for SWTGraphics2D.
@@ -1160,6 +1163,28 @@ public class SWTGraphics2D extends Graphics2D {
         SWTShapeManager.transform(TEMP_LINE_RECT, transform);
 
         return (int) (Math.max(TEMP_LINE_RECT.getWidth(), 1) + 0.5);
+    }
+
+    /**
+     * Return the transparency for this graphics context.
+     *
+     * @return the transparency for this graphics context
+     */
+    public float getTransparency() {
+        return transparency;
+    }
+
+    /**
+     * Set the transparency for this graphics context to <code>transparency</code>.
+     *
+     * @param transparency transparency, must be between <code>0.0f</code> and <code>1.0f</code> inclusive
+     */
+    public void setTransparency(final float transparency) {
+        if ((transparency < 0.0f) || (transparency > 1.0f)) {
+            throw new IllegalArgumentException("transparency must be between 0.0f and 1.0f inclusive");
+        }
+        this.transparency = transparency;
+        gc.setAlpha((int) (this.transparency * 255.0f));
     }
 
     /**
