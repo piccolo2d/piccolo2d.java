@@ -789,6 +789,7 @@ public class PCanvas extends JComponent implements PComponent {
             requestFocus();
 
             boolean shouldBalanceEvent = false;
+            boolean shouldSendEvent = false;
 
             final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_PRESSED);
 
@@ -798,6 +799,7 @@ public class PCanvas extends JComponent implements PComponent {
                         shouldBalanceEvent = true;
                     }
                     isButton1Pressed = true;
+                    shouldSendEvent = true;
                     break;
 
                 case MouseEvent.BUTTON2:
@@ -805,6 +807,7 @@ public class PCanvas extends JComponent implements PComponent {
                         shouldBalanceEvent = true;
                     }
                     isButton2Pressed = true;
+                    shouldSendEvent = true;
                     break;
 
                 case MouseEvent.BUTTON3:
@@ -812,22 +815,26 @@ public class PCanvas extends JComponent implements PComponent {
                         shouldBalanceEvent = true;
                     }
                     isButton3Pressed = true;
+                    shouldSendEvent = true;
                     break;
-                default:
-                    throw new RuntimeException("mousePressed without buttons specified");
 
+                default:
+                    break;
             }
 
             if (shouldBalanceEvent) {
                 sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
             }
 
-            sendInputEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
+            if (shouldSendEvent) {
+                sendInputEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
+            }
         }
 
         /** {@inheritDoc} */
         public void mouseReleased(final MouseEvent rawEvent) {
             boolean shouldBalanceEvent = false;
+            boolean shouldSendEvent = false;
 
             final MouseEvent event = copyButtonsFromModifiers(rawEvent, MouseEvent.MOUSE_RELEASED);
 
@@ -837,6 +844,7 @@ public class PCanvas extends JComponent implements PComponent {
                         shouldBalanceEvent = true;
                     }
                     isButton1Pressed = false;
+                    shouldSendEvent = true;
                     break;
 
                 case MouseEvent.BUTTON2:
@@ -844,6 +852,7 @@ public class PCanvas extends JComponent implements PComponent {
                         shouldBalanceEvent = true;
                     }
                     isButton2Pressed = false;
+                    shouldSendEvent = true;
                     break;
 
                 case MouseEvent.BUTTON3:
@@ -851,16 +860,21 @@ public class PCanvas extends JComponent implements PComponent {
                         shouldBalanceEvent = true;
                     }
                     isButton3Pressed = false;
+                    shouldSendEvent = true;
                     break;
+
                 default:
-                    throw new RuntimeException("mouseReleased without buttons specified");
+                    shouldBalanceEvent = false;
+                    shouldSendEvent = false;
             }
 
             if (shouldBalanceEvent) {
                 sendRetypedMouseEventToInputManager(event, MouseEvent.MOUSE_PRESSED);
             }
 
-            sendInputEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
+            if (shouldSendEvent) {
+                sendInputEventToInputManager(event, MouseEvent.MOUSE_RELEASED);
+            }
         }
 
         private MouseEvent copyButtonsFromModifiers(final MouseEvent rawEvent, final int eventType) {
