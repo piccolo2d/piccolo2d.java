@@ -40,9 +40,6 @@
   <artifactId>piccolo2d-examples</artifactId>
   <name>Piccolo2D JDK16 Examples</name>
   <packaging>bundle</packaging>
-  <properties>
-    <jdk.version>1.6</jdk.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.piccolo2d</groupId>

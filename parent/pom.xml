@@ -38,7 +38,7 @@
   <name>Piccolo2D Parent</name>
   <description>A revolutionary way to create robust, full-featured graphical applications in Java and C#, with striking visual effects such as zooming, animation and multiple representations.</description>
   <properties>
-    <jdk.version>1.5</jdk.version>
+    <jdk.version>1.6</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
     <httpbase>http://www.piccolo2d.org/java</httpbase>
@@ -320,6 +320,9 @@
                 <requireMavenVersion>
                   <version>[3.0.4,)</version>
                 </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>1.6</version>
+                </requireJavaVersion>
               </rules>    
             </configuration>
           </execution>
