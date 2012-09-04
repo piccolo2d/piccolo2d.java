@@ -30,6 +30,8 @@ package org.piccolo2d.examples;
 
 import java.awt.Color;
 
+import java.awt.geom.Ellipse2D;
+
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.event.PDragEventHandler;
 import org.piccolo2d.extras.PFrame;
@@ -57,7 +59,9 @@ public class ClipExample extends PFrame {
 
     public void initialize() {
         final PClip clip = new PClip();
-        clip.setPathToEllipse(0, 0, 100, 100);
+        clip.reset();
+        clip.append(new Ellipse2D.Float(0.0f, 0.0f, 100.0f, 100.0f), false);
+        clip.closePath();
         clip.setPaint(Color.red);
 
         clip.addChild(PPath.createRectangle(20, 20, 100, 50));

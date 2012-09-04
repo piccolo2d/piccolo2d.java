@@ -110,7 +110,7 @@ public class EventHandlerExample extends PFrame {
 
                 // create a new rectangle and add it to the canvas layer so that
                 // we can see it.
-                rectangle = new PPath();
+                rectangle = new PPath.Float();
                 rectangle.setStroke(new BasicStroke((float) (1 / e.getCamera().getViewScale())));
                 layer.addChild(rectangle);
 
@@ -142,7 +142,9 @@ public class EventHandlerExample extends PFrame {
                 b.add(dragPoint);
 
                 // Set the rectangles bounds.
-                rectangle.setPathTo(b);
+                rectangle.reset();
+                rectangle.append(b, false);
+                rectangle.closePath();
             }
         };
     }

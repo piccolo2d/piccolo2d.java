@@ -94,7 +94,7 @@ public class GraphEditorExample extends PFrame {
             final Point2D.Double bound1 = (Point2D.Double) node1.getBounds().getCenter2D();
             final Point2D.Double bound2 = (Point2D.Double) node2.getBounds().getCenter2D();
 
-            final PPath edge = new PPath();
+            final PPath edge = new PPath.Float();
             edge.moveTo((float) bound1.getX(), (float) bound1.getY());
             edge.lineTo((float) bound2.getX(), (float) bound2.getY());
 

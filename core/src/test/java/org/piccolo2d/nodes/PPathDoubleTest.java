@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2010, Piccolo2D project, http://piccolo2d.org
+ * Copyright (c) 2008-2012, Piccolo2D project, http://piccolo2d.org
  * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.jdk16.nodes;
+package org.piccolo2d.nodes;
 
 import java.awt.BasicStroke;
 import java.awt.Shape;
@@ -36,36 +36,36 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Unit test for PPath.Float.
+ * Unit test for PPath.Double.
  */
-public class PPathFloatTest extends AbstractPPathTest {
+public class PPathDoubleTest extends AbstractPPathTest {
 
     /** {@inheritDoc} */
     protected PPath createPathNode() {
-        return new PPath.Float();
+        return new PPath.Double();
     }
 
     public void testNoArgConstructor() {
-        assertNotNull(new PPath.Float());
+        assertNotNull(new PPath.Double());
     }
 
     public void testStrokeConstructor() {
-        assertNotNull(new PPath.Float((Stroke) null));
-        assertNotNull(new PPath.Float(new BasicStroke(2.0f)));
+        assertNotNull(new PPath.Double((Stroke) null));
+        assertNotNull(new PPath.Double(new BasicStroke(2.0f)));
     }
 
     public void testShapeConstructor() {
-        assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f)));
+        assertNotNull(new PPath.Double(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d)));
     }
 
     public void testShapeStrokeConstructor() {
-        assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f), null));
-        assertNotNull(new PPath.Float(new Rectangle2D.Float(0.0f, 0.0f, 100.0f, 100.0f), new BasicStroke(2.0f)));
+        assertNotNull(new PPath.Double(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d), null));
+        assertNotNull(new PPath.Double(new Rectangle2D.Double(0.0d, 0.0d, 100.0d, 100.0d), new BasicStroke(2.0f)));
     }
 
     public void testShapeConstructorNullArgument() {
         try {
-            new PPath.Float((Shape) null);
+            new PPath.Double((Shape) null);
             fail("ctr((Shape) null) expected NullPointerException");
         }
         catch (NullPointerException e) {
@@ -75,7 +75,7 @@ public class PPathFloatTest extends AbstractPPathTest {
 
     public void testShapeStrokeConstructorNullArgument() {
         try {
-            new PPath.Float((Shape) null, null);
+            new PPath.Double((Shape) null, null);
             fail("ctr((Shape) null, ) expected NullPointerException");
         }
         catch (NullPointerException e) {
@@ -84,17 +84,17 @@ public class PPathFloatTest extends AbstractPPathTest {
     }
 
     public void testPathConstructor() {
-        assertNotNull(new PPath.Float(new Path2D.Float()));
+        assertNotNull(new PPath.Double(new Path2D.Double()));
     }
 
     public void testPathStrokeConstructor() {
-        assertNotNull(new PPath.Float(new Path2D.Float(), null));
-        assertNotNull(new PPath.Float(new Path2D.Float(), new BasicStroke(2.0f)));
+        assertNotNull(new PPath.Double(new Path2D.Double(), null));
+        assertNotNull(new PPath.Double(new Path2D.Double(), new BasicStroke(2.0f)));
     }
 
     public void testPathConstructorNullArgument() {
         try {
-            new PPath.Float((Path2D) null);
+            new PPath.Double((Path2D) null);
             fail("ctr((Path2D) null) expected NullPointerException");
         }
         catch (NullPointerException e) {
@@ -102,9 +102,9 @@ public class PPathFloatTest extends AbstractPPathTest {
         }
     }
 
-    public void testStrokePathConstructorNullArgument() {
+    public void testPathStrokeConstructorNullArgument() {
         try {
-            new PPath.Float((Path2D) null, null);
+            new PPath.Double((Path2D) null, null);
             fail("ctr((Path2D) null, ) expected NullPointerException");
         }
         catch (NullPointerException e) {

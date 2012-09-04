@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2011, Piccolo2D project, http://piccolo2d.org
+ * Copyright (c) 2008-2012, Piccolo2D project, http://piccolo2d.org
  * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
@@ -54,7 +54,7 @@ public final class AnimatePathExample extends PFrame {
     private static final long serialVersionUID = 1L;
 
     /** Curve. */
-    private PPath curve = new PPath();
+    private final PPath curve = new PPath.Double(STROKE);
 
     /** Path paint. */
     private static final Paint PAINT = new Color(20, 20, 20, 120);
@@ -86,12 +86,11 @@ public final class AnimatePathExample extends PFrame {
     /** {@inheritDoc} */
     public void initialize() {
 
-        curve.moveTo(100.0f, 100.0f);
-        curve.curveTo(150.0f, 135.0f, 250.0f, 155.0f, 300.0f, 300.0f);
+        curve.moveTo(100.0d, 100.0d);
+        curve.curveTo(150.0d, 135.0d, 250.0d, 155.0d, 300.0d, 300.0d);
         curve.closePath();
 
         curve.setPaint(PAINT);
-        curve.setStroke(STROKE);
         curve.setStrokePaint(STROKE_PAINT);
 
         PInputEventListener animateCurve = new PBasicInputEventHandler() {
@@ -114,8 +113,8 @@ public final class AnimatePathExample extends PFrame {
                 /** {@inheritDoc} */
                 public void setRelativeTargetValue(final float value) {
                     curve.reset();
-                    curve.moveTo(100.0f, 100.0f);
-                    curve.curveTo(150.0f, 135.0f - (135.0f * value), 250.0f, 155.0f - (155.0f * value), 300.0f, 300.0f);
+                    curve.moveTo(100.0d, 100.0d);
+                    curve.curveTo(150.0d, 135.0d - (135.0d * value), 250.0d, 155.0d - (155.0d * value), 300.0d, 300.0d);
                     curve.closePath();
                 }
             });

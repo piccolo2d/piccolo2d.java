@@ -153,7 +153,7 @@ public class NodeExample extends PFrame {
     // this ellipse it turns into a square, when you release the mouse it
     // goes back to being an ellipse.
     public void subclassExistingClasses() {
-        final PNode n = new PPath(new Ellipse2D.Float(0, 0, 100, 80)) {
+        final PNode n = new PPath.Float(new Ellipse2D.Float(0, 0, 100, 80)) {
 
             /**
              * 

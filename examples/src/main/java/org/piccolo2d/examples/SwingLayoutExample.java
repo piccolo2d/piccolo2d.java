@@ -66,7 +66,7 @@ import org.piccolo2d.nodes.PText;
 
 public class SwingLayoutExample {
 
-    public static class MyPPath extends PPath {
+    public static class MyPPath extends PPath.Float {
         public MyPPath(final Shape shape, final Color color, final Stroke stroke, final Color strokeColor) {
             super(shape, stroke);
             setPaint(color);
@@ -169,11 +169,11 @@ public class SwingLayoutExample {
         constraints.gridy = 0; // row
         constraints.gridx++; // column
         constraints.anchor = GridBagConstraints.CENTER;
-        final PPath redCircle = new PPath(new Ellipse2D.Double(0, 0, 25, 25));
+        final PPath redCircle = new PPath.Double(new Ellipse2D.Double(0, 0, 25, 25));
         redCircle.setPaint(Color.RED);
         gridNode.addChild(redCircle, constraints);
         constraints.gridy++;
-        final PPath greenCircle = new PPath(new Ellipse2D.Double(0, 0, 25, 25));
+        final PPath greenCircle = new PPath.Double(new Ellipse2D.Double(0, 0, 25, 25));
         greenCircle.setPaint(Color.GREEN);
         gridNode.addChild(greenCircle, constraints);
         /*---- column of labels, left justified ---*/

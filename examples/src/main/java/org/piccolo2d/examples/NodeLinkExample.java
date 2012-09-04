@@ -98,7 +98,9 @@ public class NodeLinkExample extends PFrame {
         final Point2D p1 = node1.getFullBoundsReference().getCenter2D();
         final Point2D p2 = node2.getFullBoundsReference().getCenter2D();
         final Line2D line = new Line2D.Double(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        link.setPathTo(line);
+        link.reset();
+        link.append(line, false);
+        link.closePath();
     }
 
     public static void main(final String[] args) {
