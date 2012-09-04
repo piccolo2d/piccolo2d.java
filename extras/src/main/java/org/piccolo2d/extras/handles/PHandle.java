@@ -59,7 +59,7 @@ import org.piccolo2d.util.PDimension;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PHandle extends PPath {
+public class PHandle extends PPath.Float {
     private final class HandleDragHandler extends PDragSequenceEventHandler {
         protected void startDrag(final PInputEvent event) {
             super.startDrag(event);

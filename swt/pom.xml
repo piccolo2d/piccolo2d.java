@@ -293,6 +293,7 @@
     enable this profile to build on mac osx, jdk 1.6, x86_64
       set MAVEN_OPTS="-Dd64", or unit tests will fail
 
+-->
     <profile>
       <id>macosx_cocoa_intel</id>
       <activation>
@@ -307,6 +308,5 @@
         <surefire.argLine>-XstartOnFirstThread</surefire.argLine>
       </properties>
     </profile>
--->
   </profiles>
 </project>
