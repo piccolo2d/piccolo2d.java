@@ -34,7 +34,7 @@
   <parent>
     <artifactId>piccolo2d-parent</artifactId>
     <groupId>org.piccolo2d</groupId>
-    <version>3.0-SNAPSHOT</version>
+    <version>4.0-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>piccolo2d-swt-examples</artifactId>
