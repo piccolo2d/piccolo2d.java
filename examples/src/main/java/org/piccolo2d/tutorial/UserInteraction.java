@@ -131,7 +131,7 @@ public class UserInteraction extends PFrame {
             final Point2D p = e.getPosition();
 
             // Create a new squiggle and add it to the canvas.
-            squiggle = new PPath();
+            squiggle = new PPath.Float();
             squiggle.moveTo((float) p.getX(), (float) p.getY());
             squiggle.setStroke(new BasicStroke((float) (1 / e.getCamera().getViewScale())));
             canvas.getLayer().addChild(squiggle);

@@ -53,7 +53,7 @@ public class SerializationTest extends TestCase {
         for (int i = 0; i < 100; i++) {
             l.addChild(new PNode());
             l.addChild(new PText("Hello World"));
-            l.addChild(new PPath());
+            l.addChild(new PPath.Float());
         }
 
         l = (PNode) l.clone(); // copy uses serialization internally

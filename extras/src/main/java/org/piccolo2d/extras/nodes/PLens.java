@@ -30,6 +30,9 @@ package org.piccolo2d.extras.nodes;
 
 import java.awt.Color;
 import java.awt.Paint;
+
+import java.awt.geom.Rectangle2D;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -66,6 +69,7 @@ public class PLens extends PNode {
 
     private static final long serialVersionUID = 1L;
     private final PPath dragBar;
+    private final Rectangle2D dragBarRect;
     private final PCamera camera;
     private final transient PDragEventHandler lensDragger;
 
@@ -84,7 +88,8 @@ public class PLens extends PNode {
     public PLens() {
         // Drag bar gets resized to fit the available space, so any rectangle
         // will do here
-        dragBar = PPath.createRectangle(0, 0, 1, 1);
+        dragBarRect = new Rectangle2D.Float(0.0f, 0.0f, 1.0f, 1.0f);
+        dragBar = new PPath.Float(dragBarRect);
         dragBar.setPaint(DEFAULT_DRAGBAR_PAINT);
         // This forces drag events to percolate up to PLens object
         dragBar.setPickable(false);
@@ -170,7 +175,10 @@ public class PLens extends PNode {
      * lenses camera child appropriately.
      */
     protected void layoutChildren() {
-        dragBar.setPathToRectangle((float) getX(), (float) getY(), (float) getWidth(), (float) LENS_DRAGBAR_HEIGHT);
+        dragBar.reset();
+        dragBarRect.setRect((float) getX(), (float) getY(), (float) getWidth(), (float) LENS_DRAGBAR_HEIGHT);
+        dragBar.append(dragBarRect, false);
+        dragBar.closePath();
         camera.setBounds(getX(), getY() + LENS_DRAGBAR_HEIGHT, getWidth(), getHeight() - LENS_DRAGBAR_HEIGHT);
     }
 }

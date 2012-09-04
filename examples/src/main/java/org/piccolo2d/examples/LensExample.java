@@ -94,7 +94,7 @@ public class LensExample extends PFrame {
             public void startDrag(final PInputEvent e) {
                 super.startDrag(e);
                 final Point2D p = e.getPosition();
-                squiggle = new PPath();
+                squiggle = new PPath.Float();
                 squiggle.moveTo((float) p.getX(), (float) p.getY());
 
                 // add squiggles to the first layer of the bottom camera. In the

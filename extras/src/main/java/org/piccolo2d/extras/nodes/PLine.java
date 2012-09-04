@@ -58,6 +58,12 @@ public class PLine extends PNode {
     private static final PAffineTransform TEMP_TRANSFORM = new PAffineTransform();
     private static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
     private static final Color DEFAULT_STROKE_PAINT = Color.black;
+    private static final String PROPERTY_STROKE_PAINT = "strokePaint";
+    private static final int PROPERTY_CODE_STROKE_PAINT = 1 << 16;
+    private static final String PROPERTY_STROKE = "stroke";
+    private static final int PROPERTY_CODE_STROKE = 1 << 17;
+    private static final String PROPERTY_PATH = "path";
+    private static final int PROPERTY_CODE_PATH = 1 << 18;
 
     private final transient LineShape lineShape;
     private transient Stroke stroke;
@@ -116,7 +122,7 @@ public class PLine extends PNode {
         final Paint oldPaint = strokePaint;
         strokePaint = newStrokePaint;
         invalidatePaint();
-        firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, oldPaint, strokePaint);
+        firePropertyChange(PROPERTY_CODE_STROKE_PAINT, PROPERTY_STROKE_PAINT, oldPaint, strokePaint);
     }
 
     /**
@@ -138,7 +144,7 @@ public class PLine extends PNode {
         stroke = newStroke;
         updateBoundsFromLine();
         invalidatePaint();
-        firePropertyChange(PPath.PROPERTY_CODE_STROKE, PPath.PROPERTY_STROKE, oldStroke, stroke);
+        firePropertyChange(PROPERTY_CODE_STROKE, PROPERTY_STROKE, oldStroke, stroke);
     }
 
     /** {@inheritDoc} */
@@ -266,7 +272,7 @@ public class PLine extends PNode {
      * as requiring a repaint.
      */
     protected void lineChanged() {
-        firePropertyChange(PPath.PROPERTY_CODE_PATH, PPath.PROPERTY_PATH, null, lineShape);
+        firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, lineShape);
         updateBoundsFromLine();
         invalidatePaint();
     }

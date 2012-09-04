@@ -57,7 +57,7 @@ public class ZeroWidthStrokeBug extends PFrame {
         line1.setStroke(new BasicStroke(0));
         getCanvas().getLayer().addChild(line1);
 
-        PPath line2 = new PPath();
+        PPath line2 = new PPath.Float();
         line2.setStroke(new BasicStroke(0));
         line2.moveTo(15f, 10f);
         line2.lineTo(15f, 100f);

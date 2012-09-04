@@ -47,7 +47,7 @@ import org.piccolo2d.util.PPickPath;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PClip extends PPath {
+public class PClip extends PPath.Float {
     private static final long serialVersionUID = 1L;
 
     /**

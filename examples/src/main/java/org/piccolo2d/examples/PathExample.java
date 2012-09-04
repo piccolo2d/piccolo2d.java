@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2011, Piccolo2D project, http://piccolo2d.org
+ * Copyright (c) 2008-2012, Piccolo2D project, http://piccolo2d.org
  * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
@@ -30,59 +30,133 @@ package org.piccolo2d.examples;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Paint;
+import java.awt.Stroke;
+
+import java.awt.geom.Arc2D;
 
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.event.PDragEventHandler;
+
+import org.piccolo2d.event.PBasicInputEventHandler;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.event.PInputEventListener;
+
 import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.handles.PStickyHandleManager;
-import org.piccolo2d.extras.util.PFixedWidthStroke;
+
 import org.piccolo2d.nodes.PPath;
 
+/**
+ * Path example.
+ */
+public final class PathExample extends PFrame {
 
-public class PathExample extends PFrame {
-
-    /**
-     * 
-     */
+    /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
 
+    /** Path paint. */
+    private static final Paint PAINT = new Color(20, 20, 20, 120);
+
+    /** Stroke. */
+    private static final Stroke STROKE = new BasicStroke(0.5f);
+
+    /** Stroke paint. */
+    private static final Paint STROKE_PAINT = new Color(20, 20, 20, 120);
+
+    /** Mouseover paint. */
+    private static final Paint MOUSEOVER_PAINT = new Color(252, 233, 79);
+
+    /** Mouseover stroke paint. */
+    private static final Paint MOUSEOVER_STROKE_PAINT = new Color(237, 212, 0);
+
+
+    /**
+     * Create a new path example.
+     */
     public PathExample() {
         this(null);
     }
 
-    public PathExample(final PCanvas aCanvas) {
-        super("PathExample", false, aCanvas);
+    /**
+     * Create a new path example with the specified canvas.
+     *
+     * @param canvas canvas for this path example
+     */
+    public PathExample(final PCanvas canvas) {
+        super("PathExample", false, canvas);
     }
 
+
+    /** {@inheritDoc} */
     public void initialize() {
-        final PPath n1 = PPath.createRectangle(0, 0, 100, 80);
-        final PPath n2 = PPath.createEllipse(100, 100, 200, 34);
-        final PPath n3 = new PPath();
-        n3.moveTo(0, 0);
-        n3.lineTo(20, 40);
-        n3.lineTo(10, 200);
-        n3.lineTo(155.444f, 33.232f);
-        n3.closePath();
-        n3.setPaint(Color.yellow);
 
-        n1.setStroke(new BasicStroke(5));
-        n1.setStrokePaint(Color.red);
-        n2.setStroke(new PFixedWidthStroke());
-        n3.setStroke(new PFixedWidthStroke());
-        // n3.setStroke(null);
+        PPath arc = PPath.createArc(-75.0d, 25.0d, 200.0d, 200.0d, 30.0d, 60.0d, Arc2D.PIE);
+        PPath cubicCurve = PPath.createCubicCurve(100.0d, 100.0d, 150.0d, 125.0d, 175.0d, 150.0d, 200.0d, 200.0d);
+        PPath ellipse = PPath.createEllipse(250.0d, 250.0d, 90.0d, 90.0d);
+        PPath line = PPath.createLine(10.0d, 390.0d, 200.0d, 200.0d); 
+        PPath quadCurve = PPath.createQuadCurve(390.0d, 10.0d, 375.0d, 80.0d, 200.0d, 200.0d);
+        PPath rectangle = PPath.createRectangle(180.0d, 300.0d, 40.0d, 60.0d);
+        PPath roundRectangle = PPath.createRoundRectangle(280.0d, 180.0d, 60.0d, 40.0d, 4.0d, 8.0d);
 
-        getCanvas().getLayer().addChild(n1);
-        getCanvas().getLayer().addChild(n2);
-        getCanvas().getLayer().addChild(n3);
+        arc.setPaint(PAINT);
+        arc.setStroke(STROKE);
+        arc.setStrokePaint(STROKE_PAINT);
+        cubicCurve.setPaint(PAINT);
+        cubicCurve.setStroke(STROKE);
+        cubicCurve.setStrokePaint(STROKE_PAINT);
+        ellipse.setPaint(PAINT);
+        ellipse.setStroke(STROKE);
+        ellipse.setStrokePaint(STROKE_PAINT);
+        line.setPaint(PAINT);
+        line.setStroke(STROKE);
+        line.setStrokePaint(STROKE_PAINT);
+        quadCurve.setPaint(PAINT);
+        quadCurve.setStroke(STROKE);
+        quadCurve.setStrokePaint(STROKE_PAINT);
+        rectangle.setPaint(PAINT);
+        rectangle.setStroke(STROKE);
+        rectangle.setStrokePaint(STROKE_PAINT);
+        roundRectangle.setPaint(PAINT);
+        roundRectangle.setStroke(STROKE);
+        roundRectangle.setStrokePaint(STROKE_PAINT);
 
-        // create a set of bounds handles for reshaping n3, and make them
-        // sticky relative to the getCanvas().getCamera().
-        new PStickyHandleManager(getCanvas().getCamera(), n3);
+        PInputEventListener mouseOver = new PBasicInputEventHandler() {
 
-        getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
-        getCanvas().addInputEventListener(new PDragEventHandler());
+                /** {@inheritDoc} */
+                public void mouseEntered(final PInputEvent event) {
+                    event.getPickedNode().setPaint(MOUSEOVER_PAINT);
+                    ((PPath) event.getPickedNode()).setStrokePaint(MOUSEOVER_STROKE_PAINT);
+                }
+
+                /** {@inheritDoc} */
+                public void mouseExited(final PInputEvent event) {
+                    event.getPickedNode().setPaint(PAINT);
+                    ((PPath) event.getPickedNode()).setStrokePaint(STROKE_PAINT);
+                }
+            };
+
+        arc.addInputEventListener(mouseOver);
+        cubicCurve.addInputEventListener(mouseOver);
+        ellipse.addInputEventListener(mouseOver);
+        line.addInputEventListener(mouseOver);
+        quadCurve.addInputEventListener(mouseOver);
+        rectangle.addInputEventListener(mouseOver);        
+        roundRectangle.addInputEventListener(mouseOver);
+
+        getCanvas().getLayer().addChild(arc);
+        getCanvas().getLayer().addChild(cubicCurve);
+        getCanvas().getLayer().addChild(ellipse);
+        getCanvas().getLayer().addChild(line);
+        getCanvas().getLayer().addChild(quadCurve);
+        getCanvas().getLayer().addChild(rectangle);
+        getCanvas().getLayer().addChild(roundRectangle);
     }
 
+
+    /**
+     * Main.
+     *
+     * @param args command line arguments, ignored
+     */
     public static void main(final String[] args) {
         new PathExample();
     }

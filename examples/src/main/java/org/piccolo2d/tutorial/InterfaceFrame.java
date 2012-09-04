@@ -31,6 +31,8 @@ package org.piccolo2d.tutorial;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import java.awt.geom.Ellipse2D;
+
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
@@ -136,13 +138,15 @@ public class InterfaceFrame extends PFrame {
         layer.addChild(ts);
     }
 
-    class ToggleShape extends PPath {
+    class ToggleShape extends PPath.Float {
 
         private static final long serialVersionUID = 1L;
         private boolean isPressed = false;
 
         public ToggleShape() {
-            setPathToEllipse(0, 0, 100, 80);
+            reset();
+            append(new Ellipse2D.Float(0.0f, 0.0f, 100.0f, 80.0f), false);
+            closePath();
 
             addInputEventListener(new PBasicInputEventHandler() {
                 public void mousePressed(final PInputEvent event) {

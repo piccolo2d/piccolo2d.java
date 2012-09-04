@@ -77,7 +77,7 @@ public class SquiggleExample extends PFrame {
 
                 final Point2D p = e.getPosition();
 
-                squiggle = new PPath();
+                squiggle = new PPath.Float();
                 squiggle.moveTo((float) p.getX(), (float) p.getY());
                 squiggle.setStroke(new BasicStroke((float) (1 / e.getCamera().getViewScale())));
                 layer.addChild(squiggle);

@@ -65,6 +65,10 @@ public class PSWTPath extends PNode {
      * path, but old value will always be null.
      */
     public static final String PROPERTY_SHAPE = "shape";
+    private static final String PROPERTY_PATH = "path";
+    private static final int PROPERTY_CODE_PATH = 1 << 18;
+    private static final String PROPERTY_STROKE_PAINT = "strokePaint";
+    private static final int PROPERTY_CODE_STROKE_PAINT = 1 << 16;
 
     private static final double BOUNDS_TOLERANCE = 0.01;
     private static final Rectangle2D.Float TEMP_RECTANGLE = new Rectangle2D.Float();
@@ -206,7 +210,7 @@ public class PSWTPath extends PNode {
         final Paint old = strokePaint;
         strokePaint = strokeColor;
         invalidatePaint();
-        firePropertyChange(PPath.PROPERTY_CODE_STROKE_PAINT, PPath.PROPERTY_STROKE_PAINT, old, strokePaint);
+        firePropertyChange(PROPERTY_CODE_STROKE_PAINT, PROPERTY_STROKE_PAINT, old, strokePaint);
     }
 
     /**
@@ -394,7 +398,7 @@ public class PSWTPath extends PNode {
         origShape = shape;
         updateShapePoints(newShape);
 
-        firePropertyChange(PPath.PROPERTY_CODE_PATH, PPath.PROPERTY_PATH, null, shape);
+        firePropertyChange(PROPERTY_CODE_PATH, PROPERTY_PATH, null, shape);
         updateBoundsFromPath();
         invalidatePaint();
     }
