@@ -3454,7 +3454,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Sets the name of this null, may be null.
+     * Sets the name of this node, may be null.
      * 
      * @since 1.3
      * @param name new name for this node
