@@ -274,7 +274,6 @@
 
     disable this profile to build on mac osx, jdk 1.6, x86_64
 
--->
     <profile>
       <id>macosx_carbon</id>
       <activation>
@@ -287,7 +286,7 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
-
+-->
 <!--
 
     enable this profile to build on mac osx, jdk 1.6, x86_64
