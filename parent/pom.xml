@@ -38,7 +38,7 @@
   </parent>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-parent</artifactId>
-  <version>3.0-SNAPSHOT</version>
+  <version>3.0-beta1-rc1</version>
   <packaging>pom</packaging>
   <name>Piccolo2D Parent</name>
   <description>A revolutionary way to create robust, full-featured graphical applications in Java and C#, with striking visual effects such as zooming, animation and multiple representations.</description>
@@ -81,9 +81,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/parent</connection>
-    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/parent</developerConnection>
-    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/parent</url>
+    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/tags/piccolo2d-complete-3.0-beta1-rc1/parent</connection>
+    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/tags/piccolo2d-complete-3.0-beta1-rc1/parent</developerConnection>
+    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/tags/piccolo2d-complete-3.0-beta1-rc1/parent</url>
   </scm>
   <organization>
     <name>Piccolo2D</name>
