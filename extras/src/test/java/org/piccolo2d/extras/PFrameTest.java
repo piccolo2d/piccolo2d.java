@@ -63,18 +63,4 @@ public class PFrameTest extends TestCase {
         };
         assertFalse(frame.isFullScreenMode());
     }
-
-    public void testFullScreenModeInstallsEscapeListeners() {
-        PFrame frame = new PFrame();        
-        frame.setFullScreenMode(true);        
-        
-
-        KeyListener[] listeners = frame.getCanvas().getKeyListeners();
-        assertEquals(1, listeners.length);
-
-        KeyListener listener = listeners[0];
-        assertNotNull(listener);
-        frame.setVisible(false);
-        frame.setFullScreenMode(false);
-    }
 }
