@@ -45,8 +45,14 @@
     <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk</developerConnection>
     <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk</url>
   </scm>
-  <build />
-  <reporting />
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+    </plugins>
+  </reporting>
   <modules>
     <module>parent</module>
     <module>core</module>
