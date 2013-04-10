@@ -10,11 +10,11 @@ Piccolo2d.Java is an extensive toolkit based on the Java2D API.
 REQUIREMENTS
 
 To run Piccolo2D.Java applications you need to have a Java Runtime
-Environment (JRE) or Java Development Kit (JDK) version 1.4 or newer.
+Environment (JRE) or Java Development Kit (JDK) version 1.6 or newer.
 
 To build Piccolo2D.Java you need to have a Java Runtime Environment
-(JRE) or Java Development Kit (JDK) version 1.5 or newer, and Apache
-Maven version 2.0.10 or newer.
+(JRE) or Java Development Kit (JDK) version 1.6 or newer, and Apache
+Maven version 3.0.5 or newer.
 
 Java Runtime Environment (JRE)
 http://java.sun.com/javase/downloads/index.jsp#jre
@@ -46,7 +46,7 @@ dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-core</artifactId>
-  <version>2.0</version>
+  <version>3.0</version>
 </dependency>
 
 in your pom.xml.  To include the Piccolo2D core classes and the
@@ -55,7 +55,7 @@ Piccolo2D extras classes in your project, use a dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-extras</artifactId>
-  <version>2.0</version>
+  <version>3.0</version>
 </dependency>
 
 in your pom.xml.  To include the Piccolo2D core classes and the
@@ -64,7 +64,7 @@ Piccolo2D SWT classes in your project, use a dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-swt</artifactId>
-  <version>2.0</version>
+  <version>3.0</version>
 </dependency>
 
 in your pom.xml.  If your project does not use maven, simply include
@@ -81,10 +81,10 @@ To build and run the Piccolo2D examples runnable jar
 
 $ cd examples
 $ mvn assembly:assembly
-$ java -jar target/piccolo2d-examples-1.3-jar-with-dependencies.jar
+$ java -jar target/piccolo2d-examples-3.0-jar-with-dependencies.jar
 
 To build and run the Piccolo2D SWT examples runnable jar
 
 $ cd swt-examples
 $ mvn assembly:assembly
-$ java -jar target/piccolo2d-swt-examples-1.3-jar-with-dependencies.jar
+$ java -jar target/piccolo2d-swt-examples-3.0-jar-with-dependencies.jar

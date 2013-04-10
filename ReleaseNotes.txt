@@ -1,3 +1,11 @@
+=Piccolo2d 3.0-beta1 Release Notes=
+------------------
+
+Initial beta release of svn branch https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike.
+
+Further release notes will be available after beta releases are complete.
+
+
 =Piccolo2D 1.3 Release Notes=
 ------------------
 
