@@ -1,3 +1,21 @@
+=Piccolo2D 1.3.2 Release Notes=
+------------------
+
+Fixed and verified issues:
+
+134     PTransformActivity can throw null pointer exception   
+207     Horizontal scrolling causes an exception   
+208     Merge maven reporting plugin versions to parent pom   
+211     Consider using Sonatype oss-parent-7.pom as the parent of parent/pom.xml   
+224     Update maven-site-plugin version to 3.0, remove maven-3 profile             
+229     Consider updating maven-checkstyle-plugin to version 2.8                     
+230     Add link to Autocad DXF File Viewer on applications page                      
+231     Mistake in java doc comment   
+235     PSwingEventHandler doesn't dispatch events to nodes at extreme scales   
+242     Typo in API docs       
+250     Update junit dependency version to 4.11
+
+
 =Piccolo2D 1.3.1 Release Notes=
 ------------------
 
