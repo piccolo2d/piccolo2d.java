@@ -34,16 +34,16 @@
   <parent>
     <artifactId>piccolo2d-complete</artifactId>
     <groupId>org.piccolo2d</groupId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0-rc1</version>
   </parent>
   <artifactId>piccolo2d-jdk16-examples</artifactId>
   <name>Piccolo2D JDK16 Examples</name>
   <packaging>bundle</packaging>
 
   <scm>
-    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/jdk16-examples</connection>
-    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/jdk16-examples</developerConnection>
-    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/jdk16-examples</url>
+    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/tags/piccolo2d-complete-2.0-rc1/jdk16-examples</connection>
+    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/tags/piccolo2d-complete-2.0-rc1/jdk16-examples</developerConnection>
+    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/tags/piccolo2d-complete-2.0-rc1/jdk16-examples</url>
   </scm>
 
   <properties>
