@@ -32,14 +32,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>piccolo2d-parent</artifactId>
+    <artifactId>piccolo2d-complete</artifactId>
     <groupId>org.piccolo2d</groupId>
     <version>1.4-SNAPSHOT</version>
-    <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>piccolo2d-extras</artifactId>
   <packaging>bundle</packaging>
-<!--  <packaging>jar</packaging> -->
   <name>Piccolo2D Extras</name>
   <dependencies>
     <dependency>
@@ -86,10 +84,6 @@
       <plugin>
         <artifactId>maven-changelog-plugin</artifactId>
         <version>2.2</version>
-        <!--
-          configuration> <connectionType>connection</connectionType>
-          </configuration
-        -->
       </plugin>
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>        
