@@ -1,3 +1,34 @@
+=Piccolo2D 2.0 Release Notes=
+------------------
+
+Major changes:
+
+The root package name for Piccolo2D.Java is now org.piccolo2d to match the project domain name.
+
+The minimum JDK version is now 1.5.
+
+JDK 1.6-only code has been added to new modules jdk16 and jdk16-examples.
+
+Piccolo2D.Java version 2.0 is _not_ binary compatible with version 1.3.x.
+
+
+Fixed and verified issues:
+
+33      PSwing components not visible in testing frameworks
+37      change namespaces to piccolo2d,
+86      inconsistencies of position method in PNode
+135     Constants are not constant in the core.
+136     PNotificationCenter is a singleton but isn't declared as final
+152     Refactor PPath to use Path2D on JDK 1.6+
+153     PArea, a wrapper for java.awt.geom.Area to allow Constructive Area Geometry (CAG) operations
+172     Add getRoot method to POffscreenCanvas
+177     When deleting a selected node using the keyboard <DEL> a selection change is not fired
+180     Drawing tears when dragging or resizing path nodes
+186     Create a new package org.piccolo2d.examples.bugs or .issues
+236     Add zoom event handler that responds to mouse wheel events     
+251     Merge build-related changes from release-1.3 branch to trunk 
+
+
 =Piccolo2D 1.3.2 Release Notes=
 ------------------
 
