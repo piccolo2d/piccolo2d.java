@@ -3244,6 +3244,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Change the order of this node in its parent's children list so that it
      * will draw in back of all of its other sibling nodes.
+     *
+     * @deprecated by lowerToBottom in version 3.0, see http://code.google.com/p/piccolo2d/issues/detail?id=166
      */
     public void moveToBack() {
         final PNode p = parent;
@@ -3258,6 +3260,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * will draw in back of the specified sibling node.
      * 
      * @param sibling sibling to move in back of
+     * @deprecated by lowerBelow(PNode) in version 3.0, see http://code.google.com/p/piccolo2d/issues/detail?id=166
      */
     public void moveInBackOf(final PNode sibling) {
         final PNode p = parent;
@@ -3271,6 +3274,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Change the order of this node in its parent's children list so that it
      * will draw in front of all of its other sibling nodes.
+     *
+     * @deprecated by raiseToTop in version 3.0, see http://code.google.com/p/piccolo2d/issues/detail?id=166
      */
     public void moveToFront() {
         final PNode p = parent;
@@ -3285,6 +3290,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * will draw in front of the specified sibling node.
      * 
      * @param sibling sibling to move in front of
+     * @deprecated by raiseAbove(PNode) in version 3.0, see http://code.google.com/p/piccolo2d/issues/detail?id=166
      */
     public void moveInFrontOf(final PNode sibling) {
         final PNode p = parent;

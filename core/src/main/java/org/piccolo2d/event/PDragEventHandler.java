@@ -128,6 +128,7 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
      * to the front of all other on drag.
      * 
      * @return true if dragging a node will move it to the front
+     * @deprecated by getRaiseToTopOnPress, see http://code.google.com/p/piccolo2d/issues/detail?id=166
      */
     public boolean getMoveToFrontOnPress() {
         return moveToFrontOnPress;
@@ -139,6 +140,7 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
      * 
      * @param moveToFrontOnPress true if dragging a node should move it to the
      *            front
+     * @deprecated by setRaiseToTopOnPress(boolean), see http://code.google.com/p/piccolo2d/issues/detail?id=166
      */
     public void setMoveToFrontOnPress(final boolean moveToFrontOnPress) {
         this.moveToFrontOnPress = moveToFrontOnPress;
