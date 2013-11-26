@@ -12,6 +12,10 @@ Piccolo2D.Java version 3.0 is _not_ binary compatible with version 1.3.x or vers
 
 Fixed and verified issues:
 
+166     Refactor PNode.moveToBack() and related
+190     Move to version 1.6 as minimum JDK requirement for piccolo-core
+252     Merge build-related changes from trunk to branches/3.0-spike
+
 
 =Piccolo2D 2.0 Release Notes=
 ------------------
