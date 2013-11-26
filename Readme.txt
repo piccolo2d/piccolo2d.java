@@ -81,10 +81,10 @@ To build and run the Piccolo2D examples runnable jar
 
 $ cd examples
 $ mvn assembly:assembly
-$ java -jar target/piccolo2d-examples-1.3-jar-with-dependencies.jar
+$ java -jar target/piccolo2d-examples-2.0-jar-with-dependencies.jar
 
 To build and run the Piccolo2D SWT examples runnable jar
 
 $ cd swt-examples
 $ mvn assembly:assembly
-$ java -jar target/piccolo2d-swt-examples-1.3-jar-with-dependencies.jar
+$ java -jar target/piccolo2d-swt-examples-2.0-jar-with-dependencies.jar

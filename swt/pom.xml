@@ -32,33 +32,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>piccolo2d-parent</artifactId>
+    <artifactId>piccolo2d-complete</artifactId>
     <groupId>org.piccolo2d</groupId>
     <version>2.0-SNAPSHOT</version>
-    <relativePath>../parent/pom.xml</relativePath>
   </parent>
   <artifactId>piccolo2d-swt</artifactId>
   <packaging>bundle</packaging>
-<!--  <packaging>jar</packaging> -->
   <name>Piccolo2D SWT</name>
-  <dependencies>
-    <dependency>
-      <groupId>org.piccolo2d</groupId>
-      <artifactId>piccolo2d-extras</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${swt.groupId}</groupId>
-      <artifactId>${swt.artifactId}</artifactId>
-      <version>[3.3.0-v3346,)</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
+
   <scm>
     <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/swt</connection>
     <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/swt</developerConnection>
     <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/swt</url>
   </scm>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.piccolo2d</groupId>
+        <artifactId>piccolo2d-extras</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${swt.groupId}</groupId>
+        <artifactId>${swt.artifactId}</artifactId>
+        <version>[3.3.0-v3346,)</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.piccolo2d</groupId>
+      <artifactId>piccolo2d-extras</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>${swt.groupId}</groupId>
+      <artifactId>${swt.artifactId}</artifactId>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -69,115 +84,7 @@
       </plugin>
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.9</version>
-        <configuration>
-          <configLocation>${basedir}/src/build/conf/checkstyle.xml</configLocation>
-          <enableRulesSummary>false</enableRulesSummary>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>        
-        <version>2.9</version>
-        <configuration>
-          <source>${jdk.version}</source>
-          <verbose>false</verbose>
-          <show>package</show>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>javadoc</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.7.1</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-changelog-plugin</artifactId>
-        <version>2.2</version>
-        <!--
-          configuration> <connectionType>connection</connectionType>
-          </configuration
-        -->
-      </plugin>
-      <plugin>
-        <artifactId>maven-jxr-plugin</artifactId>        
-        <version>2.2</version>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>taglist-maven-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <tags>
-            <tag>TODO</tag>
-            <tag>FIXME</tag>
-            <tag>@todo</tag>
-            <tag>@deprecated</tag>
-          </tags>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.3.1</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <version>2.5</version>
-        <configuration>
-          <sourceEncoding>ascii</sourceEncoding>
-          <targetJdk>${jdk.version}</targetJdk>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jdepend-maven-plugin</artifactId>
-        <version>2.0-beta-2</version>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>2.3.1</version>
-        <configuration>
-          <!-- http://wiki.hudson-ci.org/display/HUDSON/FindBugs+Plugin -->
-          <findbugsXmlOutput>true</findbugsXmlOutput>
-          <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-          <xmlOutput>true</xmlOutput>
-          <xmlOutputDirectory>target/site</xmlOutputDirectory>
-          <includeTests>false</includeTests>        
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <formats>
-            <format>xml</format>
-            <format>html</format>
-          </formats>
-          <instrumentation>
-            <ignores>
-              <ignore>org.piccolo2d.examples.*</ignore>
-              <ignore>org.piccolo2d.examples.pswing.*</ignore>
-              <ignore>org.piccolo2d.examples.swt.*</ignore>
-              <ignore>org.piccolo2d.tutorial.*</ignore>
-            </ignores>
-            <excludes>
-              <exclude>org/piccolo2d/examples/**</exclude>
-            </excludes>
-          </instrumentation>
-        </configuration>
-      </plugin>
-    </plugins>  
-  </reporting>
+
   <profiles>
     <profile>
       <id>gtk_linux_x86_64</id>
@@ -274,7 +181,7 @@
 
     disable this profile to build on mac osx, jdk 1.6, x86_64
 
--->
+
     <profile>
       <id>macosx_carbon</id>
       <activation>
@@ -287,11 +194,12 @@
         <swt.artifactId>macosx</swt.artifactId>
       </properties>
     </profile>
+-->
 <!--
 
     enable this profile to build on mac osx, jdk 1.6, x86_64
       set MAVEN_OPTS="-Dd64", or unit tests will fail
-
+-->
     <profile>
       <id>macosx_cocoa_intel</id>
       <activation>
@@ -306,6 +214,5 @@
         <surefire.argLine>-XstartOnFirstThread</surefire.argLine>
       </properties>
     </profile>
--->
   </profiles>
 </project>
