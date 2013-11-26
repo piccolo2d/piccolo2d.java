@@ -3234,7 +3234,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * Return true if this node descends from the root.
-     * 
+     *
      * @return whether this node descends from root node
      */
     public boolean isDescendentOfRoot() {
@@ -3242,10 +3242,56 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Change the order of this node in its parent's children list so that it
-     * will draw in back of all of its other sibling nodes.
+     * Raise this node within the Z-order of its parent.
+     *
+     * @since 3.0
      */
-    public void moveToBack() {
+    public void raise() {
+        final PNode p = parent;
+        if (p != null) {
+            final int index = parent.indexOfChild(this);
+            final int siblingIndex = Math.min(parent.getChildrenCount() - 1, index + 1);
+            if (siblingIndex != index) {
+                raiseAbove(parent.getChild(siblingIndex));
+            }
+        }
+    }
+
+    /**
+     * Lower this node within the Z-order of its parent.
+     *
+     * @since 3.0
+     */
+    public void lower() {
+        final PNode p = parent;
+        if (p != null) {
+            final int index = parent.indexOfChild(this);
+            final int siblingIndex = Math.max(0, index - 1);
+            if (siblingIndex != index) {
+                lowerBelow(parent.getChild(siblingIndex));
+            }
+        }
+    }
+
+    /**
+     * Raise this node within the Z-order of its parent to the top.
+     *
+     * @since 3.0
+     */
+    public void raiseToTop() {
+        final PNode p = parent;
+        if (p != null) {
+            p.removeChild(this);
+            p.addChild(this);
+        }
+    }
+
+    /**
+     * Lower this node within the Z-order of its parent to the bottom.
+     *
+     * @since 3.0
+     */
+    public void lowerToBottom() {
         final PNode p = parent;
         if (p != null) {
             p.removeChild(this);
@@ -3254,12 +3300,27 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Change the order of this node in its parent's children list so that it
-     * will draw in back of the specified sibling node.
-     * 
-     * @param sibling sibling to move in back of
+     * Raise this node within the Z-order of its parent above the specified sibling node.
+     *
+     * @since 3.0
+     * @param sibling sibling node to raise this node above
      */
-    public void moveInBackOf(final PNode sibling) {
+    public void raiseAbove(final PNode sibling) {
+        final PNode p = parent;
+        if (p != null && p == sibling.getParent()) {
+            p.removeChild(this);
+            final int index = p.indexOfChild(sibling);
+            p.addChild(index + 1, this);
+        }
+    }
+
+    /**
+     * Lower this node within the Z-order of its parent below the specified sibling node.
+     *
+     * @since 3.0
+     * @param sibling sibling node to lower this node below
+     */
+    public void lowerBelow(final PNode sibling) {
         final PNode p = parent;
         if (p != null && p == sibling.getParent()) {
             p.removeChild(this);
@@ -3269,29 +3330,50 @@ public class PNode implements Cloneable, Serializable, Printable {
     }
 
     /**
-     * Change the order of this node in its parent's children list so that it
-     * will draw in front of all of its other sibling nodes.
+     * Raise the specified child node within the Z-order of this.
+     *
+     * @since 3.0
+     * @param child child node to raise
      */
-    public void moveToFront() {
-        final PNode p = parent;
-        if (p != null) {
-            p.removeChild(this);
-            p.addChild(this);
+    public void raise(final PNode child) {
+        if (children != null && children.contains(child) && this.equals(child.getParent())) {
+            child.raise();
         }
     }
 
     /**
-     * Change the order of this node in its parent's children list so that it
-     * will draw in front of the specified sibling node.
-     * 
-     * @param sibling sibling to move in front of
+     * Lower the specified child node within the Z-order of this.
+     *
+     * @since 3.0
+     * @param child child node to lower
      */
-    public void moveInFrontOf(final PNode sibling) {
-        final PNode p = parent;
-        if (p != null && p == sibling.getParent()) {
-            p.removeChild(this);
-            final int index = p.indexOfChild(sibling);
-            p.addChild(index + 1, this);
+    public void lower(final PNode child) {
+        if (children != null && children.contains(child) && this.equals(child.getParent())) {
+            child.lower();
+        }
+    }
+
+    /**
+     * Raise the specified child node within the Z-order of this to the top.
+     *
+     * @since 3.0
+     * @param child child node to raise to the top
+     */
+    public void raiseToTop(final PNode child) {
+        if (children != null && children.contains(child) && this.equals(child.getParent())) {
+            child.raiseToTop();
+        }
+    }
+
+    /**
+     * Lower the specified child node within the Z-order of this to the bottom.
+     *
+     * @since 3.0
+     * @param child child node to lower to the bottom
+     */
+    public void lowerToBottom(final PNode child) {
+        if (children != null && children.contains(child) && this.equals(child.getParent())) {
+            child.lowerToBottom();
         }
     }
 
