@@ -34,15 +34,15 @@
   <parent>
     <artifactId>piccolo2d-complete</artifactId>
     <groupId>org.piccolo2d</groupId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0-beta1-rc2</version>
   </parent>
   <artifactId>piccolo2d-core</artifactId>
   <packaging>bundle</packaging>
   <name>Piccolo2D Core</name>
 
   <scm>
-    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike/core</connection>
-    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike/core</developerConnection>
-    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/branches/3.0-spike/core</url>
+    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/tags/piccolo2d-complete-3.0-beta1-rc2/core</connection>
+    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/tags/piccolo2d-complete-3.0-beta1-rc2/core</developerConnection>
+    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/tags/piccolo2d-complete-3.0-beta1-rc2/core</url>
   </scm>
 </project>
