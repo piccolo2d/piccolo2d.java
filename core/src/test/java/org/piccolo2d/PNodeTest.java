@@ -1315,25 +1315,153 @@ public class PNodeTest extends TestCase {
         assertFalse(grandChild.isDescendentOf(unrelated));
     }
 
-    public void testMoveToBackMovesNodeToBeFirstChild() {
+    public void testRaise() {
         final PNode parent = new PNode();
-        parent.addChild(new PNode());
-        parent.addChild(new PNode());
         parent.addChild(node);
-        node.moveToBack();
+        parent.addChild(new PNode());
+        parent.addChild(new PNode());
+        node.raise();
+        assertEquals(1, parent.indexOfChild(node));
+    }
+
+    public void testRaiseOnly() {
+        final PNode parent = new PNode();
+        parent.addChild(node);
+        node.raise();
         assertEquals(0, parent.indexOfChild(node));
     }
 
-    public void testMoveToFrontMovesNodeToBeLastChild() {
+    public void testLower() {
+        final PNode parent = new PNode();
+        parent.addChild(new PNode());
+        parent.addChild(new PNode());
+        parent.addChild(node);
+        node.lower();
+        assertEquals(1, parent.indexOfChild(node));
+    }
+
+    public void testLowerOnly() {
+        final PNode parent = new PNode();
+        parent.addChild(node);
+        node.lower();
+        assertEquals(0, parent.indexOfChild(node));
+    }
+
+    public void testRaiseToTop() {
         final PNode parent = new PNode();
         parent.addChild(node);
         parent.addChild(new PNode());
         parent.addChild(new PNode());
-        node.moveToFront();
+        node.raiseToTop();
         assertEquals(2, parent.indexOfChild(node));
     }
 
-    public void testMoveInBackOfMovesNodeToBeforeSibling() {
+    public void testRaiseToTopOnly() {
+        final PNode parent = new PNode();
+        parent.addChild(node);
+        node.raiseToTop();
+        assertEquals(0, parent.indexOfChild(node));
+    }
+
+    public void testLowerToBottom() {
+        final PNode parent = new PNode();
+        parent.addChild(new PNode());
+        parent.addChild(new PNode());
+        parent.addChild(node);
+        node.lowerToBottom();
+        assertEquals(0, parent.indexOfChild(node));
+    }
+
+    public void testLowerToBottomOnly() {
+        final PNode parent = new PNode();
+        parent.addChild(node);
+        node.lowerToBottom();
+        assertEquals(0, parent.indexOfChild(node));
+    }
+
+    public void testRaiseAbove() {
+        final PNode parent = new PNode();
+        parent.addChild(node);
+        final PNode sibling = new PNode();
+        parent.addChild(sibling);
+        parent.addChild(new PNode());
+        node.raiseAbove(sibling);
+        assertEquals(1, parent.indexOfChild(node));
+    }
+
+    public void testLowerBelow() {
+        final PNode parent = new PNode();
+        parent.addChild(new PNode());
+        final PNode sibling = new PNode();
+        parent.addChild(sibling);
+        parent.addChild(node);
+        node.lowerBelow(sibling);
+        assertEquals(1, parent.indexOfChild(node));
+    }
+
+    public void testRaiseChild() {
+        final PNode child0 = new PNode();
+        final PNode child1 = new PNode();
+        final PNode child2 = new PNode();
+        node.addChild(child0);
+        node.addChild(child1);
+        node.addChild(child2);
+        node.raise(child0);
+        assertEquals(1, node.indexOfChild(child0));
+    }
+
+    public void testLowerChild() {
+        final PNode child0 = new PNode();
+        final PNode child1 = new PNode();
+        final PNode child2 = new PNode();
+        node.addChild(child0);
+        node.addChild(child1);
+        node.addChild(child2);
+        node.lower(child2);
+        assertEquals(1, node.indexOfChild(child2));
+    }
+
+    public void testRaiseChildToTop() {
+        final PNode child0 = new PNode();
+        final PNode child1 = new PNode();
+        final PNode child2 = new PNode();
+        node.addChild(child0);
+        node.addChild(child1);
+        node.addChild(child2);
+        node.raiseToTop(child0);
+        assertEquals(2, node.indexOfChild(child0));
+    }
+
+    public void testLowerChildToBottom() {
+        final PNode child0 = new PNode();
+        final PNode child1 = new PNode();
+        final PNode child2 = new PNode();
+        node.addChild(child0);
+        node.addChild(child1);
+        node.addChild(child2);
+        node.lowerToBottom(child2);
+        assertEquals(0, node.indexOfChild(child2));
+    }
+
+    public void testLowerToBottomMovesNodeToBeFirstChild() {
+        final PNode parent = new PNode();
+        parent.addChild(new PNode());
+        parent.addChild(new PNode());
+        parent.addChild(node);
+        node.lowerToBottom();
+        assertEquals(0, parent.indexOfChild(node));
+    }
+
+    public void testRaiseToTopMovesNodeToBeLastChild() {
+        final PNode parent = new PNode();
+        parent.addChild(node);
+        parent.addChild(new PNode());
+        parent.addChild(new PNode());
+        node.raiseToTop();
+        assertEquals(2, parent.indexOfChild(node));
+    }
+
+    public void testLowerBelowMovesNodeToBeforeSibling() {
         final PNode parent = new PNode();
         final PNode sibling = new PNode();
 
@@ -1342,11 +1470,11 @@ public class PNodeTest extends TestCase {
         parent.addChild(new PNode());
         parent.addChild(sibling);
 
-        node.moveInBackOf(sibling);
+        node.lowerBelow(sibling);
         assertEquals(2, parent.indexOfChild(node));
     }
 
-    public void testMoveInFrontOfMovesNodeToAfterSibling() {
+    public void testRaiseAboveMovesNodeToAfterSibling() {
         final PNode parent = new PNode();
         final PNode sibling = new PNode();
 
@@ -1355,11 +1483,11 @@ public class PNodeTest extends TestCase {
         parent.addChild(new PNode());
         parent.addChild(sibling);
 
-        node.moveInFrontOf(sibling);
+        node.raiseAbove(sibling);
         assertEquals(3, parent.indexOfChild(node));
     }
 
-    public void testMoveInFrontOfDoesNothingIfNotSibling() {
+    public void testRaiseAboveDoesNothingIfNotSibling() {
         final PNode parent = new PNode();
         final PNode stranger = new PNode();
 
@@ -1367,11 +1495,11 @@ public class PNodeTest extends TestCase {
         parent.addChild(new PNode());
         parent.addChild(new PNode());
 
-        node.moveInFrontOf(stranger);
+        node.raiseAbove(stranger);
         assertEquals(0, parent.indexOfChild(node));
     }
 
-    public void testMoveInBackOfDoesNothingIfNotSibling() {
+    public void testLowerBelowDoesNothingIfNotSibling() {
         final PNode parent = new PNode();
         final PNode stranger = new PNode();
 
@@ -1379,7 +1507,7 @@ public class PNodeTest extends TestCase {
         parent.addChild(new PNode());
         parent.addChild(new PNode());
 
-        node.moveInBackOf(stranger);
+        node.lowerBelow(stranger);
         assertEquals(0, parent.indexOfChild(node));
     }
 

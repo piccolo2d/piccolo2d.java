@@ -599,7 +599,9 @@ public class PSelectionEventHandler extends PDragSequenceEventHandler {
         }
 
         marquee.globalToLocal(b);
-        marquee.setPathToRectangle((float) b.x, (float) b.y, (float) b.width, (float) b.height);
+        marquee.reset();
+        marquee.append(b, false);
+        marquee.closePath();
         b.reset();
         b.add(presspt);
         b.add(pie.getPosition());

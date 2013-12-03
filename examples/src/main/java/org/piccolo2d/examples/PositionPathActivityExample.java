@@ -67,7 +67,7 @@ public class PositionPathActivityExample extends PFrame {
         path.closePath();
 
         // create node to display animation path
-        final PPath ppath = new PPath(path);
+        final PPath ppath = new PPath.Float(path);
         layer.addChild(ppath);
 
         // create activity to run animation.

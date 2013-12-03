@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2010, Piccolo2D project, http://piccolo2d.org
+ * Copyright (c) 2008-2012, Piccolo2D project, http://piccolo2d.org
  * Copyright (c) 1998-2008, University of Maryland
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.jdk16.nodes;
+package org.piccolo2d.nodes;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -211,7 +211,7 @@ public abstract class PShape extends PNode {
     }
 
     /** {@inheritDoc} */
-    protected final void paint(final PPaintContext paintContext) {
+    protected void paint(final PPaintContext paintContext) {
         final Paint p = getPaint();
         final Graphics2D g2 = paintContext.getGraphics();
 

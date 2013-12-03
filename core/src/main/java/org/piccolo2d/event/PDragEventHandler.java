@@ -44,15 +44,15 @@ import org.piccolo2d.util.PDimension;
 public class PDragEventHandler extends PDragSequenceEventHandler {
 
     private PNode draggedNode;
-    private boolean moveToFrontOnPress;
+    private boolean raiseToTopOnPress;
 
     /**
-     * Constructs a drag event handler which defaults to not moving the node to
-     * the front on drag.
+     * Constructs a drag event handler which defaults to not raising the node to
+     * the top on drag.
      */
     public PDragEventHandler() {
         draggedNode = null;
-        moveToFrontOnPress = false;
+        raiseToTopOnPress = false;
 
         setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
     }
@@ -88,15 +88,15 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
 
     /**
      * Starts a drag event and moves the dragged node to the front if this
-     * handler has been directed to do so with a call to setMoveToFrontOnDrag.
+     * handler has been directed to do so with a call to setRaiseToTopOnDrag.
      * 
      * @param event The Event responsible for the start of the drag
      */
     protected void startDrag(final PInputEvent event) {
         super.startDrag(event);
         draggedNode = event.getPickedNode();
-        if (moveToFrontOnPress) {
-            draggedNode.moveToFront();
+        if (raiseToTopOnPress) {
+            draggedNode.raiseToTop();
         }
     }
 
@@ -124,25 +124,23 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
     }
 
     /**
-     * Returns whether this drag event handler has been informed to move nodes
-     * to the front of all other on drag.
+     * Returns whether this drag event handler has been informed to raise nodes
+     * to the top of all other on drag.
      * 
-     * @return true if dragging a node will move it to the front
-     * @deprecated by getRaiseToTopOnPress, see http://code.google.com/p/piccolo2d/issues/detail?id=166
+     * @return true if dragging a node will raise it to the top
      */
-    public boolean getMoveToFrontOnPress() {
-        return moveToFrontOnPress;
+    public boolean getRaiseToTopOnPress() {
+        return raiseToTopOnPress;
     }
 
     /**
-     * Informs this drag event handler whether it should move nodes to the front
+     * Informs this drag event handler whether it should raise nodes to the top
      * when they are dragged. Default is false.
      * 
-     * @param moveToFrontOnPress true if dragging a node should move it to the
-     *            front
-     * @deprecated by setRaiseToTopOnPress(boolean), see http://code.google.com/p/piccolo2d/issues/detail?id=166
+     * @param raiseToTopOnPress true if dragging a node should raise it to the
+     *            top
      */
-    public void setMoveToFrontOnPress(final boolean moveToFrontOnPress) {
-        this.moveToFrontOnPress = moveToFrontOnPress;
+    public void setRaiseToTopOnPress(final boolean raiseToTopOnPress) {
+        this.raiseToTopOnPress = raiseToTopOnPress;
     }
 }

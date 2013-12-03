@@ -84,7 +84,7 @@ public class DynamicExample extends PFrame {
         };
         root.addActivity(a);
 
-        final PPath p = new PPath();
+        final PPath p = new PPath.Float();
         p.moveTo(0, 0);
         p.lineTo(0, 1000);
         final PFixedWidthStroke stroke = new PFixedWidthStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10,

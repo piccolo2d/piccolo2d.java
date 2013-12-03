@@ -74,7 +74,7 @@ public class PiccoloPresentation extends PFrame {
                 final PNode picked = event.getPickedNode();
 
                 if (picked.getParent() == slideBar) {
-                    picked.moveToFront();
+                    picked.raiseToTop();
                     if (picked.getScale() == 1) {
                         goToSlide(null);
                     }
@@ -100,7 +100,7 @@ public class PiccoloPresentation extends PFrame {
         currentSlide = slide;
 
         if (currentSlide != null) {
-            currentSlide.moveToFront();
+            currentSlide.raiseToTop();
             currentSlide.animateToTransform((AffineTransform) currentSlide.getAttribute("large"), 1000);
         }
     }

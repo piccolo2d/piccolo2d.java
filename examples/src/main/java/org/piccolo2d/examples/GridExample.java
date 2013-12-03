@@ -155,7 +155,7 @@ public class GridExample extends PFrame {
             protected void startDrag(final PInputEvent event) {
                 super.startDrag(event);
                 draggedNode = event.getPickedNode();
-                draggedNode.moveToFront();
+                draggedNode.raiseToTop();
                 nodeStartPosition = draggedNode.getOffset();
             }
 
