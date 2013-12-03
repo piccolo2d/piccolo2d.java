@@ -41,9 +41,9 @@
   <name>Piccolo2D SWT</name>
 
   <scm>
-    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike/swt</connection>
-    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike/swt</developerConnection>
-    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/branches/3.0-spike/swt</url>
+    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/swt</connection>
+    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/swt</developerConnection>
+    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/swt</url>
   </scm>
 
   <dependencyManagement>

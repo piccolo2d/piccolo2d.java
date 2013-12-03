@@ -41,8 +41,8 @@
   <name>Piccolo2D Core</name>
 
   <scm>
-    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike/core</connection>
-    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/branches/3.0-spike/core</developerConnection>
-    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/branches/3.0-spike/core</url>
+    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/core</connection>
+    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk/core</developerConnection>
+    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk/core</url>
   </scm>
 </project>
