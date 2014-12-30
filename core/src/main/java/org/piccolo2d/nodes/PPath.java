@@ -286,14 +286,14 @@ public abstract class PPath extends PShape {
 
     /**
      * Create and return a new path node with a shape defined by the specified line segments in single
-     * precision floating point coordinates.
+     * precision floating point coordinates.  Will be marked <code>final</code> in version 4.0.
      *
      * @param xp array of x coordinates, must contain at least one x coordinate
      * @param yp array of y coordinates, must contain at least one y coordinate
      * @return a new path node with the a shape defined by the specified line segments in single
      *    precision floating point coordinates
      */
-    public static final PPath createPolyline(final float[] xp, final float[] yp) {
+    public static PPath createPolyline(final float[] xp, final float[] yp) {
         if (xp.length < 1) {
             throw new IllegalArgumentException("xp must contain at least one x coordinate");
         }
@@ -314,13 +314,13 @@ public abstract class PPath extends PShape {
 
     /**
      * Create and return a new path node with a shape defined by the specified line segments in single
-     * precision floating point coordinates.
+     * precision floating point coordinates.  Will be marked <code>final</code> in version 4.0.
      *
      * @param points array of points, must not be null and must contain at least one point
      * @return a new path node with the a shape defined by the specified line segments in single
      *    precision floating point coordinates
      */
-    public static final PPath createPolyline(final Point2D.Float[] points) {
+    public static PPath createPolyline(final Point2D.Float[] points) {
         if (points == null) {
             throw new NullPointerException("points must not be null");
         }
@@ -475,14 +475,6 @@ public abstract class PPath extends PShape {
     public static final PPath createLine(final double x1, final double y1, final double x2, final double y2) {
         return new PPath.Double(new Line2D.Double(x1, y1, x2, y2));
     }
-
-    /*
-    public static final PPath createPolyline(final double[] xp, final double[] yp) {
-    }
-
-    public static final PPath createPolyline(final Point2D.Double[] points) {
-    }
-    */
 
     /**
      * Create and return a new path node with the specified quadratic curve in double
