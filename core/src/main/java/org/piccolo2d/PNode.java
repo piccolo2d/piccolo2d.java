@@ -1198,7 +1198,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * registered for all properties. See the fields in PNode and subclasses
      * that start with PROPERTY_ to find out which properties exist.
      * 
-     * @param listener The PropertyChangeListener to be added
+     * @param listener the PropertyChangeListener to be added
      */
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         if (changeSupport == null) {
@@ -1214,7 +1214,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * PROPERTY_ to find out which properties are supported.
      * 
      * @param propertyName The name of the property to listen on.
-     * @param listener The PropertyChangeListener to be added
+     * @param listener the PropertyChangeListener to be added
      */
     public void addPropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         if (listener == null) {
@@ -1230,7 +1230,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * Remove a PropertyChangeListener from the listener list. This removes a
      * PropertyChangeListener that was registered for all properties.
      * 
-     * @param listener The PropertyChangeListener to be removed
+     * @param listener the PropertyChangeListener to be removed
      */
     public void removePropertyChangeListener(final PropertyChangeListener listener) {
         if (changeSupport != null) {
@@ -1241,8 +1241,8 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Remove a PropertyChangeListener for a specific property.
      * 
-     * @param propertyName The name of the property that was listened on.
-     * @param listener The PropertyChangeListener to be removed
+     * @param propertyName the name of the property that was listened on.
+     * @param listener the PropertyChangeListener to be removed
      */
     public void removePropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         if (listener == null) {
@@ -1252,6 +1252,58 @@ public class PNode implements Cloneable, Serializable, Printable {
             return;
         }
         changeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+    /**
+     * Return an array of all the property change listeners added to this node.
+     * <p>
+     * If some listeners have been added with a named property, then
+     * the returned array will be a mixture of PropertyChangeListeners
+     * and <code>PropertyChangeListenerProxy</code>s. If the calling
+     * method is interested in distinguishing the listeners then it must
+     * test each element to see if it is a <code>PropertyChangeListenerProxy</code>,
+     * perform the cast, and examine the parameter.
+     *
+     * <pre>
+     * PropertyChangeListener[] listeners = bean.getPropertyChangeListeners();
+     * for (int i = 0; i &lt; listeners.length; i++) {
+     *   if (listeners[i] instanceof PropertyChangeListenerProxy) {
+     *     PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy) listeners[i];
+     *     if (proxy.getPropertyName().equals("foo")) {
+     *       // proxy is a PropertyChangeListener which was associated
+     *       // with the property named "foo"
+     *     }
+     *   }
+     * }
+     *</pre>
+     *
+     * @since 3.0.1
+     * @return all of the <code>PropertyChangeListener</code>s added or an
+     *   empty array if no listeners have been added
+     */
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        if (changeSupport == null) {
+            return new PropertyChangeListener[0];
+        }
+        return changeSupport.getPropertyChangeListeners();
+    }
+
+    /**
+     * Return an array of all the property change listeners which have been
+     * associated with the named property.
+     *
+     * @since 3.0.1
+     * @param propertyName the name of the property being listened to
+     * @return all of the <code>PropertyChangeListener</code>s associated with
+     *   the named property.  If no such listeners have been added,
+     *   or if <code>propertyName</code> is null, an empty array is
+     *   returned.
+     */
+    public PropertyChangeListener[] getPropertyChangeListeners(final String propertyName) {
+        if (changeSupport == null) {
+            return new PropertyChangeListener[0];
+        }
+        return changeSupport.getPropertyChangeListeners(propertyName);
     }
 
     /**

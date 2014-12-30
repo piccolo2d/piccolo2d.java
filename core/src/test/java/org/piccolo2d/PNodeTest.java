@@ -37,6 +37,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1576,5 +1577,39 @@ public class PNodeTest extends TestCase {
 
         final PPickPath path = canvas.getCamera().pick(5, 5, 5);
         assertSame(node1, path.getPickedNode());
+    }
+
+    public void testGetPropertyChangeListenersEmpty() {
+        PropertyChangeListener[] listeners = node.getPropertyChangeListeners();
+        assertNotNull(listeners);
+        assertEquals(0, listeners.length);
+    }
+
+    public void testGetPropertyChangeListeners() {
+        node.addPropertyChangeListener(mockListener);
+        PropertyChangeListener[] listeners = node.getPropertyChangeListeners();
+        assertNotNull(listeners);
+        assertEquals(1, listeners.length);
+        assertEquals(mockListener, listeners[0]);
+    }
+
+    public void testGetPropertyChangeListenersStringNull() {
+        PropertyChangeListener[] listeners = node.getPropertyChangeListeners(null);
+        assertNotNull(listeners);
+        assertEquals(0, listeners.length);
+    }
+
+    public void testGetPropertyChangeListenersStringEmpty() {
+        PropertyChangeListener[] listeners = node.getPropertyChangeListeners("foo");
+        assertNotNull(listeners);
+        assertEquals(0, listeners.length);
+    }
+
+    public void testGetPropertyChangeListenersString() {
+        node.addPropertyChangeListener("foo", mockListener);
+        PropertyChangeListener[] listeners = node.getPropertyChangeListeners("foo");
+        assertNotNull(listeners);
+        assertEquals(1, listeners.length);
+        assertEquals(mockListener, listeners[0]);
     }
 }
