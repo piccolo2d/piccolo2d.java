@@ -156,6 +156,62 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
         assertNotNull(PPath.createLine(0.0d, 0.0d, 50.0d, 100.0d));
     }
 
+    public void testCreatePolylineFloatArraysEmpty() {
+        try {
+            PPath.createPolyline(new float[0], new float[0]);
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    public void testCreatePolylineFloatArraysDifferentSizes() {
+        try {
+            PPath.createPolyline(new float[0], new float[] { 100.0f });
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    public void testCreatePolylineFloatArraysDifferentSingle() {
+        assertNotNull(PPath.createPolyline(new float[] { 100.0f }, new float[] { 100.0f }));
+    }
+
+    public void testCreatePolylineFloatArrays() {
+        assertNotNull(PPath.createPolyline(new float[] { 100.0f, 100.0f, 200.0f }, new float[] { 100.0f, 200.0f, 200.0f }));
+    }
+
+    public void testCreatePolylinePoint2DFloatArrayNull() {
+        try {
+            PPath.createPolyline((Point2D.Float[]) null);
+            fail("createPolyline(null) expected NullPointerException");
+        }
+        catch (NullPointerException e) {
+            // expected
+        }
+    }
+
+    public void testCreatePolylinePoint2DFloatArrayEmpty() {
+        try {
+            PPath.createPolyline(new Point2D.Float[0]);
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    public void testCreatePolylinePoint2DFloatArraySingle() {
+        assertNotNull(PPath.createPolyline(new Point2D.Float[] { new Point2D.Float(100.0f, 100.0f) }));
+    }
+
+    public void testCreatePolylinePoint2DFloatArray() {
+        assertNotNull(PPath.createPolyline(new Point2D.Float[] { new Point2D.Float(100.0f, 100.0f), new Point2D.Float(100.0f, 200.0f), new Point2D.Float(200.0f, 200.0f) }));
+    }
+
     public void testCreateQuadCurveDouble() {
         assertNotNull(PPath.createQuadCurve(0.0d, 0.0d, 25.0d, 75.0d, 50.0d, 100.0d));
     }

@@ -37,6 +37,7 @@ import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
@@ -283,14 +284,57 @@ public abstract class PPath extends PShape {
         return new PPath.Float(new Line2D.Float(x1, y1, x2, y2));
     }
 
-    /*
-      need setPathToPolyline
+    /**
+     * Create and return a new path node with a shape defined by the specified line segments in single
+     * precision floating point coordinates.
+     *
+     * @param xp array of x coordinates, must contain at least one x coordinate
+     * @param yp array of y coordinates, must contain at least one y coordinate
+     * @return a new path node with the a shape defined by the specified line segments in single
+     *    precision floating point coordinates
+     */
     public static final PPath createPolyline(final float[] xp, final float[] yp) {
+        if (xp.length < 1) {
+            throw new IllegalArgumentException("xp must contain at least one x coordinate");
+        }
+        if (yp.length < 1) {
+            throw new IllegalArgumentException("yp must contain at least one x coordinate");
+        }
+        if (xp.length != yp.length) {
+            throw new IllegalArgumentException("xp and yp must contain the same number of coordinates");
+        }
+        Path2D.Float path = new Path2D.Float();
+        path.moveTo(xp[0], yp[0]);
+        for (int i = 1; i < xp.length; i++) {
+            path.lineTo(xp[i], yp[i]);
+        }
+        path.closePath();
+        return new PPath.Float(path);
     }
 
+    /**
+     * Create and return a new path node with a shape defined by the specified line segments in single
+     * precision floating point coordinates.
+     *
+     * @param points array of points, must not be null and must contain at least one point
+     * @return a new path node with the a shape defined by the specified line segments in single
+     *    precision floating point coordinates
+     */
     public static final PPath createPolyline(final Point2D.Float[] points) {
+        if (points == null) {
+            throw new NullPointerException("points must not be null");
+        }
+        if (points.length < 1) {
+            throw new IllegalArgumentException("points must contain at least one point");
+        }
+        Path2D.Float path = new Path2D.Float();
+        path.moveTo(points[0].getX(), points[0].getY());
+        for (int i = 1; i < points.length; i++) {
+            path.lineTo(points[i].getX(), points[i].getY());
+        }
+        path.closePath();
+        return new PPath.Float(path);
     }
-    */
 
     /**
      * Create and return a new path node with the specified quadratic curve in single
