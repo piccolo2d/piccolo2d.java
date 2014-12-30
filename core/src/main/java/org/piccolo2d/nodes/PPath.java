@@ -288,6 +288,7 @@ public abstract class PPath extends PShape {
      * Create and return a new path node with a shape defined by the specified line segments in single
      * precision floating point coordinates.  Will be marked <code>final</code> in version 4.0.
      *
+     * @since 3.0.1
      * @param xp array of x coordinates, must contain at least one x coordinate
      * @param yp array of y coordinates, must contain at least one y coordinate
      * @return a new path node with the a shape defined by the specified line segments in single
@@ -316,6 +317,7 @@ public abstract class PPath extends PShape {
      * Create and return a new path node with a shape defined by the specified line segments in single
      * precision floating point coordinates.  Will be marked <code>final</code> in version 4.0.
      *
+     * @since 3.0.1
      * @param points array of points, must not be null and must contain at least one point
      * @return a new path node with the a shape defined by the specified line segments in single
      *    precision floating point coordinates
