@@ -626,7 +626,7 @@ public class PStyledText extends PNode {
 
                 // Draw the underline and the strikethrough after the text
                 if (sInfo.underline != null) {
-                    paintLine.setLine(x, y + lineInfo.maxDescent / 2, x + width, y + lineInfo.maxDescent / 2);
+                    paintLine.setLine(curX, y + lineInfo.maxDescent / 2, x + width, y + lineInfo.maxDescent / 2);
                     g2.draw(paintLine);
                 }
 
