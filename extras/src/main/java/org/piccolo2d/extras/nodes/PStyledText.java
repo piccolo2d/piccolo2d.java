@@ -285,7 +285,7 @@ public class PStyledText extends PNode {
         return curElement;
     }
 
-    private void applyFontAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
+    protected void applyFontAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
             final Element curElement, final Font font) {
         if (font != null) {
             attributedString.addAttribute(TextAttribute.FONT, font, Math.max(0, curElement.getStartOffset()
@@ -294,7 +294,7 @@ public class PStyledText extends PNode {
         }
     }
 
-    private void applyStrikeThroughAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
+    protected void applyStrikeThroughAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
             final Element curElement, final AttributeSet attributes) {
         final boolean strikethrough = StyleConstants.isStrikeThrough(attributes);
         if (strikethrough) {
@@ -305,18 +305,18 @@ public class PStyledText extends PNode {
         }
     }
 
-    private void applyUnderlineAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
+    protected void applyUnderlineAttribute(final RunInfo paragraphRange, final AttributedString attributedString,
             final Element curElement, final AttributeSet attributes) {
         final boolean underline = StyleConstants.isUnderline(attributes);
         if (underline) {
-            attributedString.addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE, Math.max(0, curElement
-                    .getStartOffset()
-                    - paragraphRange.startIndex), Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
-                    curElement.getEndOffset() - paragraphRange.startIndex));
+            int startOffset = Math.max(0, curElement.getStartOffset() - paragraphRange.startIndex);
+            int endOffset = Math.min(paragraphRange.endIndex - paragraphRange.startIndex,
+                    curElement.getEndOffset() - paragraphRange.startIndex);
+            attributedString.addAttribute(TextAttribute.UNDERLINE, Boolean.TRUE, startOffset, endOffset);
         }
     }
 
-    private void applyBackgroundAttribute(final StyleContext style, final RunInfo paragraphRange,
+    protected void applyBackgroundAttribute(final StyleContext style, final RunInfo paragraphRange,
             final AttributedString attributedString, final Element curElement, final AttributeSet attributes) {
         if (attributes.isDefined(StyleConstants.Background)) {
             final Color background = style.getBackground(attributes);
@@ -476,12 +476,7 @@ public class PStyledText extends PNode {
 
                 aTextLayout = measurer.nextLayout(Float.MAX_VALUE, Math.min(lineEnd, itr.getRunLimit()), false);
 
-                final SegmentInfo sInfo = new SegmentInfo();
-                sInfo.font = (Font) itr.getAttribute(TextAttribute.FONT);
-                sInfo.foreground = (Color) itr.getAttribute(TextAttribute.FOREGROUND);
-                sInfo.background = (Color) itr.getAttribute(TextAttribute.BACKGROUND);
-                sInfo.underline = (Boolean) itr.getAttribute(TextAttribute.UNDERLINE);
-                sInfo.layout = aTextLayout;
+                final SegmentInfo sInfo = createSegmentInfo(itr, aTextLayout);
 
                 final FontMetrics metrics = StyleContext.getDefaultStyleContext().getFontMetrics(
                         (Font) itr.getAttribute(TextAttribute.FONT));
@@ -505,6 +500,20 @@ public class PStyledText extends PNode {
         constrainDimensionsIfNeeded(textWidth, textHeight);
     }
 
+    protected SegmentInfo createSegmentInfo(final AttributedCharacterIterator itr, TextLayout aTextLayout) {
+        final SegmentInfo sInfo = newSegmentInfo();
+        sInfo.font = (Font) itr.getAttribute(TextAttribute.FONT);
+        sInfo.foreground = (Color) itr.getAttribute(TextAttribute.FOREGROUND);
+        sInfo.background = (Color) itr.getAttribute(TextAttribute.BACKGROUND);
+        sInfo.underline = (Boolean) itr.getAttribute(TextAttribute.UNDERLINE);
+        sInfo.layout = aTextLayout;
+        return sInfo;
+    }
+
+    protected SegmentInfo newSegmentInfo() {
+        return new SegmentInfo();
+    }
+    
     /**
      * @param lineInfo
      * @return
@@ -625,15 +634,20 @@ public class PStyledText extends PNode {
                 sInfo.layout.draw(g2, curX, y);
 
                 // Draw the underline and the strikethrough after the text
-                if (sInfo.underline != null) {
-                    paintLine.setLine(curX, y + lineInfo.maxDescent / 2, x + width, y + lineInfo.maxDescent / 2);
-                    g2.draw(paintLine);
-                }
+                drawUnderlineAndStrikethroughAfterText(curX, y, g2, lineInfo, sInfo, width);
 
                 curX = curX + width;
             }
 
             y += lineInfo.maxDescent + lineInfo.leading;
+        }
+    }
+
+    protected void drawUnderlineAndStrikethroughAfterText
+        (final float x, float y, final Graphics2D g2, LineInfo lineInfo, final SegmentInfo sInfo, final float width) {
+        if (sInfo.underline != null) {
+            paintLine.setLine(x, y + 1 + lineInfo.maxDescent / 2, x + width, y + 1 + lineInfo.maxDescent / 2);
+            g2.draw(paintLine);
         }
     }
 
@@ -735,6 +749,15 @@ public class PStyledText extends PNode {
         public int length() {
             return endIndex - startIndex;
         }
+
+        public int getStartIndex() {
+            return startIndex;
+        }
+
+        public int getEndIndex() {
+            return endIndex;
+        }
+        
     }
 
     /**
