@@ -33,7 +33,7 @@ Eclipse Standard Widget Toolkit
 http://www.eclipse.org/swt/
 
 See
-http://code.google.com/p/piccolo2d/wiki/BuildSWTOnMacOSX
+https://github.com/piccolo2d/google-wiki/blob/master/BuildSWTOnMacOSX.md
 
 for further details.
 
