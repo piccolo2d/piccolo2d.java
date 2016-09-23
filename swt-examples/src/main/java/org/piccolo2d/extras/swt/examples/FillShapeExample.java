@@ -43,7 +43,7 @@ import org.piccolo2d.extras.swt.PSWTPath;
  * Example demonstrating issue 187, general shapes are not filled
  * correctly under SWT.
  *
- * See {@link http://code.google.com/p/piccolo2d/issues/detail?id=187}
+ * See https://github.com/piccolo2d/piccolo2d.java/issues/187.
  */
 public class FillShapeExample {
 

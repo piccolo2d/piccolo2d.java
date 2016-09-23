@@ -54,7 +54,7 @@ public abstract class PPathActivity extends PInterpolatingActivity {
     /**
      * The "knots" that define this path's activity timing through its activity
      * and should be an monotonously increasing array starting where each value
-     * is >=0 and ending at 1f.
+     * is &gt;=0 and ending at 1f.
      */
     protected float[] knots;
 

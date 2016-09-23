@@ -57,7 +57,7 @@ abstract class PSemanticStroke implements Stroke {
      * Ask {@link #getActiveScale()}, call {@link #newStroke(float)} if
      * necessary and delegate to {@link Stroke#createStrokedShape(Shape)}.
      * 
-     * @param s
+     * @param s shape
      */
     public Shape createStrokedShape(final Shape s) {
         final float currentScale = getActiveScale();
@@ -99,6 +99,8 @@ abstract class PSemanticStroke implements Stroke {
     /**
      * Detect the current scale. Made protected to enable custom
      * re-implementations.
+     *
+     * @return the current scale
      */
     protected float getActiveScale() {
         if (PPickPath.CURRENT_PICK_PATH != null) {
@@ -122,6 +124,9 @@ abstract class PSemanticStroke implements Stroke {
     /**
      * Factory to create a new internal stroke delegate. Made protected to
      * enable custom re-implementations.
+     *
+     * @param activeScale active scale
+     * @return a new internal stroke delegate
      */
     protected abstract Stroke newStroke(final float activeScale);
 

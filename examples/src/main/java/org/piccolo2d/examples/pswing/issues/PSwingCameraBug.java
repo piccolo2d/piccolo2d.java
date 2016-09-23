@@ -39,8 +39,9 @@ import org.piccolo2d.extras.pswing.PSwingCanvas;
 /**
  * Example that demonstrates the PSwing camera bug described in Issue 148.
  * <p>
- * PSwing nodes doen't handle interactions when added to the camera<br/>
- * <a href="http://code.google.com/p/piccolo2d/issues/detail?id=148">http://code.google.com/p/piccolo2d/issues/detail?id=148</a>
+ * PSwing nodes doen't handle interactions when added to the camera
+ * <p>
+ * <a href="https://github.com/piccolo2d/piccolo2d.java/issues/148">https://github.com/piccolo2d/piccolo2d.java/issues/148</a>
  * </p>
  */
 public class PSwingCameraBug {

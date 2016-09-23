@@ -38,7 +38,7 @@ import org.piccolo2d.nodes.PText;
 
 /**
  * This example demonstrates a bug with setting the size
- * of a PFrame.  See http://code.google.com/p/piccolo2d/issues/detail?id=141.
+ * of a PFrame.  See https://github.com/piccolo2d/piccolo2d.java/issues/141.
  */
 public class FrameCanvasSizeBugExample
     extends PFrame {

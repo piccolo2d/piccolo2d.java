@@ -146,14 +146,14 @@ import java.util.Arrays;
  * <b>PSwing</b> is used to add Swing Components to a Piccolo2D canvas.
  * <p>
  * Example: adding a swing JButton to a PCanvas:
- * 
+ *
  * <pre>
  * PSwingCanvas canvas = new PSwingCanvas();
  * JButton button = new JButton(&quot;Button&quot;);
  * swing = new PSwing(canvas, button);
  * canvas.getLayer().addChild(swing);
  * </pre>
- * 
+ *
  * <p>
  * NOTE: PSwing has the current limitation that it does not listen for Container
  * events. This is only an issue if you create a PSwing and later add Swing
@@ -163,7 +163,7 @@ import java.util.Arrays;
  * </p>
  * <p>
  * For instance, the following bit of code will give unexpected results:
- * 
+ *
  * <pre>
  * JPanel panel = new JPanel();
  * PSwing swing = new PSwing(panel);
@@ -171,8 +171,7 @@ import java.util.Arrays;
  * newChild.setDoubleBuffered(true);
  * panel.add(newChild);
  * </pre>
- * 
- * </p>
+ *
  * <p>
  * NOTE: PSwing cannot be correctly interacted with through multiple cameras.
  * There is no support for it yet.
@@ -187,12 +186,11 @@ import java.util.Arrays;
  * Piccolo. A future release of Piccolo will provide support for long term
  * persistence.
  * </p>
- * 
+ *
  * @author Sam R. Reid
  * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Benjamin B. Bederson
  * @author Lance E. Good
- * 
  */
 public class PSwing extends PNode implements Serializable, PropertyChangeListener {
     /** Default serial version UID. */
@@ -394,7 +392,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     /**
      * Paints the PSwing on the specified renderContext.  Also determines if
      * the Swing component should be rendered normally or as a filled rectangle (greeking).
-     * <p/>
+     * <p>
      * The transform, clip, and composite will be set appropriately when this
      * object is rendered. It is up to this object to restore the transform,
      * clip, and composite of the Graphics2D if this node changes any of them.

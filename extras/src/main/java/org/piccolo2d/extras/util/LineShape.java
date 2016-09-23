@@ -301,8 +301,8 @@ public class LineShape implements Shape, MutablePoints {
     }
 
     /**
-     * Returns true if the two segments defined by (x1,y1)->(x2,y2) and
-     * (x3,y3)->(x4,y4) intersect. Optional fields allow for consideration of
+     * Returns true if the two segments defined by (x1,y1) &rarr; (x2,y2) and
+     * (x3,y3) &rarr; (x4,y4) intersect. Optional fields allow for consideration of
      * extending the segments to infinity at either end.
      * 
      * @param x1 segment 1's start x component
