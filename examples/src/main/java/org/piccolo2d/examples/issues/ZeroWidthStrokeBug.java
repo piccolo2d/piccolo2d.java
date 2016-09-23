@@ -37,8 +37,9 @@ import org.piccolo2d.extras.PFrame;
 /**
  * Example that demonstrates issue with zero width strokes in Issue 221.
  * <p>
- * Cannot draw veritical and horizontal lines of 0 width stroke using PPath<br/>
- * <a href="http://code.google.com/p/piccolo2d/issues/detail?id=221">http://code.google.com/p/piccolo2d/issues/detail?id=221</a>
+ * Cannot draw veritical and horizontal lines of 0 width stroke using PPath
+ * <p>
+ * <a href="https://github.com/piccolo2d/piccolo2d.java/issues/221">https://github.com/piccolo2d/piccolo2d.java/issues/221</a>
  * </p>
  */
 public class ZeroWidthStrokeBug extends PFrame {

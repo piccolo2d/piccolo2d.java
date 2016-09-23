@@ -37,7 +37,7 @@ import org.piccolo2d.PCanvas;
 
 /**
  * The interface an application can implement to control scrolling in a
- * PScrollPane->PViewport->ZCanvas component hierarchy.
+ * PScrollPane to PViewport to PCanvas component hierarchy.
  * 
  * @see PDefaultScrollDirector
  * @author Lance Good

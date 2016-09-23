@@ -112,7 +112,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * The property name that identifies a change in this node's client
-     * propertie (see {@link #getClientProperty getClientProperty}). In an
+     * properties (see {@link #getClientProperties getClientProperties}). In an
      * property change event the new value will be a reference to the map of
      * client properties but old value will always be null.
      */
@@ -120,7 +120,7 @@ public class PNode implements Cloneable, Serializable, Printable {
 
     /**
      * The property code that identifies a change in this node's client
-     * propertie (see {@link #getClientProperty getClientProperty}). In an
+     * properties (see {@link #getClientProperties getClientProperties}). In an
      * property change event the new value will be a reference to the map of
      * client properties but old value will always be null.
      */
@@ -2964,7 +2964,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     /**
      * Constructs a new PrinterJob, allows the user to select which printer to
      * print to, And then prints the node.
-     * @throws PrinterException 
+     * @throws PrinterException if print fails
      */
     public void print() throws PrinterException {
         final PrinterJob printJob = PrinterJob.getPrinterJob();

@@ -56,7 +56,6 @@ import org.piccolo2d.util.PPickPath;
  * </ul>
  * </li>
  * </ul>
- * </p>
  * <p>
  * A PMouseEvent object is passed to every <code>PMouseListener</code> or
  * <code>PMouseAdapter</code> object which registered to receive the
@@ -64,14 +63,12 @@ import org.piccolo2d.util.PPickPath;
  * <code>addMouseListener</code> method. (<code>PMouseAdapter</code> objects
  * implement the <code>PMouseListener</code> interface.) Each such listener
  * object gets a <code>PMouseEvent</code> containing the mouse event.
- * </p>
  * <p>
  * <b>Warning:</b> Serialized objects of this class will not be compatible with
  * future Piccolo2d releases. The current serialization support is appropriate
  * for short term storage or RMI between applications running the same version
  * of Piccolo2d. A future release of Piccolo2d will provide support for long
  * term persistence.
- * </p>
  * 
  * @author Benjamin B. Bederson
  * @author Sam R. Reid

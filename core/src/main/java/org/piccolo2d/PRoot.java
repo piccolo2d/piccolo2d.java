@@ -221,7 +221,7 @@ public class PRoot extends PNode {
      * Set if this root is interacting. If so the root will normally render at a
      * lower quality that is faster. Also repaints the root if the the
      * interaction has ended.
-     * <p/>
+     * <p>
      * This has similar functionality to the setInteracting method on Canvas,
      * but this is the appropriate place to mark interactions that may occur in
      * multiple canvases if this Root is shared.

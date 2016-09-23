@@ -371,6 +371,8 @@ public class BirdsEyeViewExample extends PFrame {
 
         /**
          * Add a layer to list of viewed layers
+         *
+         * @param new_layer layer to add
          */
         public void addLayer(final PLayer new_layer) {
             getCamera().addLayer(new_layer);
@@ -379,6 +381,8 @@ public class BirdsEyeViewExample extends PFrame {
 
         /**
          * Remove the layer from the viewed layers
+         *
+         * @param old_layer layer to remove
          */
         public void removeLayer(final PLayer old_layer) {
             getCamera().removeLayer(old_layer);

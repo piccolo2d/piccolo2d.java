@@ -274,7 +274,7 @@ public class PInterpolatingActivity extends PActivity {
 
     /**
      * Called whenever the activity finishes. Reschedules it if the value of
-     * loopCount is > 0.
+     * loopCount is &gt; 0.
      */
     protected void activityFinished() {
         setRelativeTargetValueAdjustingForMode(1);
