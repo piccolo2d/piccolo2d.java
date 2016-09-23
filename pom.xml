@@ -44,12 +44,12 @@
 
   <name>Piccolo2D</name>
   <description>A revolutionary way to create robust, full-featured graphical applications in Java and C#, with striking visual effects such as zooming, animation and multiple representations.</description>
-  <url>http://www.piccolo2d.org/java/site/${project.artifactId}/${project.version}</url>
+  <url>http://www.piccolo2d.org</url>
   <inceptionYear>1995</inceptionYear>
 
   <organization>
     <name>Piccolo2D</name>
-    <url>http://code.google.com/p/piccolo2d/</url>
+    <url>https://github.com/piccolo2d</url>
   </organization>
 
   <licenses>
@@ -61,30 +61,9 @@
   </licenses>
 
   <issueManagement>
-    <system>Google Code</system>
-    <url>http://code.google.com/p/piccolo2d/issues/list</url>
+    <system>Github</system>
+    <url>https://github.com/piccolo2d/piccolo2d.java/issues</url>
   </issueManagement>
-
-  <mailingLists>
-    <mailingList>
-      <name>Piccolo2D Announce</name>
-      <subscribe>http://groups.google.com/group/piccolo2d-announce/subscribe</subscribe>
-      <post>piccolo2d-announce@googlegroups.com</post>
-      <archive>http://groups.google.com/group/piccolo2d-announce</archive>
-    </mailingList>
-    <mailingList>
-      <name>Piccolo2D Users</name>
-      <subscribe>http://groups.google.com/group/piccolo2d-users/subscribe</subscribe>
-      <post>piccolo2d-users@googlegroups.com</post>
-      <archive>http://groups.google.com/group/piccolo2d-users</archive>
-    </mailingList>
-    <mailingList>
-      <name>Piccolo2D Dev</name>
-      <subscribe>http://groups.google.com/group/piccolo2d-dev/subscribe</subscribe>
-      <post>piccolo2d-dev@googlegroups.com</post>
-      <archive>http://groups.google.com/group/piccolo2d-dev</archive>
-    </mailingList>
-  </mailingLists>
 
   <developers>
     <developer>
@@ -209,9 +188,9 @@
   </contributors>
 
   <scm>
-    <connection>scm:svn:http://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk</connection>
-    <developerConnection>scm:svn:https://piccolo2d.googlecode.com/svn/piccolo2d.java/trunk</developerConnection>
-    <url>http://code.google.com/p/piccolo2d/source/browse/piccolo2d.java/trunk</url>
+    <connection>scm:git:https://github.com/piccolo2d/piccolo2d.java.git</connection>
+    <developerConnection>scm:git:https://github.com/piccolo2d/piccolo2d.java.git</developerConnection>
+    <url>https://github.com/piccolo2d/piccolo2d.java.git</url>
   </scm>
 
   <properties>
@@ -312,43 +291,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-        <configuration>
-          <detectLinks>true</detectLinks>
-          <quiet>true</quiet>
-          <source>${maven.compile.source}</source>
-          <linksource>true</linksource>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.7</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>index</report>
-              <report>summary</report>
-              <report>modules</report>
-              <report>scm</report>
-              <report>dependency-management</report>
-              <report>dependencies</report>
-              <report>dependency-convergence</report>
-              <report>distribution-management</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.18.1</version>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <modules>
     <module>core</module>
