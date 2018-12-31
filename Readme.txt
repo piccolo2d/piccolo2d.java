@@ -32,11 +32,6 @@ later on x86_64, the Eclipse Standard Widget Toolkit (SWT) version
 Eclipse Standard Widget Toolkit
 http://www.eclipse.org/swt/
 
-See
-https://github.com/piccolo2d/google-wiki/blob/master/BuildSWTOnMacOSX.md
-
-for further details.
-
 
 USING PICCOLO2D.JAVA
 
