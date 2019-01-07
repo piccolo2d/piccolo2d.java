@@ -41,7 +41,7 @@ dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-core</artifactId>
-  <version>3.0</version>
+  <version>3.0.1</version>
 </dependency>
 
 in your pom.xml.  To include the Piccolo2D core classes and the
@@ -50,7 +50,7 @@ Piccolo2D extras classes in your project, use a dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-extras</artifactId>
-  <version>3.0</version>
+  <version>3.0.1</version>
 </dependency>
 
 in your pom.xml.  To include the Piccolo2D core classes and the
@@ -59,7 +59,7 @@ Piccolo2D SWT classes in your project, use a dependency of
 <dependency>
   <groupId>org.piccolo2d</groupId>
   <artifactId>piccolo2d-swt</artifactId>
-  <version>3.0</version>
+  <version>3.0.1</version>
 </dependency>
 
 in your pom.xml.  If your project does not use maven, simply include
@@ -76,10 +76,10 @@ To build and run the Piccolo2D examples runnable jar
 
 $ cd examples
 $ mvn assembly:assembly
-$ java -jar target/piccolo2d-examples-3.0-jar-with-dependencies.jar
+$ java -jar target/piccolo2d-examples-3.0.1-jar-with-dependencies.jar
 
 To build and run the Piccolo2D SWT examples runnable jar
 
 $ cd swt-examples
 $ mvn assembly:assembly
-$ java -jar target/piccolo2d-swt-examples-3.0-jar-with-dependencies.jar
+$ java -jar target/piccolo2d-swt-examples-3.0.1-jar-with-dependencies.jar

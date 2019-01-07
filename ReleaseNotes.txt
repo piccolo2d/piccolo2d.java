@@ -1,3 +1,25 @@
+=Piccolo2D 3.0.1 Release Notes=
+------------------
+
+Major changes:
+
+Project metadata have been updated due to migration to Github.
+
+Build dependency versions and plugin versions have been updated.
+
+
+Fixed and verified issues:
+
+259     PPath.setPathToRectangle method(s) are missing from versions 2 and later
+260     Missplaced underlines in PStyledText
+261     PStyledText too closed for extension in derivations
+262     Provide access to getPropertyChangeListeners from PNode
+263     PPath.createPolyline method are missing from versions 2 and later
+266     add og:image meta tag to website's html pages.
+268     Release version 3.0.1
+273     Unit tests fail due to surefire plugin issue with Debian/Ubuntu Java8
+
+
 =Piccolo2D 3.0 Release Notes=
 ------------------
 
