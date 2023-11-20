@@ -121,7 +121,7 @@ public class PCamera extends PNode {
     private transient PComponent component;
 
     /** List of layers viewed by this camera. */
-    private transient List/*<PLayer>*/ layers;
+    private transient List<PLayer> layers;
 
     /**
      * Transform applied to layers before they are rendered. This transform
@@ -143,7 +143,7 @@ public class PCamera extends PNode {
     public PCamera() {
         super();
         viewTransform = new PAffineTransform();
-        layers = new ArrayList/*<PLayer>*/();
+        layers = new ArrayList<PLayer>();
         viewConstraint = VIEW_CONSTRAINT_NONE;
     }
 
@@ -215,7 +215,7 @@ public class PCamera extends PNode {
      * 
      * @return the list of layers viewed by this camera
      */
-    public List/*<PLayer>*/ getLayersReference() {
+    public List<PLayer> getLayersReference() {
         return layers;
     }
 
@@ -361,7 +361,7 @@ public class PCamera extends PNode {
     protected void paintCameraView(final PPaintContext paintContext) {
         final int size = layers.size();
         for (int i = 0; i < size; i++) {
-            final PLayer each = (PLayer) layers.get(i);
+            final PLayer each = layers.get(i);
             each.fullPaint(paintContext);
         }
     }
@@ -377,7 +377,7 @@ public class PCamera extends PNode {
             final Graphics2D g2 = paintContext.getGraphics();
             paintContext.setRenderQuality(PPaintContext.LOW_QUALITY_RENDERING);
             g2.setStroke(new BasicStroke(0));
-            final ArrayList nodes = new ArrayList();
+            final ArrayList<PNode> nodes = new ArrayList<PNode>();
             final PBounds nodeBounds = new PBounds();
 
             final Color boundsColor = Color.red;
@@ -385,13 +385,13 @@ public class PCamera extends PNode {
 
             final int size = layers.size();
             for (int i = 0; i < size; i++) {
-                ((PLayer) layers.get(i)).getAllNodes(null, nodes);
+                 layers.get(i).getAllNodes(null, nodes);
             }
 
-            final Iterator i = getAllNodes(null, nodes).iterator();
+            final Iterator<PNode> i = getAllNodes(null, nodes).iterator();
 
             while (i.hasNext()) {
-                final PNode each = (PNode) i.next();
+                final PNode each = i.next();
 
                 if (PDebug.debugBounds) {
                     g2.setPaint(boundsColor);
@@ -953,7 +953,7 @@ public class PCamera extends PNode {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        layers = new ArrayList();
+        layers = new ArrayList<PLayer>();
 
         while (true) {
             final Object each = in.readObject();
@@ -962,7 +962,7 @@ public class PCamera extends PNode {
                     break;
                 }
                 else {
-                    layers.add(each);
+                    layers.add((PLayer)each);
                 }
             }
         }
