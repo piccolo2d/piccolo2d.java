@@ -289,7 +289,7 @@ public class PNode implements Cloneable, Serializable, Printable {
     private transient PNode parent;
 
     /** Tracks all immediate child nodes. */
-    private List children;
+    private List<PNode> children;
 
     /** Bounds of the PNode. */
     private final PBounds bounds;
@@ -749,7 +749,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return an Enumeration over attribute keys
      */
-    public Enumeration getClientPropertyKeysEnumeration() {
+    public Enumeration<?> getClientPropertyKeysEnumeration() {
         if (clientProperties == null) {
             return PUtil.NULL_ENUMERATION;
         }
@@ -2772,8 +2772,8 @@ public class PNode implements Cloneable, Serializable, Printable {
             final float oldTransparency = transparency;
             transparency = newTransparency;
             invalidatePaint();
-            firePropertyChange(PROPERTY_CODE_TRANSPARENCY, PROPERTY_TRANSPARENCY, new Float(oldTransparency),
-                    new Float(newTransparency));
+            firePropertyChange(PROPERTY_CODE_TRANSPARENCY, PROPERTY_TRANSPARENCY, Float.valueOf(oldTransparency),
+                    Float.valueOf(newTransparency));
         }
     }
 
@@ -3159,7 +3159,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param fullBounds bounds to compare against
      * @param results array into which to add matches
      */
-    public void findIntersectingNodes(final Rectangle2D fullBounds, final ArrayList results) {
+    public void findIntersectingNodes(final Rectangle2D fullBounds, final ArrayList<PNode> results) {
         if (fullIntersects(fullBounds)) {
             final Rectangle2D localBounds = parentToLocal((Rectangle2D) fullBounds.clone());
 
@@ -3242,8 +3242,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param nodes a collection of nodes to be added to this node
      */
-    public void addChildren(final Collection nodes) {
-        final Iterator i = nodes.iterator();
+    public void addChildren(final Collection<PNode> nodes) {
+        final Iterator<PNode> i = nodes.iterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             addChild(each);
@@ -3513,8 +3513,8 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @param childrenNodes the collection of children to remove
      */
-    public void removeChildren(final Collection childrenNodes) {
-        final Iterator i = childrenNodes.iterator();
+    public void removeChildren(final Collection<PNode> childrenNodes) {
+        final Iterator<PNode> i = childrenNodes.iterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             removeChild(each);
@@ -3635,9 +3635,9 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return reference to the children list
      */
-    public List getChildrenReference() {
+    public List<PNode> getChildrenReference() {
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<PNode>();
         }
         return children;
     }
@@ -3647,7 +3647,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return iterator over this nodes children
      */
-    public ListIterator getChildrenIterator() {
+    public ListIterator<?> getChildrenIterator() {
         if (children == null) {
             return Collections.EMPTY_LIST.listIterator();
         }
@@ -3673,7 +3673,7 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return a new collection containing this node and all descendants
      */
-    public Collection getAllNodes() {
+    public Collection<PNode> getAllNodes() {
         return getAllNodes(null, null);
     }
 
@@ -3688,10 +3688,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * @param resultantNodes where matching nodes should be added
      * @return a collection containing this node and all descendants
      */
-    public Collection getAllNodes(final PNodeFilter filter, final Collection resultantNodes) {
-        Collection results;
+    public Collection<PNode> getAllNodes(final PNodeFilter filter, final Collection<PNode> resultantNodes) {
+        Collection<PNode> results;
         if (resultantNodes == null) {
-            results = new ArrayList();
+            results = new ArrayList<PNode>();
         }
         else {
             results = resultantNodes;
