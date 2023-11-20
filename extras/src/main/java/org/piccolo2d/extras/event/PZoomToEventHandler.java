@@ -52,7 +52,7 @@ public class PZoomToEventHandler extends PBasicInputEventHandler {
      * Constructs a PZoomToEventHandler that only recognizes BUTTON1 events.
      */
     public PZoomToEventHandler() {
-        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
     }
 
     /**
