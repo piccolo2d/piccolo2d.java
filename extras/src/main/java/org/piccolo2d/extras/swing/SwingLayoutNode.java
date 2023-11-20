@@ -254,16 +254,16 @@ public class SwingLayoutNode extends PNode {
      *            the child
      * @param anchor specifies the location from which layout takes place
      */
-    public void addChildren(final Collection nodes, final Object constraints, final Anchor anchor) {
-        final Iterator i = nodes.iterator();
+    public void addChildren(final Collection<PNode> nodes, final Object constraints, final Anchor anchor) {
+        final Iterator<PNode> i = nodes.iterator();
         while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+            final PNode each = i.next();
             addChild(each, constraints, anchor);
         }
     }
 
     /** {@inheritDoc} */
-    public void addChildren(final Collection nodes) {
+    public void addChildren(final Collection<PNode> nodes) {
         addChildren(nodes, null, defaultAnchor);
     }
 
@@ -274,7 +274,7 @@ public class SwingLayoutNode extends PNode {
      * @param constraints constraints the layout manager uses when laying out
      *            the child
      */
-    public void addChildren(final Collection nodes, final Object constraints) {
+    public void addChildren(final Collection<PNode> nodes, final Object constraints) {
         addChildren(nodes, constraints, defaultAnchor);
     }
 
@@ -284,7 +284,7 @@ public class SwingLayoutNode extends PNode {
      * @param nodes nodes to add to the end of the list
      * @param anchor specifies the location from which layout takes place
      */
-    public void addChildren(final Collection nodes, final Anchor anchor) {
+    public void addChildren(final Collection<PNode> nodes, final Anchor anchor) {
         addChildren(nodes, null, anchor);
     }
 
@@ -318,9 +318,9 @@ public class SwingLayoutNode extends PNode {
      * less efficient) manner.
      */
     public void removeAllChildren() {
-        final Iterator i = getChildrenIterator();
+        final Iterator<PNode> i = getChildrenIterator();
         while (i.hasNext()) {
-            removeChild((PNode) i.next());
+            removeChild(i.next());
         }
     }
 
