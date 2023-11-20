@@ -104,11 +104,11 @@ public class PBoundsHandle extends PHandle {
      * @param node node having its handles removed from
      */
     public static void removeBoundsHandlesFrom(final PNode node) {
-        final ArrayList handles = new ArrayList();
+        final ArrayList<PNode> handles = new ArrayList<PNode>();
 
-        final Iterator i = node.getChildrenIterator();
+        final Iterator<PNode> i = node.getChildrenIterator();
         while (i.hasNext()) {
-            final PNode each = (PNode) i.next();
+            final PNode each = i.next();
             if (each instanceof PBoundsHandle) {
                 handles.add(each);
             }
@@ -259,7 +259,7 @@ public class PBoundsHandle extends PHandle {
      * @param flipY whether to allow flipping along the y direction
      */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
-        final Iterator i = getParent().getChildrenIterator();
+        final Iterator<PNode> i = getParent().getChildrenIterator();
         while (i.hasNext()) {
             final Object each = i.next();
             if (each instanceof PBoundsHandle) {
