@@ -67,7 +67,10 @@ import org.piccolo2d.nodes.PText;
 public class SwingLayoutExample {
 
     public static class MyPPath extends PPath.Float {
-        public MyPPath(final Shape shape, final Color color, final Stroke stroke, final Color strokeColor) {
+    	
+		private static final long serialVersionUID = 1L;
+
+		public MyPPath(final Shape shape, final Color color, final Stroke stroke, final Color strokeColor) {
             super(shape, stroke);
             setPaint(color);
             setStrokePaint(strokeColor);
