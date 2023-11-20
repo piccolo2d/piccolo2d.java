@@ -852,13 +852,13 @@ public class PCanvas extends JComponent implements PComponent {
 
             int newButton = 0;
 
-            if (hasButtonModifier(rawEvent, InputEvent.BUTTON1_MASK)) {
+            if (hasButtonModifier(rawEvent, InputEvent.BUTTON1_DOWN_MASK)) {
                 newButton = MouseEvent.BUTTON1;
             }
-            else if (hasButtonModifier(rawEvent, InputEvent.BUTTON2_MASK)) {
+            else if (hasButtonModifier(rawEvent, InputEvent.BUTTON2_DOWN_MASK)) {
                 newButton = MouseEvent.BUTTON2;
             }
-            else if (hasButtonModifier(rawEvent, InputEvent.BUTTON3_MASK)) {
+            else if (hasButtonModifier(rawEvent, InputEvent.BUTTON3_DOWN_MASK)) {
                 newButton = MouseEvent.BUTTON3;
             }
 
@@ -866,7 +866,7 @@ public class PCanvas extends JComponent implements PComponent {
         }
 
         private boolean hasButtonModifier(final MouseEvent event, final int buttonMask) {
-            return (event.getModifiers() & buttonMask) == buttonMask;
+            return (event.getModifiersEx() & buttonMask) == buttonMask;
         }
 
         public MouseEvent buildRetypedMouseEvent(final MouseEvent e, final int newType) {
@@ -874,7 +874,7 @@ public class PCanvas extends JComponent implements PComponent {
         }
 
         public MouseEvent buildModifiedMouseEvent(final MouseEvent e, final int newType, final int newButton) {
-            return new MouseEvent((Component) e.getSource(), newType, e.getWhen(), e.getModifiers(), e.getX(),
+            return new MouseEvent((Component) e.getSource(), newType, e.getWhen(), e.getModifiersEx(), e.getX(),
                     e.getY(), e.getClickCount(), e.isPopupTrigger(), newButton);
         }
 
