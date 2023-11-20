@@ -32,10 +32,6 @@ import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.piccolo2d.extras.pswing.PComboBox;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-
 import junit.framework.TestCase;
 
 /**
@@ -48,7 +44,7 @@ public class PComboBoxTest extends TestCase {
     }
 
     public void testConstructsWithVector() {
-        final Vector items = new Vector();
+        final Vector<String> items = new Vector<String>();
         items.add("A");
         items.add("B");
         final PComboBox combo = new PComboBox(items);
@@ -62,7 +58,7 @@ public class PComboBoxTest extends TestCase {
     }
 
     public void testConstructsWithComboBoxModel() {
-        final DefaultComboBoxModel model = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
         model.addElement("A");
         model.addElement("B");
         final PComboBox combo = new PComboBox(model);
