@@ -89,7 +89,7 @@ public class PSwingMouseEvent extends MouseEvent implements Serializable, PSwing
      * @param piccoloEvent used to query about the event's Piccolo context
      */
     protected PSwingMouseEvent(final int id, final MouseEvent swingEvent, final PInputEvent piccoloEvent) {
-        super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiers(),
+        super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiersEx(),
                 swingEvent.getX(), swingEvent.getY(), swingEvent.getClickCount(), swingEvent.isPopupTrigger());
         this.id = id;
         this.event = piccoloEvent;
