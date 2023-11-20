@@ -249,7 +249,7 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
      * Used to keep track of which nodes we've attached listeners to since no
      * built in support in PNode.
      */
-    private final ArrayList listeningTo = new ArrayList();
+    private final ArrayList<PNode> listeningTo = new ArrayList<PNode>();
 
     /** The parent listener for camera/canvas changes. */
     private final PropertyChangeListener parentListener = new PropertyChangeListener() {
