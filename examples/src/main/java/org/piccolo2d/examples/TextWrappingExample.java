@@ -32,7 +32,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -70,7 +69,10 @@ public class TextWrappingExample extends PFrame {
 
     /** Toggle text action. */
     private final AbstractAction toggleText = new AbstractAction("Toggle text") {
-            /** {@inheritDoc} */
+
+		private static final long serialVersionUID = 1L;
+
+			/** {@inheritDoc} */
             public void actionPerformed(final ActionEvent event) {
                 wide.setText(wide.getText() == "" ? TEXT : "");
                 narrow.setText(narrow.getText() == "" ? TEXT : "");
@@ -79,6 +81,9 @@ public class TextWrappingExample extends PFrame {
 
     /** Constrain height action. */
     private final AbstractAction constrainHeight = new AbstractAction("Constrain Height") {
+    	
+    	private static final long serialVersionUID = 1L;
+    	
             /** {@inheritDoc} */
             public void actionPerformed(final ActionEvent event) {
                 wide.setConstrainHeightToTextHeight(!wide.isConstrainHeightToTextHeight());
@@ -88,6 +93,9 @@ public class TextWrappingExample extends PFrame {
 
     /** Constrain width action. */
     private final AbstractAction constrainWidth = new AbstractAction("Constrain Width") {
+    	
+    	private static final long serialVersionUID = 1L;
+    	
             /** {@inheritDoc} */
             public void actionPerformed(final ActionEvent event) {
                 wide.setConstrainWidthToTextWidth(!wide.isConstrainWidthToTextWidth());
@@ -97,6 +105,9 @@ public class TextWrappingExample extends PFrame {
 
     /** Reset bounds action. */
     private final AbstractAction resetBoundsAction = new AbstractAction("Reset Bounds") {
+    	
+    	private static final long serialVersionUID = 1L;
+    	
             /** {@inheritDoc} */
             public void actionPerformed(final ActionEvent event) {
                 wide.setBounds(10.0d, 10.0d, 400.0d, 100.0d);
