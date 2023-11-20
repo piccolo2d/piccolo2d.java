@@ -261,7 +261,7 @@ public class PSwingEventHandler implements PInputEventListener {
         }
         else if (isPressOrClickOrMove(pSwingMouseEvent) && comp != null) {
             final MouseEvent tempEvent = new MouseEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(), mEvent
-                    .getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
+                    .getModifiersEx(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
                     .isPopupTrigger());
 
             final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
@@ -271,7 +271,7 @@ public class PSwingEventHandler implements PInputEventListener {
             final MouseWheelEvent mWEvent = (MouseWheelEvent) mEvent;
 
             final MouseWheelEvent tempEvent = new MouseWheelEvent(comp, pSwingMouseEvent.getID(), mEvent.getWhen(),
-                    mEvent.getModifiers(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
+                    mEvent.getModifiersEx(), point.x - offset.x, point.y - offset.y, mEvent.getClickCount(), mEvent
                     .isPopupTrigger(), mWEvent.getScrollType(), mWEvent.getScrollAmount(), mWEvent
                     .getWheelRotation());
 
@@ -381,7 +381,7 @@ public class PSwingEventHandler implements PInputEventListener {
             final Point2D pt = new Point2D.Double(m1.getX(), m1.getY());
             cameraToLocal(e1.getPath().getTopCamera(), pt, buttonData.getPNode());
             final MouseEvent tempEvent = new MouseEvent(buttonData.getFocusedComponent(), m1.getID(), m1.getWhen(), m1
-                    .getModifiers(), (int) pt.getX() - buttonData.getOffsetX(), (int) pt.getY()
+                    .getModifiersEx(), (int) pt.getX() - buttonData.getOffsetX(), (int) pt.getY()
                     - buttonData.getOffsetY(), m1.getClickCount(), m1.isPopupTrigger());
 
             final PSwingEvent e2 = PSwingMouseEvent.createMouseEvent(tempEvent.getID(), tempEvent, aEvent);
