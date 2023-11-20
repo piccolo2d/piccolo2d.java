@@ -3647,9 +3647,10 @@ public class PNode implements Cloneable, Serializable, Printable {
      * 
      * @return iterator over this nodes children
      */
-    public ListIterator<?> getChildrenIterator() {
+    public ListIterator<PNode> getChildrenIterator() {
         if (children == null) {
-            return Collections.EMPTY_LIST.listIterator();
+        	List<PNode> list = Collections.emptyList();
+            return list.listIterator();
         }
         return Collections.unmodifiableList(children).listIterator();
     }
