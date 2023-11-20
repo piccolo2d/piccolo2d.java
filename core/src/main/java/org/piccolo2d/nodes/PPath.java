@@ -47,6 +47,8 @@ import java.awt.geom.PathIterator;
  * Abstract path node.
  */
 public abstract class PPath extends PShape {
+	
+	private static final long serialVersionUID = 1L;
 
     /** Path for this path node. */
     private final Path2D path;
@@ -78,6 +80,8 @@ public abstract class PPath extends PShape {
      * Path node with coordinates stored in single precision floating point.
      */
     public static class Float extends PPath {
+    	
+    	private static final long serialVersionUID = 1L;
 
         /**
          * Create a new empty path node.
@@ -142,6 +146,8 @@ public abstract class PPath extends PShape {
      * Path node with coordinates stored in double precision floating point.
      */
     public static class Double extends PPath {
+    	
+    	private static final long serialVersionUID = 1L;
 
         /**
          * Create a new empty path node.
