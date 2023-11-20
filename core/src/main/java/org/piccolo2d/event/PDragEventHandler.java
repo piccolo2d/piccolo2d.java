@@ -54,7 +54,7 @@ public class PDragEventHandler extends PDragSequenceEventHandler {
         draggedNode = null;
         raiseToTopOnPress = false;
 
-        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
     }
 
     /**
