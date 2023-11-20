@@ -30,7 +30,6 @@ package org.piccolo2d.examples;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 
 import java.awt.image.BufferedImage;
 
