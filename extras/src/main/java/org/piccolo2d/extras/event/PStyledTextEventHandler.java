@@ -89,7 +89,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
      */
     public PStyledTextEventHandler(final PCanvas canvas) {
         final PInputEventFilter filter = new PInputEventFilter();
-        filter.setOrMask(InputEvent.BUTTON1_MASK | InputEvent.BUTTON3_MASK);
+        filter.setOrMask(InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK);
         setEventFilter(filter);
         this.canvas = canvas;
         initEditor(createDefaultEditor());
@@ -173,7 +173,7 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
             final Font eFont = editor.getFont();
             final SimpleAttributeSet sas = new SimpleAttributeSet();
             sas.addAttribute(StyleConstants.FontFamily, eFont.getFamily());
-            sas.addAttribute(StyleConstants.FontSize, new Integer(eFont.getSize()));
+            sas.addAttribute(StyleConstants.FontSize, Integer.valueOf(eFont.getSize()));
 
             ((StyledDocument) doc).setParagraphAttributes(0, doc.getLength(), sas, false);
         }
@@ -290,8 +290,8 @@ public class PStyledTextEventHandler extends PBasicInputEventHandler {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         final MouseEvent me = new MouseEvent(editor, MouseEvent.MOUSE_PRESSED, event.getWhen(), event
-                                .getModifiers()
-                                | InputEvent.BUTTON1_MASK, (int) (event.getCanvasPosition().getX() - editor.getX()),
+                                .getModifiersEx()
+                                | InputEvent.BUTTON1_DOWN_MASK, (int) (event.getCanvasPosition().getX() - editor.getX()),
                                 (int) (event.getCanvasPosition().getY() - editor.getY()), 1, false);
                         editor.dispatchEvent(me);
                     }
