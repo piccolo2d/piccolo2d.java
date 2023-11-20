@@ -106,7 +106,7 @@ public class PRoot extends PNode {
     private transient PInputManager defaultInputManager;
 
     /** The Input Sources that are registered to this node. */
-    private final transient List inputSources;
+    private final transient List<InputSource> inputSources;
 
     /**
      * Used to provide a consistent clock time to activities as they are being
@@ -130,7 +130,7 @@ public class PRoot extends PNode {
      */
     public PRoot() {
         super();
-        inputSources = new ArrayList();
+        inputSources = new ArrayList<InputSource>();
         globalTime = System.currentTimeMillis();
         activityScheduler = new PActivityScheduler(this);
     }
@@ -173,7 +173,7 @@ public class PRoot extends PNode {
 
         while (activityScheduler.getActivitiesReference().size() > 0) {
             processInputs();
-            final Iterator i = getAllNodes(cameraWithCanvas, null).iterator();
+            final Iterator<PNode> i = getAllNodes(cameraWithCanvas, null).iterator();
             while (i.hasNext()) {
                 final PCamera each = (PCamera) i.next();
                 each.getComponent().paintImmediately();
@@ -323,9 +323,9 @@ public class PRoot extends PNode {
 
         globalTime = System.currentTimeMillis();
         if (inputSources.size() > 0) {
-            final Iterator inputSourceIterator = inputSources.iterator();
+            final Iterator<InputSource> inputSourceIterator = inputSources.iterator();
             while (inputSourceIterator.hasNext()) {
-                final InputSource each = (InputSource) inputSourceIterator.next();
+                final InputSource each = inputSourceIterator.next();
                 each.processInput();
             }
         }
