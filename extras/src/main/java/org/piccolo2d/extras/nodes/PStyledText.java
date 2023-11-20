@@ -78,7 +78,7 @@ public class PStyledText extends PNode {
     protected Document document;
 
     /** String contents of the document. */
-    protected transient ArrayList stringContents;
+    protected transient ArrayList<AttributedString> stringContents;
 
     /** Tracks the information about line metrics within the document. */
     protected transient LineInfo[] lines;
@@ -174,7 +174,7 @@ public class PStyledText extends PNode {
      */
     public void syncWithDocument() {
         // First get the actual text and stick it in an Attributed String
-        stringContents = new ArrayList();
+        stringContents = new ArrayList<AttributedString>();
 
         String documentString;
         try {
@@ -188,7 +188,7 @@ public class PStyledText extends PNode {
         }
 
         // The paragraph start and end indices
-        final ArrayList pEnds = extractParagraphRanges(documentString);
+        final ArrayList<RunInfo> pEnds = extractParagraphRanges(documentString);
 
         // The default style context - which will be reused
         final StyleContext styleContext = StyleContext.getDefaultStyleContext();
@@ -198,11 +198,11 @@ public class PStyledText extends PNode {
 
         AttributedString attributedString;
 
-        final Iterator contentIterator = stringContents.iterator();
-        final Iterator paragraphIterator = pEnds.iterator();
+        final Iterator<AttributedString> contentIterator = stringContents.iterator();
+        final Iterator<RunInfo> paragraphIterator = pEnds.iterator();
         while (contentIterator.hasNext() && paragraphIterator.hasNext()) {
-            paragraphRange = (RunInfo) paragraphIterator.next();
-            attributedString = (AttributedString) contentIterator.next();
+            paragraphRange = paragraphIterator.next();
+            attributedString = contentIterator.next();
             pos = paragraphRange.startIndex;
 
             // The current element will be used as a temp variable while
@@ -356,9 +356,9 @@ public class PStyledText extends PNode {
         return font;
     }
 
-    private ArrayList extractParagraphRanges(final String documentString) {
+    private ArrayList<RunInfo> extractParagraphRanges(final String documentString) {
         // The paragraph start and end indices
-        final ArrayList paragraphRanges = new ArrayList();
+        final ArrayList<RunInfo> paragraphRanges = new ArrayList<RunInfo>();
 
         // The current position in the specified range
         int pos = 0;
@@ -427,19 +427,19 @@ public class PStyledText extends PNode {
             return;
         }
 
-        final ArrayList linesList = new ArrayList();
+        final ArrayList<LineInfo> linesList = new ArrayList<LineInfo>();
 
         double textWidth = 0;
         double textHeight = 0;
 
-        final Iterator contentIterator = stringContents.iterator();
+        final Iterator<AttributedString> contentIterator = stringContents.iterator();
 
         while (contentIterator.hasNext()) {
             final AttributedString ats = (AttributedString) contentIterator.next();
             final AttributedCharacterIterator itr = ats.getIterator();
 
             LineBreakMeasurer measurer;
-            ArrayList breakList = null;
+            ArrayList<Integer> breakList = null;
 
             measurer = new LineBreakMeasurer(itr, SWING_FRC);
             breakList = extractLineBreaks(itr, measurer);
@@ -468,7 +468,7 @@ public class PStyledText extends PNode {
                     linesList.add(lineInfo);
                 }
 
-                final int lineEnd = ((Integer) breakList.get(0)).intValue();
+                final int lineEnd = breakList.get(0).intValue();
                 if (lineEnd <= itr.getRunLimit()) {
                     breakList.remove(0);
                     newLine = true;
@@ -522,8 +522,7 @@ public class PStyledText extends PNode {
         final double lineHeight;
         if (lineInfo == null) {
             lineHeight = 0;
-        }
-        else {
+        } else {
             lineHeight = lineInfo.maxAscent + lineInfo.maxDescent + lineInfo.leading;
         }
         return lineHeight;
@@ -550,18 +549,17 @@ public class PStyledText extends PNode {
 
     // Because swing doesn't use fractional font metrics by default, we use
     // LineBreakMeasurer to find out where Swing is going to break them
-    private ArrayList extractLineBreaks(final AttributedCharacterIterator itr, final LineBreakMeasurer measurer) {
-        ArrayList breakList;
-        breakList = new ArrayList();
+    private ArrayList<Integer> extractLineBreaks(final AttributedCharacterIterator itr, final LineBreakMeasurer measurer) {
+        ArrayList<Integer> breakList = new ArrayList<Integer>();
+        
         while (measurer.getPosition() < itr.getEndIndex()) {
             if (constrainWidthToTextWidth) {
                 measurer.nextLayout(Float.MAX_VALUE);
-            }
-            else {
+            } else {
                 measurer.nextLayout((float) Math.ceil(getWidth() - insets.left - insets.right));
             }
 
-            breakList.add(new Integer(measurer.getPosition()));
+            breakList.add(Integer.valueOf(measurer.getPosition()));
         }
         return breakList;
     }
@@ -765,7 +763,7 @@ public class PStyledText extends PNode {
      */
     protected static class LineInfo {
         /** Segments which make up this line's formatting segments. */
-        public List segments;
+        public List<SegmentInfo> segments;
 
         /** Maximum of the line segments' ascents. */
         public double maxAscent;
@@ -780,7 +778,7 @@ public class PStyledText extends PNode {
          * Creates a LineInfo that contains no segments.
          */
         public LineInfo() {
-            segments = new ArrayList();
+            segments = new ArrayList<SegmentInfo>();
         }
     }
 
