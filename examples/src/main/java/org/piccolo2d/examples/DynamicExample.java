@@ -94,7 +94,7 @@ public class DynamicExample extends PFrame {
     }
 
     public void rotateNodes() {
-        final Iterator i = getCanvas().getLayer().getChildrenReference().iterator();
+        final Iterator<PNode> i = getCanvas().getLayer().getChildrenReference().iterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             each.rotate(Math.toRadians(2));
