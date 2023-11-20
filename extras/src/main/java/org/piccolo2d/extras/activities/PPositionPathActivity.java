@@ -169,7 +169,7 @@ public class PPositionPathActivity extends PPathActivity {
      */
     public void setPositions(final GeneralPath path) {
         final PathIterator pi = path.getPathIterator(null, 1);
-        final ArrayList points = new ArrayList();
+        final ArrayList<Point2D.Float> points = new ArrayList<Point2D.Float>();
         final float[] point = new float[6];
         float distanceSum = 0;
         float lastMoveToX = 0;
