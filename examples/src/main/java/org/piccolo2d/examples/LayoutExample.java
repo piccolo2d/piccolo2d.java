@@ -44,9 +44,6 @@ import org.piccolo2d.nodes.PPath;
  */
 public class LayoutExample extends PFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public LayoutExample() {
@@ -71,9 +68,9 @@ public class LayoutExample extends PFrame {
                 double xOffset = 0;
                 final double yOffset = 0;
 
-                final Iterator i = getChildrenIterator();
+                final Iterator<PNode> i = getChildrenIterator();
                 while (i.hasNext()) {
-                    final PNode each = (PNode) i.next();
+                    final PNode each = i.next();
                     each.setOffset(xOffset - each.getX(), yOffset);
                     xOffset += each.getWidth();
                 }
