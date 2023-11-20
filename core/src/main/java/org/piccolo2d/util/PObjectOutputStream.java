@@ -68,7 +68,7 @@ import java.util.HashMap;
 public class PObjectOutputStream extends ObjectOutputStream {
 
     private boolean writingRoot;
-    private final HashMap unconditionallyWritten;
+    private final HashMap<Object, Boolean> unconditionallyWritten;
 
     /**
      * Transform the given object into an array of bytes.
@@ -94,7 +94,7 @@ public class PObjectOutputStream extends ObjectOutputStream {
      */
     public PObjectOutputStream(final OutputStream out) throws IOException {
         super(out);
-        unconditionallyWritten = new HashMap();
+        unconditionallyWritten = new HashMap<Object, Boolean>();
     }
 
     /**
@@ -165,7 +165,9 @@ public class PObjectOutputStream extends ObjectOutputStream {
             public void writeConditionalObject(final Object object) throws IOException {
             }
         }
-        new ZMarkObjectOutputStream().writeObject(aRoot);
+        ZMarkObjectOutputStream zmoos = new ZMarkObjectOutputStream();
+        zmoos.writeObject(aRoot);
+        zmoos.close();
     }
 
     private static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
