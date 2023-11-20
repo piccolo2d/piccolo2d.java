@@ -37,7 +37,9 @@ import java.awt.Color;
 
 public class P3DRectExample extends PFrame {
 
-    public P3DRectExample() {
+    private static final long serialVersionUID = 1L;
+
+	public P3DRectExample() {
         this(null);
     }
 
