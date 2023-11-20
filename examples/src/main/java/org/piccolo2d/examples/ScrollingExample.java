@@ -155,9 +155,9 @@ public class ScrollingExample extends PFrame {
 
             // First we compute the union of all the layers
             final PBounds layerBounds = new PBounds();
-            final java.util.List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            final java.util.List<PLayer> layers = camera.getLayersReference();
+            for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
@@ -202,9 +202,9 @@ public class ScrollingExample extends PFrame {
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            final java.util.List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            final java.util.List<PLayer> layers = camera.getLayersReference();
+            for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
