@@ -81,9 +81,9 @@ public class StickyHandleLayerExample extends PFrame {
                 final PRoot root = getActivityScheduler().getRoot();
 
                 if (root.getPaintInvalid() || root.getChildPaintInvalid()) {
-                    final Iterator i = getCanvas().getCamera().getChildrenIterator();
+                    final Iterator<PNode> i = getCanvas().getCamera().getChildrenIterator();
                     while (i.hasNext()) {
-                        final PNode each = (PNode) i.next();
+                        final PNode each = i.next();
                         if (each instanceof PHandle) {
                             final PHandle handle = (PHandle) each;
                             handle.relocateHandle();
