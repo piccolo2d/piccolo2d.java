@@ -109,7 +109,7 @@ public class GroupExample extends PFrame {
 
         // Create a selection handler so we can see that the decorator actually
         // works
-        final ArrayList selectableParents = new ArrayList();
+        final ArrayList<PNode> selectableParents = new ArrayList<PNode>();
         selectableParents.add(dg);
         selectableParents.add(vdg);
 
