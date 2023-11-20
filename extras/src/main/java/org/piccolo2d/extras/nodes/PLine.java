@@ -41,7 +41,6 @@ import java.io.ObjectOutputStream;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.extras.util.LineShape;
-import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PUtil;
