@@ -46,14 +46,13 @@ import java.util.ListIterator;
 
 import javax.swing.text.MutableAttributeSet;
 
-import org.piccolo2d.PCanvas;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
+import org.junit.Before;
+import org.junit.Test;
 import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PColorActivity;
+import org.piccolo2d.activities.PColorActivity.Target;
 import org.piccolo2d.activities.PInterpolatingActivity;
 import org.piccolo2d.activities.PTransformActivity;
-import org.piccolo2d.activities.PColorActivity.Target;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PAffineTransformException;
@@ -78,6 +77,7 @@ public class PNodeTest extends TestCase {
         super(name);
     }
 
+    @Before
     public void setUp() {
         node = new PNode();
         mockListener = new MockPropertyChangeListener();
@@ -90,6 +90,7 @@ public class PNodeTest extends TestCase {
         assertEquals(-40, node.getBoundsReference().getY(), 0);
     }
 
+    @Test
     public void testClientProperties() {
         final PNode n = new PNode();
 
