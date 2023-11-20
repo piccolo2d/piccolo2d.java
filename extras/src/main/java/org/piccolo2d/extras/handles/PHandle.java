@@ -118,7 +118,7 @@ public class PHandle extends PPath.Float {
             }
         });
 
-        handleDragger.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        handleDragger.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
         handleDragger.getEventFilter().setMarksAcceptedEventsAsHandled(true);
         handleDragger.getEventFilter().setAcceptsMouseEntered(false);
         handleDragger.getEventFilter().setAcceptsMouseExited(false);
