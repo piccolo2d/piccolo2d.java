@@ -139,8 +139,8 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
         if (camera != null) {
             // First we compute the union of all the layers
             final PBounds layerBounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
+            final List<PLayer> layers = camera.getLayersReference();
+            for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
                 final PLayer layer = (PLayer) i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
@@ -169,9 +169,9 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
         if (camera != null) {
             // First we compute the union of all the layers
             final PBounds bounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            final List<PLayer> layers = camera.getLayersReference();
+            for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = i.next();
                 bounds.add(layer.getFullBoundsReference());
             }
 
@@ -205,9 +205,9 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
 
         // Get the union of all the layers' bounds
         final PBounds layerBounds = new PBounds();
-        final List layers = camera.getLayersReference();
-        for (final Iterator i = layers.iterator(); i.hasNext();) {
-            final PLayer layer = (PLayer) i.next();
+        final List<PLayer> layers = camera.getLayersReference();
+        for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+            final PLayer layer = i.next();
             layerBounds.add(layer.getFullBoundsReference());
         }
 
@@ -277,9 +277,9 @@ public class PDefaultScrollDirector implements PScrollDirector, PropertyChangeLi
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            final List<PLayer> layers = camera.getLayersReference();
+            for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
 
