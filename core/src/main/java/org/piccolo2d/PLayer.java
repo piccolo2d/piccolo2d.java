@@ -82,14 +82,14 @@ public class PLayer extends PNode {
     /**
      * Cameras which are registered as viewers of this PLayer.
      */
-    private transient List cameras;
+    private transient List<PCamera> cameras;
 
     /**
      * Creates a PLayer without any cameras attached to it.
      */
     public PLayer() {
         super();
-        cameras = new ArrayList();
+        cameras = new ArrayList<PCamera>();
     }
 
     // ****************************************************************
@@ -102,7 +102,7 @@ public class PLayer extends PNode {
      * 
      * @return direct reference to registered cameras
      */
-    public List getCamerasReference() {
+    public List<PCamera> getCamerasReference() {
         return cameras;
     }
 
@@ -125,7 +125,7 @@ public class PLayer extends PNode {
      * @return camera at the given index
      */
     public PCamera getCamera(final int index) {
-        return (PCamera) cameras.get(index);
+        return cameras.get(index);
     }
 
     /**
@@ -174,7 +174,7 @@ public class PLayer extends PNode {
      * @return camera that was removed
      */
     public PCamera removeCamera(final int index) {
-        final PCamera result = (PCamera) cameras.remove(index);
+        final PCamera result = cameras.remove(index);
         invalidatePaint();
         firePropertyChange(PROPERTY_CODE_CAMERAS, PROPERTY_CAMERAS, null, cameras);
         return result;
@@ -213,7 +213,7 @@ public class PLayer extends PNode {
     protected void notifyCameras(final PBounds parentBounds) {
         final int count = getCameraCount();
         for (int i = 0; i < count; i++) {
-            final PCamera each = (PCamera) cameras.get(i);
+            final PCamera each = cameras.get(i);
             each.repaintFromLayer(parentBounds, this);
         }
     }
@@ -260,7 +260,7 @@ public class PLayer extends PNode {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        cameras = new ArrayList();
+        cameras = new ArrayList<PCamera>();
 
         while (true) {
             final Object each = in.readObject();
@@ -269,7 +269,7 @@ public class PLayer extends PNode {
                     break;
                 }
                 else {
-                    cameras.add(each);
+                    cameras.add((PCamera)each);
                 }
             }
         }
