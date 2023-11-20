@@ -61,7 +61,7 @@ public class SquiggleExample extends PFrame {
     public void initialize() {
         super.initialize();
         final PBasicInputEventHandler squiggleEventHandler = createSquiggleEventHandler();
-        squiggleEventHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        squiggleEventHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
         getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
         getCanvas().addInputEventListener(squiggleEventHandler);
         layer = getCanvas().getLayer();
