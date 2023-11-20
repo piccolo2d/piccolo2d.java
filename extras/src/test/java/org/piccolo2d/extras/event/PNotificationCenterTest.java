@@ -28,9 +28,6 @@
  */
 package org.piccolo2d.extras.event;
 
-import org.piccolo2d.extras.event.PNotification;
-import org.piccolo2d.extras.event.PNotificationCenter;
-
 import junit.framework.TestCase;
 
 public class PNotificationCenterTest extends TestCase {
