@@ -86,7 +86,7 @@ public class PSwingMouseWheelEvent extends MouseWheelEvent implements PSwingEven
      *            event's piccolo2d context
      */
     protected PSwingMouseWheelEvent(final int id, final MouseWheelEvent swingEvent, final PInputEvent piccoloEvent) {
-        super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiers(),
+        super((Component) swingEvent.getSource(), swingEvent.getID(), swingEvent.getWhen(), swingEvent.getModifiersEx(),
                 swingEvent.getX(), swingEvent.getY(), swingEvent.getClickCount(), swingEvent.isPopupTrigger(),
                 swingEvent.getScrollType(), swingEvent.getScrollAmount(), swingEvent.getWheelRotation());
         this.id = id;
