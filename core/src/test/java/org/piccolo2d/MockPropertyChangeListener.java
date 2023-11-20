@@ -37,7 +37,7 @@ import java.util.List;
  * Mock PropertyChangeListener.
  */
 public class MockPropertyChangeListener implements PropertyChangeListener {
-    private final List changes = new ArrayList();
+    private final List<PropertyChangeEvent> changes = new ArrayList<PropertyChangeEvent>();
 
     public void propertyChange(final PropertyChangeEvent evt) {
         changes.add(evt);
