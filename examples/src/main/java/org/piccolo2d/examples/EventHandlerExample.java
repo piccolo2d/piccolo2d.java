@@ -71,7 +71,7 @@ public class EventHandlerExample extends PFrame {
         // Make the event handler only work with BUTTON1 events, so that it does
         // not conflict with the zoom event handler that is installed by
         // default.
-        rectEventHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        rectEventHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
 
         // Remove the pan event handler that is installed by default so that it
         // does not conflict with our new rectangle creation event handler.
