@@ -56,7 +56,9 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PSwingDynamicComponentExample extends JFrame {
     
-    private static final Dimension FRAME_SIZE = new Dimension( 800, 400 );
+    private static final long serialVersionUID = 1L;
+    
+	private static final Dimension FRAME_SIZE = new Dimension( 800, 400 );
     private static final int TEXT_FIELD_COLUMNS = 30;
     
     private final ComponentPanel swingPanel, piccoloPanel;
@@ -175,7 +177,9 @@ public class PSwingDynamicComponentExample extends JFrame {
     // A panel with a few different types of JComponent.
     private static class ComponentPanel extends JPanel {
         
-        // allow public access to keep our example code short
+        private static final long serialVersionUID = 1L;
+        
+		// allow public access to keep our example code short
         public final JLabel label;
         public final JCheckBox checkBox;
         public final JRadioButton radioButton;
