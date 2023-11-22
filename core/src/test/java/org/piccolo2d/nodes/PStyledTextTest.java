@@ -26,19 +26,19 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.nodes;
+package org.piccolo2d.nodes;
 
-import org.piccolo2d.nodes.PClip;
+import org.piccolo2d.nodes.PStyledText;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for PClip.
+ * Unit test for PStyledText.
  */
-public class PClipTest extends TestCase {
+public final class PStyledTextTest extends TestCase {
     public void testClone() {
-        PClip clip = new PClip();           
-        PClip cloned = (PClip) clip.clone();
-        assertNotNull(cloned);      
+        PStyledText text = new PStyledText();
+        PStyledText clone = (PStyledText) text.clone();
+        assertNotNull(clone);
     }
 }

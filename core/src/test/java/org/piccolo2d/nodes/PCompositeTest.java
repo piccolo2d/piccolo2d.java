@@ -26,25 +26,19 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.nodes;
+package org.piccolo2d.nodes;
 
-import org.piccolo2d.nodes.PLens;
+import org.piccolo2d.nodes.PComposite;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for PLens.
+ * Unit test for PComposite.
  */
-public class PLensTest extends TestCase {
+public class PCompositeTest extends TestCase {
     public void testClone() {
-        PLens lens = new PLens();           
-        assertTrue(lens.getInputEventListeners().length > 0);
-        PLens cloned = (PLens) lens.clone();
+        PComposite composite = new PComposite();           
+        PComposite cloned = (PComposite) composite.clone();
         assertNotNull(cloned);      
-
-        //assertTrue(cloned.getInputEventListeners().length > 0);        
-        //assertNotNull(cloned.getPropertyChangeListeners());
-        //assertFalse(cloned.getPropertyChangeListeners().length == 0); 
-        //assertNotSame(cloned.getPropertyChangeListeners()[0], lens.getPropertyChangeListeners()[0]);
     }
 }

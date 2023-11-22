@@ -26,19 +26,19 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.nodes;
+package org.piccolo2d.nodes;
 
-import org.piccolo2d.nodes.PStyledText;
+import org.piccolo2d.nodes.PCacheCamera;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for PStyledText.
+ * Unit test for PCacheCamera.
  */
-public final class PStyledTextTest extends TestCase {
+public class PCacheCameraTest extends TestCase {
     public void testClone() {
-        PStyledText text = new PStyledText();
-        PStyledText clone = (PStyledText) text.clone();
-        assertNotNull(clone);
+        PCacheCamera camera = new PCacheCamera();        
+        PCacheCamera cloned = (PCacheCamera) camera.clone();
+        assertNotNull(cloned);      
     }
 }

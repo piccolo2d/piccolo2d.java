@@ -26,24 +26,29 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.nodes;
+package org.piccolo2d.nodes;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
-import org.piccolo2d.nodes.PLine;
+import org.piccolo2d.nodes.P3DRect;
+import org.piccolo2d.util.PPaintContext;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for PLine.
+ * Unit test for P3DRect.
  */
-public class PLineTest extends TestCase {
+public class P3DRectTest extends TestCase {
     public void testClone() {
-        PLine line = new PLine();
-        line.setStrokePaint(Color.RED);
-        PLine cloned = (PLine) line.clone();
-        assertNotNull(cloned);         
-        assertEquals(Color.RED, cloned.getStrokePaint());
-        assertNotSame(line.getLineReference(), cloned.getLineReference());
+        final P3DRect rect = new P3DRect(10, 10, 10, 10);
+        rect.setPaint(Color.BLUE);
+        final P3DRect cloned = (P3DRect) rect.clone();
+        assertNotNull(cloned);
+        assertEquals(Color.BLUE, cloned.getPaint());
+
+        final BufferedImage img = new BufferedImage(3, 2, BufferedImage.TYPE_INT_ARGB);
+        cloned.paint(new PPaintContext((Graphics2D) img.getGraphics()));
     }
 }

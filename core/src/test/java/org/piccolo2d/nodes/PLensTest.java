@@ -26,29 +26,25 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.nodes;
+package org.piccolo2d.nodes;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
-import org.piccolo2d.nodes.P3DRect;
-import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.nodes.PLens;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for P3DRect.
+ * Unit test for PLens.
  */
-public class P3DRectTest extends TestCase {
+public class PLensTest extends TestCase {
     public void testClone() {
-        final P3DRect rect = new P3DRect(10, 10, 10, 10);
-        rect.setPaint(Color.BLUE);
-        final P3DRect cloned = (P3DRect) rect.clone();
-        assertNotNull(cloned);
-        assertEquals(Color.BLUE, cloned.getPaint());
+        PLens lens = new PLens();           
+        assertTrue(lens.getInputEventListeners().length > 0);
+        PLens cloned = (PLens) lens.clone();
+        assertNotNull(cloned);      
 
-        final BufferedImage img = new BufferedImage(3, 2, BufferedImage.TYPE_INT_ARGB);
-        cloned.paint(new PPaintContext((Graphics2D) img.getGraphics()));
+        //assertTrue(cloned.getInputEventListeners().length > 0);        
+        //assertNotNull(cloned.getPropertyChangeListeners());
+        //assertFalse(cloned.getPropertyChangeListeners().length == 0); 
+        //assertNotSame(cloned.getPropertyChangeListeners()[0], lens.getPropertyChangeListeners()[0]);
     }
 }
