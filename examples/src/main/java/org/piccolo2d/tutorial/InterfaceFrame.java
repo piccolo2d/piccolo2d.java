@@ -48,9 +48,6 @@ import org.piccolo2d.util.PPaintContext;
 
 public class InterfaceFrame extends PFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public void initialize() {
