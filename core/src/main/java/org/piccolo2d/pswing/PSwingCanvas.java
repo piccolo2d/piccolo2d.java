@@ -67,7 +67,7 @@ public class PSwingCanvas extends PCanvas {
         }
     }
 
-    JComponent getSwingWrapper() {
+    public JComponent getSwingWrapper() {
         return swingWrapper;
     }
 
@@ -75,7 +75,7 @@ public class PSwingCanvas extends PCanvas {
         swingWrapper.add(pSwing.getComponent());
     }
 
-    void removePSwing(final PSwing pSwing) {
+    public void removePSwing(final PSwing pSwing) {
         swingWrapper.remove(pSwing.getComponent());
     }
 
