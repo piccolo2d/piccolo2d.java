@@ -36,7 +36,10 @@ import org.piccolo2d.PCanvas;
 
 
 public class TabularFisheye extends PCanvas {
-    private CalendarNode calendarNode;
+
+	private static final long serialVersionUID = 1L;
+	
+	private CalendarNode calendarNode;
 
     public TabularFisheye() {
         calendarNode = new CalendarNode();
