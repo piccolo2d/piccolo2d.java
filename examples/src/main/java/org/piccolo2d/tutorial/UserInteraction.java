@@ -122,7 +122,7 @@ public class UserInteraction extends PFrame {
 
         public SquiggleHandler(final PCanvas aCanvas) {
             canvas = aCanvas;
-            setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+            setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
         }
 
         public void startDrag(final PInputEvent e) {
