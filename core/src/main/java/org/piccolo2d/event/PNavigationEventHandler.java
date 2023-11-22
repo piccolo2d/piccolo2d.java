@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.event;
+package org.piccolo2d.event;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -43,9 +43,6 @@ import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PTransformActivity;
-import org.piccolo2d.event.PBasicInputEventHandler;
-import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.event.PInputEventFilter;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
 
