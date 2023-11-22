@@ -32,8 +32,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PInputManager;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPickPath;
