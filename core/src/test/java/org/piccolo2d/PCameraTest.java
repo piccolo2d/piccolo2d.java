@@ -40,11 +40,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PCanvas;
-import org.piccolo2d.PComponent;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
 import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PTransformActivity;
 import org.piccolo2d.util.PAffineTransform;
