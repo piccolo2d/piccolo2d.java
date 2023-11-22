@@ -31,8 +31,6 @@ package org.piccolo2d.util;
 import java.awt.geom.Rectangle2D;
 
 import org.piccolo2d.PiccoloAsserts;
-import org.piccolo2d.util.PBounds;
-import org.piccolo2d.util.PDimension;
 
 import junit.framework.TestCase;
 
