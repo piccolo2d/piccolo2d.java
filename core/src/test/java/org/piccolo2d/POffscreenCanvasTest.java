@@ -33,8 +33,6 @@ import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.POffscreenCanvas;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
