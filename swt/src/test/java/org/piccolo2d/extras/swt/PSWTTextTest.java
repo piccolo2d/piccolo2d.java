@@ -30,10 +30,8 @@ package org.piccolo2d.extras.swt;
 
 import java.awt.Color;
 import java.awt.Font;
-
 import java.awt.geom.Point2D;
 
-import org.piccolo2d.extras.swt.PSWTText;
 import org.piccolo2d.util.PBounds;
 
 import junit.framework.TestCase;
