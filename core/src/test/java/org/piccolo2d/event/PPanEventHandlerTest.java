@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.event;
 
-import org.piccolo2d.event.PPanEventHandler;
-
 import junit.framework.TestCase;
 
 /**
