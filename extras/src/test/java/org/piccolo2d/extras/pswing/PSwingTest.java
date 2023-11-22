@@ -74,7 +74,10 @@ public class PSwingTest extends TestCase {
         final JPanel panel = new JPanel();
 
         new PSwing(panel) {
-            public void updateBounds() {
+
+			private static final long serialVersionUID = 1L;
+
+			public void updateBounds() {
                 super.updateBounds();
 
                 reshaped[0] = true;
@@ -120,7 +123,7 @@ public class PSwingTest extends TestCase {
 
     public void testAddingSwingComponentToWrappedHierarchyMakesItNotDoubleBuffer() {
         final JPanel panel = new JPanel();
-        final PSwing pSwing = new PSwing(panel);
+        //final PSwing pSwing = new PSwing(panel);
         final JComponent child = new JLabel("Test Component");
         child.setDoubleBuffered(true);
         panel.add(child);
