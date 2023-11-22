@@ -73,12 +73,12 @@ public class GraphEditorExample extends PFrame {
         final PLayer edgeLayer = new PLayer();
         getCanvas().getCamera().addLayer(0, edgeLayer);
         final Random rnd = new Random();
-        ArrayList tmp;
+        ArrayList<PNode> tmp;
         for (int i = 0; i < numNodes; i++) {
             final float x = (float) (300. * rnd.nextDouble());
             final float y = (float) (400. * rnd.nextDouble());
             final PPath path = PPath.createEllipse(x, y, 20, 20);
-            tmp = new ArrayList();
+            tmp = new ArrayList<PNode>();
             path.addAttribute("edges", tmp);
             nodeLayer.addChild(path);
         }
@@ -103,7 +103,7 @@ public class GraphEditorExample extends PFrame {
             tmp = (ArrayList) node2.getAttribute("edges");
             tmp.add(edge);
 
-            tmp = new ArrayList();
+            tmp = new ArrayList<PNode>();
             tmp.add(node1);
             tmp.add(node2);
             edge.addAttribute("nodes", tmp);
@@ -153,12 +153,12 @@ public class GraphEditorExample extends PFrame {
             final PNode node = e.getPickedNode();
             node.translate(e.getDelta().width, e.getDelta().height);
 
-            final ArrayList edges = (ArrayList) e.getPickedNode().getAttribute("edges");
+            final ArrayList<PNode> edges = (ArrayList) e.getPickedNode().getAttribute("edges");
 
             int i;
             for (i = 0; i < edges.size(); i++) {
                 final PPath edge = (PPath) edges.get(i);
-                final ArrayList nodes = (ArrayList) edge.getAttribute("nodes");
+                final ArrayList<PNode> nodes = (ArrayList) edge.getAttribute("nodes");
                 final PNode node1 = (PNode) nodes.get(0);
                 final PNode node2 = (PNode) nodes.get(1);
 
