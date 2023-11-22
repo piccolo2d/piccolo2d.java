@@ -46,8 +46,9 @@ import org.piccolo2d.extras.pswing.PSwingCanvas;
 
 public class MultiplePSwingCanvasesExample extends JFrame {
     
-    
-    public static void main(final String[] args) {
+	private static final long serialVersionUID = 1L;
+
+	public static void main(final String[] args) {
         JFrame frame = new MultiplePSwingCanvasesExample();
         
         Container container = frame.getContentPane();
@@ -96,7 +97,9 @@ public class MultiplePSwingCanvasesExample extends JFrame {
         
         button.addActionListener(new AbstractAction() {
 
-            public void actionPerformed(ActionEvent arg0) {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) {
                button.setText("Thanks"); 
             }
             
