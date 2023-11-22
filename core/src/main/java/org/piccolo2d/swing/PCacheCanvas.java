@@ -26,13 +26,13 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.swing;
+package org.piccolo2d.swing;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PRoot;
-import org.piccolo2d.extras.nodes.PCacheCamera;
+import org.piccolo2d.nodes.PCacheCamera;
 
 
 /**
