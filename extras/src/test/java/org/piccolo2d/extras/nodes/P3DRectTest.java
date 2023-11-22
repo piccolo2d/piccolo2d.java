@@ -32,7 +32,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import org.piccolo2d.extras.nodes.P3DRect;
 import org.piccolo2d.util.PPaintContext;
 
 import junit.framework.TestCase;
