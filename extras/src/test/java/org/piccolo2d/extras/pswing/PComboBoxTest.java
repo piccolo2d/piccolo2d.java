@@ -32,6 +32,10 @@ import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 
+import org.piccolo2d.pswing.PComboBox;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
+
 import junit.framework.TestCase;
 
 /**

@@ -29,7 +29,8 @@
 package org.piccolo2d.extras.handles;
 
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.util.PLocator;
+import org.piccolo2d.handles.PHandle;
+import org.piccolo2d.util.PLocator;
 
 import junit.framework.TestCase;
 

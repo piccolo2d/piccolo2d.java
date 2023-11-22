@@ -34,6 +34,9 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.event.PNotification;
+import org.piccolo2d.event.PNotificationCenter;
+import org.piccolo2d.event.PSelectionEventHandler;
 
 import junit.framework.TestCase;
 

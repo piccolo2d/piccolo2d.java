@@ -28,6 +28,8 @@
  */
 package org.piccolo2d.extras.nodes;
 
+import org.piccolo2d.nodes.PNodeCache;
+
 import junit.framework.TestCase;
 
 /**

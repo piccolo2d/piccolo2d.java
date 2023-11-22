@@ -29,6 +29,7 @@
 package org.piccolo2d.extras;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 
 import junit.framework.TestCase;
 

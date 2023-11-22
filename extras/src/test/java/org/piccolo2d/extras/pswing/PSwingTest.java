@@ -29,6 +29,10 @@
 package org.piccolo2d.extras.pswing;
 
 import junit.framework.TestCase;
+
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
+import org.piccolo2d.pswing.PSwingRepaintManager;
 import org.piccolo2d.util.PPaintContext;
 
 import javax.swing.JButton;

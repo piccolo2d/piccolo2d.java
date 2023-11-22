@@ -7,6 +7,10 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.pswing.PSwingEvent;
+import org.piccolo2d.pswing.PSwingMouseEvent;
+import org.piccolo2d.pswing.PSwingMouseMotionEvent;
+import org.piccolo2d.pswing.PSwingMouseWheelEvent;
 
 import junit.framework.TestCase;
 

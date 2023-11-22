@@ -33,6 +33,8 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.image.BufferedImage;
 
+import org.piccolo2d.nodes.PShadow;
+
 import junit.framework.TestCase;
 
 /**
