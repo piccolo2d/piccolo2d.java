@@ -35,9 +35,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-import org.piccolo2d.extras.pswing.PSwingRepaintManager;
-
 import junit.framework.TestCase;
 
 /**
