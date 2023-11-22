@@ -45,6 +45,8 @@ public class PSWTKeyEvent extends KeyEvent {
     private static final long serialVersionUID = 1L;
 
     private static Component fakeSrc = new Component() {
+
+		private static final long serialVersionUID = 1L;
     };
 
     private org.eclipse.swt.events.KeyEvent swtEvent;
@@ -88,13 +90,13 @@ public class PSWTKeyEvent extends KeyEvent {
 
         if (swtEvent != null) {
             if ((swtEvent.stateMask & SWT.ALT) != 0) {
-                modifiers = modifiers | InputEvent.ALT_MASK;
+                modifiers = modifiers | InputEvent.ALT_DOWN_MASK;
             }
             if ((swtEvent.stateMask & SWT.CONTROL) != 0) {
-                modifiers = modifiers | InputEvent.CTRL_MASK;
+                modifiers = modifiers | InputEvent.CTRL_DOWN_MASK;
             }
             if ((swtEvent.stateMask & SWT.SHIFT) != 0) {
-                modifiers = modifiers | InputEvent.SHIFT_MASK;
+                modifiers = modifiers | InputEvent.SHIFT_DOWN_MASK;
             }
         }
 
