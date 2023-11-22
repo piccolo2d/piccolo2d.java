@@ -28,10 +28,7 @@
  */
 package org.piccolo2d.extras;
 
-import java.awt.event.KeyListener;
-
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.extras.PFrame;
 
 import junit.framework.TestCase;
 
@@ -40,11 +37,13 @@ import junit.framework.TestCase;
  * Unit test for PFrame.
  */
 public class PFrameTest extends TestCase {
-    private PFrame frame;   
-
+  
     public void testCanvasIsValidWithDefaultConstructor() {
         PFrame frame = new PFrame() {
-            public void setVisible(boolean visible) {
+        	
+			private static final long serialVersionUID = 1L;
+
+			public void setVisible(boolean visible) {
                 // why oh why is PFrame visible by default
             }
         };
@@ -53,11 +52,16 @@ public class PFrameTest extends TestCase {
         assertNotNull(canvas.getLayer());
         assertNotNull(canvas.getCamera());
         assertSame(canvas.getLayer(), canvas.getCamera().getLayer(0));
+        
+       assertFalse(frame.isVisible());
     }
 
     public void testDefaultsToWindowed() {
         PFrame frame = new PFrame() {
-            public void setVisible(boolean visible) {
+
+			private static final long serialVersionUID = 1L;
+
+			public void setVisible(boolean visible) {
                 // why oh why is PFrame visible by default
             }
         };
