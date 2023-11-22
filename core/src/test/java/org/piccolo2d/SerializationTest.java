@@ -30,8 +30,6 @@ package org.piccolo2d;
 
 import java.util.Iterator;
 
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
@@ -59,7 +57,7 @@ public class SerializationTest extends TestCase {
         l = (PNode) l.clone(); // copy uses serialization internally
         assertTrue(l.getChildrenCount() == 300);
 
-        final Iterator i = l.getChildrenIterator();
+        final Iterator<PNode> i = l.getChildrenIterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             assertEquals(l, each.getParent());
