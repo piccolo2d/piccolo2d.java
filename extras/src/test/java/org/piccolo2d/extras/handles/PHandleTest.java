@@ -29,7 +29,6 @@
 package org.piccolo2d.extras.handles;
 
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.handles.PHandle;
 import org.piccolo2d.extras.util.PLocator;
 
 import junit.framework.TestCase;
@@ -69,7 +68,10 @@ public class PHandleTest extends TestCase {
     public void testChangingParentCausesRelocateHandle() {
         final int[] relocateCounts = new int[1];
         PHandle handle = new PHandle(new OriginLocator()) {
-            public void relocateHandle() {
+        	
+			private static final long serialVersionUID = 1L;
+
+			public void relocateHandle() {
                 super.relocateHandle();
                 relocateCounts[0]++;
             }
@@ -83,7 +85,10 @@ public class PHandleTest extends TestCase {
     public void testResizingParentCausesRelocateHandle() {
         final int[] relocateCounts = new int[1];
         PHandle handle = new PHandle(new OriginLocator()) {
-            public void relocateHandle() {
+
+			private static final long serialVersionUID = 1L;
+
+			public void relocateHandle() {
                 super.relocateHandle();
                 relocateCounts[0]++;
             }
@@ -101,7 +106,10 @@ public class PHandleTest extends TestCase {
     }
 
     private final class OriginLocator extends PLocator {
-        public double locateX() {
+
+		private static final long serialVersionUID = 1L;
+
+		public double locateX() {
             return 0;
         }
 
