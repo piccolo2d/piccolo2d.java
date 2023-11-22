@@ -329,16 +329,6 @@ public class PSwing extends PNode implements Serializable, PropertyChangeListene
     }
 
     /**
-     * @deprecated by {@link #PSwing(JComponent)}
-     * 
-     * @param swingCanvas canvas on which the PSwing node will be embedded
-     * @param component not used
-     */
-    public PSwing(final PSwingCanvas swingCanvas, final JComponent component) {
-        this(component);
-    }
-
-    /**
      * If true {@link PSwing} will paint the {@link JComponent} to a buffer with no graphics
      * transformations applied and then paint the buffer to the target transformed
      * graphics context. On some platforms (such as Mac OS X) rendering {@link JComponent}s to
