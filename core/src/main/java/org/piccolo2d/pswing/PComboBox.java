@@ -139,7 +139,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * arrowButton and the component itself and to create our PopupMenu rather
      * than the default.
      */
-    protected class PBasicComboBoxUI extends BasicComboBoxUI {
+    public class PBasicComboBoxUI extends BasicComboBoxUI {
 
         /**
          * Create our Popup instead of swing's default.
