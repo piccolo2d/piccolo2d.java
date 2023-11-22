@@ -49,7 +49,9 @@ import java.lang.ref.WeakReference;
  */
 public class ActivityMemoryLeakBugExample extends PFrame {
 
-    public static void main(String[] args) {
+    private static final long serialVersionUID = 1L;
+
+	public static void main(String[] args) {
         new ActivityMemoryLeakBugExample();
     }
 
@@ -60,7 +62,7 @@ public class ActivityMemoryLeakBugExample extends PFrame {
         PNode node = PPath.createEllipse(20, 20, 20, 20);
         layer.addChild(node);
         // Create a WeakReference to the node so we can detect if it is gc'd.
-        final WeakReference ref = new WeakReference(layer.getChild(0));
+        final WeakReference<PNode> ref = new WeakReference<PNode>(layer.getChild(0));
         // Create and execute an activity.
         ((PNode) ref.get()).animateToPositionScaleRotation(0, 0, 5.0, 0, 1000);
         // Create a Timer that will start after the activity and repeat.
