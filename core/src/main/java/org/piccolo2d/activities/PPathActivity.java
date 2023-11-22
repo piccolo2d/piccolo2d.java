@@ -26,9 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.activities;
-
-import org.piccolo2d.activities.PInterpolatingActivity;
+package org.piccolo2d.activities;
 
 /**
  * <b>PPathActivity</b> is the abstract base class for all path activity
