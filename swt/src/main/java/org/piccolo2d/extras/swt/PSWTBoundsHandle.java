@@ -130,9 +130,9 @@ public class PSWTBoundsHandle extends PSWTHandle {
      * @param node node from which to remove bounds handles
      */
     public static void removeBoundsHandlesFrom(final PNode node) {
-        final ArrayList handles = new ArrayList();
+        final ArrayList<PNode> handles = new ArrayList<PNode>();
 
-        final Iterator i = node.getChildrenIterator();
+        final Iterator<PNode> i = node.getChildrenIterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             if (each instanceof PSWTBoundsHandle) {
