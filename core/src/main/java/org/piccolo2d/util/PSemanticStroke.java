@@ -25,12 +25,10 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.util;
+package org.piccolo2d.util;
 
 import java.awt.Shape;
 import java.awt.Stroke;
-
-import org.piccolo2d.util.PPickPath;
 
 
 /**
