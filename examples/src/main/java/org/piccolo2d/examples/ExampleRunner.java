@@ -71,7 +71,7 @@ public class ExampleRunner extends JFrame {
         JPanel panel= new JPanel(new GridLayout(0, 2));
         c.add(BorderLayout.CENTER, panel);
 
-        addExampleButtons(panel, new Class[] { ActivityExample.class, AngleNodeExample.class,
+        addExampleButtons(panel, new Class<?>[] { ActivityExample.class, AngleNodeExample.class,
                 BirdsEyeViewExample.class, CameraExample.class, CenterExample.class, ChartLabelExample.class,
                 ClipExample.class, CompositeExample.class, DynamicExample.class, EventHandlerExample.class,
                 FullScreenNodeExample.class, GraphEditorExample.class, GridExample.class, GroupExample.class,
@@ -122,13 +122,13 @@ public class ExampleRunner extends JFrame {
         return optionsPanel;
     } 
 
-    private void addExampleButtons(final JPanel panel, final Class<PFrame>[] exampleClasses) {
+    private void addExampleButtons(final JPanel panel, final Class<?>[] exampleClasses) {
         for (int i = 0; i < exampleClasses.length; i++) {
             panel.add(buildExampleButton(exampleClasses[i]));
         }
     }
 
-    private JButton buildExampleButton(final Class<PFrame> exampleClass) {
+    private JButton buildExampleButton(final Class<?> exampleClass) {
         final String fullClassName = exampleClass.getName();
         final String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
         final String exampleLabel = camelToProper(simpleClassName);
@@ -138,7 +138,7 @@ public class ExampleRunner extends JFrame {
 
 			public void actionPerformed(final ActionEvent event) {
                 try {
-                    final PFrame example = exampleClass.getDeclaredConstructor().newInstance();
+                    final PFrame example = (PFrame)exampleClass.getDeclaredConstructor().newInstance();
                     example.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
                 catch (final Exception e) {
