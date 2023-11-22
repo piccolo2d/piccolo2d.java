@@ -49,7 +49,7 @@ public class MockPInputEventListener implements PInputEventListener {
         }
     }
 
-    private final List notifications = new ArrayList();
+    private final List<Notification> notifications = new ArrayList<Notification>();
 
     public void processEvent(final PInputEvent aEvent, final int type) {
         notifications.add(new Notification(aEvent, type));
