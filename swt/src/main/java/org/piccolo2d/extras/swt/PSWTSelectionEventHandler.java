@@ -76,7 +76,7 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
      * @param selectableParents A list of nodes whose children will be selected
      *            by this event handler.
      */
-    public PSWTSelectionEventHandler(final PNode marqueeParent, final List selectableParents) {
+    public PSWTSelectionEventHandler(final PNode marqueeParent, final List<PNode> selectableParents) {
         super(new PNode(), selectableParents);
         this.marqueeParent = marqueeParent;
     }
