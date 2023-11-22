@@ -36,7 +36,10 @@ import org.piccolo2d.event.PInputEvent;
 
 
 class CalendarNode extends PNode {
-    static int DEFAULT_NUM_DAYS = 7;
+
+	private static final long serialVersionUID = 1L;
+	
+	static int DEFAULT_NUM_DAYS = 7;
     static int DEFAULT_NUM_WEEKS = 12;
     static int TEXT_X_OFFSET = 1;
     static int TEXT_Y_OFFSET = 10;
