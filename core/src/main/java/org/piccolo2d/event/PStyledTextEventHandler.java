@@ -55,7 +55,7 @@ import javax.swing.text.StyledDocument;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.nodes.PStyledText;
+import org.piccolo2d.nodes.PStyledText;
 
 
 /**
