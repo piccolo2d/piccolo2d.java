@@ -44,7 +44,9 @@ import org.piccolo2d.extras.PFrame;
  */
 public class ZeroWidthStrokeBug extends PFrame {
 
-    public ZeroWidthStrokeBug() {
+    private static final long serialVersionUID = 1L;
+
+	public ZeroWidthStrokeBug() {
         this(null);
     }
 
