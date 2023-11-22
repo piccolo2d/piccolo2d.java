@@ -95,7 +95,9 @@ public class PSwingExample3 extends JFrame {
 
         JPanel examplePanel = new JPanel() {
 
-            protected void paintComponent(Graphics g) {
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.setColor(Color.RED);
                 g.fillRect(0, 0, getWidth(), getHeight());
@@ -163,7 +165,10 @@ public class PSwingExample3 extends JFrame {
     }
 
     class ExampleGrid extends PNode {
-        private int columns;
+
+		private static final long serialVersionUID = 1L;
+		
+		private int columns;
 
         public ExampleGrid(int columns) {
             this.columns = columns;
@@ -194,7 +199,10 @@ public class PSwingExample3 extends JFrame {
     }
 
     class ExampleList extends PText {
-        ExampleList(String name) {
+
+		private static final long serialVersionUID = 1L;
+
+		ExampleList(String name) {
             super(name);
             setScale(2);
         }
@@ -220,7 +228,10 @@ public class PSwingExample3 extends JFrame {
         }
 
         class ExampleNode extends PText {
-            ExampleNode(String name, PNode example) {
+
+			private static final long serialVersionUID = 1L;
+
+			ExampleNode(String name, PNode example) {
                 super(name);
 
                 addChild(example);
