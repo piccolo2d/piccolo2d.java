@@ -42,7 +42,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 import org.piccolo2d.PNode;
-import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PAffineTransformException;
 import org.piccolo2d.util.PBounds;
