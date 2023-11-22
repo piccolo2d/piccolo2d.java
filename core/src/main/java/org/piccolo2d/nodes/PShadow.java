@@ -26,13 +26,12 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.nodes;
+package org.piccolo2d.nodes;
 
 import java.awt.Image;
 import java.awt.Paint;
 
 import org.piccolo2d.extras.util.ShadowUtils;
-import org.piccolo2d.nodes.PImage;
 
 
 
