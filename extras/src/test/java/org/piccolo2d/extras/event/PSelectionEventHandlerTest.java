@@ -89,7 +89,7 @@ public class PSelectionEventHandlerTest
         PNotificationCenter notificationCenter = PNotificationCenter.defaultCenter();
         notificationCenter.addListener(this, "selectionChanged", PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, null);
 
-        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE);
+        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE, KeyEvent.CHAR_UNDEFINED);
         PInputEvent event = new PInputEvent(null, keyEvent);
         selectionHandler.keyPressed(event);
         assertTrue(selectionHandler.getSelectionReference().isEmpty());
@@ -111,7 +111,7 @@ public class PSelectionEventHandlerTest
         PNotificationCenter notificationCenter = PNotificationCenter.defaultCenter();
         notificationCenter.addListener(this, "selectionChanged", PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, null);
 
-        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE);
+        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE, KeyEvent.CHAR_UNDEFINED);
         PInputEvent event = new PInputEvent(null, keyEvent);
         selectionHandler.keyPressed(event);
         assertTrue(selectionHandler.getSelectionReference().contains(node));
@@ -130,7 +130,7 @@ public class PSelectionEventHandlerTest
         PNotificationCenter notificationCenter = PNotificationCenter.defaultCenter();
         notificationCenter.addListener(this, "selectionChanged", PSelectionEventHandler.SELECTION_CHANGED_NOTIFICATION, null);
 
-        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE);
+        KeyEvent keyEvent = new KeyEvent(canvas, -1, System.currentTimeMillis(), 0, KeyEvent.VK_DELETE, KeyEvent.CHAR_UNDEFINED);
         PInputEvent event = new PInputEvent(null, keyEvent);
         selectionHandler.keyPressed(event);
         assertTrue(selectionHandler.getSelectionReference().isEmpty());
