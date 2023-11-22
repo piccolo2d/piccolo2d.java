@@ -116,7 +116,7 @@ public class P3DRect extends PNode {
      * 
      * @param paintContext context in which the paiting should occur
      */
-    protected void paint(final PPaintContext paintContext) {
+    public void paint(final PPaintContext paintContext) {
         // lazy init:
         if (stroke == null) {
             stroke = new BasicStroke(0);
