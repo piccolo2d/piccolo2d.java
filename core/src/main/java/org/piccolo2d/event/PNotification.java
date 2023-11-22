@@ -33,7 +33,7 @@
  * Wotonomy: OpenStep design patterns for pure Java
  * applications. Copyright (C) 2000 Blacksmith, Inc.
  */
-package org.piccolo2d.extras.event;
+package org.piccolo2d.event;
 
 import java.util.Map;
 
