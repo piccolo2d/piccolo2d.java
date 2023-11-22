@@ -31,7 +31,6 @@ package org.piccolo2d.extras.swt;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEventListener;
-import org.piccolo2d.extras.swt.PSWTBoundsHandle;
 import org.piccolo2d.extras.util.PBoundsLocator;
 
 import junit.framework.TestCase;
