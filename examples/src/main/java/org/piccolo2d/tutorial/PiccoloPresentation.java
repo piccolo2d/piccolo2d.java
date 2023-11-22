@@ -43,14 +43,12 @@ import org.piccolo2d.nodes.PImage;
 
 public class PiccoloPresentation extends PFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+    
     protected PNode slideBar;
     protected PNode currentSlide;
     protected PBasicInputEventHandler eventHandler;
-    protected ArrayList slides = new ArrayList();
+    protected ArrayList<PNode> slides = new ArrayList<PNode>();
 
     public PiccoloPresentation() {
         super();
