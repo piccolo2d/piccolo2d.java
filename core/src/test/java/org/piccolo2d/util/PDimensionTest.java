@@ -32,8 +32,6 @@ import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 
-import org.piccolo2d.util.PDimension;
-
 import junit.framework.TestCase;
 
 /**
