@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.event;
 
-import org.piccolo2d.event.PZoomEventHandler;
-
 import junit.framework.TestCase;
 
 /**
