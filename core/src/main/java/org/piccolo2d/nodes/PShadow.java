@@ -31,7 +31,7 @@ package org.piccolo2d.nodes;
 import java.awt.Image;
 import java.awt.Paint;
 
-import org.piccolo2d.extras.util.ShadowUtils;
+import org.piccolo2d.util.ShadowUtils;
 
 
 
