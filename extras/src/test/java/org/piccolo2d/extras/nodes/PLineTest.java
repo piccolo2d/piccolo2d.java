@@ -30,8 +30,6 @@ package org.piccolo2d.extras.nodes;
 
 import java.awt.Color;
 
-import org.piccolo2d.extras.nodes.PLine;
-
 import junit.framework.TestCase;
 
 /**
