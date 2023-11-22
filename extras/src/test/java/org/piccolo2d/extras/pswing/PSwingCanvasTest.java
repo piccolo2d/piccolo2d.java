@@ -30,9 +30,6 @@ package org.piccolo2d.extras.pswing;
 
 import javax.swing.JLabel;
 
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-
 import junit.framework.TestCase;
 
 /**
