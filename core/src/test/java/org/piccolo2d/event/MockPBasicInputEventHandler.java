@@ -30,14 +30,11 @@ package org.piccolo2d.event;
 
 import java.util.ArrayList;
 
-import org.piccolo2d.event.PBasicInputEventHandler;
-import org.piccolo2d.event.PInputEvent;
-
 /**
  * Mock PBasicInputEventHandler.
  */
 public class MockPBasicInputEventHandler extends PBasicInputEventHandler {
-    private final ArrayList methodCalls = new ArrayList();
+    private final ArrayList<String> methodCalls = new ArrayList<String>();
 
     public String[] getMethodCalls() {
         final String[] result = new String[methodCalls.size()];
