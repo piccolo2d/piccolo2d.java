@@ -297,7 +297,10 @@ public class PSwingTest extends TestCase {
     }
 
     public class MockPaintingPSwing extends PSwing {
-        private boolean paintedGreek;
+
+		private static final long serialVersionUID = 1L;
+		
+		private boolean paintedGreek;
         private boolean paintedComponent;
 
         public MockPaintingPSwing(JComponent component) {
