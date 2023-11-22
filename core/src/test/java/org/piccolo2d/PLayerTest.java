@@ -30,8 +30,6 @@ package org.piccolo2d;
 
 import java.util.Collection;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PLayer;
 import org.piccolo2d.util.PBounds;
 
 import junit.framework.TestCase;
@@ -47,7 +45,7 @@ public class PLayerTest extends TestCase {
     }
 
     public void testLayerHasEmptyCamerasCollectionByDefault() {
-        final Collection cameras = layer.getCamerasReference();
+        final Collection<PCamera> cameras = layer.getCamerasReference();
         assertNotNull(cameras);
         assertTrue(cameras.isEmpty());
         assertEquals(0, layer.getCameraCount());
