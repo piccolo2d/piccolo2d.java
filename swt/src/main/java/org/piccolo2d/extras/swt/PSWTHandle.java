@@ -228,7 +228,7 @@ public class PSWTHandle extends PSWTPath {
 
     private final class HandleDragHandler extends PDragSequenceEventHandler {
         public HandleDragHandler() {
-            final PInputEventFilter filter = new PInputEventFilter(InputEvent.BUTTON1_MASK);
+            final PInputEventFilter filter = new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK);
             setEventFilter(filter);
             filter.setMarksAcceptedEventsAsHandled(true);
             filter.setAcceptsMouseEntered(false);
