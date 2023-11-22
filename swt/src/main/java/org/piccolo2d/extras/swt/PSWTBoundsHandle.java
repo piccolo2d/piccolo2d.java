@@ -288,7 +288,7 @@ public class PSWTBoundsHandle extends PSWTHandle {
      * @param flipY whether to allow flipping in the vertical direction
      */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
-        final Iterator i = getParent().getChildrenIterator();
+        final Iterator<PNode> i = getParent().getChildrenIterator();
         while (i.hasNext()) {
             final Object each = i.next();
             if (each instanceof PSWTBoundsHandle) {
