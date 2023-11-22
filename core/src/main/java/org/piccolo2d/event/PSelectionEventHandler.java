@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.event;
+package org.piccolo2d.event;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -45,8 +45,6 @@ import java.util.Map;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
-import org.piccolo2d.event.PDragSequenceEventHandler;
-import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.extras.handles.PBoundsHandle;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
