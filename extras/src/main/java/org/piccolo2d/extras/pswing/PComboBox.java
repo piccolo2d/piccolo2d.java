@@ -72,10 +72,8 @@ import javax.swing.plaf.basic.ComboPopup;
  */
 public class PComboBox extends JComboBox implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+    
     private PSwing pSwing;
     private PSwingCanvas canvas;
 
@@ -84,7 +82,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * 
      * @param model The ComboBoxModel from which the list will be created
      */
-    public PComboBox(final ComboBoxModel model) {
+    public PComboBox(final ComboBoxModel<?> model) {
         super(model);
         init();
     }
@@ -104,7 +102,7 @@ public class PComboBox extends JComboBox implements Serializable {
      * 
      * @param items The items to populate the PComboBox list
      */
-    public PComboBox(final Vector items) {
+    public PComboBox(final Vector<String> items) {
         super(items);
         init();
     }
