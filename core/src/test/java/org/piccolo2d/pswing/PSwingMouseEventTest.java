@@ -1,4 +1,4 @@
-package org.piccolo2d.extras.pswing;
+package org.piccolo2d.pswing;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;

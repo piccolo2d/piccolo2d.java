@@ -26,28 +26,62 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.pswing;
+package org.piccolo2d.pswing;
 
-import javax.swing.JLabel;
+import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
+
+import org.piccolo2d.pswing.PComboBox;
 import org.piccolo2d.pswing.PSwing;
 import org.piccolo2d.pswing.PSwingCanvas;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for PSwingCanvas.
+ * Unit test for PComboBox.
  */
-public class PSwingCanvasTest extends TestCase {
-    protected int finalizerCallCount;
-
-    public void setUp() {
-        finalizerCallCount = 0;
+public class PComboBoxTest extends TestCase {
+    public void testPComboInstallsItsOwnUI() {
+        final PComboBox combo = new PComboBox();
+        assertTrue(combo.getUI() instanceof PComboBox.PBasicComboBoxUI);
     }
 
-    public void testRemovePSwingDoesNothingWithForeignPSwing() {
+    public void testConstructsWithVector() {
+        final Vector<String> items = new Vector<String>();
+        items.add("A");
+        items.add("B");
+        final PComboBox combo = new PComboBox(items);
+        assertEquals(2, combo.getModel().getSize());
+    }
+
+    public void testConstructsWithArray() {
+        final String[] items = new String[] { "A", "B" };
+        final PComboBox combo = new PComboBox(items);
+        assertEquals(2, combo.getModel().getSize());
+    }
+
+    public void testConstructsWithComboBoxModel() {
+        final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+        model.addElement("A");
+        model.addElement("B");
+        final PComboBox combo = new PComboBox(model);
+        assertEquals(2, combo.getModel().getSize());
+    }
+
+    public void testSetEnvironmentPersists() {
+        final PComboBox combo = new PComboBox();
+
         final PSwingCanvas canvas = new PSwingCanvas();
-        final PSwing orphanPSwing = new PSwing(new JLabel());
-        canvas.removePSwing(orphanPSwing);
+        final PSwing pCombo = new PSwing(combo);
+        combo.setEnvironment(pCombo, canvas);
+
+        assertEquals(pCombo, combo.getPSwing());
+        assertEquals(canvas, combo.getCanvas());
+    }
+
+    public void testPopupIsRepositioned() {
+        // Need a way of dispatching mock events to canvas before this can be
+        // tested
     }
 }
