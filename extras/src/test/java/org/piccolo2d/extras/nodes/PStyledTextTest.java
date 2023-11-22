@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.extras.nodes;
 
-import org.piccolo2d.extras.nodes.PStyledText;
-
 import junit.framework.TestCase;
 
 /**
