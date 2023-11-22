@@ -45,7 +45,7 @@ import java.util.Map;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.handles.PBoundsHandle;
+import org.piccolo2d.handles.PBoundsHandle;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
