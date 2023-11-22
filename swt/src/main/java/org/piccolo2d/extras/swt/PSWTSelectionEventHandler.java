@@ -37,7 +37,7 @@ import org.eclipse.swt.SWT;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.event.PSelectionEventHandler;
+import org.piccolo2d.event.PSelectionEventHandler;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 

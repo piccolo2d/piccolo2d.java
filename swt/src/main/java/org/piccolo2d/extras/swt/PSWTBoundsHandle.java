@@ -39,8 +39,8 @@ import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.util.PBoundsLocator;
 import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PBoundsLocator;
 import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPickPath;
 

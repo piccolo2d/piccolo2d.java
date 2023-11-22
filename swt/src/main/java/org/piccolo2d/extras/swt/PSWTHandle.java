@@ -43,10 +43,10 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
-import org.piccolo2d.extras.util.PLocator;
-import org.piccolo2d.extras.util.PNodeLocator;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
+import org.piccolo2d.util.PLocator;
+import org.piccolo2d.util.PNodeLocator;
 
 
 /**
