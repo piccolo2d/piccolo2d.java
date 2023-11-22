@@ -31,8 +31,6 @@ package org.piccolo2d.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.piccolo2d.util.PObjectOutputStream;
-
 import junit.framework.TestCase;
 
 /**
