@@ -26,14 +26,12 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras.activities;
+package org.piccolo2d.activities;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-
-import org.piccolo2d.activities.PInterpolatingActivity;
 
 
 /**
