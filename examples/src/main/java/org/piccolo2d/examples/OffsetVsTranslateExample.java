@@ -29,9 +29,9 @@
 package org.piccolo2d.examples;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
 import org.piccolo2d.activities.PActivity;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PText;
 
 

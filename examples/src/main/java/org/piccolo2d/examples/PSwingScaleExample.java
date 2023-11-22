@@ -1,11 +1,11 @@
 package org.piccolo2d.examples;
 
 import org.piccolo2d.PCamera;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
 import org.piccolo2d.util.PBounds;
 
 import javax.swing.JButton;
@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 /**
  * Demonstrate that PSwing nodes properly receive events even when they are parented by nodes
  * with extreme scales. This is an effective regression test that previously failed before fix
- * applied to {@link org.piccolo2d.extras.pswing.PSwingEventHandler}.
+ * applied to {@link org.piccolo2d.pswing.PSwingEventHandler}.
  */
 public class PSwingScaleExample extends PFrame {
 

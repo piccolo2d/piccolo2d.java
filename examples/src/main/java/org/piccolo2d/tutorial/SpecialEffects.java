@@ -30,10 +30,10 @@ package org.piccolo2d.tutorial;
 
 import java.awt.Color;
 
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.activities.PActivity;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
 

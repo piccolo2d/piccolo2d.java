@@ -34,13 +34,13 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivity;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.util.PFixedWidthStroke;
 import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PFixedWidthStroke;
 
 
 /**

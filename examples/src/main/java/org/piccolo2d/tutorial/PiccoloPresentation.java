@@ -34,10 +34,10 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PImage;
 
 

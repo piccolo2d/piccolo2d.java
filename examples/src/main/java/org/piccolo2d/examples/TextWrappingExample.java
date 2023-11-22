@@ -42,9 +42,7 @@ import javax.swing.JToolBar;
 import javax.swing.JPanel;
 
 import org.piccolo2d.PCanvas;
-
-import org.piccolo2d.extras.PFrame;
-
+import org.piccolo2d.PFrame;
 import org.piccolo2d.nodes.PText;
 
 /**

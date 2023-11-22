@@ -43,9 +43,9 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
 import org.piccolo2d.nodes.PText;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
 
 
 /**

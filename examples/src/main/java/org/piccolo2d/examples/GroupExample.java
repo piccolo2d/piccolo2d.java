@@ -35,9 +35,9 @@ import java.util.ArrayList;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.event.PSelectionEventHandler;
+import org.piccolo2d.event.PSelectionEventHandler;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;

@@ -28,13 +28,13 @@
  */
 package org.piccolo2d.examples.pswing;
 
-import org.piccolo2d.extras.pswing.PSwing;
-
 import javax.swing.JComponent;
 
+import org.piccolo2d.pswing.PSwing;
+
 /**
- * Extends {@link PSwingExample1} but uses {@link org.piccolo2d.extras.pswing.PSwing#setUseBufferedPainting(boolean)}
- * for {@link org.piccolo2d.extras.pswing.PSwing}s.
+ * Extends {@link PSwingExample1} but uses {@link org.piccolo2d.pswing.PSwing#setUseBufferedPainting(boolean)}
+ * for {@link org.piccolo2d.pswing.PSwing}s.
  */
 public class PSwingExample4 extends PSwingExample1 {
 

@@ -43,13 +43,13 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.swing.PDefaultScrollDirector;
-import org.piccolo2d.extras.swing.PScrollDirector;
-import org.piccolo2d.extras.swing.PScrollPane;
-import org.piccolo2d.extras.swing.PViewport;
 import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.swing.PDefaultScrollDirector;
+import org.piccolo2d.swing.PScrollDirector;
+import org.piccolo2d.swing.PScrollPane;
+import org.piccolo2d.swing.PViewport;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
 

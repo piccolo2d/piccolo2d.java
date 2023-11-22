@@ -30,10 +30,10 @@ package org.piccolo2d.examples.pswing;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PZoomEventHandler;
-import org.piccolo2d.extras.pswing.PComboBox;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
 import org.piccolo2d.nodes.PText;
+import org.piccolo2d.pswing.PComboBox;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;

@@ -72,8 +72,8 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.table.TableColumn;
 
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
 
 
 /**

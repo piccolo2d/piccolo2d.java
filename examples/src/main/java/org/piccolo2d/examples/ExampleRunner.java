@@ -45,7 +45,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
-import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.util.PDebug;
 
 

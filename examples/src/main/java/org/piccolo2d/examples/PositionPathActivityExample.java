@@ -31,10 +31,10 @@ package org.piccolo2d.examples;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.activities.PPositionPathActivity;
+import org.piccolo2d.activities.PPositionPathActivity;
 import org.piccolo2d.nodes.PPath;
 
 
