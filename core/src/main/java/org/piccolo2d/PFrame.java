@@ -26,7 +26,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.piccolo2d.extras;
+package org.piccolo2d;
 
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -44,8 +44,6 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
-import org.piccolo2d.PCanvas;
 
 
 /**
