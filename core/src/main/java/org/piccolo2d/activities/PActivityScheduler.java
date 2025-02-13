@@ -58,10 +58,10 @@ public class PActivityScheduler implements Serializable {
     private static final long serialVersionUID = 1L;
     private transient Timer activityTimer = null;
     private final PRoot root;
-    private final List activities;    
+    private final List<PActivity> activities;    
     private boolean activitiesChanged;
     private boolean animating;
-    private final ArrayList processingActivities;
+    private final ArrayList<PActivity> processingActivities;
 
     /**
      * Constructs an instance of PActivityScheduler. All activities it will
@@ -72,8 +72,8 @@ public class PActivityScheduler implements Serializable {
      */
     public PActivityScheduler(final PRoot rootNode) {        
         root = rootNode;
-        activities = new ArrayList();
-        processingActivities = new ArrayList();
+        activities = new ArrayList<PActivity>();
+        processingActivities = new ArrayList<PActivity>();
     }
 
     /**
@@ -157,7 +157,7 @@ public class PActivityScheduler implements Serializable {
      * 
      * @return reference to the current activities list.
      */
-    public List getActivitiesReference() {
+    public List<PActivity> getActivitiesReference() {
         return activities;
     }
 

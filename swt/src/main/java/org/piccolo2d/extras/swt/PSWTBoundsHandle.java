@@ -39,8 +39,8 @@ import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.util.PBoundsLocator;
 import org.piccolo2d.util.PBounds;
+import org.piccolo2d.util.PBoundsLocator;
 import org.piccolo2d.util.PDimension;
 import org.piccolo2d.util.PPickPath;
 
@@ -130,9 +130,9 @@ public class PSWTBoundsHandle extends PSWTHandle {
      * @param node node from which to remove bounds handles
      */
     public static void removeBoundsHandlesFrom(final PNode node) {
-        final ArrayList handles = new ArrayList();
+        final ArrayList<PNode> handles = new ArrayList<PNode>();
 
-        final Iterator i = node.getChildrenIterator();
+        final Iterator<PNode> i = node.getChildrenIterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             if (each instanceof PSWTBoundsHandle) {
@@ -288,7 +288,7 @@ public class PSWTBoundsHandle extends PSWTHandle {
      * @param flipY whether to allow flipping in the vertical direction
      */
     public void flipSiblingBoundsHandles(final boolean flipX, final boolean flipY) {
-        final Iterator i = getParent().getChildrenIterator();
+        final Iterator<PNode> i = getParent().getChildrenIterator();
         while (i.hasNext()) {
             final Object each = i.next();
             if (each instanceof PSWTBoundsHandle) {

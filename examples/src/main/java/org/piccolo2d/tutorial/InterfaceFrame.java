@@ -33,12 +33,12 @@ import java.awt.Graphics2D;
 
 import java.awt.geom.Ellipse2D;
 
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
@@ -48,9 +48,6 @@ import org.piccolo2d.util.PPaintContext;
 
 public class InterfaceFrame extends PFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public void initialize() {

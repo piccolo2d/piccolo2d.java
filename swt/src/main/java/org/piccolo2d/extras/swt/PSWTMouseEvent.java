@@ -49,6 +49,8 @@ public class PSWTMouseEvent extends MouseEvent {
     private static final long serialVersionUID = 1L;
 
     private static Component fakeSrc = new Component() {
+
+		private static final long serialVersionUID = 1L;
     };
 
     /** Event being wrapped. */
@@ -117,22 +119,22 @@ public class PSWTMouseEvent extends MouseEvent {
 
         if (swtEvent != null) {
             if ((swtEvent.stateMask & SWT.ALT) != 0) {
-                modifiers = modifiers | InputEvent.ALT_MASK;
+                modifiers = modifiers | InputEvent.ALT_DOWN_MASK;
             }
             if ((swtEvent.stateMask & SWT.CONTROL) != 0) {
-                modifiers = modifiers | InputEvent.CTRL_MASK;
+                modifiers = modifiers | InputEvent.CTRL_DOWN_MASK;
             }
             if ((swtEvent.stateMask & SWT.SHIFT) != 0) {
-                modifiers = modifiers | InputEvent.SHIFT_MASK;
+                modifiers = modifiers | InputEvent.SHIFT_DOWN_MASK;
             }
             if (swtEvent.button == SWT_BUTTON1 || (swtEvent.stateMask & SWT.BUTTON1) != 0) {
-                modifiers = modifiers | InputEvent.BUTTON1_MASK;
+                modifiers = modifiers | InputEvent.BUTTON1_DOWN_MASK;
             }
             if (swtEvent.button == SWT_BUTTON2 || (swtEvent.stateMask & SWT.BUTTON2) != 0) {
-                modifiers = modifiers | InputEvent.BUTTON2_MASK;
+                modifiers = modifiers | InputEvent.BUTTON2_DOWN_MASK;
             }
             if (swtEvent.button == SWT_BUTTON3 || (swtEvent.stateMask & SWT.BUTTON3) != 0) {
-                modifiers = modifiers | InputEvent.BUTTON3_MASK;
+                modifiers = modifiers | InputEvent.BUTTON3_DOWN_MASK;
             }
         }
 

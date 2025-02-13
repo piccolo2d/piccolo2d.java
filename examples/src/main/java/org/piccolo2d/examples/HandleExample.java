@@ -32,14 +32,14 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.handles.PBoundsHandle;
-import org.piccolo2d.extras.handles.PHandle;
-import org.piccolo2d.extras.util.PNodeLocator;
+import org.piccolo2d.handles.PBoundsHandle;
+import org.piccolo2d.handles.PHandle;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PDimension;
+import org.piccolo2d.util.PNodeLocator;
 
 
 /**

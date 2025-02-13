@@ -34,7 +34,6 @@ import java.awt.event.MouseEvent;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPickPath;
 
@@ -126,7 +125,7 @@ public class PInputEventTest extends TestCase {
     }
 
     public void testReturnsCorrectModifiers() {
-        assertEquals(InputEvent.BUTTON1_MASK, mouseEvent.getModifiers());
+        assertEquals(InputEvent.BUTTON1_DOWN_MASK, mouseEvent.getModifiersEx());
     }
 
     public void testGetButtonUsesWhatWasPassedToMouseEvent() {
@@ -134,7 +133,7 @@ public class PInputEventTest extends TestCase {
     }
 
     private MouseEvent buildSwingClick(final int x, final int y) {
-        return new MouseEvent(canvas, 1, System.currentTimeMillis(), InputEvent.BUTTON1_MASK, x, y, 1, false,
+        return new MouseEvent(canvas, 1, System.currentTimeMillis(), InputEvent.BUTTON1_DOWN_MASK, x, y, 1, false,
                 MouseEvent.BUTTON1);
     }
 

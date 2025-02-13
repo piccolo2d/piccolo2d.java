@@ -30,9 +30,8 @@ package org.piccolo2d.extras.swt;
 
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEventListener;
-import org.piccolo2d.extras.swt.PSWTHandle;
-import org.piccolo2d.extras.util.PBoundsLocator;
-import org.piccolo2d.extras.util.PLocator;
+import org.piccolo2d.util.PBoundsLocator;
+import org.piccolo2d.util.PLocator;
 
 import junit.framework.TestCase;
 

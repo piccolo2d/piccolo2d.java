@@ -61,7 +61,7 @@ public class PPanEventHandler extends PDragSequenceEventHandler {
      */
     public PPanEventHandler() {
         super();
-        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
         setAutopan(true);
     }
 

@@ -36,7 +36,6 @@ import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 import org.piccolo2d.util.PUtil;
 
-
 /**
  * Offscreen canvas.
  *
@@ -44,193 +43,194 @@ import org.piccolo2d.util.PUtil;
  */
 public final class POffscreenCanvas implements PComponent {
 
-    /** Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>. */
-    static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
-    
-    /** Bounds of this offscreen canvas. */
-    private final PBounds bounds;
+	/**
+	 * Default render quality, <code>PPaintContext.HIGH_QUALITY_RENDERING</code>.
+	 */
+	static final int DEFAULT_RENDER_QUALITY = PPaintContext.HIGH_QUALITY_RENDERING;
 
-    /** Camera for this offscreen canvas. */
-    private PCamera camera;
+	/** Bounds of this offscreen canvas. */
+	private final PBounds bounds;
 
-    /** Render quality. */
-    private int renderQuality = DEFAULT_RENDER_QUALITY;
+	/** Camera for this offscreen canvas. */
+	private PCamera camera;
 
-    /** True if this offscreen canvas is opaque. */
-    private boolean opaque;
+	/** Render quality. */
+	private int renderQuality = DEFAULT_RENDER_QUALITY;
 
-    /** Background color for this offscreen canvas. */
-    private Color backgroundColor;
+	/** True if this offscreen canvas is opaque. */
+	private boolean opaque;
 
+	/** Background color for this offscreen canvas. */
+	private Color backgroundColor;
 
-    /**
-     * Create a new offscreen canvas the specified width and height.
-     * 
-     * @param width width of this offscreen canvas, must be at least zero
-     * @param height height of this offscreen canvas, must be at least zero
-     */
-    public POffscreenCanvas(final int width, final int height) {
-        if (width < 0) {
-            throw new IllegalArgumentException("width must be at least zero, was " + width);
-        }
-        if (height < 0) {
-            throw new IllegalArgumentException("height must be at least zero, was " + height);
-        }
-        bounds = new PBounds(0.0d, 0.0d, width, height);
-        setCamera(PUtil.createBasicScenegraph());
-        
-        opaque = false;
-        backgroundColor = null;
-    }
+	/**
+	 * Create a new offscreen canvas the specified width and height.
+	 * 
+	 * @param width  width of this offscreen canvas, must be at least zero
+	 * @param height height of this offscreen canvas, must be at least zero
+	 */
+	public POffscreenCanvas(final int width, final int height) {
+		if (width < 0) {
+			throw new IllegalArgumentException("width must be at least zero, was " + width);
+		}
+		if (height < 0) {
+			throw new IllegalArgumentException("height must be at least zero, was " + height);
+		}
+		bounds = new PBounds(0.0d, 0.0d, width, height);
+		setCamera(PUtil.createBasicScenegraph());
 
+		opaque = false;
+		backgroundColor = null;
+	}
 
-    /**
-     * Render this offscreen canvas to the specified graphics.
-     *
-     * @param graphics graphics to render this offscreen canvas to, must not be null
-     */
-    public void render(final Graphics2D graphics) {
-        if (graphics == null) {
-            throw new IllegalArgumentException("graphics must not be null");
-        }
-        
-        if (opaque && backgroundColor != null) {
-            graphics.setBackground(backgroundColor);
-            graphics.clearRect(0, 0, (int) bounds.getWidth(), (int) bounds.getHeight());
-        }
-        
-        final PPaintContext paintContext = new PPaintContext(graphics);
-        paintContext.setRenderQuality(renderQuality);
-        camera.fullPaint(paintContext);
-    }
+	/**
+	 * Render this offscreen canvas to the specified graphics.
+	 *
+	 * @param graphics graphics to render this offscreen canvas to, must not be null
+	 */
+	public void render(final Graphics2D graphics) {
+		if (graphics == null) {
+			throw new IllegalArgumentException("graphics must not be null");
+		}
 
-    /**
-     * Set the camera for this offscreen canvas to <code>camera</code>.
-     * 
-     * @param camera camera for this offscreen canvas
-     */
-    public void setCamera(final PCamera camera) {
-        if (this.camera != null) {
-            this.camera.setComponent(null);
-        }
-        this.camera = camera;
-        if (camera != null) {
-            camera.setComponent(this);
-            camera.setBounds((PBounds) bounds.clone());
-        }
-    }
+		if (opaque && backgroundColor != null) {
+			graphics.setBackground(backgroundColor);
+			graphics.clearRect(0, 0, (int) bounds.getWidth(), (int) bounds.getHeight());
+		}
 
-    /**
-     * Return the camera for this offscreen canvas.
-     * 
-     * @return the camera for this offscreen canvas
-     */
-    public PCamera getCamera() {
-        return camera;
-    }
+		final PPaintContext paintContext = new PPaintContext(graphics);
+		paintContext.setRenderQuality(renderQuality);
+		camera.fullPaint(paintContext);
+	}
 
-    /**
-     * Set the render quality hint for this offscreen canvas to
-     * <code>renderQuality</code>.
-     * 
-     * @param renderQuality render quality hint, must be one of
-     *            <code>PPaintContext.HIGH_QUALITY_RENDERING</code> or
-     *            <code>PPaintContext.LOW_QUALITY_RENDERING</code>
-     */
-    public void setRenderQuality(final int renderQuality) {
-        if (renderQuality == PPaintContext.HIGH_QUALITY_RENDERING
-                || renderQuality == PPaintContext.LOW_QUALITY_RENDERING) {
-            this.renderQuality = renderQuality;
-        }
-        else {
-            throw new IllegalArgumentException("renderQuality must be one of PPaintContext.HIGH_QUALITY_RENDERING"
-                    + " or PPaintContext.LOW_QUALITY_RENDERING, was " + renderQuality);
-        }
-    }
+	/**
+	 * Set the camera for this offscreen canvas to <code>camera</code>.
+	 * 
+	 * @param camera camera for this offscreen canvas
+	 */
+	public void setCamera(final PCamera camera) {
+		if (this.camera != null) {
+			this.camera.setComponent(null);
+		}
+		this.camera = camera;
+		if (camera != null) {
+			camera.setComponent(this);
+			camera.setBounds((PBounds) bounds.clone());
+		}
+	}
 
-    /**
-     * Return the render quality hint for this offscreen canvas.
-     * 
-     * @return the render quality hint for this offscreen canvas
-     */
-    public int getRenderQuality() {
-        return renderQuality;
-    }
+	/**
+	 * Return the camera for this offscreen canvas.
+	 * 
+	 * @return the camera for this offscreen canvas
+	 */
+	public PCamera getCamera() {
+		return camera;
+	}
 
-    /** {@inheritDoc} */
-    public void paintImmediately() {
-        // empty
-    }
+	/**
+	 * Set the render quality hint for this offscreen canvas to
+	 * <code>renderQuality</code>.
+	 * 
+	 * @param renderQuality render quality hint, must be one of
+	 *                      <code>PPaintContext.HIGH_QUALITY_RENDERING</code> or
+	 *                      <code>PPaintContext.LOW_QUALITY_RENDERING</code>
+	 */
+	public void setRenderQuality(final int renderQuality) {
+		if (renderQuality == PPaintContext.HIGH_QUALITY_RENDERING
+				|| renderQuality == PPaintContext.LOW_QUALITY_RENDERING) {
+			this.renderQuality = renderQuality;
+		} else {
+			throw new IllegalArgumentException("renderQuality must be one of PPaintContext.HIGH_QUALITY_RENDERING"
+					+ " or PPaintContext.LOW_QUALITY_RENDERING, was " + renderQuality);
+		}
+	}
 
-    /** {@inheritDoc} */
-    public void popCursor() {
-        // empty
-    }
+	/**
+	 * Return the render quality hint for this offscreen canvas.
+	 * 
+	 * @return the render quality hint for this offscreen canvas
+	 */
+	public int getRenderQuality() {
+		return renderQuality;
+	}
 
-    /** {@inheritDoc} */
-    public void pushCursor(final Cursor cursor) {
-        // empty
-    }
+	/** {@inheritDoc} */
+	public void paintImmediately() {
+		// empty
+	}
 
-    /** {@inheritDoc} */
-    public void repaint(final PBounds repaintBounds) {
-        // empty
-    }
+	/** {@inheritDoc} */
+	public void popCursor() {
+		// empty
+	}
 
-    /** {@inheritDoc} */
-    public void setInteracting(final boolean interacting) {
-        // empty
-    }
-    
-    /**
-     * Return the root node of the scene graph for this offscreen canvas.  The
-     * root node will be null if the camera for this offscreen canvas is null.
-     * 
-     * @return the root node of the scene graph for this offscreen canvas
-     */
-    public PRoot getRoot() {
-        return camera == null ? null : camera.getRoot();
-    }
+	/** {@inheritDoc} */
+	public void pushCursor(final Cursor cursor) {
+		// empty
+	}
 
-    /**
-     * Return true if this offscreen canvas is opaque.  Defaults to <code>false</code>.
-     *
-     * @return true if this offscreen canvas is opaque
-     */
-    public boolean isOpaque() {
-        return opaque;
-    }
+	/** {@inheritDoc} */
+	public void repaint(final PBounds repaintBounds) {
+		// empty
+	}
 
-    /**
-     * Set to true if this offscreen canvas is opaque.
-     *
-     * @param opaque true if this offscreen canvas is opaque
-     */
-    public void setOpaque(final boolean opaque) {
-        this.opaque = opaque;
-    }
+	/** {@inheritDoc} */
+	public void setInteracting(final boolean interacting) {
+		// empty
+	}
 
-    /**
-     * Return the background color for this offscreen canvas.  If this
-     * offscreen canvas is opaque, the background color will be painted
-     * before the contents of the scene are rendered.
-     *
-     * @see #isOpaque
-     * @return the background color for this offscreen canvas
-     */
-    public Color getBackground() {
-        return backgroundColor;
-    }
+	/**
+	 * Return the root node of the scene graph for this offscreen canvas. The root
+	 * node will be null if the camera for this offscreen canvas is null.
+	 * 
+	 * @return the root node of the scene graph for this offscreen canvas
+	 */
+	public PRoot getRoot() {
+		return camera == null ? null : camera.getRoot();
+	}
 
-    /**
-     * Set the background color for this offscreen canvas to <code>backgroundColor</code>.
-     * If this offscreen canvas is opaque, the background color will be painted
-     * before the contents of the scene are rendered.
-     *
-     * @see #isOpaque
-     * @param backgroundColor background color for this offscreen canvas
-     */
-    public void setBackground(final Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
+	/**
+	 * Return true if this offscreen canvas is opaque. Defaults to
+	 * <code>false</code>.
+	 *
+	 * @return true if this offscreen canvas is opaque
+	 */
+	public boolean isOpaque() {
+		return opaque;
+	}
+
+	/**
+	 * Set to true if this offscreen canvas is opaque.
+	 *
+	 * @param opaque true if this offscreen canvas is opaque
+	 */
+	public void setOpaque(final boolean opaque) {
+		this.opaque = opaque;
+	}
+
+	/**
+	 * Return the background color for this offscreen canvas. If this offscreen
+	 * canvas is opaque, the background color will be painted before the contents of
+	 * the scene are rendered.
+	 *
+	 * @see #isOpaque
+	 * @return the background color for this offscreen canvas
+	 */
+	public Color getBackground() {
+		return backgroundColor;
+	}
+
+	/**
+	 * Set the background color for this offscreen canvas to
+	 * <code>backgroundColor</code>. If this offscreen canvas is opaque, the
+	 * background color will be painted before the contents of the scene are
+	 * rendered.
+	 *
+	 * @see #isOpaque
+	 * @param backgroundColor background color for this offscreen canvas
+	 */
+	public void setBackground(final Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 }

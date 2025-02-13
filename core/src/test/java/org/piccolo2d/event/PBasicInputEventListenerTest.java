@@ -35,9 +35,6 @@ import java.awt.event.MouseWheelEvent;
 
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PiccoloAsserts;
-import org.piccolo2d.event.PBasicInputEventHandler;
-import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.event.PInputEventFilter;
 
 import junit.framework.TestCase;
 

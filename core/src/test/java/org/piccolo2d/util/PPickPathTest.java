@@ -33,7 +33,6 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.nodes.PPath;
-import org.piccolo2d.util.PPickPath;
 
 import junit.framework.TestCase;
 

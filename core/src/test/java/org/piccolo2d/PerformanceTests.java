@@ -40,7 +40,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.piccolo2d.PNode;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
@@ -60,9 +59,9 @@ public class PerformanceTests extends TestCase {
     }
 
     public void testRunPerformanceTests() {
-        if (1 == 1) {
-            return;
-        }
+        //if (1 == 1) {
+        //    return;
+        //}
 
         // three times to warm up JVM
         for (int i = 0; i < 3; i++) {
@@ -126,7 +125,7 @@ public class PerformanceTests extends TestCase {
     public void removeNodes() {
         final PNode parent = new PNode();
         final PNode[] nodes = new PNode[NUMBER_NODES];
-        final ArrayList list = new ArrayList();
+        final ArrayList<PNode> list = new ArrayList<PNode>();
 
         for (int i = 0; i < NUMBER_NODES; i++) {
             nodes[i] = new PNode();

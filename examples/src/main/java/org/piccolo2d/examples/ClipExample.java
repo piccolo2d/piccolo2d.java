@@ -33,9 +33,9 @@ import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.event.PDragEventHandler;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.nodes.PClip;
+import org.piccolo2d.nodes.PClip;
 import org.piccolo2d.nodes.PPath;
 
 

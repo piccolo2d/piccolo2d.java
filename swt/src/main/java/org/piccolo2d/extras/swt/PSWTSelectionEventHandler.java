@@ -37,7 +37,7 @@ import org.eclipse.swt.SWT;
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.event.PSelectionEventHandler;
+import org.piccolo2d.event.PSelectionEventHandler;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PPaintContext;
 
@@ -76,7 +76,7 @@ public class PSWTSelectionEventHandler extends PSelectionEventHandler {
      * @param selectableParents A list of nodes whose children will be selected
      *            by this event handler.
      */
-    public PSWTSelectionEventHandler(final PNode marqueeParent, final List selectableParents) {
+    public PSWTSelectionEventHandler(final PNode marqueeParent, final List<PNode> selectableParents) {
         super(new PNode(), selectableParents);
         this.marqueeParent = marqueeParent;
     }

@@ -33,8 +33,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
 
 /**
  * Example that demonstrates the PSwing camera bug described in Issue 148.

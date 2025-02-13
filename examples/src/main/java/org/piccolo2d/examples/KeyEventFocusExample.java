@@ -31,10 +31,10 @@ package org.piccolo2d.examples;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 
 

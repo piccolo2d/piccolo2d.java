@@ -35,12 +35,12 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PDimension;
 
@@ -122,7 +122,7 @@ public class UserInteraction extends PFrame {
 
         public SquiggleHandler(final PCanvas aCanvas) {
             canvas = aCanvas;
-            setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+            setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
         }
 
         public void startDrag(final PInputEvent e) {

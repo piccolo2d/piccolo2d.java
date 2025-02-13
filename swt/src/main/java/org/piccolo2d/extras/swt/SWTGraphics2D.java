@@ -69,6 +69,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Transform;
 
+
 /**
  * An extension to Graphics2D to support an SWT Piccolo Canvas with little
  * modification to the current Piccolo architecture
@@ -94,11 +95,11 @@ public class SWTGraphics2D extends Graphics2D {
      */
     protected static int CACHE_COUNT = 0;
     /** Map from font names to Fonts. */
-    protected static final HashMap FONT_CACHE = new HashMap();
+    protected static final HashMap<String, org.eclipse.swt.graphics.Font> FONT_CACHE = new HashMap<String, org.eclipse.swt.graphics.Font>();
     /** Map from awt colors to swt colors. */
-    protected static final HashMap COLOR_CACHE = new HashMap();
+    protected static final HashMap<Color, org.eclipse.swt.graphics.Color> COLOR_CACHE = new HashMap<Color, org.eclipse.swt.graphics.Color>();
     /** Map from awt shapess to swt Paths. */
-    protected static final HashMap SHAPE_CACHE = new HashMap();
+    protected static final HashMap<Shape, Path> SHAPE_CACHE = new HashMap<Shape, Path>();
     /** Buffer used to extract the graphics device. */
     protected static final BufferedImage BUFFER = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
@@ -1334,7 +1335,7 @@ public class SWTGraphics2D extends Graphics2D {
      * 
      * @see java.awt.Graphics2D#setRenderingHints(Map)
      */
-    public void setRenderingHints(final Map hints) {
+    public void setRenderingHints(final Map<?,?> hints) {
     }
 
     /**
@@ -1342,7 +1343,7 @@ public class SWTGraphics2D extends Graphics2D {
      * 
      * @see java.awt.Graphics2D#addRenderingHints(Map)
      */
-    public void addRenderingHints(final Map hints) {
+    public void addRenderingHints(final Map<?,?> hints) {
     }
 
     /**
@@ -1539,18 +1540,18 @@ public class SWTGraphics2D extends Graphics2D {
         CACHE_COUNT--;
 
         if (CACHE_COUNT == 0) {
-            for (final Iterator i = FONT_CACHE.values().iterator(); i.hasNext();) {
-                final org.eclipse.swt.graphics.Font font = (org.eclipse.swt.graphics.Font) i.next();
+            for (final Iterator<org.eclipse.swt.graphics.Font> i = FONT_CACHE.values().iterator(); i.hasNext();) {
+                final org.eclipse.swt.graphics.Font font = i.next();
                 font.dispose();
             }
             FONT_CACHE.clear();
-            for (final Iterator i = COLOR_CACHE.values().iterator(); i.hasNext();) {
-                final org.eclipse.swt.graphics.Color color = (org.eclipse.swt.graphics.Color) i.next();
+            for (final Iterator<org.eclipse.swt.graphics.Color> i = COLOR_CACHE.values().iterator(); i.hasNext();) {
+                final org.eclipse.swt.graphics.Color color = i.next();
                 color.dispose();
             }
             COLOR_CACHE.clear();
-            for (final Iterator i = SHAPE_CACHE.values().iterator(); i.hasNext();) {
-                final Path path = (Path) i.next();
+            for (final Iterator<Path> i = SHAPE_CACHE.values().iterator(); i.hasNext();) {
+                final Path path = i.next();
                 path.dispose();
             }
             SHAPE_CACHE.clear();

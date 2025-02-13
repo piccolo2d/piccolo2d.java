@@ -37,13 +37,13 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.handles.PHandle;
-import org.piccolo2d.extras.util.PLocator;
+import org.piccolo2d.handles.PHandle;
 import org.piccolo2d.util.PDimension;
+import org.piccolo2d.util.PLocator;
 import org.piccolo2d.util.PPaintContext;
 
 

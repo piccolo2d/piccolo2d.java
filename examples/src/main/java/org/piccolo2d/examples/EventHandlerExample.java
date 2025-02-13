@@ -33,11 +33,11 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.util.PBounds;
 
@@ -71,7 +71,7 @@ public class EventHandlerExample extends PFrame {
         // Make the event handler only work with BUTTON1 events, so that it does
         // not conflict with the zoom event handler that is installed by
         // default.
-        rectEventHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK));
+        rectEventHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK));
 
         // Remove the pan event handler that is installed by default so that it
         // does not conflict with our new rectangle creation event handler.

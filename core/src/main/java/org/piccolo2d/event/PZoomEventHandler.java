@@ -72,7 +72,7 @@ public class PZoomEventHandler extends PDragSequenceEventHandler {
      */
     public PZoomEventHandler() {
         super();
-        setEventFilter(new PInputEventFilter(InputEvent.BUTTON3_MASK));
+        setEventFilter(new PInputEventFilter(InputEvent.BUTTON3_DOWN_MASK));
     }
 
     // ****************************************************************

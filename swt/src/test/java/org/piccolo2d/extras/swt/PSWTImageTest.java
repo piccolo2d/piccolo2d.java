@@ -30,17 +30,13 @@ package org.piccolo2d.extras.swt;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-
 import org.eclipse.swt.layout.FillLayout;
-
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.piccolo2d.extras.swt.PSWTCanvas;
-import org.piccolo2d.extras.swt.PSWTImage;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for PSWTImage.
@@ -78,7 +74,10 @@ public class PSWTImageTest extends TestCase {
         final boolean[] called = new boolean[1];
         called[0] = false;
         imageNode = new PSWTImage(canvas, image) {
-            protected void disposeImage() {
+
+			private static final long serialVersionUID = 1L;
+
+			protected void disposeImage() {
                 called[0] = true;
                 super.disposeImage();
             }

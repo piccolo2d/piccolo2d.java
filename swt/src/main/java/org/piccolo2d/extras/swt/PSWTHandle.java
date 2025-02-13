@@ -43,10 +43,10 @@ import org.piccolo2d.PNode;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventFilter;
-import org.piccolo2d.extras.util.PLocator;
-import org.piccolo2d.extras.util.PNodeLocator;
 import org.piccolo2d.util.PBounds;
 import org.piccolo2d.util.PDimension;
+import org.piccolo2d.util.PLocator;
+import org.piccolo2d.util.PNodeLocator;
 
 
 /**
@@ -228,7 +228,7 @@ public class PSWTHandle extends PSWTPath {
 
     private final class HandleDragHandler extends PDragSequenceEventHandler {
         public HandleDragHandler() {
-            final PInputEventFilter filter = new PInputEventFilter(InputEvent.BUTTON1_MASK);
+            final PInputEventFilter filter = new PInputEventFilter(InputEvent.BUTTON1_DOWN_MASK);
             setEventFilter(filter);
             filter.setMarksAcceptedEventsAsHandled(true);
             filter.setAcceptsMouseEntered(false);

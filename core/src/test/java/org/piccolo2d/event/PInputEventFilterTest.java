@@ -34,8 +34,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.piccolo2d.PInputManager;
-import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.event.PInputEventFilter;
 
 import junit.framework.TestCase;
 
@@ -175,34 +173,34 @@ public class PInputEventFilterTest extends TestCase {
 
     public void testRejectsEventsUnlessModifiersContainAllOfMask() {
         PInputEvent event = buildTestEvent();
-        filter.setAndMask(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
+        filter.setAndMask(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
         assertRejectsEvent(event);
-        event = buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
+        event = buildTestEvent(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
         assertAcceptsEvent(event);
 
-        event = buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.META_MASK);
+        event = buildTestEvent(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.META_DOWN_MASK);
         assertAcceptsEvent(event);
     }
 
     public void testRejectsEventsUnlessModifiersContainOneOfOrMask() {
         final PInputEvent event = buildTestEvent();
-        filter.setOrMask(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
+        filter.setOrMask(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
         assertRejectsEvent(event);
-        assertRejectsEvent(buildTestEvent(InputEvent.META_MASK));
-        assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_MASK));
-        assertAcceptsEvent(buildTestEvent(InputEvent.ALT_MASK));
-        assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
+        assertRejectsEvent(buildTestEvent(InputEvent.META_DOWN_MASK));
+        assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_DOWN_MASK));
+        assertAcceptsEvent(buildTestEvent(InputEvent.ALT_DOWN_MASK));
+        assertAcceptsEvent(buildTestEvent(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
     }
 
     public void testRejectsEventsUnlessTheyMatchOneOfNotMask() {
         final PInputEvent event = buildTestEvent();
-        filter.setNotMask(InputEvent.CTRL_MASK | InputEvent.ALT_MASK);
+        filter.setNotMask(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
         assertAcceptsEvent(event);
 
-        assertAcceptsEvent(buildTestEvent(InputEvent.META_MASK));
-        assertRejectsEvent(buildTestEvent(InputEvent.CTRL_MASK));
-        assertRejectsEvent(buildTestEvent(InputEvent.ALT_MASK));
-        assertRejectsEvent(buildTestEvent(InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
+        assertAcceptsEvent(buildTestEvent(InputEvent.META_DOWN_MASK));
+        assertRejectsEvent(buildTestEvent(InputEvent.CTRL_DOWN_MASK));
+        assertRejectsEvent(buildTestEvent(InputEvent.ALT_DOWN_MASK));
+        assertRejectsEvent(buildTestEvent(InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
     }
 
     public void testRejectsMouseEventsIfMouseClickFilterSet() {
@@ -238,7 +236,7 @@ public class PInputEventFilterTest extends TestCase {
     }
 
     private PInputEvent buildTestEvent() {
-        return buildTestEvent(InputEvent.BUTTON1_MASK);
+        return buildTestEvent(InputEvent.BUTTON1_DOWN_MASK);
     }
 
     private PInputEvent buildTestEvent(final int modifiers) {

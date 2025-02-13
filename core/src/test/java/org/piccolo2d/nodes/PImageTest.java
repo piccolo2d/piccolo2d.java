@@ -34,7 +34,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.util.PPaintContext;
 
 import junit.framework.TestCase;

@@ -104,7 +104,7 @@ public class PSWTText extends PNode {
     protected int padding = DEFAULT_PADDING;
 
     /** Each element is one line of text. */
-    protected ArrayList lines = new ArrayList();
+    protected ArrayList<String> lines = new ArrayList<String>();
 
     /** Translation offset X. */
     protected double translateX = 0.0;
@@ -255,7 +255,7 @@ public class PSWTText extends PNode {
     public String getText() {
         StringBuffer result = new StringBuffer();
 
-        final Iterator lineIterator = lines.iterator();
+        final Iterator<String> lineIterator = lines.iterator();
         while (lineIterator.hasNext()) {
             result.append(lineIterator.next());
             result.append('\n');
@@ -468,7 +468,7 @@ public class PSWTText extends PNode {
 
         final FontMetrics fontMetrics = sg2.getSWTFontMetrics();
 
-        final Iterator lineIterator = lines.iterator();
+        final Iterator<String> lineIterator = lines.iterator();
         while (lineIterator.hasNext()) {
             line = (String) lineIterator.next();
             if (line.length() != 0) {
@@ -526,7 +526,7 @@ public class PSWTText extends PNode {
 
         boolean firstLine = true;
 
-        final Iterator lineIterator = lines.iterator();
+        final Iterator<String> lineIterator = lines.iterator();
         while (lineIterator.hasNext()) {
             String line = (String) lineIterator.next();
             Point lineBounds = gc.stringExtent(line);

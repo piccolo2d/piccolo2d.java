@@ -32,9 +32,9 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.event.PDragEventHandler;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.nodes.PNodeCache;
+import org.piccolo2d.nodes.PNodeCache;
 import org.piccolo2d.nodes.PPath;
 
 

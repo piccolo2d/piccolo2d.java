@@ -33,7 +33,6 @@ import java.awt.Component;
 import java.awt.Font;
 
 import org.piccolo2d.MockPropertyChangeListener;
-import org.piccolo2d.nodes.PText;
 
 import junit.framework.TestCase;
 

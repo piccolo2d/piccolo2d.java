@@ -45,7 +45,7 @@ import org.eclipse.swt.graphics.Rectangle;
 public class SWTShapeManager {
     private static AffineTransform IDENTITY_XFORM = new AffineTransform();
     private static Point2D aPoint = new Point2D.Double();
-    private static ArrayList segList = new ArrayList();
+    private static ArrayList<Point2D> segList = new ArrayList<Point2D>();
     private static double[] pts = new double[8];
 
     /**

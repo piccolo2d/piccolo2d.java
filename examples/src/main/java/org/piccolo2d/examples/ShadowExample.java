@@ -30,15 +30,14 @@ package org.piccolo2d.examples;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 
 import java.awt.image.BufferedImage;
 
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.nodes.PShadow;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PShadow;
 import org.piccolo2d.nodes.PText;
 
 

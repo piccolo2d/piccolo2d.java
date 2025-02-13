@@ -40,14 +40,14 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JDialog;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragEventHandler;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.nodes.P3DRect;
+import org.piccolo2d.nodes.P3DRect;
 import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;

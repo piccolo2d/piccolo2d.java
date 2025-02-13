@@ -252,12 +252,14 @@ public class PInputEvent {
      * 
      * @return modifier flags for the input event
      */
-    public int getModifiers() {
+    /*
+    private int getModifiers() {
         if (!isFocusEvent()) {
             return inputEvent.getModifiers();
         }
         throw new IllegalStateException("Can't get modifiers from focus event");
     }
+    */
 
     /**
      * Returns the extended modifiers provided for the input event by swing.

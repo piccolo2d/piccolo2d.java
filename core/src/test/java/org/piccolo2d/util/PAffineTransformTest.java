@@ -34,10 +34,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.piccolo2d.PiccoloAsserts;
-import org.piccolo2d.util.PAffineTransform;
-import org.piccolo2d.util.PAffineTransformException;
-import org.piccolo2d.util.PBounds;
-import org.piccolo2d.util.PDimension;
 
 import junit.framework.TestCase;
 

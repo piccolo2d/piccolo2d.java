@@ -425,7 +425,7 @@ public class PText extends PNode {
      * wrapped based on the bounds of this node.
      */
     public void recomputeLayout() {
-        final ArrayList linesList = new ArrayList();
+        final ArrayList<TextLayout> linesList = new ArrayList<TextLayout>();
         double textWidth = 0;
         double textHeight = 0;
 

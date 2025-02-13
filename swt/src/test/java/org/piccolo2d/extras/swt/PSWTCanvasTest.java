@@ -28,16 +28,14 @@
  */
 package org.piccolo2d.extras.swt;
 
-import junit.framework.TestCase;
-
 import org.eclipse.swt.layout.FillLayout;
-
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.piccolo2d.event.PInputEventListener;
 import org.piccolo2d.event.PPanEventHandler;
 import org.piccolo2d.event.PZoomEventHandler;
-import org.piccolo2d.extras.swt.PSWTCanvas;
+
+import junit.framework.TestCase;
 
 
 /**

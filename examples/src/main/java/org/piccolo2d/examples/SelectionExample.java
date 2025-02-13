@@ -31,11 +31,11 @@ package org.piccolo2d.examples;
 import java.awt.Color;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.event.PNotification;
-import org.piccolo2d.extras.event.PNotificationCenter;
-import org.piccolo2d.extras.event.PSelectionEventHandler;
+import org.piccolo2d.event.PNotification;
+import org.piccolo2d.event.PNotificationCenter;
+import org.piccolo2d.event.PSelectionEventHandler;
 import org.piccolo2d.nodes.PPath;
 
 
