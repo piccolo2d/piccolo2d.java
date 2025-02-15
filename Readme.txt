@@ -25,13 +25,6 @@ http://java.sun.com/javase/downloads/index.jsp#jdk
 Apache Maven
 http://maven.apache.org/download.html
 
-For some platforms, including Mac OSX with JDK version 1.6 or
-later on x86_64, the Eclipse Standard Widget Toolkit (SWT) version
-3.3.0 or later must also be installed manually.
-
-Eclipse Standard Widget Toolkit
-http://www.eclipse.org/swt/
-
 
 USING PICCOLO2D.JAVA
 
@@ -53,15 +46,6 @@ Piccolo2D extras classes in your project, use a dependency of
   <version>3.0.1</version>
 </dependency>
 
-in your pom.xml.  To include the Piccolo2D core classes and the
-Piccolo2D SWT classes in your project, use a dependency of
-
-<dependency>
-  <groupId>org.piccolo2d</groupId>
-  <artifactId>piccolo2d-swt</artifactId>
-  <version>3.0.1</version>
-</dependency>
-
 in your pom.xml.  If your project does not use maven, simply include
 the relevant Piccolo2D jars in your project's classpath.
 
@@ -77,9 +61,3 @@ To build and run the Piccolo2D examples runnable jar
 $ cd examples
 $ mvn assembly:assembly
 $ java -jar target/piccolo2d-examples-3.0.1-jar-with-dependencies.jar
-
-To build and run the Piccolo2D SWT examples runnable jar
-
-$ cd swt-examples
-$ mvn assembly:assembly
-$ java -jar target/piccolo2d-swt-examples-3.0.1-jar-with-dependencies.jar
