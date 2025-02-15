@@ -30,8 +30,6 @@ package org.piccolo2d.util;
 
 import java.awt.Color;
 
-import org.piccolo2d.util.PDebug;
-
 import junit.framework.TestCase;
 
 /**

@@ -53,9 +53,9 @@ import java.awt.event.MouseWheelEvent;
  */
 public class PInputEventFilter {
     /** Mask representing all possible modifiers. */
-    public static final int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK | InputEvent.BUTTON3_MASK
-            | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.ALT_GRAPH_MASK
-            | InputEvent.META_MASK;
+    public static final int ALL_MODIFIERS_MASK = InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK
+            | InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK
+            | InputEvent.META_DOWN_MASK;
 
     /** If event modifiers don't match this exactly, event it filtered. */
     private int andMask;
@@ -153,7 +153,7 @@ public class PInputEventFilter {
         int modifiers = 0;
 
         if (!event.isFocusEvent()) {
-            modifiers = event.getModifiers();
+            modifiers = event.getModifiersEx();
         }
 
         if (event.isHandled() && !acceptsAlreadyHandledEvents) {

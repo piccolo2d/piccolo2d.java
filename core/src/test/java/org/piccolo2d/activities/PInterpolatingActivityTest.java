@@ -28,7 +28,6 @@
  */
 package org.piccolo2d.activities;
 
-import org.piccolo2d.activities.PInterpolatingActivity;
 import org.piccolo2d.util.PUtil;
 
 import junit.framework.TestCase;

@@ -31,8 +31,8 @@ package org.piccolo2d.examples.issues;
 import java.awt.BasicStroke;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.nodes.PPath;
-import org.piccolo2d.extras.PFrame;
 
 /**
  * Example that demonstrates issue with zero width strokes in Issue 221.
@@ -44,7 +44,9 @@ import org.piccolo2d.extras.PFrame;
  */
 public class ZeroWidthStrokeBug extends PFrame {
 
-    public ZeroWidthStrokeBug() {
+    private static final long serialVersionUID = 1L;
+
+	public ZeroWidthStrokeBug() {
         this(null);
     }
 

@@ -28,15 +28,12 @@
  */
 package org.piccolo2d.nodes;
 
-import java.awt.Color;
 import java.awt.Shape;
-
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -100,7 +97,7 @@ public abstract class AbstractPPathTest extends AbstractPShapeTest {
         final FileInputStream fin = new FileInputStream(file);
         final ObjectInputStream in = new ObjectInputStream(fin);
         path = (PPath) in.readObject();
-
+        in.close();
         return path;
     }
 

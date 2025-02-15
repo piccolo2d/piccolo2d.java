@@ -46,9 +46,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-import org.piccolo2d.extras.swing.PScrollPane;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
+import org.piccolo2d.swing.PScrollPane;
 
 
 /**

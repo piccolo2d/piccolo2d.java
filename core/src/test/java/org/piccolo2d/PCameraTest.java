@@ -40,11 +40,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.piccolo2d.PCamera;
-import org.piccolo2d.PCanvas;
-import org.piccolo2d.PComponent;
-import org.piccolo2d.PLayer;
-import org.piccolo2d.PNode;
 import org.piccolo2d.activities.PActivity;
 import org.piccolo2d.activities.PTransformActivity;
 import org.piccolo2d.util.PAffineTransform;
@@ -82,7 +77,7 @@ public class PCameraTest extends TestCase {
         camera1.addLayer(layer2);
 
 
-        final PCamera cameraCopy = (PCamera) camera1.clone();
+        //final PCamera cameraCopy = (PCamera) camera1.clone();
         //TODO: assertEquals(2, cameraCopy.getLayerCount());                       
     }
 
@@ -690,7 +685,7 @@ public class PCameraTest extends TestCase {
         }
 
         /** {@inheritDoc} */
-        public Collection getAllNodes(final PNodeFilter filter, final Collection nodes) {
+        public Collection<PNode> getAllNodes(final PNodeFilter filter, final Collection<PNode> nodes) {
             getAllNodesCalled = true;
             return super.getAllNodes(filter, nodes);
         }

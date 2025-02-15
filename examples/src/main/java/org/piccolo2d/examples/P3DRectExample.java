@@ -29,15 +29,17 @@
 package org.piccolo2d.examples;
 
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.nodes.P3DRect;
+import org.piccolo2d.PFrame;
+import org.piccolo2d.nodes.P3DRect;
 
 import java.awt.Color;
 
 
 public class P3DRectExample extends PFrame {
 
-    public P3DRectExample() {
+    private static final long serialVersionUID = 1L;
+
+	public P3DRectExample() {
         this(null);
     }
 

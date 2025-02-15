@@ -31,7 +31,10 @@ package org.piccolo2d.examples.fisheye;
 import javax.swing.JFrame;
 
 public class TabularFisheyeFrame extends JFrame {
-    public TabularFisheyeFrame() {
+
+	private static final long serialVersionUID = 1L;
+
+	public TabularFisheyeFrame() {
         setTitle("Piccolo2D Tabular Fisheye");
 
         TabularFisheye tabularFisheye = new TabularFisheye();

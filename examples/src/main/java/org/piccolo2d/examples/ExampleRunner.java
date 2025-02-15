@@ -45,7 +45,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
-import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.util.PDebug;
 
 
@@ -71,7 +71,7 @@ public class ExampleRunner extends JFrame {
         JPanel panel= new JPanel(new GridLayout(0, 2));
         c.add(BorderLayout.CENTER, panel);
 
-        addExampleButtons(panel, new Class[] { ActivityExample.class, AngleNodeExample.class,
+        addExampleButtons(panel, new Class<?>[] { ActivityExample.class, AngleNodeExample.class,
                 BirdsEyeViewExample.class, CameraExample.class, CenterExample.class, ChartLabelExample.class,
                 ClipExample.class, CompositeExample.class, DynamicExample.class, EventHandlerExample.class,
                 FullScreenNodeExample.class, GraphEditorExample.class, GridExample.class, GroupExample.class,
@@ -93,18 +93,27 @@ public class ExampleRunner extends JFrame {
         optionsPanel.setBorder(new TitledBorder("Display Options"));
                
         optionsPanel.add(new JCheckBox(new AbstractAction("Print Frame Rates to Console") {
-            public void actionPerformed(final ActionEvent e) {
+        	
+            private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(final ActionEvent e) {
                 PDebug.debugPrintFrameRate = !PDebug.debugPrintFrameRate;
             }
         }));
 
         optionsPanel.add(new JCheckBox(new AbstractAction("Show Region Managment") {
-            public void actionPerformed(final ActionEvent e) {
+        		
+            private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(final ActionEvent e) {
                 PDebug.debugRegionManagement = !PDebug.debugRegionManagement;
             }
         }));
 
         optionsPanel.add(new JCheckBox(new AbstractAction("Show Full Bounds") {
+        	
+        	private static final long serialVersionUID = 1L;
+        	
             public void actionPerformed(final ActionEvent e) {
                 PDebug.debugFullBounds = !PDebug.debugFullBounds;
             }
@@ -113,20 +122,23 @@ public class ExampleRunner extends JFrame {
         return optionsPanel;
     } 
 
-    private void addExampleButtons(final JPanel panel, final Class[] exampleClasses) {
+    private void addExampleButtons(final JPanel panel, final Class<?>[] exampleClasses) {
         for (int i = 0; i < exampleClasses.length; i++) {
             panel.add(buildExampleButton(exampleClasses[i]));
         }
     }
 
-    private JButton buildExampleButton(final Class exampleClass) {
+    private JButton buildExampleButton(final Class<?> exampleClass) {
         final String fullClassName = exampleClass.getName();
         final String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
         final String exampleLabel = camelToProper(simpleClassName);
         JButton button = new JButton(new AbstractAction(exampleLabel) {
-            public void actionPerformed(final ActionEvent event) {
+        	
+            private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(final ActionEvent event) {
                 try {
-                    final PFrame example = (PFrame) exampleClass.newInstance();
+                    final PFrame example = (PFrame)exampleClass.getDeclaredConstructor().newInstance();
                     example.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
                 catch (final Exception e) {

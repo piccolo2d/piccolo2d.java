@@ -28,8 +28,6 @@
  */
 package org.piccolo2d.activities;
 
-import org.piccolo2d.activities.PTransformActivity;
-
 import junit.framework.TestCase;
 
 /**

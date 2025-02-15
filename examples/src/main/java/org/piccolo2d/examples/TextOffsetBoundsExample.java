@@ -35,9 +35,9 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.nodes.PStyledText;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.nodes.PHtmlView;
+import org.piccolo2d.nodes.PStyledText;
 import org.piccolo2d.nodes.PText;
 
 

@@ -36,7 +36,7 @@ import java.util.Iterator;
  */
 public class PerformanceLog {
 
-    private final ArrayList log = new ArrayList();
+    private final ArrayList<ZLogEntry> log = new ArrayList<ZLogEntry>();
     private long testTime;
 
 
@@ -76,7 +76,7 @@ public class PerformanceLog {
         System.out.println("Test data for input into spreadsheet:");
         System.out.println();
 
-        Iterator i = log.iterator();
+        Iterator<ZLogEntry> i = log.iterator();
         while (i.hasNext()) {
             final ZLogEntry each = (ZLogEntry) i.next();
             System.out.println(each.time);

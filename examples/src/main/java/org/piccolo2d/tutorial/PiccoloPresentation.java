@@ -34,23 +34,21 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.PFrame;
 import org.piccolo2d.nodes.PImage;
 
 
 public class PiccoloPresentation extends PFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+    
     protected PNode slideBar;
     protected PNode currentSlide;
     protected PBasicInputEventHandler eventHandler;
-    protected ArrayList slides = new ArrayList();
+    protected ArrayList<PNode> slides = new ArrayList<PNode>();
 
     public PiccoloPresentation() {
         super();

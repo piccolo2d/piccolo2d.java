@@ -38,6 +38,8 @@ import java.awt.geom.Area;
  * Area node.
  */
 public final class PArea extends PShape {
+	
+	private static final long serialVersionUID = 1L;
 
     /** Area for this area node. */
     private final transient Area area;

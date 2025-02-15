@@ -34,15 +34,12 @@ import java.awt.Paint;
 import java.awt.Stroke;
 
 import org.piccolo2d.PCanvas;
-
+import org.piccolo2d.PFrame;
 import org.piccolo2d.activities.PInterpolatingActivity;
 
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.event.PInputEventListener;
-
-import org.piccolo2d.extras.PFrame;
-
 import org.piccolo2d.nodes.PPath;
 
 /**

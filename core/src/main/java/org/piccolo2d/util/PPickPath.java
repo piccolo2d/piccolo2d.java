@@ -77,7 +77,7 @@ public class PPickPath implements PInputEventListener {
     private PStack transformStack;
     private PStack pickBoundsStack;
     private PCamera bottomCamera;
-    private HashMap excludedNodes;
+    private HashMap<PNode, PNode> excludedNodes;
 
     /**
      * Creates a pick pack originating from the provided camera and with the
@@ -169,7 +169,7 @@ public class PPickPath implements PInputEventListener {
             return null;
         }
         if (excludedNodes == null) {
-            excludedNodes = new HashMap();
+            excludedNodes = new HashMap<PNode, PNode>();
         }
 
         // exclude current picked node

@@ -32,14 +32,14 @@ import java.awt.Color;
 import java.util.Iterator;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivity;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.handles.PBoundsHandle;
-import org.piccolo2d.extras.handles.PHandle;
-import org.piccolo2d.extras.util.PBoundsLocator;
+import org.piccolo2d.handles.PBoundsHandle;
+import org.piccolo2d.handles.PHandle;
 import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PBoundsLocator;
 
 
 /**
@@ -81,9 +81,9 @@ public class StickyHandleLayerExample extends PFrame {
                 final PRoot root = getActivityScheduler().getRoot();
 
                 if (root.getPaintInvalid() || root.getChildPaintInvalid()) {
-                    final Iterator i = getCanvas().getCamera().getChildrenIterator();
+                    final Iterator<PNode> i = getCanvas().getCamera().getChildrenIterator();
                     while (i.hasNext()) {
-                        final PNode each = (PNode) i.next();
+                        final PNode each = i.next();
                         if (each instanceof PHandle) {
                             final PHandle handle = (PHandle) each;
                             handle.relocateHandle();

@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @author Jesse Grosjean
  */
-public class PStack extends ArrayList {
+public class PStack extends ArrayList<Object> {
     /**
      * Allows for future serialization code to understand versioned binary
      * formats.

@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivity;
 
 import junit.framework.TestCase;

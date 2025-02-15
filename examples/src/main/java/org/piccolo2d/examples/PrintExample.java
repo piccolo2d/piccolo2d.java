@@ -52,13 +52,13 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.swing.PDefaultScrollDirector;
-import org.piccolo2d.extras.swing.PScrollDirector;
-import org.piccolo2d.extras.swing.PScrollPane;
-import org.piccolo2d.extras.swing.PViewport;
 import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.swing.PDefaultScrollDirector;
+import org.piccolo2d.swing.PScrollDirector;
+import org.piccolo2d.swing.PScrollPane;
+import org.piccolo2d.swing.PViewport;
 import org.piccolo2d.util.PAffineTransform;
 import org.piccolo2d.util.PBounds;
 
@@ -185,9 +185,9 @@ public class PrintExample extends PFrame {
             if (camera != null) {
                 // First we compute the union of all the layers
                 final PBounds layerBounds = new PBounds();
-                final java.util.List layers = camera.getLayersReference();
-                for (final Iterator i = layers.iterator(); i.hasNext();) {
-                    final PLayer layer = (PLayer) i.next();
+                final java.util.List<PLayer> layers = camera.getLayersReference();
+                for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+                    final PLayer layer = i.next();
                     layerBounds.add(layer.getFullBoundsReference());
                 }
 
@@ -233,9 +233,9 @@ public class PrintExample extends PFrame {
 
             // Get the union of all the layers' bounds
             final PBounds layerBounds = new PBounds();
-            final List layers = camera.getLayersReference();
-            for (final Iterator i = layers.iterator(); i.hasNext();) {
-                final PLayer layer = (PLayer) i.next();
+            final List<PLayer> layers = camera.getLayersReference();
+            for (final Iterator<PLayer> i = layers.iterator(); i.hasNext();) {
+                final PLayer layer = i.next();
                 layerBounds.add(layer.getFullBoundsReference());
             }
 

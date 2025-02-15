@@ -55,19 +55,22 @@ import org.piccolo2d.PCanvas;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.extras.pswing.PSwing;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
-import org.piccolo2d.extras.swing.SwingLayoutNode;
-import org.piccolo2d.extras.swing.SwingLayoutNode.Anchor;
 import org.piccolo2d.nodes.PHtmlView;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
+import org.piccolo2d.pswing.PSwing;
+import org.piccolo2d.pswing.PSwingCanvas;
+import org.piccolo2d.swing.SwingLayoutNode;
+import org.piccolo2d.swing.SwingLayoutNode.Anchor;
 
 
 public class SwingLayoutExample {
 
     public static class MyPPath extends PPath.Float {
-        public MyPPath(final Shape shape, final Color color, final Stroke stroke, final Color strokeColor) {
+    	
+		private static final long serialVersionUID = 1L;
+
+		public MyPPath(final Shape shape, final Color color, final Stroke stroke, final Color strokeColor) {
             super(shape, stroke);
             setPaint(color);
             setStrokePaint(strokeColor);

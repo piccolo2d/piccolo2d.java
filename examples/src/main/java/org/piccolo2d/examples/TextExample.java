@@ -29,8 +29,8 @@
 package org.piccolo2d.examples;
 
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.event.PStyledTextEventHandler;
+import org.piccolo2d.PFrame;
+import org.piccolo2d.event.PStyledTextEventHandler;
 
 
 /**

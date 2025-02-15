@@ -30,6 +30,7 @@ package org.piccolo2d.examples.fisheye;
 
 import javax.swing.JApplet;
 
+@SuppressWarnings({ "removal", "serial" })
 public class TabularFisheyeApplet extends JApplet {
 
     public void init() {

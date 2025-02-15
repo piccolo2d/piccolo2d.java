@@ -34,13 +34,13 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.PFrame;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.PRoot;
 import org.piccolo2d.activities.PActivity;
-import org.piccolo2d.extras.PFrame;
-import org.piccolo2d.extras.util.PFixedWidthStroke;
 import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.util.PFixedWidthStroke;
 
 
 /**
@@ -94,7 +94,7 @@ public class DynamicExample extends PFrame {
     }
 
     public void rotateNodes() {
-        final Iterator i = getCanvas().getLayer().getChildrenReference().iterator();
+        final Iterator<PNode> i = getCanvas().getLayer().getChildrenReference().iterator();
         while (i.hasNext()) {
             final PNode each = (PNode) i.next();
             each.rotate(Math.toRadians(2));

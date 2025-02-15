@@ -35,7 +35,6 @@ import java.awt.image.BufferedImage;
 
 import org.piccolo2d.MockPropertyChangeListener;
 import org.piccolo2d.PCanvas;
-import org.piccolo2d.nodes.PHtmlView;
 import org.piccolo2d.util.PBounds;
 
 import junit.framework.TestCase;

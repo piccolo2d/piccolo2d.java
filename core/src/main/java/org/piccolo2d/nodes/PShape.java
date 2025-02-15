@@ -47,7 +47,9 @@ import org.piccolo2d.util.PPaintContext;
  */
 public abstract class PShape extends PNode {
 
-    /** Stroke for this shape node, defaults to {@link #DEFAULT_STROKE}. */
+	private static final long serialVersionUID = 1L;
+
+	/** Stroke for this shape node, defaults to {@link #DEFAULT_STROKE}. */
     private transient Stroke stroke = DEFAULT_STROKE;
 
     /** Stroke paint for this shape node, defaults to {@link #DEFAULT_STROKE_PAINT}. */
