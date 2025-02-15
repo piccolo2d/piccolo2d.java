@@ -56,8 +56,6 @@ To build all the Piccolo2D modules
 
 $ mvn install
 
-To build and run the Piccolo2D examples runnable jar
+To run the Piccolo2D examples runnable jar
 
-$ cd examples
-$ mvn assembly:assembly
-$ java -jar target/piccolo2d-examples-3.0.1-jar-with-dependencies.jar
+$ java -jar examples/target/piccolo2d-examples-{version}-jar-with-dependencies.jar
