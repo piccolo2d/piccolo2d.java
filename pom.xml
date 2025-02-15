@@ -286,6 +286,13 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <!-- without mention here defaults to version 1.2 -->
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.5.0</version>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencyManagement>
@@ -311,4 +318,34 @@
     <module>extras</module>
     <module>examples</module>
   </modules>
+  <profiles>
+    <profile>
+      <!-- Override maven plugin versions in release profile -->
+      <id>sonatype-oss-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>3.5.0</version>
+          </plugin>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.7</version>
+          </plugin>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.4.2</version>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.11.2</version>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
